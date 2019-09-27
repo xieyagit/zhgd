@@ -105,7 +105,6 @@
 		</dependency>
 
 		<!-- Test Dependencies -->
-
 		<dependency>
 			<groupId>facesdk.SDKServerJava.SDKServerJava</groupId>
 			<artifactId>SDKServerJava</artifactId>
