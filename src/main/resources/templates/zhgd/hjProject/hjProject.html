@@ -1,0 +1,323 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+							<li>
+								项目名：<input type="text" name="projectName"/>
+							</li>
+
+							<li>
+								简称：<input type="text" name="shortName"/>
+							</li>
+
+							<li>
+								项目负责人：<input type="text" name="projectPrincipal"/>
+							</li>
+
+							<li>
+								联系方式：<input type="text" name="phone"/>
+							</li>
+
+							<li>
+								项目类型（从字典获取相应数据）：<input type="text" name="projectType"/>
+							</li>
+
+							<li>
+								项目状态（0审核中，1审核通过，2不通过，3在建，4停工，5异常）：<input type="text" name="projectState"/>
+							</li>
+
+							<li>
+								项目管理人数：<input type="text" name="projectNumber"/>
+							</li>
+
+							<li>
+								所属地区（三级联动）：<input type="text" name="projectRegion"/>
+							</li>
+
+							<li>
+								施工许可证：<input type="text" name="builderLicense"/>
+							</li>
+
+							<li>
+								项目地址：<input type="text" name="projectAddress"/>
+							</li>
+
+							<li>
+								起始时间：<input type="text" name="startingTime"/>
+							</li>
+
+							<li>
+								结束时间：<input type="text" name="finishTime"/>
+							</li>
+
+							<li>
+								施工企业（公司库获取）：<input type="text" name="constructionId"/>
+							</li>
+
+							<li>
+								监理企业（公司库获取）：<input type="text" name="supervisorId"/>
+							</li>
+
+							<li>
+								建筑面积(平米)：<input type="text" name="acreage"/>
+							</li>
+
+							<li>
+								工程造价(万元)：<input type="text" name="projectCost"/>
+							</li>
+
+							<li>
+								经度：<input type="text" name="longitude"/>
+							</li>
+
+							<li>
+								纬度：<input type="text" name="latitude"/>
+							</li>
+
+							<li>
+								安全报监编号：<input type="text" name="securityCode"/>
+							</li>
+
+							<li>
+								质量报监编号：<input type="text" name="qualityNumber"/>
+							</li>
+
+							<li>
+								设计单位：<input type="text" name="designOrganization"/>
+							</li>
+
+							<li>
+								勘察单位：<input type="text" name="explorationUnit"/>
+							</li>
+
+							<li>
+								备注：<input type="text" name="remark"/>
+							</li>
+
+							<li>
+								项目效果图：<input type="text" name="projectImage"/>
+							</li>
+
+							<li>
+								状态（0.显示 1.隐藏）：<input type="text" name="showState"/>
+							</li>
+
+							<li>
+								创建时间：<input type="text" name="createDate"/>
+							</li>
+
+							<li>
+								修改时间：<input type="text" name="updateDate"/>
+							</li>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="zhgd:hjProject:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="zhgd:hjProject:edit">
+					<i class="fa fa-edit"></i> 修改
+				</a>
+				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="zhgd:hjProject:remove">
+					<i class="fa fa-remove"></i> 删除
+				</a>
+				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="zhgd:hjProject:export">
+						<i class="fa fa-download"></i> 导出
+				 </a>
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('zhgd:hjProject:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('zhgd:hjProject:remove')}]];
+        var prefix = ctx + "zhgd/hjProject";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "项目",
+				search: false,
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'id', 
+					title : 'ID',
+					visible: false
+				},
+				{
+					field : 'projectName', 
+					title : '项目名',
+					sortable: true
+				},
+				{
+					field : 'shortName', 
+					title : '简称',
+					sortable: true
+				},
+				{
+					field : 'projectPrincipal', 
+					title : '项目负责人',
+					sortable: true
+				},
+				{
+					field : 'phone', 
+					title : '联系方式',
+					sortable: true
+				},
+				{
+					field : 'projectType', 
+					title : '项目类型（从字典获取相应数据）',
+					sortable: true
+				},
+				{
+					field : 'projectState', 
+					title : '项目状态（0审核中，1审核通过，2不通过，3在建，4停工，5异常）',
+					sortable: true
+				},
+				{
+					field : 'projectNumber', 
+					title : '项目管理人数',
+					sortable: true
+				},
+				{
+					field : 'projectRegion', 
+					title : '所属地区（三级联动）',
+					sortable: true
+				},
+				{
+					field : 'builderLicense', 
+					title : '施工许可证',
+					sortable: true
+				},
+				{
+					field : 'projectAddress', 
+					title : '项目地址',
+					sortable: true
+				},
+				{
+					field : 'startingTime', 
+					title : '起始时间',
+					sortable: true
+				},
+				{
+					field : 'finishTime', 
+					title : '结束时间',
+					sortable: true
+				},
+				{
+					field : 'constructionId', 
+					title : '施工企业（公司库获取）',
+					sortable: true
+				},
+				{
+					field : 'supervisorId', 
+					title : '监理企业（公司库获取）',
+					sortable: true
+				},
+				{
+					field : 'acreage', 
+					title : '建筑面积(平米)',
+					sortable: true
+				},
+				{
+					field : 'projectCost', 
+					title : '工程造价(万元)',
+					sortable: true
+				},
+				{
+					field : 'longitude', 
+					title : '经度',
+					sortable: true
+				},
+				{
+					field : 'latitude', 
+					title : '纬度',
+					sortable: true
+				},
+				{
+					field : 'securityCode', 
+					title : '安全报监编号',
+					sortable: true
+				},
+				{
+					field : 'qualityNumber', 
+					title : '质量报监编号',
+					sortable: true
+				},
+				{
+					field : 'designOrganization', 
+					title : '设计单位',
+					sortable: true
+				},
+				{
+					field : 'explorationUnit', 
+					title : '勘察单位',
+					sortable: true
+				},
+				{
+					field : 'remark', 
+					title : '备注',
+					sortable: true
+				},
+				{
+					field : 'projectImage', 
+					title : '项目效果图',
+					sortable: true
+				},
+				{
+					field : 'showState', 
+					title : '状态（0.显示 1.隐藏）',
+					sortable: true
+				},
+				{
+					field : 'createDate', 
+					title : '创建时间',
+					sortable: true
+				},
+				{
+					field : 'updateDate', 
+					title : '修改时间',
+					sortable: true
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

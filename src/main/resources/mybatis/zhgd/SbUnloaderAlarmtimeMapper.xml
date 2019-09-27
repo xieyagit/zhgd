@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbUnloaderAlarmtime.mapper.SbUnloaderAlarmtimeMapper">
+    
+    <resultMap type="SbUnloaderAlarmtime" id="SbUnloaderAlarmtimeResult">
+        <result property="id"    column="id"    />
+        <result property="deviceNo"    column="DeviceNo"    />
+        <result property="hxzId"    column="HxzId"    />
+        <result property="startTime"    column="StartTime"    />
+        <result property="alarmType"    column="AlarmType"    />
+        <result property="alarmValue"    column="AlarmValue"    />
+    </resultMap>
+    <resultMap id="ExportUnloaderAlarmtimeResult" type="ExportUnloaderAlarmtime">
+        <result property="startTime"    column="StartTime"    />
+        <result property="alarmValue"    column="AlarmValue"    />
+    </resultMap>
+	
+	<sql id="selectSbUnloaderAlarmtimeVo">
+        select id, DeviceNo, HxzId, StartTime, AlarmType, AlarmValue from sb_unloader_alarmtime
+    </sql>
+
+    <select id="getSbUnloaderAlarmtimeList" parameterType="SbUnloaderAlarmtime" resultMap="SbUnloaderAlarmtimeResult">
+        SELECT * from sb_unloader_alarmtime AS a
+        LEFT JOIN sb_unloader_binding AS b ON (a.HxzId=b.HxzId)
+        <where>
+            <if test="projectId != null "> and b.Pid = #{projectId}</if>
+            <if test="hxzId != null  and hxzId != '' "> and b.HxzId = #{hxzId}</if>
+            <if test="alarmType != null">and AlarmType=#{alarmType}</if>
+            <if test="startTime != null  and startTime != '' "> and StartTime like "${startTime}%"</if>
+        </where>
+        ORDER BY StartTime DESC
+    </select>
+
+    <select id="getSbUnloaderAlarmtimeListById" parameterType="ExportUnloaderAlarmtime" resultMap="ExportUnloaderAlarmtimeResult">
+        SELECT * from sb_unloader_alarmtime AS a
+        LEFT JOIN sb_unloader_binding AS b ON (a.HxzId=b.HxzId)
+        <where>
+            <if test="ids != null and ids != '' ">
+                and a.id in
+                <foreach item="id" collection="ids" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="deviceId != null and deviceId != ''">
+                and a.HxzId = #{deviceId}
+            </if>
+            <if test="alarmType != null">
+                and alarmType = #{alarmType}
+            </if>
+        </where>
+    </select>
+
+    <select id="count" parameterType="SbUnloaderAlarmtime" resultType="int">
+        SELECT count(*) FROM `sb_unloader_alarmtime` as a
+        LEFT JOIN sb_unloader_binding AS b ON (a.HxzId=b.HxzId)
+        <where>
+            <if test="projectId != null "> and b.Pid = #{projectId}</if>
+            <if test="hxzId != null  and hxzId != '' "> and b.HxzId = #{hxzId}</if>
+            <if test="alarmType != null">and AlarmType=#{alarmType}</if>
+            <if test="startTime != null  and startTime != '' "> and StartTime like "${startTime}%"</if>
+        </where>
+    </select>
+
+    <select id="selectSbUnloaderAlarmtimeList" parameterType="SbUnloaderAlarmtime" resultMap="SbUnloaderAlarmtimeResult">
+        <include refid="selectSbUnloaderAlarmtimeVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+             <if test="deviceNo != null  and deviceNo != '' "> and DeviceNo = #{deviceNo}</if>
+             <if test="hxzId != null  and hxzId != '' "> and HxzId = #{hxzId}</if>
+             <if test="startTime != null  and startTime != '' "> and StartTime = #{startTime}</if>
+             <if test="alarmType != null "> and AlarmType = #{alarmType}</if>
+             <if test="alarmValue != null "> and AlarmValue = #{alarmValue}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbUnloaderAlarmtimeById" parameterType="Integer" resultMap="SbUnloaderAlarmtimeResult">
+        <include refid="selectSbUnloaderAlarmtimeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbUnloaderAlarmtime" parameterType="SbUnloaderAlarmtime">
+        insert into sb_unloader_alarmtime
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">DeviceNo,</if>
+			<if test="hxzId != null  and hxzId != ''  ">HxzId,</if>
+			<if test="startTime != null  and startTime != ''  ">StartTime,</if>
+			<if test="alarmType != null  ">AlarmType,</if>
+			<if test="alarmValue != null  ">AlarmValue,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+			<if test="hxzId != null  and hxzId != ''  ">#{hxzId},</if>
+			<if test="startTime != null  and startTime != ''  ">#{startTime},</if>
+			<if test="alarmType != null  ">#{alarmType},</if>
+			<if test="alarmValue != null  ">#{alarmValue},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbUnloaderAlarmtime" parameterType="SbUnloaderAlarmtime">
+        update sb_unloader_alarmtime
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceNo != null  and deviceNo != ''  ">DeviceNo = #{deviceNo},</if>
+            <if test="hxzId != null  and hxzId != ''  ">HxzId = #{hxzId},</if>
+            <if test="startTime != null  and startTime != ''  ">StartTime = #{startTime},</if>
+            <if test="alarmType != null  ">AlarmType = #{alarmType},</if>
+            <if test="alarmValue != null  ">AlarmValue = #{alarmValue},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbUnloaderAlarmtimeById" parameterType="Integer">
+        delete from sb_unloader_alarmtime where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbUnloaderAlarmtimeByIds" parameterType="String">
+        delete from sb_unloader_alarmtime where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

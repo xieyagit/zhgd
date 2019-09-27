@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-sbDoorLock-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">配电箱编号：</label>
+				<div class="col-sm-8">
+					<input id="electricityBoxId" name="electricityBoxId" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">锁状态：</label>
+				<div class="col-sm-8">
+					<input id="lockType" name="lockType" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">门状态：</label>
+				<div class="col-sm-8">
+					<input id="doorType" name="doorType" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">数据更新时间：</label>
+				<div class="col-sm-8">
+					<input id="handleTime" name="handleTime" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">开门时间：</label>
+				<div class="col-sm-8">
+					<input id="opendoorTime" name="opendoorTime" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">关门时间：</label>
+				<div class="col-sm-8">
+					<input id="closedoorTime" name="closedoorTime" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">开锁时间：</label>
+				<div class="col-sm-8">
+					<input id="openlockTime" name="openlockTime" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">关锁时间：</label>
+				<div class="col-sm-8">
+					<input id="closelockTime" name="closelockTime" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "zhgd/sbDoorLock"
+		$("#form-sbDoorLock-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/add", $('#form-sbDoorLock-add').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

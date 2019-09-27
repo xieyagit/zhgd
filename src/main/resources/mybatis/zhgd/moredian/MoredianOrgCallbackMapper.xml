@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.moredian.moredianOrgCallback.mapper.MoredianOrgCallbackMapper">
+    
+    <resultMap type="MoredianOrgCallback" id="MoredianOrgCallbackResult">
+        <result property="id"    column="id"    />
+        <result property="callbackUrl"    column="callback_url"    />
+        <result property="callbackTag"    column="callback_tag"    />
+        <result property="orgId"    column="org_id"    />
+    </resultMap>
+	
+	<sql id="selectMoredianOrgCallbackVo">
+        select id, callback_url, callback_tag, org_id from sb_moredian_org_callback
+    </sql>
+	
+    <select id="selectMoredianOrgCallbackList" parameterType="MoredianOrgCallback" resultMap="MoredianOrgCallbackResult">
+        <include refid="selectMoredianOrgCallbackVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="callbackUrl != null  and callbackUrl != '' "> and callback_url = #{callbackUrl}</if>
+             <if test="callbackTag != null  and callbackTag != '' "> and callback_tag = #{callbackTag}</if>
+             <if test="orgId != null  and orgId != '' "> and org_id = #{orgId}</if>
+         </where>
+    </select>
+    
+    <select id="selectMoredianOrgCallbackById" parameterType="Integer" resultMap="MoredianOrgCallbackResult">
+        <include refid="selectMoredianOrgCallbackVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMoredianOrgCallback" parameterType="MoredianOrgCallback">
+        insert into sb_moredian_org_callback
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="callbackUrl != null  and callbackUrl != ''  ">callback_url,</if>
+			<if test="callbackTag != null  and callbackTag != ''  ">callback_tag,</if>
+			<if test="orgId != null  and orgId != ''  ">org_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="callbackUrl != null  and callbackUrl != ''  ">#{callbackUrl},</if>
+			<if test="callbackTag != null  and callbackTag != ''  ">#{callbackTag},</if>
+			<if test="orgId != null  and orgId != ''  ">#{orgId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateMoredianOrgCallback" parameterType="MoredianOrgCallback">
+        update sb_moredian_org_callback
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="callbackUrl != null  and callbackUrl != ''  ">callback_url = #{callbackUrl},</if>
+            <if test="callbackTag != null  and callbackTag != ''  ">callback_tag = #{callbackTag},</if>
+            <if test="orgId != null  and orgId != ''  ">org_id = #{orgId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteMoredianOrgCallbackById" parameterType="Integer">
+        delete from sb_moredian_org_callback where id = #{id}
+    </delete>
+	
+    <delete id="deleteMoredianOrgCallbackByIds" parameterType="String">
+        delete from sb_moredian_org_callback where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

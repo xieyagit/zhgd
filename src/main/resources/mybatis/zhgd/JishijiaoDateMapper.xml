@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.jishijiaoDate.mapper.JishijiaoDateMapper">
+    
+    <resultMap type="JishijiaoDate" id="JishijiaoDateResult">
+        <result property="id"    column="id"    />
+        <result property="aid"    column="aid"    />
+        <result property="cid"    column="cid"    />
+        <result property="cidUrl"    column="cid_url"    />
+        <result property="timeStamp"    column="time_stamp"    />
+        <result property="srcpicData"    column="srcpic_data"    />
+        <result property="srcpicName"    column="srcpic_name"    />
+        <result property="status"    column="status"    />
+        <result property="picName"    column="pic_name"    />
+        <result property="picData"    column="pic_data"    />
+        <result property="alertFlag"    column="alertFlag"    />
+        <result property="numOfHead"    column="numOfHead"    />
+        <result property="timeStampE"    column="time_stamp_e"    />
+        <result property="headInfo"    column="head_info"    />
+    </resultMap>
+	
+	<sql id="selectJishijiaoDateVo">
+        select id, aid, cid, cid_url, time_stamp, srcpic_data, srcpic_name, status, pic_name, pic_data, alertFlag, numOfHead, time_stamp_e, head_info from jishijiao_date
+    </sql>
+	
+    <select id="selectJishijiaoDateList" parameterType="JishijiaoDate" resultMap="JishijiaoDateResult">
+        <include refid="selectJishijiaoDateVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="aid != null  and aid != '' "> and aid = #{aid}</if>
+             <if test="cid != null  and cid != '' "> and cid = #{cid}</if>
+             <if test="cidUrl != null  and cidUrl != '' "> and cid_url = #{cidUrl}</if>
+             <if test="timeStamp != null  and timeStamp != '' "> and time_stamp = #{timeStamp}</if>
+             <if test="srcpicData != null  and srcpicData != '' "> and srcpic_data = #{srcpicData}</if>
+             <if test="srcpicName != null  and srcpicName != '' "> and srcpic_name = #{srcpicName}</if>
+             <if test="status != null "> and status = #{status}</if>
+             <if test="picName != null  and picName != '' "> and pic_name = #{picName}</if>
+             <if test="picData != null  and picData != '' "> and pic_data = #{picData}</if>
+             <if test="alertFlag != null "> and alertFlag = #{alertFlag}</if>
+             <if test="numOfHead != null "> and numOfHead = #{numOfHead}</if>
+             <if test="timeStampE != null  and timeStampE != '' "> and time_stamp_e = #{timeStampE}</if>
+             <if test="headInfo != null  and headInfo != '' "> and head_info = #{headInfo}</if>
+         </where>
+    </select>
+    
+    <select id="selectJishijiaoDateById" parameterType="Integer" resultMap="JishijiaoDateResult">
+        <include refid="selectJishijiaoDateVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertJishijiaoDate" parameterType="JishijiaoDate">
+        insert into jishijiao_date
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="aid != null  and aid != ''  ">aid,</if>
+			<if test="cid != null  and cid != ''  ">cid,</if>
+			<if test="cidUrl != null  and cidUrl != ''  ">cid_url,</if>
+			<if test="timeStamp != null  and timeStamp != ''  ">time_stamp,</if>
+			<if test="srcpicData != null  and srcpicData != ''  ">srcpic_data,</if>
+			<if test="srcpicName != null  and srcpicName != ''  ">srcpic_name,</if>
+			<if test="status != null  ">status,</if>
+			<if test="picName != null  and picName != ''  ">pic_name,</if>
+			<if test="picData != null  and picData != ''  ">pic_data,</if>
+			<if test="alertFlag != null  ">alertFlag,</if>
+			<if test="numOfHead != null  ">numOfHead,</if>
+			<if test="timeStampE != null  and timeStampE != ''  ">time_stamp_e,</if>
+			<if test="headInfo != null  and headInfo != ''  ">head_info,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="aid != null  and aid != ''  ">#{aid},</if>
+			<if test="cid != null  and cid != ''  ">#{cid},</if>
+			<if test="cidUrl != null  and cidUrl != ''  ">#{cidUrl},</if>
+			<if test="timeStamp != null  and timeStamp != ''  ">#{timeStamp},</if>
+			<if test="srcpicData != null  and srcpicData != ''  ">#{srcpicData},</if>
+			<if test="srcpicName != null  and srcpicName != ''  ">#{srcpicName},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="picName != null  and picName != ''  ">#{picName},</if>
+			<if test="picData != null  and picData != ''  ">#{picData},</if>
+			<if test="alertFlag != null  ">#{alertFlag},</if>
+			<if test="numOfHead != null  ">#{numOfHead},</if>
+			<if test="timeStampE != null  and timeStampE != ''  ">#{timeStampE},</if>
+			<if test="headInfo != null  and headInfo != ''  ">#{headInfo},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateJishijiaoDate" parameterType="JishijiaoDate">
+        update jishijiao_date
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="aid != null  and aid != ''  ">aid = #{aid},</if>
+            <if test="cid != null  and cid != ''  ">cid = #{cid},</if>
+            <if test="cidUrl != null  and cidUrl != ''  ">cid_url = #{cidUrl},</if>
+            <if test="timeStamp != null  and timeStamp != ''  ">time_stamp = #{timeStamp},</if>
+            <if test="srcpicData != null  and srcpicData != ''  ">srcpic_data = #{srcpicData},</if>
+            <if test="srcpicName != null  and srcpicName != ''  ">srcpic_name = #{srcpicName},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="picName != null  and picName != ''  ">pic_name = #{picName},</if>
+            <if test="picData != null  and picData != ''  ">pic_data = #{picData},</if>
+            <if test="alertFlag != null  ">alertFlag = #{alertFlag},</if>
+            <if test="numOfHead != null  ">numOfHead = #{numOfHead},</if>
+            <if test="timeStampE != null  and timeStampE != ''  ">time_stamp_e = #{timeStampE},</if>
+            <if test="headInfo != null  and headInfo != ''  ">head_info = #{headInfo},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteJishijiaoDateById" parameterType="Integer">
+        delete from jishijiao_date where id = #{id}
+    </delete>
+	
+    <delete id="deleteJishijiaoDateByIds" parameterType="String">
+        delete from jishijiao_date where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

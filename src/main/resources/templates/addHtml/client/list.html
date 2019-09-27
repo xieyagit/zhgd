@@ -1,0 +1,349 @@
+﻿<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>后台管理系统</title>
+	<style type="text/css">
+		#app {
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+	<link th:href="@{/css/addCss/css/app.css}" rel="stylesheet" />
+</head>
+<body class="el-popup-parent--hidden" style="zoom: 0.9; padding-right: 18px;">
+	<div id="app">
+		<div data-v-153e8baf="" id="content" class="content" style="left:0px;margin-top: -50px;">
+				<div data-v-153e8baf="" class="tab-bar">
+					<div data-v-153e8baf="" class="el-tabs el-tabs--card el-tabs--top">
+						<div class="el-tabs__header is-top">
+							<div class="el-tabs__nav-wrap is-top">
+								<div class="el-tabs__nav-scroll">
+									<div role="tablist" class="el-tabs__nav is-top" style="transform: translateX(0px);">
+										<!--<div id="tab-userList" aria-controls="pane-userList" role="tab" aria-selected="true" tabindex="0" class="el-tabs__item is-top is-active is-closable">
+											客户列表<span class="el-icon-close"></span>
+										</div>-->
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="el-tabs__content">
+							<div data-v-153e8baf="" role="tabpanel" id="pane-userList" aria-labelledby="tab-userList" class="el-tab-pane">
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div data-v-c91951e8="" data-v-153e8baf="">
+					<!--[S]顶部功能面板-->
+					<div data-v-c91951e8="" class="el-input" style="width: 200px;">
+						<!----><input type="text" autocomplete="off" placeholder="请输入客户姓名/手机号" maxlength="50" class="el-input__inner">
+					</div>
+
+					<div data-v-c91951e8="" class="el-input" style="width: 200px;">
+						<!---->
+						<input type="text" autocomplete="off" placeholder="请输入渠道编码" class="el-input__inner"><!----><!----><!---->
+					</div>
+
+					<div data-v-c91951e8="" class="el-date-editor el-input el-input--prefix el-input--suffix el-date-editor--date">
+						<!---->
+						<input type="text" autocomplete="off" name="" placeholder="选择开始日期" class="el-input__inner">
+						<span class="el-input__prefix"><i class="el-input__icon el-icon-date"></i><!----></span>
+						<span class="el-input__suffix">
+							<span class="el-input__suffix-inner"><i class="el-input__icon"></i><!----></span><!---->
+						</span>
+						<!---->
+					</div>
+
+					<div data-v-c91951e8="" class="el-date-editor el-input el-input--prefix el-input--suffix el-date-editor--date">
+						<!----><input type="text" autocomplete="off" name="" placeholder="选择结束日期" class="el-input__inner">
+						<span class="el-input__prefix"><i class="el-input__icon el-icon-date"></i><!----></span><span class="el-input__suffix">
+							<span class="el-input__suffix-inner"><i class="el-input__icon"></i><!----></span><!---->
+						</span><!---->
+					</div>
+
+					<div data-v-c91951e8="" class="el-select">
+						<!---->
+						<div class="el-input el-input--suffix">
+							<!---->
+							<input type="text" readonly="readonly" autocomplete="off" placeholder="请选择认证状态" class="el-input__inner"><!---->
+							<span class="el-input__suffix">
+								<span class="el-input__suffix-inner">
+									<i class="el-select__caret el-input__icon el-icon-arrow-up"></i><!----><!---->
+								</span>
+							</span>
+						</div>
+					</div>
+
+					<button data-v-c91951e8="" type="button" class="el-button el-button--primary">
+						<i class="el-icon-search"></i><span>查询</span>
+					</button>
+					<!--[E]顶部功能面板-->
+
+					<!--[S]正文列表-->
+					<div data-v-c91951e8="" class="el-table el-table--fit el-table--striped el-table--scrollable-x el-table--enable-row-transition" resizable="" align="center" style="margin: 20px 0px;">
+						<div class="hidden-columns">
+							<div data-v-c91951e8=""></div>
+							<div data-v-c91951e8=""></div>
+							<div data-v-c91951e8=""></div>
+							<div data-v-c91951e8=""></div>
+							<div data-v-c91951e8=""></div>
+							<div data-v-c91951e8=""></div>
+							<div data-v-c91951e8=""></div>
+							<div data-v-c91951e8=""></div>
+							<div data-v-c91951e8=""></div>
+							<div data-v-c91951e8=""></div>
+							<div data-v-c91951e8=""></div>
+							<div data-v-c91951e8=""></div>
+							<div data-v-c91951e8=""></div>
+							<div data-v-c91951e8=""></div>
+							<div data-v-c91951e8=""></div>
+							<div data-v-c91951e8=""></div>
+							<div data-v-c91951e8=""></div>
+						</div>
+						<div class="el-table__header-wrapper">
+							<table cellspacing="0" cellpadding="0" border="0" class="el-table__header" style="width: 100%;">
+								<colgroup>
+									<col name="el-table_1_column_1" width="48">
+									<col name="el-table_1_column_2" width="80">
+									<col name="el-table_1_column_3" width="120">
+									<col name="el-table_1_column_4" width="80">
+									<col name="el-table_1_column_5" width="80">
+									<col name="el-table_1_column_6" width="80">
+									<col name="el-table_1_column_7" width="100">
+									<col name="el-table_1_column_8" width="80">
+									<col name="el-table_1_column_9" width="80">
+									<col name="el-table_1_column_10" width="80">
+									<col name="el-table_1_column_11" width="80">
+									<col name="el-table_1_column_12" width="80">
+									<col name="el-table_1_column_13" width="80">
+									<col name="el-table_1_column_14" width="80">
+									<col name="el-table_1_column_15" width="80">
+									<col name="el-table_1_column_16" width="100">
+									<col name="el-table_1_column_17" width="150">
+									<col name="gutter" width="0">
+								</colgroup>
+								<thead class="has-gutter">
+									<tr class="">
+										<th colspan="1" rowspan="1" class="el-table_1_column_1  is-center   is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);">
+											<div class="cell">序号</div>
+										</th>
+										<th colspan="1" rowspan="1" class="el-table_1_column_2  is-center   is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">客户姓名</div></th>
+										<th colspan="1" rowspan="1" class="el-table_1_column_3  is-center   is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);">
+											<div class="cell">手机号码</div>
+										</th>
+										<th colspan="1" rowspan="1" class="el-table_1_column_4  is-center   is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);">
+											<div class="cell">渠道编码</div>
+										</th>
+										<th colspan="1" rowspan="1" class="el-table_1_column_5  is-center   is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">操作系统</div></th>
+										<th colspan="1" rowspan="1" class="el-table_1_column_6  is-center   is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);">
+											<div class="cell">放款数</div>
+										</th>
+										<th colspan="1" rowspan="1" class="el-table_1_column_7  is-center   is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">注册时间</div></th>
+										<th colspan="1" rowspan="1" class="el-table_1_column_8  is-center   is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);">
+											<div class="cell">客户类型</div>
+										</th>
+										<th colspan="1" rowspan="1" class="el-table_1_column_9  is-center   is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">实名认证</div></th>
+										<th colspan="1" rowspan="1" class="el-table_1_column_10  is-center   is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">人脸识别</div></th>
+										<th colspan="1" rowspan="1" class="el-table_1_column_11  is-center   is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">个人信息</div></th>
+										<th colspan="1" rowspan="1" class="el-table_1_column_12  is-center   is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">运营商认证</div></th>
+										<th colspan="1" rowspan="1" class="el-table_1_column_13  is-center   is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">支付宝认证</div></th>
+										<th colspan="1" rowspan="1" class="el-table_1_column_14  is-center   is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">银行卡认证</div></th>
+										<th colspan="1" rowspan="1" class="el-table_1_column_15  is-center   is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">申请状态</div></th>
+										<th colspan="1" rowspan="1" class="el-table_1_column_16  is-center   is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">最近访问时间</div></th>
+										<th colspan="1" rowspan="1" class="el-table_1_column_17  is-center   is-hidden is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">操作</div></th>
+										<th class="gutter" style="width: 0px; display: none;"></th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="el-table__body-wrapper is-scrolling-left">
+							<table cellspacing="0" cellpadding="0" border="0" class="el-table__body" style="width: 100%;">
+								<colgroup>
+									<col name="el-table_1_column_1" width="48">
+									<col name="el-table_1_column_2" width="80">
+									<col name="el-table_1_column_3" width="120">
+									<col name="el-table_1_column_4" width="80">
+									<col name="el-table_1_column_5" width="80">
+									<col name="el-table_1_column_6" width="80">
+									<col name="el-table_1_column_7" width="100">
+									<col name="el-table_1_column_8" width="80">
+									<col name="el-table_1_column_9" width="80">
+									<col name="el-table_1_column_10" width="80">
+									<col name="el-table_1_column_11" width="80">
+									<col name="el-table_1_column_12" width="80">
+									<col name="el-table_1_column_13" width="80">
+									<col name="el-table_1_column_14" width="80">
+									<col name="el-table_1_column_15" width="80">
+									<col name="el-table_1_column_16" width="100">
+									<col name="el-table_1_column_17" width="150">
+								</colgroup>
+								<tbody>
+									<tr class="el-table__row even-row">
+										<td rowspan="1" colspan="1" class="el-table_1_column_1 is-center " style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell"><div>1</div></div></td>
+										<td rowspan="1" colspan="1" class="el-table_1_column_2 is-center " style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">崔岩</div></td>
+										<td rowspan="1" colspan="1" class="el-table_1_column_3 is-center " style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">15300589979</div></td>
+										<td rowspan="1" colspan="1" class="el-table_1_column_4 is-center " style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">0</div></td>
+										<td rowspan="1" colspan="1" class="el-table_1_column_5 is-center " style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">iOS</div></td>
+										<td rowspan="1" colspan="1" class="el-table_1_column_6 is-center " style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">0</div></td>
+										<td rowspan="1" colspan="1" class="el-table_1_column_7 is-center " style="border-bottom: 1px solid rgb(204, 204, 204);">
+											<div class="cell">2019-01-05 18:06:31</div>
+										</td>
+										<td rowspan="1" colspan="1" class="el-table_1_column_8 is-center " style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell"><p data-v-c91951e8="" style="color: rgb(245, 108, 108);">新客</p> <!----> <!----></div></td>
+										<td rowspan="1" colspan="1" class="el-table_1_column_9 is-center " style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell"><!----> <p data-v-c91951e8="" style="color: rgb(103, 194, 58);">已认证</p></div></td>
+										<td rowspan="1" colspan="1" class="el-table_1_column_10 is-center " style="border-bottom: 1px solid rgb(204, 204, 204);">
+											<div class="cell">
+												<p data-v-c91951e8="" style="color: rgb(103, 194, 58);">已认证</p>
+											</div>
+										</td>
+										<td rowspan="1" colspan="1" class="el-table_1_column_11 is-center " style="border-bottom: 1px solid rgb(204, 204, 204);">
+											<div class="cell"><p data-v-c91951e8="" style="color: rgb(153, 153, 153);">未认证</p> <!----></div>
+										</td>
+										<td rowspan="1" colspan="1" class="el-table_1_column_12 is-center " style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell"><p data-v-c91951e8="" style="color: rgb(153, 153, 153);">未认证</p> <!----> <!----></div></td>
+										<td rowspan="1" colspan="1" class="el-table_1_column_13 is-center " style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell"><p data-v-c91951e8="" style="color: rgb(153, 153, 153);">未认证</p> <!----> <!----></div></td>
+										<td rowspan="1" colspan="1" class="el-table_1_column_14 is-center " style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell"><p data-v-c91951e8="" style="color: rgb(153, 153, 153);">未认证</p> <!----> <!----></div></td>
+										<td rowspan="1" colspan="1" class="el-table_1_column_15 is-center " style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell"><p data-v-c91951e8="" style="color: rgb(153, 153, 153);">未提单</p></div></td>
+										<td rowspan="1" colspan="1" class="el-table_1_column_16 is-center " style="border-bottom: 1px solid rgb(204, 204, 204);">
+											<div class="cell">2019-01-05 18:09:06</div>
+										</td>
+										<td rowspan="1" colspan="1" class="el-table_1_column_17 is-center" style="border-bottom: 1px solid rgb(204, 204, 204);">
+											<div class="cell"><button data-v-c91951e8="" type="button" class="el-button el-button--warning el-button--mini"><i class="el-icon-document"></i><span>详情链接</span></button></div>
+										</td>
+									</tr>
+							</table>
+						</div>
+						<div class="el-table__fixed-right" style="width: 150px; height: 754px;">
+							<div class="el-table__fixed-header-wrapper">
+								<table cellspacing="0" cellpadding="0" border="0" class="el-table__header" style="width: 100%;">
+									<colgroup>
+										<col name="el-table_1_column_1" width="48">
+										<col name="el-table_1_column_2" width="80">
+										<col name="el-table_1_column_3" width="120">
+										<col name="el-table_1_column_4" width="80">
+										<col name="el-table_1_column_5" width="80">
+										<col name="el-table_1_column_6" width="80">
+										<col name="el-table_1_column_7" width="100">
+										<col name="el-table_1_column_8" width="80">
+										<col name="el-table_1_column_9" width="80">
+										<col name="el-table_1_column_10" width="80">
+										<col name="el-table_1_column_11" width="80">
+										<col name="el-table_1_column_12" width="80">
+										<col name="el-table_1_column_13" width="80">
+										<col name="el-table_1_column_14" width="80">
+										<col name="el-table_1_column_15" width="80">
+										<col name="el-table_1_column_16" width="100">
+										<col name="el-table_1_column_17" width="150">
+									</colgroup>
+									<thead class="">
+										<tr class="">
+											<th colspan="1" rowspan="1" class="el-table_1_column_1  is-center   is-hidden is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);">
+												<div class="cell">序号</div>
+											</th>
+											<th colspan="1" rowspan="1" class="el-table_1_column_2  is-center   is-hidden is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">客户姓名</div></th>
+											<th colspan="1" rowspan="1" class="el-table_1_column_3  is-center   is-hidden is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">手机号码</div></th>
+											<th colspan="1" rowspan="1" class="el-table_1_column_4  is-center   is-hidden is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">渠道编码</div></th>
+											<th colspan="1" rowspan="1" class="el-table_1_column_5  is-center   is-hidden is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">操作系统</div></th>
+											<th colspan="1" rowspan="1" class="el-table_1_column_6  is-center   is-hidden is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">放款数</div></th>
+											<th colspan="1" rowspan="1" class="el-table_1_column_7  is-center   is-hidden is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">注册时间</div></th>
+											<th colspan="1" rowspan="1" class="el-table_1_column_8  is-center   is-hidden is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">客户类型</div></th>
+											<th colspan="1" rowspan="1" class="el-table_1_column_9  is-center   is-hidden is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">实名认证</div></th>
+											<th colspan="1" rowspan="1" class="el-table_1_column_10  is-center   is-hidden is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">人脸识别</div></th>
+											<th colspan="1" rowspan="1" class="el-table_1_column_11  is-center   is-hidden is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">个人信息</div></th>
+											<th colspan="1" rowspan="1" class="el-table_1_column_12  is-center   is-hidden is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">运营商认证</div></th>
+											<th colspan="1" rowspan="1" class="el-table_1_column_13  is-center   is-hidden is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">支付宝认证</div></th>
+											<th colspan="1" rowspan="1" class="el-table_1_column_14  is-center   is-hidden is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">银行卡认证</div></th>
+											<th colspan="1" rowspan="1" class="el-table_1_column_15  is-center   is-hidden is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);">
+												<div class="cell">申请状态</div>
+											</th>
+											<th colspan="1" rowspan="1" class="el-table_1_column_16  is-center   is-hidden is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);"><div class="cell">最近访问时间</div></th>
+											<th colspan="1" rowspan="1" class="el-table_1_column_17  is-center   is-leaf" style="border-bottom: 1px solid rgb(204, 204, 204);">
+												<div class="cell">操作</div>
+											</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+						</div>
+						<div class="el-table__fixed-right-patch" style="width: 0px; height: 68px;"></div>
+						<div class="el-table__column-resize-proxy" style="display: none;"></div>
+						<div class="el-loading-mask" style="display: none;">
+							<div class="el-loading-spinner">
+								<svg viewBox="25 25 50 50" class="circular">
+									<circle cx="50" cy="50" r="20" fill="none" class="path"></circle>
+								</svg>
+							</div>
+						</div>
+					</div>
+					<!--[E]正文列表-->
+
+					<!--[S]底部分页-->
+					<div data-v-c91951e8="" class="pagination pagination-margin fr">
+						<div data-v-c91951e8="" class="el-pagination">
+							<span class="el-pagination__total">
+								共 1 条
+							</span>
+							<span class="el-pagination__sizes">
+								<div class="el-select el-select--mini">
+									<div class="el-input el-input--mini el-input--suffix">
+										<input type="text" readonly="readonly" autocomplete="off" placeholder="请选择" class="el-input__inner"><!----><span class="el-input__suffix">
+											<span class="el-input__suffix-inner">
+												<i class="el-select__caret el-input__icon el-icon-arrow-up"></i>
+											</span><!---->
+										</span><!---->
+									</div>
+									<div class="el-select-dropdown el-popper" style="display: none; min-width: 110px;">
+										<div class="el-scrollbar" style="">
+											<div class="el-select-dropdown__wrap el-scrollbar__wrap" style="margin-bottom: -18px; margin-right: -18px;">
+												<ul class="el-scrollbar__view el-select-dropdown__list">
+													<!---->
+													<li class="el-select-dropdown__item selected"><span>10条/页</span></li>
+													<li class="el-select-dropdown__item"><span>20条/页</span></li>
+													<li class="el-select-dropdown__item"><span>30条/页</span></li>
+													<li class="el-select-dropdown__item"><span>40条/页</span></li>
+												</ul>
+											</div>
+											<div class="el-scrollbar__bar is-horizontal">
+												<div class="el-scrollbar__thumb" style="transform: translateX(0%);"></div>
+											</div><div class="el-scrollbar__bar is-vertical">
+												<div class="el-scrollbar__thumb" style="transform: translateY(0%);"></div>
+											</div>
+										</div><!---->
+									</div>
+								</div>
+							</span>
+							<button type="button" disabled="disabled" class="btn-prev">
+								<i class="el-icon el-icon-arrow-left"></i>
+							</button>
+							<ul class="el-pager">
+								<li class="number active">1</li><!---->
+								<li class="number">2</li>
+								<li class="number">3</li>
+								<li class="number">4</li>
+								<li class="number">5</li>
+								<li class="number">6</li>
+								<li class="el-icon more btn-quicknext el-icon-more"></li>
+								<li class="number">65</li>
+							</ul>
+							<button type="button" class="btn-next">
+								<i class="el-icon el-icon-arrow-right"></i>
+							</button>
+							<span class="el-pagination__jump">
+								前往
+								<div class="el-input el-pagination__editor is-in-pagination">
+									<input type="number" autocomplete="off" min="1" class="el-input__inner" max="65"><!----><!----><!---->
+								</div>页
+							</span>
+						</div>
+					</div>
+					<!--[E]底部分页-->
+
+					<p data-v-c91951e8="" style="font-size: 12px; color: rgb(102, 102, 102); line-height: 18px;">
+						说明：1.客户列表根据客户进件状态实时进行跟踪统计,可能因为网络等原因会出现一定延迟，请耐心等待；<br data-v-c91951e8="">
+						2.只支持30天时间段查询，更长时间请自行组合选择；
+					</p>
+				</div>
+			</div>
+	</div>
+</body>
+</html>

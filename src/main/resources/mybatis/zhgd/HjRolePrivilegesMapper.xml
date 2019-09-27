@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjRolePrivileges.mapper.HjRolePrivilegesMapper">
+    
+    <resultMap type="HjRolePrivileges" id="HjRolePrivilegesResult">
+        <result property="id"    column="id"    />
+        <result property="roleId"    column="role_id"    />
+        <result property="privilegesId"    column="privileges_id"    />
+        <result property="whetherTheDefault"    column="whether_the_default"    />
+    </resultMap>
+
+
+    <resultMap type="com.hujiang.project.zhgd.hjRolePrivileges.domain.PrivilegesRoleParam" id="PrivilegesRoleParamResult">
+        <result property="id"    column="id"    />
+        <result property="privilegesName"    column="privileges_name"    />
+        <result property="url"    column="url"    />
+        <result property="privilegesType"    column="privileges_type"    />
+        <result property="whetherOrNotVisible"    column="whether_or_not_visible"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="appOrPc"    column="app_or_pc"    />
+    </resultMap>
+
+    <select id="selectRolePrivileges" parameterType="com.hujiang.project.zhgd.hjRolePrivileges.domain.PrivilegesRoleParam" resultMap="PrivilegesRoleParamResult">
+       SELECT
+        s.id,
+        s.privileges_name,
+        s.privileges_type,
+        s.url,
+        s.whether_or_not_visible,
+        s.parent_id,
+        s.app_or_pc
+        FROM
+            hj_system_privileges s
+        LEFT JOIN hj_role_privileges r ON r.privileges_id = s.id
+        WHERE
+        <if test="roleId != null ">
+            r.role_id = #{roleId}
+        </if>
+        AND s.whether_or_not_visible = 0
+    </select>
+
+
+
+	<sql id="selectHjRolePrivilegesVo">
+        select id, role_id, privileges_id, whether_the_default from hj_role_privileges
+    </sql>
+	
+    <select id="selectHjRolePrivilegesList" parameterType="HjRolePrivileges" resultMap="HjRolePrivilegesResult">
+        <include refid="selectHjRolePrivilegesVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="roleId != null "> and role_id = #{roleId}</if>
+             <if test="privilegesId != null "> and privileges_id = #{privilegesId}</if>
+             <if test="whetherTheDefault != null "> and whether_the_default = #{whetherTheDefault}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjRolePrivilegesById" parameterType="Integer" resultMap="HjRolePrivilegesResult">
+        <include refid="selectHjRolePrivilegesVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjRolePrivileges" parameterType="HjRolePrivileges">
+        insert into hj_role_privileges
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="roleId != null  ">role_id,</if>
+			<if test="privilegesId != null  ">privileges_id,</if>
+			<if test="whetherTheDefault != null  ">whether_the_default,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="roleId != null  ">#{roleId},</if>
+			<if test="privilegesId != null  ">#{privilegesId},</if>
+			<if test="whetherTheDefault != null  ">#{whetherTheDefault},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjRolePrivileges" parameterType="HjRolePrivileges">
+        update hj_role_privileges
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="roleId != null  ">role_id = #{roleId},</if>
+            <if test="privilegesId != null  ">privileges_id = #{privilegesId},</if>
+            <if test="whetherTheDefault != null  ">whether_the_default = #{whetherTheDefault},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjRolePrivilegesById" parameterType="Integer">
+        delete from hj_role_privileges where id = #{id}
+    </delete>
+
+    <delete id="deleteHjRoleId" parameterType="Integer">
+         DELETE FROM hj_role_privileges WHERE
+        <if test="parseInt != null  ">
+            role_id = #{parseInt}
+        </if>
+    </delete>
+	
+    <delete id="deleteHjRolePrivilegesByIds" parameterType="String">
+        delete from hj_role_privileges where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

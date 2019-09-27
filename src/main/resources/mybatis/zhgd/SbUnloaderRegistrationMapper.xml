@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbUnloaderRegistration.mapper.SbUnloaderRegistrationMapper">
+    
+    <resultMap type="SbUnloaderRegistration" id="SbUnloaderRegistrationResult">
+        <result property="id"    column="id"    />
+        <result property="hxzFactory"    column="HxzFactory"    />
+        <result property="hxzId"    column="HxzId"    />
+        <result property="hardwareVer"    column="HardwareVer"    />
+        <result property="softwareVer"    column="SoftwareVer"    />
+        <result property="simCardNo"    column="SimCardNo"    />
+        <result property="deviceNo" column="DeviceNo"/>
+    </resultMap>
+	
+	<sql id="selectSbUnloaderRegistrationVo">
+        select id, HxzFactory, DeviceNo, HxzId, HardwareVer, SoftwareVer, SimCardNo from sb_unloader_registration
+    </sql>
+	
+    <select id="selectSbUnloaderRegistrationList" parameterType="SbUnloaderRegistration" resultMap="SbUnloaderRegistrationResult">
+        <include refid="selectSbUnloaderRegistrationVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="hxzFactory != null  and hxzFactory != '' "> and HxzFactory = #{hxzFactory}</if>
+             <if test="hxzId != null  and hxzId != '' "> and HxzId = #{hxzId}</if>
+             <if test="hardwareVer != null  and hardwareVer != '' "> and HardwareVer = #{hardwareVer}</if>
+             <if test="softwareVer != null  and softwareVer != '' "> and SoftwareVer = #{softwareVer}</if>
+             <if test="simCardNo != null  and simCardNo != '' "> and SimCardNo = #{simCardNo}</if>
+             <if test="deviceNo != null and deviceNo != ''" > and DeviceNo = #{simCardNo}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbUnloaderRegistrationById" parameterType="Integer" resultMap="SbUnloaderRegistrationResult">
+        <include refid="selectSbUnloaderRegistrationVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbUnloaderRegistration" parameterType="SbUnloaderRegistration">
+        insert into sb_unloader_registration
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="hxzFactory != null  and hxzFactory != ''  ">HxzFactory,</if>
+			<if test="hxzId != null  and hxzId != ''  ">HxzId,</if>
+			<if test="hardwareVer != null  and hardwareVer != ''  ">HardwareVer,</if>
+			<if test="softwareVer != null  and softwareVer != ''  ">SoftwareVer,</if>
+			<if test="simCardNo != null  and simCardNo != ''  ">SimCardNo,</if>
+            <if test="deviceNo != null and deviceNo != ''" >DeviceNo,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="hxzFactory != null  and hxzFactory != ''  ">#{hxzFactory},</if>
+			<if test="hxzId != null  and hxzId != ''  ">#{hxzId},</if>
+			<if test="hardwareVer != null  and hardwareVer != ''  ">#{hardwareVer},</if>
+			<if test="softwareVer != null  and softwareVer != ''  ">#{softwareVer},</if>
+			<if test="simCardNo != null  and simCardNo != ''  ">#{simCardNo},</if>
+            <if test="deviceNo != null and deviceNo != ''" >#{simCardNo},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbUnloaderRegistration" parameterType="SbUnloaderRegistration">
+        update sb_unloader_registration
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="hxzFactory != null  and hxzFactory != ''  ">HxzFactory = #{hxzFactory},</if>
+            <if test="hxzId != null  and hxzId != ''  ">HxzId = #{hxzId},</if>
+            <if test="hardwareVer != null  and hardwareVer != ''  ">HardwareVer = #{hardwareVer},</if>
+            <if test="softwareVer != null  and softwareVer != ''  ">SoftwareVer = #{softwareVer},</if>
+            <if test="simCardNo != null  and simCardNo != ''  ">SimCardNo = #{simCardNo},</if>
+            <if test="deviceNo != null and deviceNo != ''" >DeviceNo = #{simCardNo},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbUnloaderRegistrationById" parameterType="Integer">
+        delete from sb_unloader_registration where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbUnloaderRegistrationByIds" parameterType="String">
+        delete from sb_unloader_registration where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbUnloaderParameter.mapper.SbUnloaderParameterMapper">
+    
+    <resultMap type="SbUnloaderParameter" id="SbUnloaderParameterResult">
+        <result property="id"    column="id"    />
+        <result property="deviceNo"    column="DeviceNo"    />
+        <result property="hxzId"    column="HxzId"    />
+        <result property="unloadingPlatformType"    column="UnloadingPlatformType"    />
+        <result property="weightSet"    column="WeightSet"    />
+        <result property="obliguityXSet"    column="ObliguityXSet"    />
+        <result property="obliguityYSet"    column="ObliguityYSet"    />
+        <result property="gpsSet"    column="GpsSet"    />
+        <result property="weightPreAlarmValue"    column="WeightPreAlarmValue"    />
+        <result property="obliguityXPreAlarmValue"    column="ObliguityXPreAlarmValue"    />
+        <result property="obliguityYPreAlarmValue"    column="ObliguityYPreAlarmValue"    />
+        <result property="batteryPreAlarmValue"    column="BatteryPreAlarmValue"    />
+        <result property="weightAlarmValue"    column="WeightAlarmValue"    />
+        <result property="obliguityXAlarmValue"    column="ObliguityXAlarmValue"    />
+        <result property="obliguityYAlarmValue"    column="ObliguityYAlarmValue"    />
+        <result property="batteryAlarmValue"    column="BatteryAlarmValue"    />
+    </resultMap>
+	
+	<sql id="selectSbUnloaderParameterVo">
+        select id, DeviceNo, HxzId, UnloadingPlatformType, WeightSet, ObliguityXSet, ObliguityYSet, GpsSet, WeightPreAlarmValue, ObliguityXPreAlarmValue, ObliguityYPreAlarmValue, BatteryPreAlarmValue, WeightAlarmValue, ObliguityXAlarmValue, ObliguityYAlarmValue, BatteryAlarmValue from sb_unloader_parameter
+    </sql>
+	
+    <select id="selectSbUnloaderParameterList" parameterType="SbUnloaderParameter" resultMap="SbUnloaderParameterResult">
+        <include refid="selectSbUnloaderParameterVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="deviceNo != null  and deviceNo != '' "> and DeviceNo = #{deviceNo}</if>
+             <if test="hxzId != null  and hxzId != '' "> and HxzId = #{hxzId}</if>
+             <if test="unloadingPlatformType != null  and unloadingPlatformType != '' "> and UnloadingPlatformType = #{unloadingPlatformType}</if>
+             <if test="weightSet != null  and weightSet != '' "> and WeightSet = #{weightSet}</if>
+             <if test="obliguityXSet != null  and obliguityXSet != '' "> and ObliguityXSet = #{obliguityXSet}</if>
+             <if test="obliguityYSet != null  and obliguityYSet != '' "> and ObliguityYSet = #{obliguityYSet}</if>
+             <if test="gpsSet != null  and gpsSet != '' "> and GpsSet = #{gpsSet}</if>
+             <if test="weightPreAlarmValue != null "> and WeightPreAlarmValue = #{weightPreAlarmValue}</if>
+             <if test="obliguityXPreAlarmValue != null "> and ObliguityXPreAlarmValue = #{obliguityXPreAlarmValue}</if>
+             <if test="obliguityYPreAlarmValue != null "> and ObliguityYPreAlarmValue = #{obliguityYPreAlarmValue}</if>
+             <if test="batteryPreAlarmValue != null "> and BatteryPreAlarmValue = #{batteryPreAlarmValue}</if>
+             <if test="weightAlarmValue != null "> and WeightAlarmValue = #{weightAlarmValue}</if>
+             <if test="obliguityXAlarmValue != null "> and ObliguityXAlarmValue = #{obliguityXAlarmValue}</if>
+             <if test="obliguityYAlarmValue != null "> and ObliguityYAlarmValue = #{obliguityYAlarmValue}</if>
+             <if test="batteryAlarmValue != null "> and BatteryAlarmValue = #{batteryAlarmValue}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbUnloaderParameterById" parameterType="Integer" resultMap="SbUnloaderParameterResult">
+        <include refid="selectSbUnloaderParameterVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbUnloaderParameter" parameterType="SbUnloaderParameter">
+        insert into sb_unloader_parameter
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">DeviceNo,</if>
+			<if test="hxzId != null  and hxzId != ''  ">HxzId,</if>
+			<if test="unloadingPlatformType != null  and unloadingPlatformType != ''  ">UnloadingPlatformType,</if>
+			<if test="weightSet != null  and weightSet != ''  ">WeightSet,</if>
+			<if test="obliguityXSet != null  and obliguityXSet != ''  ">ObliguityXSet,</if>
+			<if test="obliguityYSet != null  and obliguityYSet != ''  ">ObliguityYSet,</if>
+			<if test="gpsSet != null  and gpsSet != ''  ">GpsSet,</if>
+			<if test="weightPreAlarmValue != null  ">WeightPreAlarmValue,</if>
+			<if test="obliguityXPreAlarmValue != null  ">ObliguityXPreAlarmValue,</if>
+			<if test="obliguityYPreAlarmValue != null  ">ObliguityYPreAlarmValue,</if>
+			<if test="batteryPreAlarmValue != null  ">BatteryPreAlarmValue,</if>
+			<if test="weightAlarmValue != null  ">WeightAlarmValue,</if>
+			<if test="obliguityXAlarmValue != null  ">ObliguityXAlarmValue,</if>
+			<if test="obliguityYAlarmValue != null  ">ObliguityYAlarmValue,</if>
+			<if test="batteryAlarmValue != null  ">BatteryAlarmValue,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+			<if test="hxzId != null  and hxzId != ''  ">#{hxzId},</if>
+			<if test="unloadingPlatformType != null  and unloadingPlatformType != ''  ">#{unloadingPlatformType},</if>
+			<if test="weightSet != null  and weightSet != ''  ">#{weightSet},</if>
+			<if test="obliguityXSet != null  and obliguityXSet != ''  ">#{obliguityXSet},</if>
+			<if test="obliguityYSet != null  and obliguityYSet != ''  ">#{obliguityYSet},</if>
+			<if test="gpsSet != null  and gpsSet != ''  ">#{gpsSet},</if>
+			<if test="weightPreAlarmValue != null  ">#{weightPreAlarmValue},</if>
+			<if test="obliguityXPreAlarmValue != null  ">#{obliguityXPreAlarmValue},</if>
+			<if test="obliguityYPreAlarmValue != null  ">#{obliguityYPreAlarmValue},</if>
+			<if test="batteryPreAlarmValue != null  ">#{batteryPreAlarmValue},</if>
+			<if test="weightAlarmValue != null  ">#{weightAlarmValue},</if>
+			<if test="obliguityXAlarmValue != null  ">#{obliguityXAlarmValue},</if>
+			<if test="obliguityYAlarmValue != null  ">#{obliguityYAlarmValue},</if>
+			<if test="batteryAlarmValue != null  ">#{batteryAlarmValue},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbUnloaderParameter" parameterType="SbUnloaderParameter">
+        update sb_unloader_parameter
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceNo != null  and deviceNo != ''  ">DeviceNo = #{deviceNo},</if>
+            <if test="hxzId != null  and hxzId != ''  ">HxzId = #{hxzId},</if>
+            <if test="unloadingPlatformType != null  and unloadingPlatformType != ''  ">UnloadingPlatformType = #{unloadingPlatformType},</if>
+            <if test="weightSet != null  and weightSet != ''  ">WeightSet = #{weightSet},</if>
+            <if test="obliguityXSet != null  and obliguityXSet != ''  ">ObliguityXSet = #{obliguityXSet},</if>
+            <if test="obliguityYSet != null  and obliguityYSet != ''  ">ObliguityYSet = #{obliguityYSet},</if>
+            <if test="gpsSet != null  and gpsSet != ''  ">GpsSet = #{gpsSet},</if>
+            <if test="weightPreAlarmValue != null  ">WeightPreAlarmValue = #{weightPreAlarmValue},</if>
+            <if test="obliguityXPreAlarmValue != null  ">ObliguityXPreAlarmValue = #{obliguityXPreAlarmValue},</if>
+            <if test="obliguityYPreAlarmValue != null  ">ObliguityYPreAlarmValue = #{obliguityYPreAlarmValue},</if>
+            <if test="batteryPreAlarmValue != null  ">BatteryPreAlarmValue = #{batteryPreAlarmValue},</if>
+            <if test="weightAlarmValue != null  ">WeightAlarmValue = #{weightAlarmValue},</if>
+            <if test="obliguityXAlarmValue != null  ">ObliguityXAlarmValue = #{obliguityXAlarmValue},</if>
+            <if test="obliguityYAlarmValue != null  ">ObliguityYAlarmValue = #{obliguityYAlarmValue},</if>
+            <if test="batteryAlarmValue != null  ">BatteryAlarmValue = #{batteryAlarmValue},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbUnloaderParameterById" parameterType="Integer">
+        delete from sb_unloader_parameter where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbUnloaderParameterByIds" parameterType="String">
+        delete from sb_unloader_parameter where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

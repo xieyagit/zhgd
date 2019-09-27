@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjWorkers.mapper.HjWorkersMapper">
+    
+    <resultMap type="HjWorkers" id="HjWorkersResult">
+        <result property="id"    column="id"    />
+        <result property="empName"    column="emp_name"    />
+        <result property="idCode"    column="id_code"    />
+        <result property="empPhon"    column="emp_phon"    />
+        <result property="empSex"    column="emp_sex"    />
+        <result property="empNation"    column="emp_nation"    />
+        <result property="idAddress"    column="id_address"    />
+        <result property="idAgency"    column="id_agency"    />
+        <result property="idValiddate"    column="id_validdate"    />
+        <result property="dateOfBirth"    column="date_of_birth"    />
+        <result property="nativePlace"    column="native_place"    />
+        <result property="isTeam"    column="is_team"    />
+        <result property="jobName"    column="job_name"    />
+        <result property="empBankname"    column="emp_bankname"    />
+        <result property="empCardnum"    column="emp_cardnum"    />
+        <result property="accountType"    column="account_type"    />
+        <result property="accountAddress"    column="account_address"    />
+        <result property="credential"    column="credential"    />
+        <result property="remark"    column="remark"    />
+        <result property="faceUrl"    column="face_url"    />
+        <result property="empNaticeplace"    column="emp_naticeplace"    />
+        <result property="idphotoScan"    column="idphoto_scan"    />
+        <result property="idphotoScan2"    column="idphoto_scan2"    />
+        <result property="bankCardUrl"    column="bank_card_url"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="updateDate"    column="update_date"    />
+    </resultMap>
+	
+	<sql id="selectHjWorkersVo">
+        select id, emp_name, id_code, emp_phon, emp_sex, emp_nation, id_address, id_agency, id_validdate, date_of_birth, native_place, is_team, job_name, emp_bankname, emp_cardnum, account_type, account_address, credential, remark, face_url, emp_naticeplace, idphoto_scan, idphoto_scan2, bank_card_url, create_date, update_date from hj_workers
+    </sql>
+	
+    <select id="selectHjWorkersList" parameterType="HjWorkers" resultMap="HjWorkersResult">
+        <include refid="selectHjWorkersVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="empName != null  and empName != '' "> and emp_name = #{empName}</if>
+             <if test="idCode != null  and idCode != '' "> and id_code = #{idCode}</if>
+             <if test="empPhon != null and empPhon != ''"> and emp_phon = #{empPhon}</if>
+             <if test="empSex != null  and empSex != '' "> and emp_sex = #{empSex}</if>
+             <if test="empNation != null  and empNation != '' "> and emp_nation = #{empNation}</if>
+             <if test="idAddress != null  and idAddress != '' "> and id_address = #{idAddress}</if>
+             <if test="idAgency != null  and idAgency != '' "> and id_agency = #{idAgency}</if>
+             <if test="idValiddate != null  and idValiddate != '' "> and id_validdate = #{idValiddate}</if>
+             <if test="dateOfBirth != null  and dateOfBirth != '' "> and date_of_birth = #{dateOfBirth}</if>
+             <if test="nativePlace != null  and nativePlace != '' "> and native_place = #{nativePlace}</if>
+             <if test="isTeam != null "> and is_team = #{isTeam}</if>
+             <if test="jobName != null "> and job_name = #{jobName}</if>
+             <if test="empBankname != null  and empBankname != '' "> and emp_bankname = #{empBankname}</if>
+             <if test="empCardnum != null  and empCardnum != '' "> and emp_cardnum = #{empCardnum}</if>
+             <if test="accountType != null  and accountType != '' "> and account_type = #{accountType}</if>
+             <if test="accountAddress != null  and accountAddress != '' "> and account_address = #{accountAddress}</if>
+             <if test="credential != null  and credential != '' "> and credential = #{credential}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+             <if test="faceUrl != null  and faceUrl != '' "> and face_url = #{faceUrl}</if>
+             <if test="empNaticeplace != null  and empNaticeplace != '' "> and emp_naticeplace = #{empNaticeplace}</if>
+             <if test="idphotoScan != null  and idphotoScan != '' "> and idphoto_scan = #{idphotoScan}</if>
+             <if test="idphotoScan2 != null  and idphotoScan2 != '' "> and idphoto_scan2 = #{idphotoScan2}</if>
+             <if test="bankCardUrl != null  and bankCardUrl != '' "> and bank_card_url = #{bankCardUrl}</if>
+             <if test="createDate != null "> and create_date = #{createDate}</if>
+             <if test="updateDate != null  and updateDate != '' "> and update_date = #{updateDate}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjWorkersById" parameterType="Integer" resultMap="HjWorkersResult">
+        <include refid="selectHjWorkersVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjWorkers" parameterType="HjWorkers">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into hj_workers
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="empName != null  and empName != ''  ">emp_name,</if>
+			<if test="idCode != null  and idCode != ''  ">id_code,</if>
+            <if test="empPhon != null and empPhon != ''">emp_phon,</if>
+			<if test="empSex != null  and empSex != ''  ">emp_sex,</if>
+			<if test="empNation != null  and empNation != ''  ">emp_nation,</if>
+			<if test="idAddress != null  and idAddress != ''  ">id_address,</if>
+			<if test="idAgency != null  and idAgency != ''  ">id_agency,</if>
+			<if test="idValiddate != null  and idValiddate != ''  ">id_validdate,</if>
+			<if test="dateOfBirth != null  and dateOfBirth != ''  ">date_of_birth,</if>
+			<if test="nativePlace != null  and nativePlace != ''  ">native_place,</if>
+			<if test="isTeam != null  ">is_team,</if>
+			<if test="jobName != null  ">job_name,</if>
+			<if test="empBankname != null  and empBankname != ''  ">emp_bankname,</if>
+			<if test="empCardnum != null  and empCardnum != ''  ">emp_cardnum,</if>
+			<if test="accountType != null  and accountType != ''  ">account_type,</if>
+			<if test="accountAddress != null  and accountAddress != ''  ">account_address,</if>
+			<if test="credential != null  and credential != ''  ">credential,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="faceUrl != null  and faceUrl != ''  ">face_url,</if>
+			<if test="empNaticeplace != null  and empNaticeplace != ''  ">emp_naticeplace,</if>
+			<if test="idphotoScan != null  and idphotoScan != ''  ">idphoto_scan,</if>
+			<if test="idphotoScan2 != null  and idphotoScan2 != ''  ">idphoto_scan2,</if>
+			<if test="bankCardUrl != null  and bankCardUrl != ''  ">bank_card_url,</if>
+			<if test="createDate != null  ">create_date,</if>
+			<if test="updateDate != null  and updateDate != ''  ">update_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="empName != null  and empName != ''  ">#{empName},</if>
+			<if test="idCode != null  and idCode != ''  ">#{idCode},</if>
+            <if test="empPhon != null and empPhon != ''">#{empPhon},</if>
+			<if test="empSex != null  and empSex != ''  ">#{empSex},</if>
+			<if test="empNation != null  and empNation != ''  ">#{empNation},</if>
+			<if test="idAddress != null  and idAddress != ''  ">#{idAddress},</if>
+			<if test="idAgency != null  and idAgency != ''  ">#{idAgency},</if>
+			<if test="idValiddate != null  and idValiddate != ''  ">#{idValiddate},</if>
+			<if test="dateOfBirth != null  and dateOfBirth != ''  ">#{dateOfBirth},</if>
+			<if test="nativePlace != null  and nativePlace != ''  ">#{nativePlace},</if>
+			<if test="isTeam != null  ">#{isTeam},</if>
+			<if test="jobName != null  ">#{jobName},</if>
+			<if test="empBankname != null  and empBankname != ''  ">#{empBankname},</if>
+			<if test="empCardnum != null  and empCardnum != ''  ">#{empCardnum},</if>
+			<if test="accountType != null  and accountType != ''  ">#{accountType},</if>
+			<if test="accountAddress != null  and accountAddress != ''  ">#{accountAddress},</if>
+			<if test="credential != null  and credential != ''  ">#{credential},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="faceUrl != null  and faceUrl != ''  ">#{faceUrl},</if>
+			<if test="empNaticeplace != null  and empNaticeplace != ''  ">#{empNaticeplace},</if>
+			<if test="idphotoScan != null  and idphotoScan != ''  ">#{idphotoScan},</if>
+			<if test="idphotoScan2 != null  and idphotoScan2 != ''  ">#{idphotoScan2},</if>
+			<if test="bankCardUrl != null  and bankCardUrl != ''  ">#{bankCardUrl},</if>
+			<if test="createDate != null  ">#{createDate},</if>
+			<if test="updateDate != null  and updateDate != ''  ">#{updateDate},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjWorkers" parameterType="HjWorkers">
+        update hj_workers
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="empName != null  and empName != ''  ">emp_name = #{empName},</if>
+            <if test="idCode != null  and idCode != ''  ">id_code = #{idCode},</if>
+            <if test="empPhon != null and empPhon != ''">emp_phon = #{empPhon},</if>
+            <if test="empSex != null  and empSex != ''  ">emp_sex = #{empSex},</if>
+            <if test="empNation != null  and empNation != ''  ">emp_nation = #{empNation},</if>
+            <if test="idAddress != null  and idAddress != ''  ">id_address = #{idAddress},</if>
+            <if test="idAgency != null  and idAgency != ''  ">id_agency = #{idAgency},</if>
+            <if test="idValiddate != null  and idValiddate != ''  ">id_validdate = #{idValiddate},</if>
+            <if test="dateOfBirth != null  and dateOfBirth != ''  ">date_of_birth = #{dateOfBirth},</if>
+            <if test="nativePlace != null  and nativePlace != ''  ">native_place = #{nativePlace},</if>
+            <if test="isTeam != null  ">is_team = #{isTeam},</if>
+            <if test="jobName != null  ">job_name = #{jobName},</if>
+            <if test="empBankname != null  and empBankname != ''  ">emp_bankname = #{empBankname},</if>
+            <if test="empCardnum != null  and empCardnum != ''  ">emp_cardnum = #{empCardnum},</if>
+            <if test="accountType != null  and accountType != ''  ">account_type = #{accountType},</if>
+            <if test="accountAddress != null  and accountAddress != ''  ">account_address = #{accountAddress},</if>
+            <if test="credential != null  and credential != ''  ">credential = #{credential},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="faceUrl != null  and faceUrl != ''  ">face_url = #{faceUrl},</if>
+            <if test="empNaticeplace != null  and empNaticeplace != ''  ">emp_naticeplace = #{empNaticeplace},</if>
+            <if test="idphotoScan != null  and idphotoScan != ''  ">idphoto_scan = #{idphotoScan},</if>
+            <if test="idphotoScan2 != null  and idphotoScan2 != ''  ">idphoto_scan2 = #{idphotoScan2},</if>
+            <if test="bankCardUrl != null  and bankCardUrl != ''  ">bank_card_url = #{bankCardUrl},</if>
+            <if test="createDate != null  ">create_date = #{createDate},</if>
+            <if test="updateDate != null  and updateDate != ''  ">update_date = #{updateDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjWorkersById" parameterType="Integer">
+        delete from hj_workers where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjWorkersByIds" parameterType="String">
+        delete from hj_workers where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

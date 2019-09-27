@@ -1,0 +1,359 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+							<li>
+								设备编号：<input type="text" name="deviceNo"/>
+							</li>
+
+							<li>
+								运行时,格式为yyyy-MM-dd hh:mm:ss，：<input type="text" name="runtime"/>
+							</li>
+
+							<li>
+								载重（T）：<input type="text" name="laod"/>
+							</li>
+
+							<li>
+								载重比：<input type="text" name="loadRatio"/>
+							</li>
+
+							<li>
+								左右笼标记(0单笼,1左笼,2右笼)：<input type="text" name="sign"/>
+							</li>
+
+							<li>
+								载重人数：<input type="text" name="loadingCapacity"/>
+							</li>
+
+							<li>
+								升降机司机名字：<input type="text" name="operatorName"/>
+							</li>
+
+							<li>
+								IC卡号：<input type="text" name="icNum"/>
+							</li>
+
+							<li>
+								方向(0停止,1上行,2下行)：<input type="text" name="direction"/>
+							</li>
+
+							<li>
+								高度：<input type="text" name="height"/>
+							</li>
+
+							<li>
+								实时标志(0历史数据,1实时数据)：<input type="text" name="realTimeFlag"/>
+							</li>
+
+							<li>
+								状态(32监理授64加节模式128 下限位报警)：<input type="text" name="status"/>
+							</li>
+
+							<li>
+								制动距离：<input type="text" name="brakingDistance"/>
+							</li>
+
+							<li>
+								是否上限位报警（0-否，1-是，2-无上限位）：<input type="text" name="isUpWarning"/>
+							</li>
+
+							<li>
+								是否下限位报警( 0-否，1-是，2-无下限位）：<input type="text" name="isDownWarning"/>
+							</li>
+
+							<li>
+								是否安全器报警(0.否1.是)：<input type="text" name="isSafetyDeviceWarn"/>
+							</li>
+
+							<li>
+								是否超重报警(0.否1.是)：<input type="text" name="isOverWarning"/>
+							</li>
+
+							<li>
+								是否前限位报警(0.否1.是)：<input type="text" name="isForwardWarning"/>
+							</li>
+
+							<li>
+								是否后限位报警(0.否1.是)：<input type="text" name="isBackwardWarning"/>
+							</li>
+
+							<li>
+								设备编号：<input type="text" name="hxzid"/>
+							</li>
+
+							<li>
+								人数报警0:正常1:报警：<input type="text" name="peopleCntAlarm"/>
+							</li>
+
+							<li>
+								载重报警0:正常1:报警：<input type="text" name="weightAlarm"/>
+							</li>
+
+							<li>
+								速度报警0:正常1:报警：<input type="text" name="speedAlarm"/>
+							</li>
+
+							<li>
+								倾角X报警0:正常1:报警：<input type="text" name="obliguityXAlarm"/>
+							</li>
+
+							<li>
+								倾角Y报警0:正常1:报警：<input type="text" name="obliguityYAlarm"/>
+							</li>
+
+							<li>
+								速度：<input type="text" name="speed"/>
+							</li>
+
+							<li>
+								风速：<input type="text" name="windSpeed"/>
+							</li>
+
+							<li>
+								风级：<input type="text" name="windLevel"/>
+							</li>
+
+							<li>
+								楼层：<input type="text" name="floor"/>
+							</li>
+
+							<li>
+								倾角X：<input type="text" name="obliguityX"/>
+							</li>
+
+							<li>
+								倾角Y：<input type="text" name="obliguityY"/>
+							</li>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="zhgd:sbElevatorAddrecord:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="zhgd:sbElevatorAddrecord:edit">
+					<i class="fa fa-edit"></i> 修改
+				</a>
+				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="zhgd:sbElevatorAddrecord:remove">
+					<i class="fa fa-remove"></i> 删除
+				</a>
+				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="zhgd:sbElevatorAddrecord:export">
+						<i class="fa fa-download"></i> 导出
+				 </a>
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('zhgd:sbElevatorAddrecord:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('zhgd:sbElevatorAddrecord:remove')}]];
+        var prefix = ctx + "zhgd/sbElevatorAddrecord";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "2.5.3升降机实时数据",
+				search: false,
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'id', 
+					title : '',
+					visible: false
+				},
+				{
+					field : 'deviceNo', 
+					title : '设备编号',
+					sortable: true
+				},
+				{
+					field : 'runtime', 
+					title : '运行时,格式为yyyy-MM-dd hh:mm:ss，',
+					sortable: true
+				},
+				{
+					field : 'laod', 
+					title : '载重（T）',
+					sortable: true
+				},
+				{
+					field : 'loadRatio', 
+					title : '载重比',
+					sortable: true
+				},
+				{
+					field : 'sign', 
+					title : '左右笼标记(0单笼,1左笼,2右笼)',
+					sortable: true
+				},
+				{
+					field : 'loadingCapacity', 
+					title : '载重人数',
+					sortable: true
+				},
+				{
+					field : 'operatorName', 
+					title : '升降机司机名字',
+					sortable: true
+				},
+				{
+					field : 'icNum', 
+					title : 'IC卡号',
+					sortable: true
+				},
+				{
+					field : 'direction', 
+					title : '方向(0停止,1上行,2下行)',
+					sortable: true
+				},
+				{
+					field : 'height', 
+					title : '高度',
+					sortable: true
+				},
+				{
+					field : 'realTimeFlag', 
+					title : '实时标志(0历史数据,1实时数据)',
+					sortable: true
+				},
+				{
+					field : 'status', 
+					title : '状态(32监理授64加节模式128 下限位报警)',
+					sortable: true
+				},
+				{
+					field : 'brakingDistance', 
+					title : '制动距离',
+					sortable: true
+				},
+				{
+					field : 'isUpWarning', 
+					title : '是否上限位报警（0-否，1-是，2-无上限位）',
+					sortable: true
+				},
+				{
+					field : 'isDownWarning', 
+					title : '是否下限位报警( 0-否，1-是，2-无下限位）',
+					sortable: true
+				},
+				{
+					field : 'isSafetyDeviceWarn', 
+					title : '是否安全器报警(0.否1.是)',
+					sortable: true
+				},
+				{
+					field : 'isOverWarning', 
+					title : '是否超重报警(0.否1.是)',
+					sortable: true
+				},
+				{
+					field : 'isForwardWarning', 
+					title : '是否前限位报警(0.否1.是)',
+					sortable: true
+				},
+				{
+					field : 'isBackwardWarning', 
+					title : '是否后限位报警(0.否1.是)',
+					sortable: true
+				},
+				{
+					field : 'hxzid', 
+					title : '设备编号',
+					sortable: true
+				},
+				{
+					field : 'peopleCntAlarm', 
+					title : '人数报警0:正常1:报警',
+					sortable: true
+				},
+				{
+					field : 'weightAlarm', 
+					title : '载重报警0:正常1:报警',
+					sortable: true
+				},
+				{
+					field : 'speedAlarm', 
+					title : '速度报警0:正常1:报警',
+					sortable: true
+				},
+				{
+					field : 'obliguityXAlarm', 
+					title : '倾角X报警0:正常1:报警',
+					sortable: true
+				},
+				{
+					field : 'obliguityYAlarm', 
+					title : '倾角Y报警0:正常1:报警',
+					sortable: true
+				},
+				{
+					field : 'speed', 
+					title : '速度',
+					sortable: true
+				},
+				{
+					field : 'windSpeed', 
+					title : '风速',
+					sortable: true
+				},
+				{
+					field : 'windLevel', 
+					title : '风级',
+					sortable: true
+				},
+				{
+					field : 'floor', 
+					title : '楼层',
+					sortable: true
+				},
+				{
+					field : 'obliguityX', 
+					title : '倾角X',
+					sortable: true
+				},
+				{
+					field : 'obliguityY', 
+					title : '倾角Y',
+					sortable: true
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

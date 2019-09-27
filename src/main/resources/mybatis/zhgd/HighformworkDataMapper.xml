@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjghformwork.mapper.HighformworkDataMapper">
+    
+    <resultMap type="HighformworkData" id="HjHighformworkDataResult">
+        <result property="id"    column="id"    />
+        <result property="structuresId"    column="structures_id"    />
+        <result property="displayId"    column="display_id"    />
+        <result property="factorId"    column="factor_id"    />
+        <result property="force"    column="force_r"    />
+        <result property="displacement"    column="displacement"    />
+        <result property="subside"    column="subside"    />
+        <result property="tiltX"    column="tilt_x"    />
+        <result property="tiltY"    column="tilt_y"    />
+        <result property="reservedO"    column="reserved_o"    />
+        <result property="reservedT"    column="reserved_t"    />
+        <result property="creation"    column="creation"    />
+    </resultMap>
+	
+	<sql id="selectHjHighformworkDataVo">
+        select id, structures_id, display_id, factor_id, force_r, displacement, subside, tilt_x, tilt_y, reserved_o, reserved_t, creation from hj_highformwork_data
+    </sql>
+	
+    <select id="selectHighformworkDataList" parameterType="HighformworkData" resultMap="HjHighformworkDataResult">
+        <include refid="selectHjHighformworkDataVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="structuresId != null "> and structures_id = #{structuresId}</if>
+             <if test="displayId != null "> and display_id = #{displayId}</if>
+             <if test="factorId != null "> and factor_id = #{factorId}</if>
+             <if test="force != null  and force != '' "> and force_r = #{force}</if>
+             <if test="displacement != null  and displacement != '' "> and displacement = #{displacement}</if>
+             <if test="subside != null  and subside != '' "> and subside = #{subside}</if>
+             <if test="tiltX != null  and tiltX != '' "> and tilt_x = #{tiltX}</if>
+             <if test="tiltY != null  and tiltY != '' "> and tilt_y = #{tiltY}</if>
+             <if test="reservedO != null  and reservedO != '' "> and reserved_o = #{reservedO}</if>
+             <if test="reservedT != null  and reservedT != '' "> and reserved_t = #{reservedT}</if>
+             <if test="creation != null "> and creation LIKE CONCAT(CONCAT(#{creation}), '%')</if>
+         </where>
+    </select>
+    
+    <select id="selectHighformworkDataById" parameterType="Integer" resultMap="HjHighformworkDataResult">
+        <include refid="selectHjHighformworkDataVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHighformworkData" parameterType="HighformworkData">
+        insert into hj_highformwork_data
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="structuresId != null  ">structures_id,</if>
+			<if test="displayId != null  ">display_id,</if>
+			<if test="factorId != null  ">factor_id,</if>
+			<if test="force != null  and force != ''  ">force_r,</if>
+			<if test="displacement != null  and displacement != ''  ">displacement,</if>
+			<if test="subside != null  and subside != ''  ">subside,</if>
+			<if test="tiltX != null  and tiltX != ''  ">tilt_x,</if>
+			<if test="tiltY != null  and tiltY != ''  ">tilt_y,</if>
+			<if test="reservedO != null  and reservedO != ''  ">reserved_o,</if>
+			<if test="reservedT != null  and reservedT != ''  ">reserved_t,</if>
+			<if test="creation != null  ">creation,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="structuresId != null  ">#{structuresId},</if>
+			<if test="displayId != null  ">#{displayId},</if>
+			<if test="factorId != null  ">#{factorId},</if>
+			<if test="force != null  and force != ''  ">#{force},</if>
+			<if test="displacement != null  and displacement != ''  ">#{displacement},</if>
+			<if test="subside != null  and subside != ''  ">#{subside},</if>
+			<if test="tiltX != null  and tiltX != ''  ">#{tiltX},</if>
+			<if test="tiltY != null  and tiltY != ''  ">#{tiltY},</if>
+			<if test="reservedO != null  and reservedO != ''  ">#{reservedO},</if>
+			<if test="reservedT != null  and reservedT != ''  ">#{reservedT},</if>
+			<if test="creation != null  ">#{creation},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHighformworkData" parameterType="HighformworkData">
+        update hj_highformwork_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="structuresId != null  ">structures_id = #{structuresId},</if>
+            <if test="displayId != null  ">display_id = #{displayId},</if>
+            <if test="factorId != null  ">factor_id = #{factorId},</if>
+            <if test="force != null  and force != ''  ">force_r = #{force},</if>
+            <if test="displacement != null  and displacement != ''  ">displacement = #{displacement},</if>
+            <if test="subside != null  and subside != ''  ">subside = #{subside},</if>
+            <if test="tiltX != null  and tiltX != ''  ">tilt_x = #{tiltX},</if>
+            <if test="tiltY != null  and tiltY != ''  ">tilt_y = #{tiltY},</if>
+            <if test="reservedO != null  and reservedO != ''  ">reserved_o = #{reservedO},</if>
+            <if test="reservedT != null  and reservedT != ''  ">reserved_t = #{reservedT},</if>
+            <if test="creation != null  ">creation = #{creation},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHighformworkDataById" parameterType="Integer">
+        delete from hj_highformwork_data where id = #{id}
+    </delete>
+	
+    <delete id="deleteHighformworkDataByIds" parameterType="String">
+        delete from hj_highformwork_data where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+
+    <!--按时间段查询-->
+    <select id="selectHighformworkDataListT" resultMap="HjHighformworkDataResult">
+        <include refid="selectHjHighformworkDataVo"/>
+        <where>
+            <if test="factorId != null "> and factor_id = #{factorId}</if>
+            <if test="startTime != null and startTime != ''">
+                and creation <![CDATA[ >=]]> #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and creation <![CDATA[ <=]]> #{endTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectHighformworkDataListV" resultType="String">
+        SELECT ${param} FROM hj_highformwork_data
+        <where>
+            <if test="factorId != null "> and factor_id = #{factorId}</if>
+            <if test="startTime != null and startTime != ''">
+                and creation <![CDATA[ >=]]> #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and creation <![CDATA[ <=]]> #{endTime}
+            </if>
+        </where>
+        ORDER BY creation Desc LIMIT  1
+    </select>
+
+    <!--最大值-->
+    <select id="selectParmeterMax" parameterType="com.hujiang.project.zhgd.hjDeeppit.domain.SbAvg" resultType="java.lang.String">
+        <if test="subside != null ">select max(${subside}) from hj_deeppit_data</if>
+        <if test="factorId != null ">where factor_id = #{factorId}</if>
+    </select>
+    <!--最小值-->
+    <select id="selectParmeterMin" parameterType="com.hujiang.project.zhgd.hjDeeppit.domain.SbAvg" resultType="java.lang.String">
+        <if test="subside != null ">select min(${subside}) from hj_deeppit_data</if>
+        <if test="factorId != null ">where factor_id = #{factorId}</if>
+    </select>
+    <!--求平均值-->
+    <select id="selectParmeterAvg" parameterType="com.hujiang.project.zhgd.hjDeeppit.domain.SbAvg" resultType="java.lang.String">
+        <if test="subside != null ">select avg(${subside}) from hj_deeppit_data</if>
+        <if test="factorId != null ">where factor_id = #{factorId}</if>
+    </select>
+    
+</mapper>

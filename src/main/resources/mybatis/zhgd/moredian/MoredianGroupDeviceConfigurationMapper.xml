@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.moredian.moredianGroupDeviceConfiguration.mapper.MoredianGroupDeviceConfigurationMapper">
+    
+    <resultMap type="MoredianGroupDeviceConfiguration" id="MoredianGroupDeviceConfigurationResult">
+        <result property="id"    column="id"    />
+        <result property="dayBeginTime"    column="day_begin_time"    />
+        <result property="dayEndTime"    column="day_end_time"    />
+        <result property="weekdays"    column="weekdays"    />
+        <result property="groupId"    column="group_id"    />
+    </resultMap>
+	
+	<sql id="selectMoredianGroupDeviceConfigurationVo">
+        select id, day_begin_time, day_end_time, weekdays, group_id from sb_moredian_group_device_configuration
+    </sql>
+	
+    <select id="selectMoredianGroupDeviceConfigurationList" parameterType="MoredianGroupDeviceConfiguration" resultMap="MoredianGroupDeviceConfigurationResult">
+        <include refid="selectMoredianGroupDeviceConfigurationVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="dayBeginTime != null  and dayBeginTime != '' "> and day_begin_time = #{dayBeginTime}</if>
+             <if test="dayEndTime != null  and dayEndTime != '' "> and day_end_time = #{dayEndTime}</if>
+             <if test="weekdays != null  and weekdays != '' "> and weekdays = #{weekdays}</if>
+             <if test="groupId != null  and groupId != '' "> and group_id = #{groupId}</if>
+         </where>
+    </select>
+    
+    <select id="selectMoredianGroupDeviceConfigurationById" parameterType="Integer" resultMap="MoredianGroupDeviceConfigurationResult">
+        <include refid="selectMoredianGroupDeviceConfigurationVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMoredianGroupDeviceConfiguration" parameterType="MoredianGroupDeviceConfiguration">
+        insert into sb_moredian_group_device_configuration
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="dayBeginTime != null  and dayBeginTime != ''  ">day_begin_time,</if>
+			<if test="dayEndTime != null  and dayEndTime != ''  ">day_end_time,</if>
+			<if test="weekdays != null  and weekdays != ''  ">weekdays,</if>
+			<if test="groupId != null  and groupId != ''  ">group_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="dayBeginTime != null  and dayBeginTime != ''  ">#{dayBeginTime},</if>
+			<if test="dayEndTime != null  and dayEndTime != ''  ">#{dayEndTime},</if>
+			<if test="weekdays != null  and weekdays != ''  ">#{weekdays},</if>
+			<if test="groupId != null  and groupId != ''  ">#{groupId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateMoredianGroupDeviceConfiguration" parameterType="MoredianGroupDeviceConfiguration">
+        update sb_moredian_group_device_configuration
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="dayBeginTime != null  and dayBeginTime != ''  ">day_begin_time = #{dayBeginTime},</if>
+            <if test="dayEndTime != null  and dayEndTime != ''  ">day_end_time = #{dayEndTime},</if>
+            <if test="weekdays != null  and weekdays != ''  ">weekdays = #{weekdays},</if>
+            <if test="groupId != null  and groupId != ''  ">group_id = #{groupId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteMoredianGroupDeviceConfigurationById" parameterType="Integer">
+        delete from sb_moredian_group_device_configuration where id = #{id}
+    </delete>
+	
+    <delete id="deleteMoredianGroupDeviceConfigurationByIds" parameterType="String">
+        delete from sb_moredian_group_device_configuration where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

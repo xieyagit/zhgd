@@ -1,0 +1,143 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-sbCraneWarning-edit" th:object="${sbCraneWarning}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备编号--32位：</label>
+				<div class="col-sm-8">
+					<input id="deviceNo" name="deviceNo" th:field="*{deviceNo}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">运行时,格式为yyyy-MM-dd hh:mm:ss，：</label>
+				<div class="col-sm-8">
+					<input id="runtime" name="runtime" th:field="*{runtime}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">载重（动臂式塔 机无载重，0）：</label>
+				<div class="col-sm-8">
+					<input id="load" name="load" th:field="*{load}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">载重比：</label>
+				<div class="col-sm-8">
+					<input id="loadRatio" name="loadRatio" th:field="*{loadRatio}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">力矩：</label>
+				<div class="col-sm-8">
+					<input id="moment" name="moment" th:field="*{moment}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">力矩比：</label>
+				<div class="col-sm-8">
+					<input id="momentRatio" name="momentRatio" th:field="*{momentRatio}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">回转角度：</label>
+				<div class="col-sm-8">
+					<input id="slewingSpeed" name="slewingSpeed" th:field="*{slewingSpeed}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">高度(动臂式塔 机无高度,填0）：</label>
+				<div class="col-sm-8">
+					<input id="height" name="height" th:field="*{height}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">幅度：</label>
+				<div class="col-sm-8">
+					<input id="range" name="range" th:field="*{range}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">倍率：</label>
+				<div class="col-sm-8">
+					<input id="magnification" name="magnification" th:field="*{magnification}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">传感器状态（1-正常，2-停机）：</label>
+				<div class="col-sm-8">
+					<input id="sensorStatus" name="sensorStatus" th:field="*{sensorStatus}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">正常工作预警状态（1-正常，2-预警）：</label>
+				<div class="col-sm-8">
+					<input id="normalWorkEarlyWarnState" name="normalWorkEarlyWarnState" th:field="*{normalWorkEarlyWarnState}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">正常工作报警状态（1-正常，2-预警）：</label>
+				<div class="col-sm-8">
+					<input id="normalWorkWarnStatus" name="normalWorkWarnStatus" th:field="*{normalWorkWarnStatus}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">区域限制预警状态（1-无，2-预警（塔吊 进入限制区域））：</label>
+				<div class="col-sm-8">
+					<input id="regionLimitEarlyWarnStatus" name="regionLimitEarlyWarnStatus" th:field="*{regionLimitEarlyWarnStatus}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">区域限制报警状态（1-无，2-预警（塔吊 进入限制区域））：</label>
+				<div class="col-sm-8">
+					<input id="regionLimitWarnStatus" name="regionLimitWarnStatus" th:field="*{regionLimitWarnStatus}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">群塔预警状态（1-无，2-预警（交叉群塔 同时作业中））：</label>
+				<div class="col-sm-8">
+					<input id="groupTowerEarlyWarnStatus" name="groupTowerEarlyWarnStatus" th:field="*{groupTowerEarlyWarnStatus}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">群塔报警状态（1-无，2-预警（交叉群塔 同时作业中））：</label>
+				<div class="col-sm-8">
+					<input id="groupTowerWarnStatus" name="groupTowerWarnStatus" th:field="*{groupTowerWarnStatus}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">风速 m/s：</label>
+				<div class="col-sm-8">
+					<input id="windSpeed" name="windSpeed" th:field="*{windSpeed}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备编号：</label>
+				<div class="col-sm-8">
+					<input id="hxzid" name="hxzid" th:field="*{hxzid}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "zhgd/sbCraneWarning";
+		$("#form-sbCraneWarning-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-sbCraneWarning-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

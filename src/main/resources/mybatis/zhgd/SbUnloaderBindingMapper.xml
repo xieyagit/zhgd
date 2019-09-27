@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbUnloaderBinding.mapper.SbUnloaderBindingMapper">
+    
+    <resultMap type="SbUnloaderBinding" id="SbUnloaderBindingResult">
+        <result property="id"    column="id"    />
+        <result property="deviceNo"    column="DeviceNo"    />
+        <result property="hxzId"    column="HxzId"    />
+        <result property="pid"    column="Pid"    />
+        <result property="dName"    column="DName"    />
+        <result property="isSynchronization"    column="IsSynchronization"    />
+    </resultMap>
+	
+	<sql id="selectSbUnloaderBindingVo">
+        select id, DeviceNo, HxzId, Pid, DName, IsSynchronization from sb_unloader_binding
+    </sql>
+	
+    <select id="selectSbUnloaderBindingList" parameterType="SbUnloaderBinding" resultMap="SbUnloaderBindingResult">
+        <include refid="selectSbUnloaderBindingVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="deviceNo != null  and deviceNo != '' "> and DeviceNo = #{deviceNo}</if>
+             <if test="hxzId != null "> and HxzId = #{hxzId}</if>
+             <if test="pid != null "> and Pid = #{pid}</if>
+             <if test="dName != null  and dName != '' "> and DName = #{dName}</if>
+             <if test="isSynchronization != null  and isSynchronization != '' "> and IsSynchronization = #{isSynchronization}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbUnloaderBindingById" parameterType="Integer" resultMap="SbUnloaderBindingResult">
+        <include refid="selectSbUnloaderBindingVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbUnloaderBinding" parameterType="SbUnloaderBinding">
+        insert into sb_unloader_binding
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">DeviceNo,</if>
+			<if test="hxzId != null  ">HxzId,</if>
+			<if test="pid != null  ">Pid,</if>
+			<if test="dName != null  and dName != ''  ">DName,</if>
+			<if test="isSynchronization != null  and isSynchronization != ''  ">IsSynchronization,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+			<if test="hxzId != null  ">#{hxzId},</if>
+			<if test="pid != null  ">#{pid},</if>
+			<if test="dName != null  and dName != ''  ">#{dName},</if>
+			<if test="isSynchronization != null  and isSynchronization != ''  ">#{isSynchronization},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbUnloaderBinding" parameterType="SbUnloaderBinding">
+        update sb_unloader_binding
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceNo != null  and deviceNo != ''  ">DeviceNo = #{deviceNo},</if>
+            <if test="hxzId != null  ">HxzId = #{hxzId},</if>
+            <if test="pid != null  ">Pid = #{pid},</if>
+            <if test="dName != null  and dName != ''  ">DName = #{dName},</if>
+            <if test="isSynchronization != null  and isSynchronization != ''  ">IsSynchronization = #{isSynchronization},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbUnloaderBindingById" parameterType="Integer">
+        delete from sb_unloader_binding where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbUnloaderBindingByIds" parameterType="String">
+        delete from sb_unloader_binding where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-sbElevatorAddparams-edit" th:object="${sbElevatorAddparams}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备编号：</label>
+				<div class="col-sm-8">
+					<input id="deviceNo" name="deviceNo" th:field="*{deviceNo}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备型号：</label>
+				<div class="col-sm-8">
+					<input id="model" name="model" th:field="*{model}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备名称：</label>
+				<div class="col-sm-8">
+					<input id="name" name="name" th:field="*{name}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">最大载重（T)：</label>
+				<div class="col-sm-8">
+					<input id="lLoadCapacity" name="lLoadCapacity" th:field="*{lLoadCapacity}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">最大高度(M)：</label>
+				<div class="col-sm-8">
+					<input id="lHeight" name="lHeight" th:field="*{lHeight}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">最大自由高度(M)：</label>
+				<div class="col-sm-8">
+					<input id="lHeight2" name="lHeight2" th:field="*{lHeight2}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">向下采集点输入方式：</label>
+				<div class="col-sm-8">
+					<input id="lUpcollect" name="lUpcollect" th:field="*{lUpcollect}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">向上采集点输入方式：</label>
+				<div class="col-sm-8">
+					<input id="lDowncollection" name="lDowncollection" th:field="*{lDowncollection}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">齿轮模数(0-20)：</label>
+				<div class="col-sm-8">
+					<input id="lGearmodules" name="lGearmodules" th:field="*{lGearmodules}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">下限位输入方式：</label>
+				<div class="col-sm-8">
+					<input id="lLowlimit" name="lLowlimit" th:field="*{lLowlimit}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">主接触器输出方式：</label>
+				<div class="col-sm-8">
+					<input id="lMContract" name="lMContract" th:field="*{lMContract}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">副接触器输出方式：</label>
+				<div class="col-sm-8">
+					<input id="lSContract" name="lSContract" th:field="*{lSContract}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">监控控制方式：</label>
+				<div class="col-sm-8">
+					<input id="lMonitorstyle" name="lMonitorstyle" th:field="*{lMonitorstyle}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">升节节数：</label>
+				<div class="col-sm-8">
+					<input id="lSections" name="lSections" th:field="*{lSections}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">升降机控制方式：</label>
+				<div class="col-sm-8">
+					<input id="lControlstyle" name="lControlstyle" th:field="*{lControlstyle}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">分时限载载重（T)：</label>
+				<div class="col-sm-8">
+					<input id="lLimitCapacity" name="lLimitCapacity" th:field="*{lLimitCapacity}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备编号：</label>
+				<div class="col-sm-8">
+					<input id="hxzid" name="hxzid" th:field="*{hxzid}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "zhgd/sbElevatorAddparams";
+		$("#form-sbElevatorAddparams-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-sbElevatorAddparams-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

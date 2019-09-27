@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.moredian.moredianOrg.mapper.MoredianOrgMapper">
+    
+    <resultMap type="MoredianOrg" id="MoredianOrgResult">
+        <result property="id"    column="id"    />
+        <result property="orgName"    column="org_name"    />
+        <result property="address"    column="address"    />
+        <result property="contact"    column="contact"    />
+        <result property="phone"    column="phone"    />
+        <result property="orgId"    column="org_id"    />
+        <result property="orgAuthKey"    column="org_auth_key"    />
+    </resultMap>
+	
+	<sql id="selectMoredianOrgVo">
+        select id, org_name, address, contact, phone, org_id, org_auth_key from sb_moredian_org
+    </sql>
+	
+    <select id="selectMoredianOrgList" parameterType="MoredianOrg" resultMap="MoredianOrgResult">
+        <include refid="selectMoredianOrgVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="orgName != null  and orgName != '' "> and org_name = #{orgName}</if>
+             <if test="address != null  and address != '' "> and address = #{address}</if>
+             <if test="contact != null  and contact != '' "> and contact = #{contact}</if>
+             <if test="phone != null  and phone != '' "> and phone = #{phone}</if>
+             <if test="orgId != null  and orgId != '' "> and org_id = #{orgId}</if>
+             <if test="orgAuthKey != null  and orgAuthKey != '' "> and org_auth_key = #{orgAuthKey}</if>
+         </where>
+    </select>
+    
+    <select id="selectMoredianOrgById" parameterType="Integer" resultMap="MoredianOrgResult">
+        <include refid="selectMoredianOrgVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectMoredianOrgByGroupId" parameterType="String" resultMap="MoredianOrgResult">
+        select o.org_id,o.org_auth_key from sb_moredian_group g
+            LEFT JOIN sb_moredian_org o on g.org_id=o.org_id
+            where g.group_id=#{groupId}
+    </select>
+
+    <insert id="insertMoredianOrg" parameterType="MoredianOrg">
+        insert into sb_moredian_org
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="orgName != null  and orgName != ''  ">org_name,</if>
+			<if test="address != null  and address != ''  ">address,</if>
+			<if test="contact != null  and contact != ''  ">contact,</if>
+			<if test="phone != null  and phone != ''  ">phone,</if>
+			<if test="orgId != null  and orgId != ''  ">org_id,</if>
+			<if test="orgAuthKey != null  and orgAuthKey != ''  ">org_auth_key,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="orgName != null  and orgName != ''  ">#{orgName},</if>
+			<if test="address != null  and address != ''  ">#{address},</if>
+			<if test="contact != null  and contact != ''  ">#{contact},</if>
+			<if test="phone != null  and phone != ''  ">#{phone},</if>
+			<if test="orgId != null  and orgId != ''  ">#{orgId},</if>
+			<if test="orgAuthKey != null  and orgAuthKey != ''  ">#{orgAuthKey},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateMoredianOrg" parameterType="MoredianOrg">
+        update sb_moredian_org
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orgName != null  and orgName != ''  ">org_name = #{orgName},</if>
+            <if test="address != null  and address != ''  ">address = #{address},</if>
+            <if test="contact != null  and contact != ''  ">contact = #{contact},</if>
+            <if test="phone != null  and phone != ''  ">phone = #{phone},</if>
+            <if test="orgId != null  and orgId != ''  ">org_id = #{orgId},</if>
+            <if test="orgAuthKey != null  and orgAuthKey != ''  ">org_auth_key = #{orgAuthKey},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteMoredianOrgById" parameterType="Integer">
+        delete from sb_moredian_org where id = #{id}
+    </delete>
+	
+    <delete id="deleteMoredianOrgByIds" parameterType="String">
+        delete from sb_moredian_org where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

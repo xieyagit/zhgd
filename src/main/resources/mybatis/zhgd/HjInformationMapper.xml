@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjInformation.mapper.HjInformationMapper">
+
+    <resultMap type="HjInformation" id="HjInformationResult">
+        <result property="id"    column="id"    />
+        <result property="menuId"    column="menu_id"    />
+        <result property="fileName"    column="file_name"    />
+        <result property="filePath"    column="file_path"    />
+        <result property="uploadingDate"    column="uploading_date"    />
+        <result property="uploadingName"    column="uploading_name"    />
+        <result property="remark"    column="remark"    />
+        <result property="projectId"    column="projectId"    />
+    </resultMap>
+	
+	<sql id="selectHjInformationVo">
+        select id, menu_id, file_name, file_path, uploading_date, uploading_name, remark from hj_information
+    </sql>
+    <select id="particulars" parameterType="HjInformation" resultMap="HjInformationResult">
+        <include refid="selectHjInformationVo"/>
+        <where>
+            <if test="menuId != null and menuId != 0 "> and menu_id = #{menuId} </if>
+            <if test="id != null and id != 0" > and  id = #{id} </if>
+            <if test="projectId != null and projectId != 0"> and projectId = #{projectId}</if>
+        </where>
+        order BY uploading_date DESC
+    </select>
+
+    <select id="file" parameterType="HjInformation" resultMap="HjInformationResult">
+        select id from hj_information
+        where projectId = #{projectId} and menu_id = #{muenId}
+    </select>
+    <select id="selectHjInformationList" parameterType="HjInformation" resultMap="HjInformationResult">
+        <include refid="selectHjInformationVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="menuId != null "> and menu_id = #{menuId}</if>
+             <if test="fileName != null  and fileName != '' "> and file_name = #{fileName}</if>
+             <if test="filePath != null  and filePath != '' "> and file_path = #{filePath}</if>
+             <if test="uploadingDate != null "> and uploading_date = #{uploadingDate}</if>
+             <if test="uploadingName != null  and uploadingName != '' "> and uploading_name = #{uploadingName}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+            <if test="projectId != 0"> and projectId = #{projectId}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjInformationById" parameterType="Integer" resultMap="HjInformationResult">
+        <include refid="selectHjInformationVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="instadd" parameterType="HjInformation">
+        insert into hj_information
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="menuId != 0  ">menu_id,</if>
+            <if test="fileName != null  and fileName != ''  ">file_name,</if>
+            <if test="filePath != null  and filePath != ''  ">file_path,</if>
+            <if test="uploadingName != null  and uploadingName != ''  ">uploading_name,</if>
+            <if test="remark != null  and remark != ''  ">remark,</if>
+            <if test="projectId != 0">projectId,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="menuId != 0  ">#{menuId},</if>
+            <if test="fileName != null  and fileName != ''  ">#{fileName},</if>
+            <if test="filePath != null  and filePath != ''  ">#{filePath},</if>
+            <if test="uploadingName != null  and uploadingName != ''  ">#{uploadingName},</if>
+            <if test="remark != null  and remark != ''  ">#{remark},</if>
+            <if test="projectId != 0">#{projectId},</if>
+        </trim>
+    </insert>
+
+
+    <insert id="insertHjInformation" parameterType="HjInformation">
+        insert into hj_information
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="menuId != null  ">menu_id,</if>
+			<if test="fileName != null  and fileName != ''  ">file_name,</if>
+			<if test="filePath != null  and filePath != ''  ">file_path,</if>
+			<if test="uploadingDate != null  ">uploading_date,</if>
+			<if test="uploadingName != null  and uploadingName != ''  ">uploading_name,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="menuId != null  ">#{menuId},</if>
+			<if test="fileName != null  and fileName != ''  ">#{fileName},</if>
+			<if test="filePath != null  and filePath != ''  ">#{filePath},</if>
+			<if test="uploadingDate != null  ">#{uploadingDate},</if>
+			<if test="uploadingName != null  and uploadingName != ''  ">#{uploadingName},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="upda" parameterType="HjInformation">
+        update hj_information
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fileName != null  and fileName != ''  ">file_name = #{fileName},</if>
+            <if test="filePath != null  and filePath != ''  ">file_path = #{filePath},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+	 
+    <update id="updateHjInformation" parameterType="HjInformation">
+        update hj_information
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="menuId != null  ">menu_id = #{menuId},</if>
+            <if test="fileName != null  and fileName != ''  ">file_name = #{fileName},</if>
+            <if test="filePath != null  and filePath != ''  ">file_path = #{filePath},</if>
+            <if test="uploadingDate != null  ">uploading_date = #{uploadingDate},</if>
+            <if test="uploadingName != null  and uploadingName != ''  ">uploading_name = #{uploadingName},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjInformationById" parameterType="Integer">
+        delete from hj_information where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjInformationByIds" parameterType="String">
+        delete from hj_information where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

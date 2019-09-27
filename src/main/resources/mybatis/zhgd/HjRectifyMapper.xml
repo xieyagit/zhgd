@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjRectify.mapper.HjRectifyMapper">
+    
+    <resultMap type="HjRectify" id="HjRectifyResult">
+        <result property="id"    column="id"    />
+        <result property="rectifyName"    column="rectify_name"    />
+        <result property="rectifyDate"    column="rectify_date"    />
+        <result property="rectifyCompany"    column="rectify_company"    />
+        <result property="rectifyProblem"    column="rectify_problem"    />
+        <result property="rectifyImg"    column="rectify_img"    />
+        <result property="rectifgRemarks"    column="rectifg_remarks"    />
+        <result property="relevanceId"    column="relevanceId"    />
+    </resultMap>
+	
+	<sql id="selectHjRectifyVo">
+        select id, rectify_name, rectify_date, rectify_company, rectify_problem, rectify_img, rectifg_remarks, relevanceId from hj_rectify
+    </sql>
+	
+    <select id="selectHjRectifyList" parameterType="HjRectify" resultMap="HjRectifyResult">
+        <include refid="selectHjRectifyVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="rectifyName != null  and rectifyName != '' "> and rectify_name = #{rectifyName}</if>
+             <if test="rectifyDate != null "> and rectify_date = #{rectifyDate}</if>
+             <if test="rectifyCompany != null  and rectifyCompany != '' "> and rectify_company = #{rectifyCompany}</if>
+             <if test="rectifyProblem != null  and rectifyProblem != '' "> and rectify_problem = #{rectifyProblem}</if>
+             <if test="rectifyImg != null  and rectifyImg != '' "> and rectify_img = #{rectifyImg}</if>
+             <if test="rectifgRemarks != null  and rectifgRemarks != '' "> and rectifg_remarks = #{rectifgRemarks}</if>
+             <if test="relevanceId != null "> and relevanceId = #{relevanceId}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjRectifyById" parameterType="Integer" resultMap="HjRectifyResult">
+        <include refid="selectHjRectifyVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjRectify" parameterType="HjRectify">
+        insert into hj_rectify
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="rectifyName != null  and rectifyName != ''  ">rectify_name,</if>
+			<if test="rectifyDate != null  ">rectify_date,</if>
+			<if test="rectifyCompany != null  and rectifyCompany != ''  ">rectify_company,</if>
+			<if test="rectifyProblem != null  and rectifyProblem != ''  ">rectify_problem,</if>
+			<if test="rectifyImg != null  and rectifyImg != ''  ">rectify_img,</if>
+			<if test="rectifgRemarks != null  and rectifgRemarks != ''  ">rectifg_remarks,</if>
+			<if test="relevanceId != null  ">relevanceId,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="rectifyName != null  and rectifyName != ''  ">#{rectifyName},</if>
+			<if test="rectifyDate != null  ">#{rectifyDate},</if>
+			<if test="rectifyCompany != null  and rectifyCompany != ''  ">#{rectifyCompany},</if>
+			<if test="rectifyProblem != null  and rectifyProblem != ''  ">#{rectifyProblem},</if>
+			<if test="rectifyImg != null  and rectifyImg != ''  ">#{rectifyImg},</if>
+			<if test="rectifgRemarks != null  and rectifgRemarks != ''  ">#{rectifgRemarks},</if>
+			<if test="relevanceId != null  ">#{relevanceId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjRectify" parameterType="HjRectify">
+        update hj_rectify
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="rectifyName != null  and rectifyName != ''  ">rectify_name = #{rectifyName},</if>
+            <if test="rectifyDate != null  ">rectify_date = #{rectifyDate},</if>
+            <if test="rectifyCompany != null  and rectifyCompany != ''  ">rectify_company = #{rectifyCompany},</if>
+            <if test="rectifyProblem != null  and rectifyProblem != ''  ">rectify_problem = #{rectifyProblem},</if>
+            <if test="rectifyImg != null  and rectifyImg != ''  ">rectify_img = #{rectifyImg},</if>
+            <if test="rectifgRemarks != null  and rectifgRemarks != ''  ">rectifg_remarks = #{rectifgRemarks},</if>
+            <if test="relevanceId != null  ">relevanceId = #{relevanceId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjRectifyById" parameterType="Integer">
+        delete from hj_rectify where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjRectifyByIds" parameterType="String">
+        delete from hj_rectify where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

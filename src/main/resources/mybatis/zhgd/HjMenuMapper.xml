@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjMenu.mapper.HjMenuMapper">
+    
+    <resultMap type="HjMenu" id="HjMenuResult">
+        <result property="id"    column="id"    />
+        <result property="materialName"    column="materialName"    />
+        <result property="uploadingType"    column="uploadingType"    />
+        <result property="typeId"    column="typeId"    />
+        <result property="uploadingname"  column="uploading_name"/>
+        <result property="uploadingDate"    column="uploading_date"    />
+    </resultMap>
+	
+	<sql id="selectHjMenuVo">
+        select id, materialName, uploadingType, typeId from hj_menu
+    </sql>
+
+    <select id="selealls"  parameterType="HjMenu" resultMap="HjMenuResult">
+        SELECT materialName,id
+		FROM hj_menu
+		where typeId = #{typeId}
+    </select>
+	<select id="seleall"  parameterType="HjMenu" resultMap="HjMenuResult">
+        select i.uploading_name,uploading_date as uploading_date from  hj_information i
+        <where>
+            <if test="typeId != null and typeId != '' and typeId != 0">
+                and i.menu_id = #{id}
+            </if>
+            <if test="projectId != null and projectId != '' and projectId != 0">
+                and i.projectId=#{projectId}
+            </if>
+        </where>
+        ORDER BY uploading_date DESC
+        limit 1
+    </select>
+    <select id="selectHjMenuList" parameterType="HjMenu" resultMap="HjMenuResult">
+        <include refid="selectHjMenuVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="materialName != null  and materialName != '' "> and materialName = #{materialName}</if>
+             <if test="uploadingType != null  and uploadingType != '' "> and uploadingType = #{uploadingType}</if>
+             <if test="typeId != null "> and typeId = #{typeId}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjMenuById" parameterType="Integer" resultMap="HjMenuResult">
+        <include refid="selectHjMenuVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjMenu" parameterType="HjMenu">
+        insert into hj_menu
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="materialName != null  and materialName != ''  ">materialName,</if>
+			<if test="uploadingType != null  and uploadingType != ''  ">uploadingType,</if>
+			<if test="typeId != null  ">typeId,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="materialName != null  and materialName != ''  ">#{materialName},</if>
+			<if test="uploadingType != null  and uploadingType != ''  ">#{uploadingType},</if>
+			<if test="typeId != null  ">#{typeId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjMenu" parameterType="HjMenu">
+        update hj_menu
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="materialName != null  and materialName != ''  ">materialName = #{materialName},</if>
+            <if test="uploadingType != null  and uploadingType != ''  ">uploadingType = #{uploadingType},</if>
+            <if test="typeId != null  ">typeId = #{typeId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="update" parameterType="HjMenu">
+        update hj_menu
+        <trim prefix="SET" suffixOverrides=",">
+            uploadingType = '已上传'
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updates" parameterType="HjMenu">
+        update hj_menu
+        <trim prefix="SET" suffixOverrides=",">
+            uploadingType = '未上传'
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjMenuById" parameterType="Integer">
+        delete from hj_menu where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjMenuByIds" parameterType="String">
+        delete from hj_menu where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

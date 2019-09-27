@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbCraneAddparams.mapper.SbCraneAddparamsMapper">
+    
+    <resultMap type="SbCraneAddparams" id="SbCraneAddparamsResult">
+        <result property="id"    column="id"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="model"    column="model"    />
+        <result property="name"    column="name"    />
+        <result property="tcMaxscope"    column="TC_MaxScope"    />
+        <result property="tcSbSpeedcut"    column="TC_SB_SpeedCut"    />
+        <result property="tcSaSpeedcut"    column="TC_SA_SpeedCut"    />
+        <result property="tcMaxheight"    column="TC_MaxHeight"    />
+        <result property="tcMaxXbHeight"    column="TC_MAX_XB_HEIGHT"    />
+        <result property="tcMinheight"    column="TC_MinHeight"    />
+        <result property="tcHuSpeedcut"    column="TC_HU_SpeedCut"    />
+        <result property="tcMinscope"    column="TC_MinScope"    />
+        <result property="tcHbSpeedcut"    column="TC_HB_SpeedCut"    />
+        <result property="tcLoadcapacity"    column="TC_LoadCapacity"    />
+        <result property="tcMsLoadcapacity"    column="TC_MS_LoadCapacity"    />
+        <result property="tcMlMaxscope"    column="TC_ML_MaxScope"    />
+        <result property="tcMultiple"    column="TC_Multiple"    />
+        <result property="towerType"    column="Tower_type"    />
+        <result property="hxzid"    column="hxzid"    />
+        <result property="frontArmLength" column="FrontArmLength"/>
+        <result property="backArmLength" column="BackArmLength"/>
+    </resultMap>
+
+    <resultMap id="OptionsCraneResult" type="OptionsCrane">
+        <result property="id" column="id"/>
+        <result property="frontArmLength" column="frontArmLength"/>
+        <result property="backArmLength" column="backArmLength"/>
+        <result property="projectId" column="projectId"/>
+        <result property="craneName" column="craneName"/>
+        <result property="deviceNo" column="deviceNo"/>
+        <result property="hxzId" column="hxzId"/>
+    </resultMap>
+	
+	<sql id="selectSbCraneAddparamsVo">
+        select id, device_no, model, name, TC_MaxScope, TC_SB_SpeedCut, TC_SA_SpeedCut, TC_MaxHeight, TC_MAX_XB_HEIGHT, TC_MinHeight, TC_HU_SpeedCut, TC_MinScope, TC_HB_SpeedCut, TC_LoadCapacity, TC_MS_LoadCapacity, TC_ML_MaxScope, TC_Multiple, Tower_type, hxzid from sb_crane_addparams
+    </sql>
+	<select id="getOptionsCraneList" parameterType="OptionsCrane" resultMap="OptionsCraneResult">
+        SELECT b.id,b.hxzid AS hxzId,b.pid as projectId,a.FrontArmLength as frontArmLength,
+        a.BackArmLength as backArmLength,b.dname AS craneName,b.device_no as deviceNo FROM sb_crane_binding AS b
+        LEFT JOIN sb_crane_addparams AS a ON (b.hxzid=a.hxzid)
+        where 1= 1
+        <if test="projectId != null and projectId != '' ">and  b.pid = #{projectId}</if>
+    </select>
+    <delete id="deleteCrane" parameterType="Integer">
+        delete from sb_crane_binding where id = #{id}
+    </delete>
+    <insert id="insertCrane" parameterType="OptionsCrane">
+        insert into sb_crane_binding
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deviceNo != null  and deviceNo != ''  ">device_no,</if>
+            <if test="craneName != null  and craneName != ''  ">dname,</if>
+            <if test="hxzId != null  and hxzId != ''  ">hxzid,</if>
+            <if test="projectId != null">pid,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+            <if test="craneName != null  and craneName != ''  ">#{craneName},</if>
+            <if test="hxzId != null  and hxzId != ''  ">#{hxzId},</if>
+            <if test="projectId != null">#{projectId},</if>
+        </trim>
+    </insert>
+    <update id="updateCrane" parameterType="OptionsCrane">
+        update sb_crane_binding
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceNo != null  and deviceNo != ''  ">device_no = #{deviceNo},</if>
+            <if test="craneName != null  and craneName != ''  ">dname = #{craneName},</if>
+            <if test="hxzId != null  and hxzId != ''  ">hxzid = #{hxzId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+
+    <select id="selectSbCraneAddparamsList" parameterType="SbCraneAddparams" resultMap="SbCraneAddparamsResult">
+        <include refid="selectSbCraneAddparamsVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
+             <if test="model != null  and model != '' "> and model = #{model}</if>
+             <if test="name != null  and name != '' "> and name = #{name}</if>
+             <if test="tcMaxscope != null "> and TC_MaxScope = #{tcMaxscope}</if>
+             <if test="tcSbSpeedcut != null "> and TC_SB_SpeedCut = #{tcSbSpeedcut}</if>
+             <if test="tcSaSpeedcut != null "> and TC_SA_SpeedCut = #{tcSaSpeedcut}</if>
+             <if test="tcMaxheight != null "> and TC_MaxHeight = #{tcMaxheight}</if>
+             <if test="tcMaxXbHeight != null "> and TC_MAX_XB_HEIGHT = #{tcMaxXbHeight}</if>
+             <if test="tcMinheight != null "> and TC_MinHeight = #{tcMinheight}</if>
+             <if test="tcHuSpeedcut != null "> and TC_HU_SpeedCut = #{tcHuSpeedcut}</if>
+             <if test="tcMinscope != null "> and TC_MinScope = #{tcMinscope}</if>
+             <if test="tcHbSpeedcut != null "> and TC_HB_SpeedCut = #{tcHbSpeedcut}</if>
+             <if test="tcLoadcapacity != null "> and TC_LoadCapacity = #{tcLoadcapacity}</if>
+             <if test="tcMsLoadcapacity != null "> and TC_MS_LoadCapacity = #{tcMsLoadcapacity}</if>
+             <if test="tcMlMaxscope != null "> and TC_ML_MaxScope = #{tcMlMaxscope}</if>
+             <if test="tcMultiple != null "> and TC_Multiple = #{tcMultiple}</if>
+             <if test="towerType != null "> and Tower_type = #{towerType}</if>
+             <if test="hxzid != null  and hxzid != '' "> and hxzid = #{hxzid}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbCraneAddparamsById" parameterType="Long" resultMap="SbCraneAddparamsResult">
+        <include refid="selectSbCraneAddparamsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbCraneAddparams" parameterType="SbCraneAddparams">
+        insert into sb_crane_addparams
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">device_no,</if>
+			<if test="model != null  and model != ''  ">model,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="tcMaxscope != null  ">TC_MaxScope,</if>
+			<if test="tcSbSpeedcut != null  ">TC_SB_SpeedCut,</if>
+			<if test="tcSaSpeedcut != null  ">TC_SA_SpeedCut,</if>
+			<if test="tcMaxheight != null  ">TC_MaxHeight,</if>
+			<if test="tcMaxXbHeight != null  ">TC_MAX_XB_HEIGHT,</if>
+			<if test="tcMinheight != null  ">TC_MinHeight,</if>
+			<if test="tcHuSpeedcut != null  ">TC_HU_SpeedCut,</if>
+			<if test="tcMinscope != null  ">TC_MinScope,</if>
+			<if test="tcHbSpeedcut != null  ">TC_HB_SpeedCut,</if>
+			<if test="tcLoadcapacity != null  ">TC_LoadCapacity,</if>
+			<if test="tcMsLoadcapacity != null  ">TC_MS_LoadCapacity,</if>
+			<if test="tcMlMaxscope != null  ">TC_ML_MaxScope,</if>
+			<if test="tcMultiple != null  ">TC_Multiple,</if>
+			<if test="towerType != null  ">Tower_type,</if>
+			<if test="hxzid != null  and hxzid != ''  ">hxzid,</if>
+            <if test="frontArmLength != null">FrontArmLength,</if>
+            <if test="backArmLength != null">BackArmLength,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+			<if test="model != null  and model != ''  ">#{model},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="tcMaxscope != null  ">#{tcMaxscope},</if>
+			<if test="tcSbSpeedcut != null  ">#{tcSbSpeedcut},</if>
+			<if test="tcSaSpeedcut != null  ">#{tcSaSpeedcut},</if>
+			<if test="tcMaxheight != null  ">#{tcMaxheight},</if>
+			<if test="tcMaxXbHeight != null  ">#{tcMaxXbHeight},</if>
+			<if test="tcMinheight != null  ">#{tcMinheight},</if>
+			<if test="tcHuSpeedcut != null  ">#{tcHuSpeedcut},</if>
+			<if test="tcMinscope != null  ">#{tcMinscope},</if>
+			<if test="tcHbSpeedcut != null  ">#{tcHbSpeedcut},</if>
+			<if test="tcLoadcapacity != null  ">#{tcLoadcapacity},</if>
+			<if test="tcMsLoadcapacity != null  ">#{tcMsLoadcapacity},</if>
+			<if test="tcMlMaxscope != null  ">#{tcMlMaxscope},</if>
+			<if test="tcMultiple != null  ">#{tcMultiple},</if>
+			<if test="towerType != null  ">#{towerType},</if>
+			<if test="hxzid != null  and hxzid != ''  ">#{hxzid},</if>
+            <if test="frontArmLength != null">#{frontArmLength},</if>
+            <if test="backArmLength != null">#{backArmLength},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbCraneAddparams" parameterType="SbCraneAddparams">
+        update sb_crane_addparams
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceNo != null  and deviceNo != ''  ">device_no = #{deviceNo},</if>
+            <if test="model != null  and model != ''  ">model = #{model},</if>
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="tcMaxscope != null  ">TC_MaxScope = #{tcMaxscope},</if>
+            <if test="tcSbSpeedcut != null  ">TC_SB_SpeedCut = #{tcSbSpeedcut},</if>
+            <if test="tcSaSpeedcut != null  ">TC_SA_SpeedCut = #{tcSaSpeedcut},</if>
+            <if test="tcMaxheight != null  ">TC_MaxHeight = #{tcMaxheight},</if>
+            <if test="tcMaxXbHeight != null  ">TC_MAX_XB_HEIGHT = #{tcMaxXbHeight},</if>
+            <if test="tcMinheight != null  ">TC_MinHeight = #{tcMinheight},</if>
+            <if test="tcHuSpeedcut != null  ">TC_HU_SpeedCut = #{tcHuSpeedcut},</if>
+            <if test="tcMinscope != null  ">TC_MinScope = #{tcMinscope},</if>
+            <if test="tcHbSpeedcut != null  ">TC_HB_SpeedCut = #{tcHbSpeedcut},</if>
+            <if test="tcLoadcapacity != null  ">TC_LoadCapacity = #{tcLoadcapacity},</if>
+            <if test="tcMsLoadcapacity != null  ">TC_MS_LoadCapacity = #{tcMsLoadcapacity},</if>
+            <if test="tcMlMaxscope != null  ">TC_ML_MaxScope = #{tcMlMaxscope},</if>
+            <if test="tcMultiple != null  ">TC_Multiple = #{tcMultiple},</if>
+            <if test="towerType != null  ">Tower_type = #{towerType},</if>
+            <if test="hxzid != null  and hxzid != ''  ">hxzid = #{hxzid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbCraneAddparamsById" parameterType="Long">
+        delete from sb_crane_addparams where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbCraneAddparamsByIds" parameterType="String">
+        delete from sb_crane_addparams where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

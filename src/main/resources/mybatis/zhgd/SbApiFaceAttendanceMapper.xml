@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbApiFaceAttendance.mapper.SbApiFaceAttendanceMapper">
+    
+    <resultMap type="SbApiFaceAttendance" id="SbApiFaceAttendanceResult">
+        <result property="id"    column="id"    />
+        <result property="personId"    column="person_id"    />
+        <result property="attendanceTime"    column="attendance_time"    />
+        <result property="equipmentNumber"    column="equipment_number"    />
+        <result property="faceUrl"    column="face_url"    />
+        <result property="ip"    column="ip"    />
+    </resultMap>
+	
+	<sql id="selectSbApiFaceAttendanceVo">
+        select id, person_id, attendance_time, equipment_number, face_url, ip from sb_api_face_attendance
+    </sql>
+	
+    <select id="selectSbApiFaceAttendanceList" parameterType="SbApiFaceAttendance" resultMap="SbApiFaceAttendanceResult">
+        <include refid="selectSbApiFaceAttendanceVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="personId != null  and personId != '' "> and person_id = #{personId}</if>
+             <if test="attendanceTime != null  and attendanceTime != '' "> and attendance_time = #{attendanceTime}</if>
+             <if test="equipmentNumber != null  and equipmentNumber != '' "> and equipment_number = #{equipmentNumber}</if>
+             <if test="faceUrl != null  and faceUrl != '' "> and face_url = #{faceUrl}</if>
+             <if test="ip != null  and ip != '' "> and ip = #{ip}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbApiFaceAttendanceById" parameterType="Integer" resultMap="SbApiFaceAttendanceResult">
+        <include refid="selectSbApiFaceAttendanceVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbApiFaceAttendance" parameterType="SbApiFaceAttendance">
+        insert into sb_api_face_attendance
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="personId != null  and personId != ''  ">person_id,</if>
+			<if test="attendanceTime != null  and attendanceTime != ''  ">attendance_time,</if>
+			<if test="equipmentNumber != null  and equipmentNumber != ''  ">equipment_number,</if>
+			<if test="faceUrl != null  and faceUrl != ''  ">face_url,</if>
+			<if test="ip != null  and ip != ''  ">ip,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="personId != null  and personId != ''  ">#{personId},</if>
+			<if test="attendanceTime != null  and attendanceTime != ''  ">#{attendanceTime},</if>
+			<if test="equipmentNumber != null  and equipmentNumber != ''  ">#{equipmentNumber},</if>
+			<if test="faceUrl != null  and faceUrl != ''  ">#{faceUrl},</if>
+			<if test="ip != null  and ip != ''  ">#{ip},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbApiFaceAttendance" parameterType="SbApiFaceAttendance">
+        update sb_api_face_attendance
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="personId != null  and personId != ''  ">person_id = #{personId},</if>
+            <if test="attendanceTime != null  and attendanceTime != ''  ">attendance_time = #{attendanceTime},</if>
+            <if test="equipmentNumber != null  and equipmentNumber != ''  ">equipment_number = #{equipmentNumber},</if>
+            <if test="faceUrl != null  and faceUrl != ''  ">face_url = #{faceUrl},</if>
+            <if test="ip != null  and ip != ''  ">ip = #{ip},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbApiFaceAttendanceById" parameterType="Integer">
+        delete from sb_api_face_attendance where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbApiFaceAttendanceByIds" parameterType="String">
+        delete from sb_api_face_attendance where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

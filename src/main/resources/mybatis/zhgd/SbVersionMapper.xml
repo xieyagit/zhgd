@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbVersion.mapper.SbVersionMapper">
+    
+    <resultMap type="SbVersion" id="SbVersionResult">
+        <result property="id"    column="id"    />
+        <result property="versionNumber"    column="versionNumber"    />
+        <result property="versionName"    column="versionName"    />
+        <result property="versionContent"    column="versionContent"    />
+        <result property="url"    column="url"    />
+        <result property="isMandatoryUpgrade"    column="isMandatoryUpgrade"    />
+        <result property="createTime" column="createTime"/>
+    </resultMap>
+	
+	<sql id="selectSbVersionVo">
+        select id, versionNumber, versionName, versionContent, url, isMandatoryUpgrade,createTime from sb_version
+    </sql>
+	
+    <select id="selectSbVersionList" parameterType="SbVersion" resultMap="SbVersionResult">
+        <include refid="selectSbVersionVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="versionNumber != null "> and versionNumber = #{versionNumber}</if>
+             <if test="versionName != null  and versionName != '' "> and versionName = #{versionName}</if>
+             <if test="versionContent != null  and versionContent != '' "> and versionContent = #{versionContent}</if>
+             <if test="url != null  and url != '' "> and url = #{url}</if>
+             <if test="isMandatoryUpgrade != null "> and isMandatoryUpgrade = #{isMandatoryUpgrade}</if>
+         </where>
+    </select>
+
+    <select id="selectSbVersion" parameterType="SbVersion" resultMap="SbVersionResult">
+        <include refid="selectSbVersionVo"/>
+        ORDER BY createTime DESC LIMIT 0,1
+    </select>
+    
+    <select id="selectSbVersionById" parameterType="Integer" resultMap="SbVersionResult">
+        <include refid="selectSbVersionVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbVersion" parameterType="SbVersion">
+        insert into sb_version
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="versionNumber != null  ">versionNumber,</if>
+			<if test="versionName != null  and versionName != ''  ">versionName,</if>
+			<if test="versionContent != null  and versionContent != ''  ">versionContent,</if>
+			<if test="url != null  and url != ''  ">url,</if>
+			<if test="isMandatoryUpgrade != null  ">isMandatoryUpgrade,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="versionNumber != null  ">#{versionNumber},</if>
+			<if test="versionName != null  and versionName != ''  ">#{versionName},</if>
+			<if test="versionContent != null  and versionContent != ''  ">#{versionContent},</if>
+			<if test="url != null  and url != ''  ">#{url},</if>
+			<if test="isMandatoryUpgrade != null  ">#{isMandatoryUpgrade},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbVersion" parameterType="SbVersion">
+        update sb_version
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="versionNumber != null  ">versionNumber = #{versionNumber},</if>
+            <if test="versionName != null  and versionName != ''  ">versionName = #{versionName},</if>
+            <if test="versionContent != null  and versionContent != ''  ">versionContent = #{versionContent},</if>
+            <if test="url != null  and url != ''  ">url = #{url},</if>
+            <if test="isMandatoryUpgrade != null  ">isMandatoryUpgrade = #{isMandatoryUpgrade},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbVersionById" parameterType="Integer">
+        delete from sb_version where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbVersionByIds" parameterType="String">
+        delete from sb_version where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

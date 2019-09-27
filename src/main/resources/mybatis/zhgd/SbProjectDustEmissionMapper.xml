@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbProjectDustEmission.mapper.SbProjectDustEmissionMapper">
+    
+    <resultMap type="SbProjectDustEmission" id="SbProjectDustEmissionResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="sn"    column="sn"    />
+        <result property="comments"    column="comments"    />
+        <result property="type"    column="type"    />
+        <result property="meOption"    column="me_option"    />
+        <result property="installAddress"    column="install_address"    />
+        <result property="installCompany"    column="install_company"    />
+        <result property="deviceInstallationDate"    column="device_installation_date"    />
+        <result property="videoAddress"    column="video_address"    />
+        <result property="jdbh"    column="jdbh"    />
+    </resultMap>
+
+	<sql id="selectSbProjectDustEmissionVo">
+        select id, project_id, sn, comments, `type`, me_option, install_address, install_company, device_installation_date ,video_address,jdbh
+        from sb_project_dust_emission
+    </sql>
+
+    <select id="selectSn" parameterType="SbProjectDustEmission" resultMap="ProjectDustEmissionDustEmission">
+        SELECT sn,jdbh FROM sb_project_dust_emission
+        WHERE project_id = #{projectId}
+		limit 1
+    </select>
+
+    <select id="selectProjectDustEmissionListData" parameterType="SbProjectDustEmission" resultMap="ProjectDustEmissionDustEmission">
+        <include refid="selectSbProjectDustEmissionVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+            <if test="sn != null  and sn != '' "> and sn = #{sn}</if>
+            <if test="comments != null  and comments != '' "> and comments = #{comments}</if>
+        </where>
+    </select>
+
+    <select id="selectSbProjectDustEmissionList" parameterType="SbProjectDustEmission" resultMap="SbProjectDustEmissionResult">
+        <include refid="selectSbProjectDustEmissionVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+             <if test="projectId != null "> and project_id = #{projectId}</if>
+             <if test="sn != null  and sn != '' "> and sn = #{sn}</if>
+             <if test="comments != null  and comments != '' "> and comments = #{comments}</if>
+             <if test="type != null "> and `type` = #{type}</if>
+             <if test="meOption != null  and meOption != '' "> and me_option = #{meOption}</if>
+             <if test="installAddress != null  and installAddress != '' "> and install_address = #{installAddress}</if>
+             <if test="installCompany != null  and installCompany != '' "> and install_company = #{installCompany}</if>
+             <if test="deviceInstallationDate != null "> and device_installation_date = #{deviceInstallationDate}</if>
+         </where>
+    </select>
+
+    <select id="selectSbProjectDustEmissionById" parameterType="Long" resultMap="SbProjectDustEmissionResult">
+        <include refid="selectSbProjectDustEmissionVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSbProjectDustEmission" parameterType="SbProjectDustEmission">
+        insert into sb_project_dust_emission
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="projectId != null  ">project_id,</if>
+			<if test="sn != null  and sn != ''  ">sn,</if>
+			<if test="comments != null  and comments != ''  ">comments,</if>
+			<if test="type != null and type != ''  ">`type`,</if>
+			<if test="meOption != null  and meOption != ''  ">me_option,</if>
+			<if test="installAddress != null  and installAddress != ''  ">install_address,</if>
+			<if test="installCompany != null  and installCompany != ''  ">install_company,</if>
+			<if test="deviceInstallationDate != null and  deviceInstallationDate != '' ">device_installation_date,</if>
+			<if test="videoAddress != null and videoAddress != '' ">video_address,</if>
+			<if test="jdbh != null and jdbh != ''  ">jdbh,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="projectId != null  ">#{projectId},</if>
+			<if test="sn != null  and sn != ''  ">#{sn},</if>
+			<if test="comments != null  and comments != ''  ">#{comments},</if>
+			<if test="type != null and type != ''  ">#{type},</if>
+			<if test="meOption != null  and meOption != ''  ">#{meOption},</if>
+			<if test="installAddress != null  and installAddress != ''  ">#{installAddress},</if>
+			<if test="installCompany != null  and installCompany != ''  ">#{installCompany},</if>
+			<if test="deviceInstallationDate != null and  deviceInstallationDate != '' ">#{deviceInstallationDate},</if>
+			<if test="videoAddress != null and videoAddress != ''  ">#{videoAddress},</if>
+			<if test="jdbh != null and jdbh != ''  ">#{jdbh},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSbProjectDustEmission" parameterType="SbProjectDustEmission">
+        update sb_project_dust_emission
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null  ">project_id = #{projectId},</if>
+            <if test="sn != null  and sn != ''  ">sn = #{sn},</if>
+            <if test="comments != null  and comments != ''  ">comments = #{comments},</if>
+            <if test="type != null ">`type` = #{type},</if>
+            <if test="meOption != null   ">me_option = #{meOption},</if>
+            <if test="installAddress != null  ">install_address = #{installAddress},</if>
+            <if test="installCompany != null ">install_company = #{installCompany},</if>
+            <if test="deviceInstallationDate != null ">device_installation_date = #{deviceInstallationDate},</if>
+            <if test="videoAddress != null ">video_address = #{videoAddress},</if>
+            <if test="jdbh != null and jdbh != ''  ">jdbh = #{jdbh},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbProjectDustEmissionById" parameterType="Long">
+        delete from sb_project_dust_emission where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbProjectDustEmissionByIds" parameterType="String">
+        delete from sb_project_dust_emission where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <resultMap id="ProjectDustEmissionDustEmission" type="SbProjectDustEmission" extends="SbProjectDustEmissionResult">
+
+    <collection column="sn" property="dustEmissionList" select="com.hujiang.project.zhgd.sbDustEmission.mapper.SbDustEmissionMapper.selectDustEmissionListBySn"/>
+
+</resultMap>
+
+</mapper>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjDeeppit.mapper.SbDeeppitDisplayItemsMapper">
+    
+    <resultMap type="SbDeeppitDisplayItems" id="SbDeeppitDisplayItemsResult">
+        <result property="id"    column="id"    />
+        <result property="displayId"    column="display_id"    />
+        <result property="name"    column="name"    />
+        <result property="fieldName"    column="fieldName"    />
+        <result property="unit"    column="unit"    />
+        <result property="reserved"    column="reserved"    />
+    </resultMap>
+	
+	<sql id="selectSbDeeppitDisplayItemsVo">
+        select id, display_id, name, fieldName, unit, reserved from sb_deeppit_display_items
+    </sql>
+	
+    <select id="selectSbDeeppitDisplayItemsList" parameterType="SbDeeppitDisplayItems" resultMap="SbDeeppitDisplayItemsResult">
+        <include refid="selectSbDeeppitDisplayItemsVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="displayId != null "> and display_id = #{displayId}</if>
+             <if test="name != null  and name != '' "> and name = #{name}</if>
+             <if test="fieldName != null  and fieldName != '' "> and fieldName = #{fieldName}</if>
+             <if test="unit != null  and unit != '' "> and unit = #{unit}</if>
+             <if test="reserved != null  and reserved != '' "> and reserved = #{reserved}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbDeeppitDisplayItemsById" parameterType="Integer" resultMap="SbDeeppitDisplayItemsResult">
+        <include refid="selectSbDeeppitDisplayItemsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbDeeppitDisplayItems" parameterType="SbDeeppitDisplayItems">
+        insert into sb_deeppit_display_items
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="displayId != null  ">display_id,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="fieldName != null  and fieldName != ''  ">fieldName,</if>
+			<if test="unit != null  and unit != ''  ">unit,</if>
+			<if test="reserved != null  and reserved != ''  ">reserved,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="displayId != null  ">#{displayId},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="fieldName != null  and fieldName != ''  ">#{fieldName},</if>
+			<if test="unit != null  and unit != ''  ">#{unit},</if>
+			<if test="reserved != null  and reserved != ''  ">#{reserved},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbDeeppitDisplayItems" parameterType="SbDeeppitDisplayItems">
+        update sb_deeppit_display_items
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="displayId != null  ">display_id = #{displayId},</if>
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="fieldName != null  and fieldName != ''  ">fieldName = #{fieldName},</if>
+            <if test="unit != null  and unit != ''  ">unit = #{unit},</if>
+            <if test="reserved != null  and reserved != ''  ">reserved = #{reserved},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbDeeppitDisplayItemsById" parameterType="Integer">
+        delete from sb_deeppit_display_items where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbDeeppitDisplayItemsByIds" parameterType="String">
+        delete from sb_deeppit_display_items where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjDeeppit.mapper.DeeppitAlarmDataMapper">
+    
+    <resultMap type="DeeppitAlarmData" id="DeeppitAlarmDataResult">
+        <result property="id"    column="id"    />
+        <result property="structuresId"    column="structures_id"    />
+        <result property="structuresName"    column="structures_name"    />
+        <result property="alarmId"    column="alarm_id"    />
+        <result property="sourceId"    column="source_id"    />
+        <result property="sourceName"    column="source_name"    />
+        <result property="sourceTypeId"    column="source_type_id"    />
+        <result property="sourceTypeName"    column="source_type_name"    />
+        <result property="alarmTypeCode"    column="alarm_type_code"    />
+        <result property="level"    column="level"    />
+        <result property="content"    column="content"    />
+        <result property="count"    column="count"    />
+        <result property="state"    column="state"    />
+        <result property="startTime"    column="startTime"    />
+        <result property="endTime"    column="endTime"    />
+    </resultMap>
+
+    <resultMap type="StatisticsAlertor" id="StatisticsAlertorResult">
+        <result property="level"    column="level"    />
+        <result property="cnt"    column="cnt"    />
+        <result property="r"    column="r"/>
+    </resultMap>
+	
+	<sql id="selectDeeppitAlarmDataVo">
+        select id, structures_id, structures_name, alarm_id, source_id, source_name, source_type_id, source_type_name, alarm_type_code, level, content, count, state, startTime, endTime from hj_deeppit_alarm_data
+    </sql>
+	
+    <select id="selectDeeppitAlarmDataList" parameterType="DeeppitAlarmData" resultMap="DeeppitAlarmDataResult">
+        <include refid="selectDeeppitAlarmDataVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="structuresId != null "> and structures_id = #{structuresId}</if>
+             <if test="structuresName != null  and structuresName != '' "> and structures_name = #{structuresName}</if>
+             <if test="alarmId != null  and alarmId != '' "> and alarm_id = #{alarmId}</if>
+             <if test="sourceId != null  and sourceId != '' "> and source_id = #{sourceId}</if>
+             <if test="sourceName != null  and sourceName != '' "> and source_name = #{sourceName}</if>
+             <if test="sourceTypeId != null "> and source_type_id = #{sourceTypeId}</if>
+             <if test="sourceTypeName != null  and sourceTypeName != '' "> and source_type_name = #{sourceTypeName}</if>
+             <if test="alarmTypeCode != null  and alarmTypeCode != '' "> and alarm_type_code = #{alarmTypeCode}</if>
+             <if test="level != null "> and level = #{level}</if>
+             <if test="content != null  and content != '' "> and content = #{content}</if>
+             <if test="count != null "> and count = #{count}</if>
+             <if test="state != null "> and state = #{state}</if>
+             <if test="startTime != null "> and startTime = #{startTime}</if>
+             <if test="endTime != null "> and endTime LIKE CONCAT(CONCAT(#{endTime}), '%')</if>
+         </where>
+
+    </select>
+    
+    <select id="selectDeeppitAlarmDataById" parameterType="String" resultMap="DeeppitAlarmDataResult">
+        <include refid="selectDeeppitAlarmDataVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="statisticsAlertor" parameterType="Integer" resultMap="StatisticsAlertorResult">
+       SELECT level,a.cnt,CONCAT(ROUND(a.cnt/b.sum *100,2),'','%') as r
+            FROM (
+                select level,
+                       COUNT(level) as cnt
+                FROM
+                       hj_deeppit_alarm_data
+                WHERE
+                    structures_id = #{structuresId}
+                GROUP BY
+                       level
+                ORDER BY
+                       cnt DESC
+            )AS a,
+            (
+                SELECT COUNT(*) as sum
+                FROM
+                       hj_deeppit_alarm_data
+                WHERE
+                    structures_id = #{structuresId}
+            ) AS b;
+    </select>
+
+
+
+    <insert id="insertDeeppitAlarmData" parameterType="DeeppitAlarmData">
+        insert into hj_deeppit_alarm_data
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="structuresId != null  ">structures_id,</if>
+			<if test="structuresName != null  and structuresName != ''  ">structures_name,</if>
+			<if test="alarmId != null  and alarmId != ''  ">alarm_id,</if>
+			<if test="sourceId != null  and sourceId != ''  ">source_id,</if>
+			<if test="sourceName != null  and sourceName != ''  ">source_name,</if>
+			<if test="sourceTypeId != null  ">source_type_id,</if>
+			<if test="sourceTypeName != null  and sourceTypeName != ''  ">source_type_name,</if>
+			<if test="alarmTypeCode != null  and alarmTypeCode != ''  ">alarm_type_code,</if>
+			<if test="level != null  ">level,</if>
+			<if test="content != null  and content != ''  ">content,</if>
+			<if test="count != null  ">count,</if>
+			<if test="state != null  ">state,</if>
+			<if test="startTime != null  ">startTime,</if>
+			<if test="endTime != null  ">endTime,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="structuresId != null  ">#{structuresId},</if>
+			<if test="structuresName != null  and structuresName != ''  ">#{structuresName},</if>
+			<if test="alarmId != null  and alarmId != ''  ">#{alarmId},</if>
+			<if test="sourceId != null  and sourceId != ''  ">#{sourceId},</if>
+			<if test="sourceName != null  and sourceName != ''  ">#{sourceName},</if>
+			<if test="sourceTypeId != null  ">#{sourceTypeId},</if>
+			<if test="sourceTypeName != null  and sourceTypeName != ''  ">#{sourceTypeName},</if>
+			<if test="alarmTypeCode != null  and alarmTypeCode != ''  ">#{alarmTypeCode},</if>
+			<if test="level != null  ">#{level},</if>
+			<if test="content != null  and content != ''  ">#{content},</if>
+			<if test="count != null  ">#{count},</if>
+			<if test="state != null  ">#{state},</if>
+			<if test="startTime != null  ">#{startTime},</if>
+			<if test="endTime != null  ">#{endTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateDeeppitAlarmData" parameterType="DeeppitAlarmData">
+        update hj_deeppit_alarm_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="structuresId != null  ">structures_id = #{structuresId},</if>
+            <if test="structuresName != null  and structuresName != ''  ">structures_name = #{structuresName},</if>
+            <if test="alarmId != null  and alarmId != ''  ">alarm_id = #{alarmId},</if>
+            <if test="sourceId != null  and sourceId != ''  ">source_id = #{sourceId},</if>
+            <if test="sourceName != null  and sourceName != ''  ">source_name = #{sourceName},</if>
+            <if test="sourceTypeId != null  ">source_type_id = #{sourceTypeId},</if>
+            <if test="sourceTypeName != null  and sourceTypeName != ''  ">source_type_name = #{sourceTypeName},</if>
+            <if test="alarmTypeCode != null  and alarmTypeCode != ''  ">alarm_type_code = #{alarmTypeCode},</if>
+            <if test="level != null  ">level = #{level},</if>
+            <if test="content != null  and content != ''  ">content = #{content},</if>
+            <if test="count != null  ">count = #{count},</if>
+            <if test="state != null  ">state = #{state},</if>
+            <if test="startTime != null  ">startTime = #{startTime},</if>
+            <if test="endTime != null  ">endTime = #{endTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteDeeppitAlarmDataById" parameterType="String">
+        delete from hj_deeppit_alarm_data where id = #{id}
+    </delete>
+	
+    <delete id="deleteDeeppitAlarmDataByIds" parameterType="String">
+        delete from hj_deeppit_alarm_data where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

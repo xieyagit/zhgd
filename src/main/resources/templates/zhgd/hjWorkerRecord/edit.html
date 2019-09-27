@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-hjWorkerRecord-edit" th:object="${hjWorkerRecord}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">身份证号码：</label>
+				<div class="col-sm-8">
+					<input id="idCode" name="idCode" th:field="*{idCode}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">项目id：</label>
+				<div class="col-sm-8">
+					<input id="projectId" name="projectId" th:field="*{projectId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">参建单位id：</label>
+				<div class="col-sm-8">
+					<input id="constructionId" name="constructionId" th:field="*{constructionId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">班组id：</label>
+				<div class="col-sm-8">
+					<input id="teamId" name="teamId" th:field="*{teamId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">创建时间：</label>
+				<div class="col-sm-8">
+					<input id="createDate" name="createDate" th:field="*{createDate}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "zhgd/hjWorkerRecord";
+		$("#form-hjWorkerRecord-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-hjWorkerRecord-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

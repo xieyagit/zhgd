@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjSafetyArea.mapper.HjSafetyAreaMapper">
+    
+    <resultMap type="HjSafetyArea" id="HjSafetyAreaResult">
+        <result property="id"    column="id"    />
+        <result property="area"    column="area"    />
+        <result property="address" column="address"/>
+        <result property="userId" column="userId"/>
+    </resultMap>
+    <resultMap type="SafetyArea" id="SafetyAreaResult">
+        <result property="areaId"    column="areaId"    />
+        <result property="areaName"    column="areaName"    />
+        <result property="address" column="address"/>
+        <result property="constructionId" column="constructionId"/>
+        <result property="constructionName" column="constructionName"/>
+        <result property="userId" column="userId"/>
+        <result property="userName" column="userName"/>
+    </resultMap>
+	
+	<sql id="selectHjSafetyAreaVo">
+        select id, area from hj_safety_area
+    </sql>
+	<select id="getOptionsList" parameterType="SafetyArea" resultMap="SafetyAreaResult">
+    SELECT a.id AS areaId,a.area AS areaName,a.address,cc.id AS constructionId,cc.construction_name AS constructionName
+    FROM hj_safety_area AS a
+    LEFT JOIN hj_construction_area AS c ON(a.id=c.areaId)
+    LEFT JOIN hj_construction_company AS cc ON(cc.id = c.constructionId)
+    LEFT JOIN hj_construction_project AS cp ON(cp.construction_id = c.constructionId)
+    where  cp.project_id = #{projectId}
+    </select>
+    <select id="getUserByArea"  parameterType="SafetyArea" resultMap="SafetyAreaResult">
+        SELECT
+          areaId,
+          u.userId as userId,s.user_name AS userName
+          FROM hj_area_user AS u
+          LEFT JOIN hj_system_user AS s ON(u.userId=s.id)
+          WHERE 1=1
+          <if test="areaId != null">and  u.areaId = #{areaId}</if>
+    </select>
+    <select id="selectHjSafetyAreaList" parameterType="HjSafetyArea" resultMap="HjSafetyAreaResult">
+        <include refid="selectHjSafetyAreaVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="area != null  and area != '' "> and area = #{area}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjSafetyAreaById" parameterType="Integer" resultMap="HjSafetyAreaResult">
+        <include refid="selectHjSafetyAreaVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjSafetyArea" parameterType="HjSafetyArea" useGeneratedKeys="true" keyProperty="id">
+        insert into hj_safety_area
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="area != null  and area != ''  ">area,</if>
+            <if test="address != null and address != '' ">address,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="area != null  and area != ''  ">#{area},</if>
+            <if test="address != null and address != '' ">#{address},</if>
+         </trim>
+    </insert>
+    <delete id="deleteArea" parameterType="Integer">
+        delete from hj_safety_area where id = #{areaId}
+    </delete>
+
+    <insert id="insertConstructionArea" parameterType="SafetyArea">
+        INSERT INTO `hj_construction_area`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="areaId != null  and areaId != ''  ">areaId,</if>
+            <if test="constructionId != null and constructionId != '' ">constructionId,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="areaId != null  and areaId != ''  ">#{areaId},</if>
+            <if test="constructionId != null and constructionId != '' ">#{constructionId},</if>
+        </trim>
+    </insert>
+
+    <delete id="deleteAreaAndConstruction" parameterType="Integer">
+        delete from hj_construction_area where areaId = #{areaId}
+    </delete>
+    <select id="getAreaUser" parameterType="SafetyArea" resultMap="SafetyAreaResult">
+        SELECT * FROM `hj_area_user` where areaId = #{areaId} and userId =#{userId}
+    </select>
+    <insert id="insertAreaUser" parameterType="SafetyArea">
+        INSERT INTO `hj_area_user`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="areaId != null  and areaId != ''  ">areaId,</if>
+            <if test="userId != null and userId != '' ">userId,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="areaId != null  and areaId != ''  ">#{areaId},</if>
+            <if test="userId != null and userId != '' ">#{userId},</if>
+        </trim>
+    </insert>
+    <delete id="deleteAreaUser" parameterType="Integer">
+        delete from hj_area_user where userId = #{userId} and areaId = #{areaId}
+    </delete>
+    <delete id="deleteAreaAndUser" parameterType="Integer">
+        delete from hj_area_user where areaId = #{areaId}
+    </delete>
+    <update id="updateHjSafetyArea" parameterType="HjSafetyArea">
+        update hj_safety_area
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="area != null  and area != ''  ">area = #{area},</if>
+            <if test="address != null  and address != ''  ">address = #{address},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="updateConstructionArea" parameterType="SafetyArea">
+        update hj_construction_area
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="constructionId != null  and constructionId != ''  ">constructionId = #{constructionId},</if>
+        </trim>
+        where areaId = #{areaId}
+    </update>
+
+	<delete id="deleteHjSafetyAreaById" parameterType="Integer">
+        delete from hj_safety_area where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjSafetyAreaByIds" parameterType="String">
+        delete from hj_safety_area where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjInspector.mapper.HjInspectorMapper">
+    
+    <resultMap type="HjInspector" id="HjInspectorResult">
+        <result property="id"    column="id"    />
+        <result property="relevanceId"    column="relevanceId"    />
+        <result property="inspectorName"    column="inspector_name"    />
+        <result property="inspectorDate"    column="inspector_date"    />
+        <result property="inspectorProblem"    column="inspector_problem"    />
+        <result property="inspectorImg"    column="inspector_img"    />
+        <result property="inspectorRemarks"    column="inspector_remarks"    />
+        <result property="people"    column="people"    />
+    </resultMap>
+	
+	<sql id="selectHjInspectorVo">
+        select id, relevanceId, inspector_name, inspector_date, inspector_problem, inspector_img, inspector_remarks, people from hj_inspector
+    </sql>
+	
+    <select id="selectHjInspectorList" parameterType="HjInspector" resultMap="HjInspectorResult">
+        <include refid="selectHjInspectorVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="relevanceId != null "> and relevanceId = #{relevanceId}</if>
+             <if test="inspectorName != null  and inspectorName != '' "> and inspector_name = #{inspectorName}</if>
+             <if test="inspectorDate != null "> and inspector_date = #{inspectorDate}</if>
+             <if test="inspectorProblem != null  and inspectorProblem != '' "> and inspector_problem = #{inspectorProblem}</if>
+             <if test="inspectorImg != null  and inspectorImg != '' "> and inspector_img = #{inspectorImg}</if>
+             <if test="inspectorRemarks != null  and inspectorRemarks != '' "> and inspector_remarks = #{inspectorRemarks}</if>
+             <if test="people != null  and people != '' "> and people = #{people}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjInspectorById" parameterType="Integer" resultMap="HjInspectorResult">
+        <include refid="selectHjInspectorVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjInspector" parameterType="HjInspector">
+        insert into hj_inspector
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="relevanceId != null  ">relevanceId,</if>
+			<if test="inspectorName != null  and inspectorName != ''  ">inspector_name,</if>
+			<if test="inspectorDate != null  ">inspector_date,</if>
+			<if test="inspectorProblem != null  and inspectorProblem != ''  ">inspector_problem,</if>
+			<if test="inspectorImg != null  and inspectorImg != ''  ">inspector_img,</if>
+			<if test="inspectorRemarks != null  and inspectorRemarks != ''  ">inspector_remarks,</if>
+			<if test="people != null  and people != ''  ">people,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="relevanceId != null  ">#{relevanceId},</if>
+			<if test="inspectorName != null  and inspectorName != ''  ">#{inspectorName},</if>
+			<if test="inspectorDate != null  ">#{inspectorDate},</if>
+			<if test="inspectorProblem != null  and inspectorProblem != ''  ">#{inspectorProblem},</if>
+			<if test="inspectorImg != null  and inspectorImg != ''  ">#{inspectorImg},</if>
+			<if test="inspectorRemarks != null  and inspectorRemarks != ''  ">#{inspectorRemarks},</if>
+			<if test="people != null  and people != ''  ">#{people},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjInspector" parameterType="HjInspector">
+        update hj_inspector
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="relevanceId != null  ">relevanceId = #{relevanceId},</if>
+            <if test="inspectorName != null  and inspectorName != ''  ">inspector_name = #{inspectorName},</if>
+            <if test="inspectorDate != null  ">inspector_date = #{inspectorDate},</if>
+            <if test="inspectorProblem != null  and inspectorProblem != ''  ">inspector_problem = #{inspectorProblem},</if>
+            <if test="inspectorImg != null  and inspectorImg != ''  ">inspector_img = #{inspectorImg},</if>
+            <if test="inspectorRemarks != null  and inspectorRemarks != ''  ">inspector_remarks = #{inspectorRemarks},</if>
+            <if test="people != null  and people != ''  ">people = #{people},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjInspectorById" parameterType="Integer">
+        delete from hj_inspector where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjInspectorByIds" parameterType="String">
+        delete from hj_inspector where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-hjDictionaries-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">标识（例：PROJECT_MUNICIPAL）：</label>
+				<div class="col-sm-8">
+					<input id="tag" name="tag" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">数据类型名称（例：项目类型）：</label>
+				<div class="col-sm-8">
+					<input id="groupTitle" name="groupTitle" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">类别（例：PROJECT_TYPE）：</label>
+				<div class="col-sm-8">
+					<input id="category" name="category" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">标题（例：市政、房建）：</label>
+				<div class="col-sm-8">
+					<input id="title" name="title" class="form-control" type="text">
+				</div>
+			</div>
+
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "zhgd/hjDictionaries"
+		$("#form-hjDictionaries-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/add", $('#form-hjDictionaries-add').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

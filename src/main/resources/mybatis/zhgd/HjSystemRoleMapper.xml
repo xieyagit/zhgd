@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjSystemRole.mapper.HjSystemRoleMapper">
+    
+    <resultMap type="HjSystemRole" id="HjSystemRoleResult">
+        <result property="id"    column="id"    />
+        <result property="roleName"    column="role_name"    />
+        <result property="remark"    column="remark"    />
+        <result property="hierarchy"    column="hierarchy"    />
+        <result property="belong"    column="belong"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="updateDate"    column="update_date"    />
+        <result property="dataPermission"    column="data_permission"    />
+    </resultMap>
+
+
+    <resultMap type="com.hujiang.project.zhgd.hjSystemRole.domain.RoleParam" id="RoleParamResult">
+        <result property="id"    column="id"    />
+        <result property="roleName"    column="role_name"    />
+        <result property="remark"    column="remark"    />
+        <result property="hierarchy"    column="hierarchy"    />
+        <result property="belong"    column="belong"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="updateDate"    column="update_date"    />
+        <result property="dataPermission"    column="data_permission"    />
+    </resultMap>
+	
+	<sql id="selectHjSystemRoleVo">
+        select id, role_name, remark, hierarchy, belong, create_date, update_date, data_permission from hj_system_role
+    </sql>
+	
+    <select id="selectHjSystemRoleList" parameterType="HjSystemRole" resultMap="HjSystemRoleResult">
+        <include refid="selectHjSystemRoleVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="roleName != null  and roleName != '' "> and role_name = #{roleName}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+             <if test="hierarchy != null "> and hierarchy = #{hierarchy}</if>
+             <if test="belong != null "> and belong = #{belong}</if>
+             <if test="createDate != null "> and create_date = #{createDate}</if>
+             <if test="updateDate != null "> and update_date = #{updateDate}</if>
+             <if test="dataPermission != null  and dataPermission != '' "> and data_permission = #{dataPermission}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjSystemRoleById" parameterType="Integer" resultMap="HjSystemRoleResult">
+        <include refid="selectHjSystemRoleVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjSystemRole" parameterType="HjSystemRole">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into hj_system_role
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="roleName != null  and roleName != ''  ">role_name,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="hierarchy != null  ">hierarchy,</if>
+			<if test="belong != null  ">belong,</if>
+			<if test="createDate != null  ">create_date,</if>
+			<if test="updateDate != null  ">update_date,</if>
+			<if test="dataPermission != null  and dataPermission != ''  ">data_permission,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="roleName != null  and roleName != ''  ">#{roleName},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="hierarchy != null  ">#{hierarchy},</if>
+			<if test="belong != null  ">#{belong},</if>
+			<if test="createDate != null  ">#{createDate},</if>
+			<if test="updateDate != null  ">#{updateDate},</if>
+			<if test="dataPermission != null  and dataPermission != ''  ">#{dataPermission},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjSystemRole" parameterType="HjSystemRole">
+        update hj_system_role
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="roleName != null  and roleName != ''  ">role_name = #{roleName},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="hierarchy != null  ">hierarchy = #{hierarchy},</if>
+            <if test="belong != null  ">belong = #{belong},</if>
+            <if test="createDate != null  ">create_date = #{createDate},</if>
+            <if test="updateDate != null  ">update_date = #{updateDate},</if>
+            <if test="dataPermission != null  and dataPermission != ''  ">data_permission = #{dataPermission},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjSystemRoleById" parameterType="Integer">
+        delete from hj_system_role where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjSystemRoleByIds" parameterType="String">
+        delete from hj_system_role where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <sql id="Group_List_Condition" >
+        <where >
+            <if test="hierarchy != null  ">
+                sr.hierarchy = #{hierarchy}
+            </if>
+            <if test="belong != null  ">
+                AND sr.belong = #{belong}
+            </if>
+            <if test="roleName != null" >
+                and sr.role_name like "%"#{roleName}"%"
+            </if>
+
+        </where>
+    </sql>
+
+
+    <select id="selectSystemRoleCount" resultType="java.lang.Integer">
+        SELECT
+          COUNT(*)
+        FROM
+        hj_system_role sr
+        <include refid="Group_List_Condition" />
+    </select>
+
+    <select id="selectSystemRole" parameterType="com.hujiang.project.zhgd.hjSystemRole.domain.RoleParam" resultMap="RoleParamResult">
+        SELECT
+           *
+        FROM
+        hj_system_role sr
+        <include refid="Group_List_Condition" />
+        <if test="offset != null &amp;&amp; limit != null">
+            limit ${offset},${limit}
+        </if>
+    </select>
+
+
+
+    <select id="queryUserRole" resultMap="HjSystemRoleResult">
+        SELECT
+            *
+        FROM
+            hj_system_role r
+        LEFT JOIN hj_user_role u ON r.id = u.role_id
+        WHERE
+        <if test="userType != null  ">
+            r.hierarchy = #{userType}
+        </if>
+        <if test="parameterId != null  ">
+            AND r.belong = #{parameterId}
+        </if>
+        <if test="userId != null  ">
+            AND u.user_id = #{userId}
+        </if>
+    </select>
+
+</mapper>

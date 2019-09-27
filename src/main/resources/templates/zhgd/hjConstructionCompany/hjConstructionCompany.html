@@ -1,0 +1,251 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+							<li>
+								参建单位名称：<input type="text" name="constructionName"/>
+							</li>
+
+							<li>
+								简称：<input type="text" name="shortName"/>
+							</li>
+
+							<li>
+								注册资金（：万元）：<input type="text" name="capital"/>
+							</li>
+
+							<li>
+								单位类型（从字典获取相应数据）：<input type="text" name="companyType"/>
+							</li>
+
+							<li>
+								法人代表：<input type="text" name="legalPerson"/>
+							</li>
+
+							<li>
+								社会统一信用代码：<input type="text" name="suid"/>
+							</li>
+
+							<li>
+								组织机构代码：<input type="text" name="organizationCode"/>
+							</li>
+
+							<li>
+								基本账户开户银行：<input type="text" name="bankOpen"/>
+							</li>
+
+							<li>
+								基本账户银行账户：<input type="text" name="bankNum"/>
+							</li>
+
+							<li>
+								开户地址：<input type="text" name="bankAddress"/>
+							</li>
+
+							<li>
+								单位详细地址：<input type="text" name="address"/>
+							</li>
+
+							<li>
+								负责人：<input type="text" name="contacts"/>
+							</li>
+
+							<li>
+								电话：<input type="text" name="mobilePhone"/>
+							</li>
+
+							<li>
+								电子邮箱：<input type="text" name="email"/>
+							</li>
+
+							<li>
+								备注：<input type="text" name="remark"/>
+							</li>
+
+							<li>
+								状态（0.显示 1.隐藏）：<input type="text" name="showState"/>
+							</li>
+
+							<li>
+								人脸组：<input type="text" name="faceGroup"/>
+							</li>
+
+							<li>
+								创建时间：<input type="text" name="createDate"/>
+							</li>
+
+							<li>
+								修改时间：<input type="text" name="updateDate"/>
+							</li>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="zhgd:hjConstructionCompany:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="zhgd:hjConstructionCompany:edit">
+					<i class="fa fa-edit"></i> 修改
+				</a>
+				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="zhgd:hjConstructionCompany:remove">
+					<i class="fa fa-remove"></i> 删除
+				</a>
+				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="zhgd:hjConstructionCompany:export">
+						<i class="fa fa-download"></i> 导出
+				 </a>
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('zhgd:hjConstructionCompany:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('zhgd:hjConstructionCompany:remove')}]];
+        var prefix = ctx + "zhgd/hjConstructionCompany";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "参建单位",
+				search: false,
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'id', 
+					title : 'ID',
+					visible: false
+				},
+				{
+					field : 'constructionName', 
+					title : '参建单位名称',
+					sortable: true
+				},
+				{
+					field : 'shortName', 
+					title : '简称',
+					sortable: true
+				},
+				{
+					field : 'capital', 
+					title : '注册资金（：万元）',
+					sortable: true
+				},
+				{
+					field : 'companyType', 
+					title : '单位类型（从字典获取相应数据）',
+					sortable: true
+				},
+				{
+					field : 'legalPerson', 
+					title : '法人代表',
+					sortable: true
+				},
+				{
+					field : 'suid', 
+					title : '社会统一信用代码',
+					sortable: true
+				},
+				{
+					field : 'organizationCode', 
+					title : '组织机构代码',
+					sortable: true
+				},
+				{
+					field : 'bankOpen', 
+					title : '基本账户开户银行',
+					sortable: true
+				},
+				{
+					field : 'bankNum', 
+					title : '基本账户银行账户',
+					sortable: true
+				},
+				{
+					field : 'bankAddress', 
+					title : '开户地址',
+					sortable: true
+				},
+				{
+					field : 'address', 
+					title : '单位详细地址',
+					sortable: true
+				},
+				{
+					field : 'contacts', 
+					title : '负责人',
+					sortable: true
+				},
+				{
+					field : 'mobilePhone', 
+					title : '电话',
+					sortable: true
+				},
+				{
+					field : 'email', 
+					title : '电子邮箱',
+					sortable: true
+				},
+				{
+					field : 'remark', 
+					title : '备注',
+					sortable: true
+				},
+				{
+					field : 'showState', 
+					title : '状态（0.显示 1.隐藏）',
+					sortable: true
+				},
+				{
+					field : 'faceGroup', 
+					title : '人脸组',
+					sortable: true
+				},
+				{
+					field : 'createDate', 
+					title : '创建时间',
+					sortable: true
+				},
+				{
+					field : 'updateDate', 
+					title : '修改时间',
+					sortable: true
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

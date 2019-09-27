@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjSystemUser.mapper.HjSystemUserMapper">
+    
+    <resultMap type="HjSystemUser" id="HjSystemUserResult">
+        <result property="id"    column="id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="userPhone"    column="user_phone"    />
+        <result property="userAccount"    column="user_account"    />
+        <result property="userPassword"    column="user_password"    />
+        <result property="userState"    column="user_state"    />
+        <result property="userType"    column="user_type"    />
+        <result property="entry"    column="entry"    />
+        <result property="creator"    column="creator"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="updateDate"    column="update_date"    />
+        <result property="alias" column="alias"/>
+        <result property="filed" column="filed"/>
+    </resultMap>
+
+
+    <resultMap type="com.hujiang.project.zhgd.hjSystemUser.domain.UserParam" id="UserParamResult">
+        <result property="id"    column="id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="userPhone"    column="user_phone"    />
+        <result property="userAccount"    column="user_account"    />
+        <result property="userPassword"    column="user_password"    />
+        <result property="userState"    column="user_state"    />
+        <result property="userType"    column="user_type"    />
+        <result property="entry"    column="entry"    />
+        <result property="creator"    column="creator"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="updateDate"    column="update_date"    />
+    </resultMap>
+
+    <resultMap id="User" type="com.hujiang.project.zhgd.hjSystemUser.domain.UpdateUser">
+        <result property="id" column="id"/>
+        <result property="userAccount" column="user_account"/>
+        <result property="constructionName" column="construction_name"/>
+        <result property="userName" column="user_name"/>
+        <result property="entry" column="entry"/>
+        <result property="userPhone" column="user_phone"/>
+    </resultMap>
+	
+	<sql id="selectHjSystemUserVo">
+        select * from hj_system_user
+    </sql>
+    <select id="getUserList" parameterType="HjSystemUser" resultMap="HjSystemUserResult">
+        SELECT
+        su.id,
+        su.user_account,
+        su.user_name,
+        su.user_phone
+        FROM
+        hj_system_user AS su
+        LEFT JOIN hj_project_user AS pu ON(pu.user_id=su.id)
+        WHERE
+          pu.project_id = #{projectId}
+    </select>
+
+    <update id="updateAlias" parameterType="HjSystemUser">
+        update hj_system_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="alias != null  and alias != ''  ">alias = #{alias},</if>
+        </trim>
+        where id = #{userId}
+    </update>
+    <select id="getByAlias" parameterType="HjSystemUser" resultMap="HjSystemUserResult">
+        SELECT * FROM `hj_system_user` where id=#{userId}
+    </select>
+    <select id="getCraneUserList" parameterType="HjSystemUser" resultMap="HjSystemUserResult">
+        SELECT * FROM `hj_system_user` where 1=1
+        <if test="userId != null">and id=#{userId}</if>
+        <if test="filed != null and filed != '' ">
+        AND CONCAT(`user_account`, `user_name`) LIKE CONCAT('%',#{filed},'%')
+        </if>
+    </select>
+    <select id="getByUser" parameterType="HjSystemUser" resultMap="HjSystemUserResult">
+        SELECT * FROM `hj_system_user` WHERE user_name=#{userName}
+    </select>
+
+
+	<select id="getUserById" parameterType="UpdateUser" resultMap="User">
+       SELECT su.id id,su.user_account user_account,
+        (SELECT cc.construction_name from hj_construction_company cc where cc.id = cu.company_id) construction_name,
+        su.user_name user_name,su.entry entry,
+        su.user_phone user_phone
+        FROM hj_system_user su
+        LEFT JOIN hj_company_user cu on(su.id = cu.user_id)
+        where su.id=#{id}
+    </select>
+    
+    <update id="updateUserById" parameterType="UpdateUser">
+        UPDATE hj_system_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null  and userName != ''  ">user_name = #{userName},</if>
+            <if test="userPhone != null  and userPhone != ''  ">user_phone = #{userPhone},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <select id="selectHjSystemUserList" parameterType="HjSystemUser" resultMap="HjSystemUserResult">
+        <include refid="selectHjSystemUserVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="userName != null  and userName != '' "> and user_name = #{userName}</if>
+             <if test="userPhone != null  and userPhone != '' "> and user_phone = #{userPhone}</if>
+             <if test="userAccount != null  and userAccount != '' "> and user_account = #{userAccount}</if>
+             <if test="userPassword != null  and userPassword != '' "> and user_password = #{userPassword}</if>
+             <if test="userState != null  and userState != '' "> and user_state = #{userState}</if>
+             <if test="userType != null "> and user_typr = #{userType}</if>
+             <if test="entry != null "> and entry = #{entry}</if>
+             <if test="creator != null  and creator != '' "> and creator = #{creator}</if>
+             <if test="createDate != null "> and create_date = #{createDate}</if>
+             <if test="updateDate != null "> and update_date = #{updateDate}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjSystemUserById" parameterType="Integer" resultMap="HjSystemUserResult">
+        <include refid="selectHjSystemUserVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjSystemUser" parameterType="HjSystemUser" >
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into hj_system_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="userName != null  and userName != ''  ">user_name,</if>
+			<if test="userPhone != null  and userPhone != ''  ">user_phone,</if>
+			<if test="userAccount != null  and userAccount != ''  ">user_account,</if>
+			<if test="userPassword != null  and userPassword != ''  ">user_password,</if>
+			<if test="userState != null  and userState != ''  ">user_state,</if>
+			<if test="userType != null  ">user_type,</if>
+			<if test="entry != null  ">entry,</if>
+			<if test="creator != null  and creator != ''  ">creator,</if>
+			<if test="createDate != null  ">create_date,</if>
+			<if test="updateDate != null  ">update_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="userName != null  and userName != ''  ">#{userName},</if>
+			<if test="userPhone != null  and userPhone != ''  ">#{userPhone},</if>
+			<if test="userAccount != null  and userAccount != ''  ">#{userAccount},</if>
+			<if test="userPassword != null  and userPassword != ''  ">#{userPassword},</if>
+			<if test="userState != null  and userState != ''  ">#{userState},</if>
+			<if test="userType != null  ">#{userType},</if>
+			<if test="entry != null  ">#{entry},</if>
+			<if test="creator != null  and creator != ''  ">#{creator},</if>
+			<if test="createDate != null  ">#{createDate},</if>
+			<if test="updateDate != null  ">#{updateDate},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjSystemUser" parameterType="HjSystemUser">
+        update hj_system_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null  and userName != ''  ">user_name = #{userName},</if>
+            <if test="userPhone != null  and userPhone != ''  ">user_phone = #{userPhone},</if>
+            <if test="userAccount != null  and userAccount != ''  ">user_account = #{userAccount},</if>
+            <if test="userPassword != null  and userPassword != ''  ">user_password = #{userPassword},</if>
+            <if test="userState != null  and userState != ''  ">user_state = #{userState},</if>
+            <if test="userType != null  ">user_type = #{userType},</if>
+            <if test="entry != null  ">entry = #{entry},</if>
+            <if test="creator != null  and creator != ''  ">creator = #{creator},</if>
+            <if test="createDate != null  ">create_date = #{createDate},</if>
+            <if test="updateDate != null  ">update_date = #{updateDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjSystemUserById" parameterType="Integer">
+        delete from hj_system_user where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjSystemUserByIds" parameterType="String">
+        delete from hj_system_user where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <sql id="Company_List_Project" >
+        <where >
+            <if test="creator != null  ">
+                su.creator = #{creator}
+            </if>
+            <if test="userType != null  ">
+               and su.user_type = #{userType}
+            </if>
+            <if test="userName != null" >
+                and su.user_name like "%"#{userName}"%"
+            </if>
+        </where>
+    </sql>
+
+
+    <select id="queryCompanyUser" parameterType="com.hujiang.project.zhgd.hjSystemUser.domain.UserParam" resultMap="UserParamResult">
+        SELECT
+        *
+        FROM
+        hj_system_user su
+        <include refid="Company_List_Project" />
+        <if test="offset != null &amp;&amp; limit != null">
+            limit ${offset},${limit}
+        </if>
+    </select>
+
+    <select id="queryCompanyUserCount" resultType="java.lang.Integer">
+        SELECT
+        COUNT(*)
+        FROM
+        hj_system_user su
+        <include refid="Company_List_Project" />
+    </select>
+    
+</mapper>

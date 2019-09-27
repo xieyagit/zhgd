@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjConstructionProject.mapper.HjConstructionProjectMapper">
+    
+    <resultMap type="HjConstructionProject" id="HjConstructionProjectResult">
+        <result property="id"    column="id"    />
+        <result property="constructionId"    column="construction_id"    />
+        <result property="projectId"    column="project_id"    />
+    </resultMap>
+	
+	<sql id="selectHjConstructionProjectVo">
+        select id, construction_id, project_id from hj_construction_project
+    </sql>
+	
+    <select id="selectHjConstructionProjectList" parameterType="HjConstructionProject" resultMap="HjConstructionProjectResult">
+        <include refid="selectHjConstructionProjectVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="constructionId != null "> and construction_id = #{constructionId}</if>
+             <if test="projectId != null "> and project_id = #{projectId}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjConstructionProjectById" parameterType="Integer" resultMap="HjConstructionProjectResult">
+        <include refid="selectHjConstructionProjectVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectHjConstructionProjectByProjectId" parameterType="Integer" resultMap="HjConstructionProjectResult">
+        <include refid="selectHjConstructionProjectVo"/>
+        where construction_id = #{constructionId}
+    </select>
+
+
+    <select id="selectHjConstructionList" parameterType="Integer" resultMap="HjConstructionProjectResult">
+        <include refid="selectHjConstructionProjectVo"/>
+        where project_id = #{projectId}
+    </select>
+
+    <insert id="insertHjConstructionProject" parameterType="HjConstructionProject">
+        insert into hj_construction_project
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="constructionId != null  ">construction_id,</if>
+			<if test="projectId != null  ">project_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="constructionId != null  ">#{constructionId},</if>
+			<if test="projectId != null  ">#{projectId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjConstructionProject" parameterType="HjConstructionProject">
+        update hj_construction_project
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="constructionId != null  ">construction_id = #{constructionId},</if>
+            <if test="projectId != null  ">project_id = #{projectId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjConstructionProjectById" parameterType="Integer">
+        delete from hj_construction_project where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjConstructionProjectByIds" parameterType="String">
+        delete from hj_construction_project where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjTeam.mapper.HjTeamMapper">
+    
+    <resultMap type="HjTeam" id="HjTeamResult">
+        <result property="id"    column="id"    />
+        <result property="teamName"    column="team_name"    />
+        <result property="constructionId"    column="construction_id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="updateDate"    column="update_date"    />
+        <result property="remark"    column="remark"    />
+        <result property="projectName"    column="projectName"    />
+        <result property="companyName"    column="companyName"    />
+        <result property="teamType"    column="team_type"    />
+        <result property="teamId"    column="team_id"    />
+
+    </resultMap>
+	
+	<sql id="selectHjTeamVo">
+        select id, team_name, construction_id, project_id, create_date, update_date,remark
+        ,(select p.project_name from hj_project p where p.id=project_id) projectName,
+        (select c.construction_name from hj_construction_company c where c.id=construction_id) companyName,
+        team_type,team_id
+        from hj_team t
+    </sql>
+	
+    <select id="selectHjTeamList" parameterType="HjTeam" resultMap="HjTeamResult">
+        <include refid="selectHjTeamVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="teamName != null  and teamName != '' "> and team_name like '%${teamName}%'</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+             <if test="teamType != null  and teamType != '' "> and team_type = #{teamType}</if>
+             <if test="teamId != null  and teamId != '' "> and team_id = #{teamId}</if>
+             <if test="companyName != null  and companyName != '' "> and construction_id in (select c.id from hj_construction_company c  where  c.construction_name like '%${companyName}%')  </if>
+             <if test="constructionId != null "> and construction_id = #{constructionId}</if>
+             <if test="projectId != null "> and project_id = #{projectId}</if>
+             <if test="createDate != null "> and create_date = #{createDate}</if>
+             <if test="updateDate != null "> and update_date = #{updateDate}</if>
+         </where>
+        order by create_date desc
+    </select>
+    <select id="getHjTeam" parameterType="HjTeam" resultMap="HjTeamResult">
+        SELECT * FROM `hj_team`where team_name =#{teamName} and project_id = #{projectId}
+    </select>
+
+    <select id="selectHjTeamById" parameterType="Integer" resultMap="HjTeamResult">
+        <include refid="selectHjTeamVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjTeam" parameterType="HjTeam">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into hj_team
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="teamName != null  and teamName != ''  ">team_name,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="constructionId != null  ">construction_id,</if>
+			<if test="projectId != null  ">project_id,</if>
+			<if test="createDate != null  ">create_date,</if>
+			<if test="updateDate != null  ">update_date,</if>
+            <if test="teamType != null  and teamType != '' ">team_type,</if>
+            <if test="teamId != null  and teamId != '' ">team_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="teamName != null  and teamName != ''  ">#{teamName},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="constructionId != null  ">#{constructionId},</if>
+			<if test="projectId != null  ">#{projectId},</if>
+			<if test="createDate != null  ">#{createDate},</if>
+			<if test="updateDate != null  ">#{updateDate},</if>
+            <if test="teamType != null  and teamType != '' ">#{teamType},</if>
+            <if test="teamId != null  and teamId != '' ">#{teamId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjTeam" parameterType="HjTeam">
+        update hj_team
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="teamName != null  and teamName != ''  ">team_name = #{teamName},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="constructionId != null  ">construction_id = #{constructionId},</if>
+            <if test="projectId != null  ">project_id = #{projectId},</if>
+            <if test="createDate != null  ">create_date = #{createDate},</if>
+            <if test="updateDate != null  ">update_date = #{updateDate},</if>
+            <if test="teamType != null  and teamType != '' "> and team_type = #{teamType},</if>
+            <if test="teamId != null  and teamId != '' "> and team_id = #{teamId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjTeamById" parameterType="Integer">
+        delete from hj_team where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjTeamByIds" parameterType="String">
+        delete from hj_team where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

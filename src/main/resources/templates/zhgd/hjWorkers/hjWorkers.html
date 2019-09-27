@@ -1,0 +1,305 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+							<li>
+								姓名：<input type="text" name="empName"/>
+							</li>
+
+							<li>
+								身份证号码：<input type="text" name="idCode"/>
+							</li>
+
+							<li>
+								手机号码：<input type="text" name="empPhon"/>
+							</li>
+
+							<li>
+								性别：<input type="text" name="empSex"/>
+							</li>
+
+							<li>
+								民族：<input type="text" name="empNation"/>
+							</li>
+
+							<li>
+								身份证地址：<input type="text" name="idAddress"/>
+							</li>
+
+							<li>
+								签发机关：<input type="text" name="idAgency"/>
+							</li>
+
+							<li>
+								有效期限：<input type="text" name="idValiddate"/>
+							</li>
+
+							<li>
+								出生日期：<input type="text" name="dateOfBirth"/>
+							</li>
+
+							<li>
+								籍贯：<input type="text" name="nativePlace"/>
+							</li>
+
+							<li>
+								是否班组长(0否，1是)：<input type="text" name="isTeam"/>
+							</li>
+
+							<li>
+								工种名称：<input type="text" name="jobName"/>
+							</li>
+
+							<li>
+								开户行：<input type="text" name="empBankname"/>
+							</li>
+
+							<li>
+								银行账号：<input type="text" name="empCardnum"/>
+							</li>
+
+							<li>
+								账户类型：<input type="text" name="accountType"/>
+							</li>
+
+							<li>
+								开户地址：<input type="text" name="accountAddress"/>
+							</li>
+
+							<li>
+								获得证书：<input type="text" name="credential"/>
+							</li>
+
+							<li>
+								备注：<input type="text" name="remark"/>
+							</li>
+
+							<li>
+								人脸照片：<input type="text" name="faceUrl"/>
+							</li>
+
+							<li>
+								身份证人脸照片：<input type="text" name="empNaticeplace"/>
+							</li>
+
+							<li>
+								身份证正面照片：<input type="text" name="idphotoScan"/>
+							</li>
+
+							<li>
+								身份证反面照片：<input type="text" name="idphotoScan2"/>
+							</li>
+
+							<li>
+								银行卡照片：<input type="text" name="bankCardUrl"/>
+							</li>
+
+							<li>
+								创建时间：<input type="text" name="createDate"/>
+							</li>
+
+							<li>
+								修改时间：<input type="text" name="updateDate"/>
+							</li>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="zhgd:hjWorkers:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="zhgd:hjWorkers:edit">
+					<i class="fa fa-edit"></i> 修改
+				</a>
+				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="zhgd:hjWorkers:remove">
+					<i class="fa fa-remove"></i> 删除
+				</a>
+				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="zhgd:hjWorkers:export">
+						<i class="fa fa-download"></i> 导出
+				 </a>
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('zhgd:hjWorkers:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('zhgd:hjWorkers:remove')}]];
+        var prefix = ctx + "zhgd/hjWorkers";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "工人库",
+				search: false,
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'id', 
+					title : 'ID',
+					visible: false
+				},
+				{
+					field : 'empName', 
+					title : '姓名',
+					sortable: true
+				},
+				{
+					field : 'idCode', 
+					title : '身份证号码',
+					sortable: true
+				},
+				{
+					field : 'empPhon', 
+					title : '手机号码',
+					sortable: true
+				},
+				{
+					field : 'empSex', 
+					title : '性别',
+					sortable: true
+				},
+				{
+					field : 'empNation', 
+					title : '民族',
+					sortable: true
+				},
+				{
+					field : 'idAddress', 
+					title : '身份证地址',
+					sortable: true
+				},
+				{
+					field : 'idAgency', 
+					title : '签发机关',
+					sortable: true
+				},
+				{
+					field : 'idValiddate', 
+					title : '有效期限',
+					sortable: true
+				},
+				{
+					field : 'dateOfBirth', 
+					title : '出生日期',
+					sortable: true
+				},
+				{
+					field : 'nativePlace', 
+					title : '籍贯',
+					sortable: true
+				},
+				{
+					field : 'isTeam', 
+					title : '是否班组长(0否，1是)',
+					sortable: true
+				},
+				{
+					field : 'jobName', 
+					title : '工种名称',
+					sortable: true
+				},
+				{
+					field : 'empBankname', 
+					title : '开户行',
+					sortable: true
+				},
+				{
+					field : 'empCardnum', 
+					title : '银行账号',
+					sortable: true
+				},
+				{
+					field : 'accountType', 
+					title : '账户类型',
+					sortable: true
+				},
+				{
+					field : 'accountAddress', 
+					title : '开户地址',
+					sortable: true
+				},
+				{
+					field : 'credential', 
+					title : '获得证书',
+					sortable: true
+				},
+				{
+					field : 'remark', 
+					title : '备注',
+					sortable: true
+				},
+				{
+					field : 'faceUrl', 
+					title : '人脸照片',
+					sortable: true
+				},
+				{
+					field : 'empNaticeplace', 
+					title : '身份证人脸照片',
+					sortable: true
+				},
+				{
+					field : 'idphotoScan', 
+					title : '身份证正面照片',
+					sortable: true
+				},
+				{
+					field : 'idphotoScan2', 
+					title : '身份证反面照片',
+					sortable: true
+				},
+				{
+					field : 'bankCardUrl', 
+					title : '银行卡照片',
+					sortable: true
+				},
+				{
+					field : 'createDate', 
+					title : '创建时间',
+					sortable: true
+				},
+				{
+					field : 'updateDate', 
+					title : '修改时间',
+					sortable: true
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

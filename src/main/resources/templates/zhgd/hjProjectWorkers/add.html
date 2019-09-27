@@ -1,0 +1,391 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-hjProjectWorkers-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">姓名：</label>
+				<div class="col-sm-8">
+					<input id="empName" name="empName" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">身份证号码：</label>
+				<div class="col-sm-8">
+					<input id="idCode" name="idCode" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">手机号码：</label>
+				<div class="col-sm-8">
+					<input id="empPhon" name="empPhon" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">性别：</label>
+				<div class="col-sm-8">
+					<!--<input id="empSex" name="empSex" class="form-control" type="text">-->
+					<input type="radio"  name="empSex"  th:value="0" checked />男
+					<input type="radio"  name="empSex"  th:value="1" />女
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">民族：</label>
+				<div class="col-sm-8">
+					<input id="empNation" name="empNation" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">身份证地址：</label>
+				<div class="col-sm-8">
+					<input id="idAddress" name="idAddress" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">签发机关：</label>
+				<div class="col-sm-8">
+					<input id="idAgency" name="idAgency" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">有效期限：</label>
+				<div class="col-sm-8">
+					<input id="idValiddate" name="idValiddate" class="time-input" type="text" readonly>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">出生日期：</label>
+				<div class="col-sm-8">
+					<input id="dateOfBirth" name="dateOfBirth" class="time-input" type="text" readonly>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">籍贯：</label>
+				<div class="col-sm-8">
+					<input id="nativePlace" name="nativePlace" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">进场日期：</label>
+				<div class="col-sm-8">
+					<input id="startTime" name="startTime" class="time-input" type="text" readonly>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">退场日期：</label>
+				<div class="col-sm-8">
+					<input id="endTime" name="endTime" class="time-input" type="text" readonly>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">所属班组id：</label>
+				<div class="col-sm-8">
+					<input id="workTypenameId" name="workTypenameId" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">是否班组长：</label>
+				<div class="col-sm-8">
+					<!--<input id="isTeam" name="isTeam" class="form-control" type="text">-->
+					<input type="radio"  name="isTeam"  th:value="0" checked />否
+					<input type="radio"  name="isTeam"  th:value="1" />是
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">是否重要人员：</label>
+				<div class="col-sm-8">
+					<!--<input id="cwrIskeypsn" name="cwrIskeypsn" class="form-control" type="text">-->
+					<input type="radio"  name="cwrIskeypsn"  th:value="0" checked />否
+					<input type="radio"  name="cwrIskeypsn"  th:value="1" />是
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">人员类别：</label>
+				<div class="col-sm-8">
+					<select id="jobTypename" name="jobTypename" class="form-control" >
+						<option value="">请选择人员类别</option>
+						<option th:each="p:${job}" th:value="${p.tag}" th:text="${p.title}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">工种：</label>
+				<div class="col-sm-8">
+					<select id="jobName" name="jobName" class="form-control" >
+						<option value="">请选择工种</option>
+						<option th:each="p:${work}" th:value="${p.tag}" th:text="${p.title}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">人员类型：</label>
+				<div class="col-sm-8">
+					<select id="empCategory" name="empCategory" class="form-control" >
+						<option value="">请选择人员类型</option>
+						<option th:each="p:${emp}" th:value="${p.tag}" th:text="${p.title}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">是否办理合同：</label>
+				<div class="col-sm-8">
+					<!--<input id="ifContract" name="ifContract" class="form-control" type="text">-->
+					<input type="radio"  name="ifContract"  th:value="0" checked />否
+					<input type="radio"  name="ifContract"  th:value="1" />是
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">所属工做部门：</label>
+				<div class="col-sm-8">
+					<input id="empDept" name="empDept" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">现工作部门：</label>
+				<div class="col-sm-8">
+					<input id="obDept" name="obDept" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">开户行：</label>
+				<div class="col-sm-8">
+					<input id="empBankname" name="empBankname" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">银行账号：</label>
+				<div class="col-sm-8">
+					<input id="empCardnum" name="empCardnum" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">账户类型：</label>
+				<div class="col-sm-8">
+					<select id="accountType" name="accountType" class="form-control" >
+						<option value="">请选择账户类型</option>
+						<option th:each="p:${bank}" th:value="${p.tag}" th:text="${p.title}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">开户地址：</label>
+				<div class="col-sm-8">
+					<input id="accountAddress" name="accountAddress" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">获得证书：</label>
+				<div class="col-sm-8">
+					<input id="credential" name="credential" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<input id="remark" name="remark" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">简易劳动合同上传状态：</label>
+				<div class="col-sm-8">
+					<!--<input id="contract" name="contract" class="form-control" type="text">-->
+					<input type="radio"  name="contract"  th:value="0" checked />未上传
+					<input type="radio"  name="contract"  th:value="1" />已上传
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">工人进场承诺书上传状态：</label>
+				<div class="col-sm-8">
+					<!--<input id="entrance" name="entrance" class="form-control" type="text">-->
+					<input type="radio"  name="entrance"  th:value="0" checked />未上传
+					<input type="radio"  name="entrance"  th:value="1" />已上传
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">工人退场承诺书上传状态：</label>
+				<div class="col-sm-8">
+					<!--<input id="exeunt" name="exeunt" class="form-control" type="text">-->
+					<input type="radio"  name="exeunt"  th:value="0" checked />未上传
+					<input type="radio"  name="exeunt"  th:value="1" />已上传
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">两制“工作”确认书上传状态：</label>
+				<div class="col-sm-8">
+					<!--<input id="workConfirm" name="workConfirm" class="form-control" type="text">-->
+					<input type="radio"  name="workConfirm"  th:value="0" checked />未上传
+					<input type="radio"  name="workConfirm"  th:value="1" />已上传
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">身份证正反面文件上传状态：</label>
+				<div class="col-sm-8">
+					<!--<input id="iDCardPDF" name="iDCardPDF" class="form-control" type="text">-->
+					<input type="radio"  name="iDCardPDF"  th:value="0" checked />未上传
+					<input type="radio"  name="iDCardPDF"  th:value="1" />已上传
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">安全教育培训是否合格：</label>
+				<div class="col-sm-8">
+					<!--<input id="isTrain" name="isTrain" class="form-control" type="text">-->
+					<input type="radio"  name="isTrain"  th:value="0" checked />未上传
+					<input type="radio"  name="isTrain"  th:value="1" />已上传
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">人脸照片：</label>
+				<div class="col-sm-8">
+					<input id="faceUrlimage" name="faceUrlimage" class="file-control" type="file" accept = "image/*">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">身份证人脸照片：</label>
+				<div class="col-sm-8">
+					<input id="empNaticeplaceimage" name="empNaticeplaceimage" class="file-control" type="file" accept = "image/*">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">身份证正面照片：</label>
+				<div class="col-sm-8">
+					<input id="idphotoScanimage" name="idphotoScanimage" class="file-control" type="file" accept = "image/*">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">身份证反面照片：</label>
+				<div class="col-sm-8">
+					<input id="idphotoScan2image" name="idphotoScan2image" class="file-control" type="file" accept = "image/*">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">银行卡照片：</label>
+				<div class="col-sm-8">
+					<input id="bankCardUrlimage" name="bankCardUrlimage" class="file-control" type="file" accept = "image/*">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">项目id：</label>
+				<div class="col-sm-8">
+					<input id="projectId" name="projectId" class="form-control" type="text">
+				</div>
+			</div>
+			<!--<div class="form-group">	-->
+				<!--<label class="col-sm-3 control-label">进退场状态：</label>-->
+				<!--<div class="col-sm-8">-->
+					<input id="enterAndRetreatCondition" name="enterAndRetreatCondition" class="form-control" type="hidden" th:value="2">
+					<!--<input type="radio"  name="enterAndRetreatCondition"  th:value="0" checked />进场-->
+					<!--<input type="radio"  name="enterAndRetreatCondition"  th:value="1" />退场-->
+				<!--</div>-->
+			<!--</div>-->
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "zhgd/hjProjectWorkers"
+		$("#form-hjProjectWorkers-add").validate({
+			rules:{
+                empName:{
+					required:true,
+				},
+                idCode:{
+                    required:true,
+                },
+                empPhon:{
+                    required:true,
+                },
+                empSex:{
+                    required:true,
+                },
+                empNation:{
+                    required:true,
+                },
+                idAddress:{
+                    required:true,
+                },
+                idAgency:{
+                    required:true,
+                },
+                idValiddate:{
+                    required:true,
+                },
+                startTime:{
+                    required:true,
+                },
+                workTypename_id:{
+                    required:true,
+                },
+                isTeam:{
+                    required:true,
+                },
+                cwrIskeypsn:{
+                    required:true,
+                },
+                jobTypename:{
+                    required:true,
+                },
+                jobName:{
+                    required:true,
+                },
+
+                empCategory:{
+                    required:true,
+                },
+
+                ifContract:{
+                    required:true,
+                },
+
+                faceUrlimage:{
+                    required:true,
+                },
+
+                workTypenameId:{
+                    required:true,
+                },
+                idphotoScanimage:{
+                    required:true,
+                },
+                idphotoScan2image:{
+                    required:true,
+                },
+                projectId:{
+                    required:true,
+                },
+                empNaticeplaceimage:{
+                    required:true,
+                },
+
+
+
+
+            }
+		});
+		
+		// function submitHandler() {
+	    //     if ($.validate.form()) {
+	    //         $.operate.save(prefix + "/add", $('#form-hjProjectWorkers-add').serialize());
+	    //     }
+	    // }
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.modal.loading("正在处理中，请稍后...");
+                $.ajax({
+                    url: prefix + "/add",
+                    type: "post",
+                    dataType: "json",
+                    contentType: false, //不设置内容类型
+                    processData: false, //不处理数据
+                    data: new FormData($('#form-hjProjectWorkers-add')[0]),
+                    success: function(result) {
+                        $.operate.successCallback(result);
+                    }
+                })
+
+            }
+        }
+	</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-hjConstructionProject-edit" th:object="${hjConstructionProject}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">参建单位id：</label>
+				<div class="col-sm-8">
+					<input id="constructionId" name="constructionId" th:field="*{constructionId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">项目ID：</label>
+				<div class="col-sm-8">
+					<input id="projectId" name="projectId" th:field="*{projectId}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "zhgd/hjConstructionProject";
+		$("#form-hjConstructionProject-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-hjConstructionProject-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-sbElevatorOperator-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备编号：</label>
+				<div class="col-sm-8">
+					<input id="deviceNo" name="deviceNo" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">操作开始时间：</label>
+				<div class="col-sm-8">
+					<input id="startTime" name="startTime" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">操作结束时间：</label>
+				<div class="col-sm-8">
+					<input id="endTime" name="endTime" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">方向(1 上行,2 下行)：</label>
+				<div class="col-sm-8">
+					<input id="direction" name="direction" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">最高承重值：</label>
+				<div class="col-sm-8">
+					<input id="maxLoadValue" name="maxLoadValue" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">是否发生超载(0.否1.是)：</label>
+				<div class="col-sm-8">
+					<input id="isOverLoad" name="isOverLoad" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">持卡人姓名：</label>
+				<div class="col-sm-8">
+					<input id="operatorName" name="operatorName" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">是否非持卡人操作(0.否1.是)：</label>
+				<div class="col-sm-8">
+					<input id="isillegalOperation" name="isillegalOperation" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备编号：</label>
+				<div class="col-sm-8">
+					<input id="hxzid" name="hxzid" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "zhgd/sbElevatorOperator"
+		$("#form-sbElevatorOperator-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/add", $('#form-sbElevatorOperator-add').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

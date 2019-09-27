@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjFile.mapper.HjFileMapper">
+    
+    <resultMap type="HjFile" id="HjFileResult">
+        <result property="id"    column="id"    />
+        <result property="folderId"    column="folder_id"    />
+        <result property="fileUrl"    column="file_url"    />
+        <result property="fileSize"    column="file_size"    />
+        <result property="uploadAccount"    column="upload_account"    />
+        <result property="fileName"    column="file_name"    />
+        <result property="uploadTime"    column="upload_time"    />
+    </resultMap>
+	
+	<sql id="selectHjFileVo">
+        select id, folder_id, file_url, file_size, upload_account, file_name,upload_time from hj_file
+    </sql>
+	
+    <select id="selectHjFileList" parameterType="HjFile" resultMap="HjFileResult">
+        <include refid="selectHjFileVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="folderId != null "> and folder_id = #{folderId}</if>
+             <if test="fileUrl != null  and fileUrl != '' "> and file_url = #{fileUrl}</if>
+             <if test="fileSize != null "> and file_size = #{fileSize}</if>
+             <if test="uploadAccount != null  and uploadAccount != '' "> and upload_account = #{uploadAccount}</if>
+             <if test="fileName != null  and fileName != '' "> and file_name like"%${fileName}%"</if>
+         </where>
+    </select>
+    
+    <select id="selectHjFileById" parameterType="Integer" resultMap="HjFileResult">
+        <include refid="selectHjFileVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectHjFileSize" parameterType="Integer" resultType="Map">
+      select  IFNULL(sum(f.file_size) ,0)  as `sum`,s.file_size as `size` from hj_folder fo
+        LEFT JOIN hj_file f on fo.id=f.folder_id
+        LEFT JOIN hj_file_size s on fo.project_id=s.project_id
+        where fo.project_id=#{projectId}
+    </select>
+
+    <insert id="insertHjFile" parameterType="HjFile">
+        insert into hj_file
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="folderId != null  ">folder_id,</if>
+			<if test="fileUrl != null  and fileUrl != ''  ">file_url,</if>
+			<if test="fileSize != null  ">file_size,</if>
+			<if test="uploadAccount != null  and uploadAccount != ''  ">upload_account,</if>
+			<if test="fileName != null  and fileName != ''  ">file_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="folderId != null  ">#{folderId},</if>
+			<if test="fileUrl != null  and fileUrl != ''  ">#{fileUrl},</if>
+			<if test="fileSize != null  ">#{fileSize},</if>
+			<if test="uploadAccount != null  and uploadAccount != ''  ">#{uploadAccount},</if>
+			<if test="fileName != null  and fileName != ''  ">#{fileName},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjFile" parameterType="HjFile">
+        update hj_file
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="folderId != null  ">folder_id = #{folderId},</if>
+            <if test="fileUrl != null  and fileUrl != ''  ">file_url = #{fileUrl},</if>
+            <if test="fileSize != null  ">file_size = #{fileSize},</if>
+            <if test="uploadAccount != null  and uploadAccount != ''  ">upload_account = #{uploadAccount},</if>
+            <if test="fileName != null  and fileName != ''  ">file_name = #{fileName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjFileById" parameterType="Integer">
+        delete from hj_file where id = #{id}
+    </delete>
+    <delete id="deleteHjFileByFolderId" parameterType="Integer">
+        delete from hj_file where folder_id = #{folderId}
+    </delete>
+	
+    <delete id="deleteHjFileByIds" parameterType="String">
+        delete from hj_file where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

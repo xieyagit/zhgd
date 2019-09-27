@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbArea.mapper.SbAreaMapper">
+    
+    <resultMap type="SbArea" id="SbAreaResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="pid"    column="pid"    />
+        <result property="bid"    column="bid"    />
+        <result property="xloc"    column="xloc"    />
+        <result property="yloc"    column="yloc"    />
+        <result property="radius"    column="radius"    />
+    </resultMap>
+
+    <resultMap id="area" type="Area">
+        <result property="jid" column="jid"/>
+        <result property="projectName" column="projectName"/>
+        <result property="aid" column="aid"/>
+        <result property="aname" column="aname"/>
+        <result property="axloc" column="axloc"/>
+        <result property="ayloc" column="ayloc"/>
+        <result property="radius" column="radius"/>
+        <result property="pid" column="pid"/>
+        <result property="pname" column="pname"/>
+        <result property="imei" column="imei"/>
+        <result property="createDate" column="createDate"/>
+        <result property="pxloc" column="pxloc"/>
+        <result property="pyloc" column="pyloc"/>
+    </resultMap>
+
+    <resultMap id="OptionsLocationResult" type="OptionsLocation">
+        <result property="areaId" column="areaId"/>
+        <result property="areaName" column="areaName"/>
+        <result property="areaAddress" column="areaAddress"/>
+        <result property="constructionId" column="constructionId"/>
+        <result property="constructionName" column="constructionName"/>
+        <result property="userId" column="userId"/>
+        <result property="userName" column="userName"/>
+    </resultMap>
+
+    <resultMap id="OptionsUserResult" type="OptionsUser">
+        <result property="id" column="id"/>
+        <result property="imei" column="imei"/>
+        <result property="userId" column="userId"/>
+        <result property="areaId" column="areaId"/>
+        <result property="userName" column="userName"/>
+        <result property="areaName" column="areaName"/>
+    </resultMap>
+
+	<sql id="selectSbAreaVo">
+        select id, name, pid, bid, xloc, yloc, radius from sb_area
+    </sql>
+
+    <select id="getAreaList" parameterType="OptionsLocation" resultMap="OptionsLocationResult">
+        SELECT
+            a.id AS  areaId,
+            a.name AS areaName,
+            a.address AS areaAddress,
+            cc.id AS constructionId,
+            cc.construction_name AS constructionName
+        FROM
+            `sb_area` AS a
+        LEFT JOIN hj_construction_company AS cc ON (a.bid=cc.id)
+        where a.pid = #{projectId}
+    </select>
+
+    <select id="getAreaById" parameterType="OptionsLocation" resultMap="OptionsLocationResult">
+        SELECT
+            a.id AS  areaId,
+            a.name AS areaName,
+            a.address AS areaAddress,
+            cc.id AS constructionId,
+            cc.construction_name AS constructionName
+        FROM
+            `sb_area` AS a
+        LEFT JOIN hj_construction_company AS cc ON (a.bid=cc.id)
+        where a.id = #{areaId}
+    </select>
+
+    <delete id="deleteAreaUser" parameterType="Integer">
+        delete from sb_hire where peopleId = #{userId} and areaId=#{areaId}
+    </delete>
+    <delete id="deleteUser" parameterType="Integer">
+        delete from hj_project_workers where id = #{userId}
+    </delete>
+    <insert id="addArea" parameterType="OptionsLocation">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="areaId">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into sb_area
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="areaName != null  and areaName != ''  ">name,</if>
+            <if test="projectId != null  ">pid,</if>
+            <if test="constructionId != null  ">bid,</if>
+            <if test="areaXloc != null  ">xloc,</if>
+            <if test="areaYloc != null  ">yloc,</if>
+            <if test="radius != null  ">radius,</if>
+            <if test="areaAddress != null  ">address,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="areaName != null  and areaName != ''  ">#{areaName},</if>
+            <if test="projectId != null  ">#{projectId},</if>
+            <if test="constructionId != null  ">#{constructionId},</if>
+            <if test="areaXloc != null  ">#{areaXloc},</if>
+            <if test="areaYloc != null  ">#{areaYloc},</if>
+            <if test="radius != null  ">#{radius},</if>
+            <if test="areaAddress != null  ">#{areaAddress},</if>
+        </trim>
+    </insert>
+    <update id="updateAreaUser" parameterType="OptionsUser">
+        UPDATE `sb_hire`
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="imei != null and imei != ''">imei = #{imei},</if>
+            <if test="areaId != null and areaId != ''">areaId = #{areaId},</if>
+        </trim>
+        where peopleId = #{userId}
+    </update>
+    <update id="updateUserPhone" parameterType="OptionsUser">
+        UPDATE `hj_project_workers`
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null and userName != ''">emp_name = #{userName},</if>
+            <if test="userPhone != null and userPhone != ''">emp_phon = #{userPhone},</if>
+        </trim>
+        where id = #{userId}
+    </update>
+    <insert id="insertAreaUser" parameterType="OptionsUser">
+        insert into sb_hire
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="imei != null  and imei != ''  ">imei,</if>
+            <if test="areaId != null  ">areaId,</if>
+            <if test="userId != null and userId != ''">peopleId</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="imei != null  and imei != ''  ">#{imei},</if>
+            <if test="areaId != null  ">#{areaId},</if>
+            <if test="userId != null and userId != ''">#{userId},</if>
+        </trim>
+    </insert>
+    <insert id="insertUserPhone" parameterType="OptionsUser">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into hj_project_workers
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userName != null  and userName != ''  ">emp_name,</if>
+            <if test="userPhone != null and userPhone != '' ">emp_phon,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userName != null  and userName != ''  ">#{userName},</if>
+            <if test="userPhone != null and userPhone ">#{userPhone},</if>
+        </trim>
+    </insert>
+    <select id="getUserList" parameterType="OptionsUser" resultMap="OptionsUserResult">
+        SELECT
+        h.imei,
+        w.id AS userId,
+        areaId,
+        a.`name` AS areaName,
+        w.emp_name AS userName
+        FROM
+        `sb_hire` AS h
+        LEFT JOIN sb_area AS a ON (h.areaId=a.id)
+        LEFT JOIN hj_project_workers AS w ON(h.peopleId = w.id)
+        WHERE 1=1
+        <if test="filed != null and filed != '' ">
+            AND CONCAT(a.name, w.emp_name) LIKE CONCAT('%',#{filed},'%')
+        </if>
+        <if test="projectId != null and projectId != '' ">AND a.pid = #{projectId}</if>
+        <if test="areaId != null and areaId != ''">AND h.areaId =#{areaId}</if>
+    </select>
+    <select id="getAreaUserById" parameterType="OptionsUser" resultMap="OptionsUserResult">
+        SELECT
+        h.imei,
+        w.id AS userId,
+        areaId,
+        a.`name` AS areaName,
+        w.emp_name AS userName
+        FROM
+        `sb_hire` AS h
+        LEFT JOIN sb_area AS a ON (h.areaId=a.id)
+        LEFT JOIN hj_project_workers AS w ON(h.peopleId = w.id)
+     WHERE
+        w.id = #{userId}
+    </select>
+    <update id="updateArea" parameterType="OptionsLocation">
+        update sb_area
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="areaName != null  ">`name`=#{areaName},</if>
+            <if test="areaAddress != null  ">address=#{areaAddress},</if>
+            <if test="constructionId != null  ">bid=#{constructionId},</if>
+        </trim>
+        where id = #{areaId}
+    </update>
+    <delete id="deleteArea" parameterType="Integer">
+        delete from sb_area where id = #{areaId}
+    </delete>
+    <select id="selectSbAreaList" parameterType="SbArea" resultMap="SbAreaResult">
+        <include refid="selectSbAreaVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="name != null  and name != '' "> and name = #{name}</if>
+             <if test="pid != null "> and pid = #{pid}</if>
+             <if test="bid != null "> and bid = #{bid}</if>
+             <if test="xloc != null "> and xloc = #{xloc}</if>
+             <if test="yloc != null "> and yloc = #{yloc}</if>
+             <if test="radius != null "> and radius = #{radius}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbAreaById" parameterType="Integer" resultMap="SbAreaResult">
+        <include refid="selectSbAreaVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbArea" parameterType="SbArea">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into sb_area
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="pid != null  ">pid,</if>
+			<if test="bid != null  ">bid,</if>
+			<if test="xloc != null  ">xloc,</if>
+			<if test="yloc != null  ">yloc,</if>
+			<if test="radius != null  ">radius,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="pid != null  ">#{pid},</if>
+			<if test="bid != null  ">#{bid},</if>
+			<if test="xloc != null  ">#{xloc},</if>
+			<if test="yloc != null  ">#{yloc},</if>
+			<if test="radius != null  ">#{radius},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRadius" parameterType="SbArea">
+        update sb_area
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="radius != null  "> radius = #{radius}</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateSbArea" parameterType="SbArea">
+        update sb_area
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="pid != null  ">pid = #{pid},</if>
+            <if test="bid != null  ">bid = #{bid},</if>
+            <if test="xloc != null  ">xloc = #{xloc},</if>
+            <if test="yloc != null  ">yloc = #{yloc},</if>
+            <if test="radius != null  ">radius = #{radius},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbAreaById" parameterType="Integer">
+        delete from sb_area where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbAreaByIds" parameterType="String">
+        delete from sb_area where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbApiFaceEquipment.mapper.SbApiFaceEquipmentMapper">
+    
+    <resultMap type="SbApiFaceEquipment" id="SbApiFaceEquipmentResult">
+        <result property="id"    column="id"    />
+        <result property="equipmentId"    column="equipment_id"    />
+        <result property="inOrOut"    column="in_or_out"    />
+        <result property="equipmentManufacturer"    column="equipment_manufacturer"    />
+    </resultMap>
+	
+	<sql id="selectSbApiFaceEquipmentVo">
+        select id, equipment_id, in_or_out, equipment_manufacturer from sb_api_face_equipment
+    </sql>
+	
+    <select id="selectSbApiFaceEquipmentList" parameterType="SbApiFaceEquipment" resultMap="SbApiFaceEquipmentResult">
+        <include refid="selectSbApiFaceEquipmentVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="equipmentId != null  and equipmentId != '' "> and equipment_id = #{equipmentId}</if>
+             <if test="inOrOut != null  and inOrOut != '' "> and in_or_out = #{inOrOut}</if>
+             <if test="equipmentManufacturer != null  and equipmentManufacturer != '' "> and equipment_manufacturer = #{equipmentManufacturer}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbApiFaceEquipmentById" parameterType="Integer" resultMap="SbApiFaceEquipmentResult">
+        <include refid="selectSbApiFaceEquipmentVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbApiFaceEquipment" parameterType="SbApiFaceEquipment">
+        insert into sb_api_face_equipment
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="equipmentId != null  and equipmentId != ''  ">equipment_id,</if>
+			<if test="inOrOut != null  and inOrOut != ''  ">in_or_out,</if>
+			<if test="equipmentManufacturer != null  and equipmentManufacturer != ''  ">equipment_manufacturer,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="equipmentId != null  and equipmentId != ''  ">#{equipmentId},</if>
+			<if test="inOrOut != null  and inOrOut != ''  ">#{inOrOut},</if>
+			<if test="equipmentManufacturer != null  and equipmentManufacturer != ''  ">#{equipmentManufacturer},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbApiFaceEquipment" parameterType="SbApiFaceEquipment">
+        update sb_api_face_equipment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="equipmentId != null  and equipmentId != ''  ">equipment_id = #{equipmentId},</if>
+            <if test="inOrOut != null  and inOrOut != ''  ">in_or_out = #{inOrOut},</if>
+            <if test="equipmentManufacturer != null  and equipmentManufacturer != ''  ">equipment_manufacturer = #{equipmentManufacturer},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbApiFaceEquipmentById" parameterType="Integer">
+        delete from sb_api_face_equipment where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbApiFaceEquipmentByIds" parameterType="String">
+        delete from sb_api_face_equipment where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

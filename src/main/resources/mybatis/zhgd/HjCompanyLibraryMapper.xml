@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjCompanyLibrary.mapper.HjCompanyLibraryMapper">
+    
+    <resultMap type="HjCompanyLibrary" id="HjCompanyLibraryResult">
+        <result property="id"    column="id"    />
+        <result property="companyName"    column="company_name"    />
+        <result property="shortName"    column="short_name"    />
+        <result property="capital"    column="capital"    />
+        <result property="companyType"    column="company_type"    />
+        <result property="legalPerson"    column="legal_person"    />
+        <result property="suid"    column="suid"    />
+        <result property="organizationCode"    column="organization_code"    />
+        <result property="bankOpen"    column="bank_open"    />
+        <result property="bankNum"    column="bank_num"    />
+        <result property="bankAddress"    column="bank_address"    />
+        <result property="address"    column="address"    />
+        <result property="contacts"    column="contacts"    />
+        <result property="mobilePhone"    column="mobile_phone"    />
+        <result property="email"    column="email"    />
+        <result property="showState"    column="show_state"    />
+        <result property="remark"    column="remark"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="updateDate"    column="update_date"    />
+        <association property="dictionaries" select="com.hujiang.project.zhgd.hjDictionaries.mapper.HjDictionariesMapper.selectHjDictionariesById"  column="company_type"/>
+    </resultMap>
+	
+	<sql id="selectHjCompanyLibraryVo">
+        select id, company_name, short_name, capital, company_type, legal_person, suid, organization_code, bank_open, bank_num, bank_address, address, contacts, mobile_phone, email, show_state, remark, create_date, update_date from hj_company_library
+    </sql>
+    <select id="selectHjCompanyLibraryListTwo" parameterType="Integer" resultMap="HjCompanyLibraryResult">
+    <include refid="selectHjCompanyLibraryVo"/>
+
+       where id in (select company_id from hj_company_hierarchy where parent_id=#{companyId}) and show_state=0
+
+    </select>
+    <select id="selectHjCompanyLibraryList" parameterType="HjCompanyLibrary" resultMap="HjCompanyLibraryResult">
+        <include refid="selectHjCompanyLibraryVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="companyName != null  and companyName != '' "> and company_name = #{companyName}</if>
+             <if test="shortName != null  and shortName != '' "> and short_name = #{shortName}</if>
+             <if test="capital != null "> and capital = #{capital}</if>
+             <if test="companyType != null "> and company_type = #{companyType}</if>
+             <if test="legalPerson != null  and legalPerson != '' "> and legal_person = #{legalPerson}</if>
+             <if test="suid != null  and suid != '' "> and suid = #{suid}</if>
+             <if test="organizationCode != null  and organizationCode != '' "> and organization_code = #{organizationCode}</if>
+             <if test="bankOpen != null  and bankOpen != '' "> and bank_open = #{bankOpen}</if>
+             <if test="bankNum != null  and bankNum != '' "> and bank_num = #{bankNum}</if>
+             <if test="bankAddress != null  and bankAddress != '' "> and bank_address = #{bankAddress}</if>
+             <if test="address != null  and address != '' "> and address = #{address}</if>
+             <if test="contacts != null  and contacts != '' "> and contacts = #{contacts}</if>
+             <if test="mobilePhone != null  and mobilePhone != '' "> and mobile_phone = #{mobilePhone}</if>
+             <if test="email != null  and email != '' "> and email = #{email}</if>
+             <if test="showState != null "> and show_state = #{showState}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+             <if test="createDate != null "> and create_date = #{createDate}</if>
+             <if test="updateDate != null "> and update_date = #{updateDate}</if>
+         </where>
+    </select>
+    <select id="selectHjCompanyLibraryPage" parameterType="Map" resultMap="HjCompanyLibraryResult">
+        <include refid="selectHjCompanyLibraryVo"/>
+        <where>
+            <if test="hj.id != null "> and id = #{hj.id}</if>
+            <if test="hj.companyName != null  and hj.companyName != '' "> and company_name like"%${hj.companyName}%"</if>
+            <if test="hj.shortName != null  and hj.shortName != '' "> and short_name like"%${hj.shortName}%"</if>
+            <if test="hj.capital != null "> and capital = #{hj.capital}</if>
+            <if test="hj.companyType != null "> and company_type = #{hj.companyType}</if>
+            <if test="hj.legalPerson != null  and hj.legalPerson != '' "> and legal_person = #{hj.legalPerson}</if>
+            <if test="hj.suid != null  and hj.suid != '' "> and suid = #{hj.suid}</if>
+            <if test="hj.organizationCode != null  and hj.organizationCode != '' "> and organization_code = #{hj.organizationCode}</if>
+            <if test="hj.bankOpen != null  and hj.bankOpen != '' "> and bank_open = #{hj.bankOpen}</if>
+            <if test="hj.bankNum != null  and hj.bankNum != '' "> and bank_num = #{hj.bankNum}</if>
+            <if test="hj.bankAddress != null  and hj.bankAddress != '' "> and bank_address = #{hj.bankAddress}</if>
+            <if test="hj.address != null  and hj.address != '' "> and address = #{hj.address}</if>
+            <if test="hj.contacts != null  and hj.contacts != '' "> and contacts = #{hj.contacts}</if>
+            <if test="hj.mobilePhone != null  and hj.mobilePhone != '' "> and mobile_phone = #{hj.mobilePhone}</if>
+            <if test="hj.email != null  and hj.email != '' "> and email = #{hj.email}</if>
+            <if test="hj.showState != null "> and show_state = #{hj.showState}</if>
+            <if test="hj.remark != null  and hj.remark != '' "> and remark = #{hj.remark}</if>
+            <if test="hj.createDate != null "> and create_date = #{hj.createDate}</if>
+            <if test="hj.updateDate != null "> and update_date = #{hj.updateDate}</if>
+            <if test="companyId != null "> and id in(select company_id from hj_company_hierarchy where parent_id=(select id from hj_company_hierarchy where company_id=#{companyId} ))</if>
+
+        </where>
+    </select>
+    
+    <select id="selectHjCompanyLibraryById" parameterType="Integer" resultMap="HjCompanyLibraryResult">
+        <include refid="selectHjCompanyLibraryVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjCompanyLibrary" parameterType="HjCompanyLibrary" >
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into hj_company_library
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="companyName != null  and companyName != ''  ">company_name,</if>
+			<if test="shortName != null  and shortName != ''  ">short_name,</if>
+			<if test="capital != null  ">capital,</if>
+			<if test="companyType != null  ">company_type,</if>
+			<if test="legalPerson != null  and legalPerson != ''  ">legal_person,</if>
+			<if test="suid != null  and suid != ''  ">suid,</if>
+			<if test="organizationCode != null  and organizationCode != ''  ">organization_code,</if>
+			<if test="bankOpen != null  and bankOpen != ''  ">bank_open,</if>
+			<if test="bankNum != null  and bankNum != ''  ">bank_num,</if>
+			<if test="bankAddress != null  and bankAddress != ''  ">bank_address,</if>
+			<if test="address != null  and address != ''  ">address,</if>
+			<if test="contacts != null  and contacts != ''  ">contacts,</if>
+			<if test="mobilePhone != null  and mobilePhone != ''  ">mobile_phone,</if>
+			<if test="email != null  and email != ''  ">email,</if>
+			<if test="showState != null  ">show_state,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="createDate != null  ">create_date,</if>
+			<if test="updateDate != null  ">update_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="companyName != null  and companyName != ''  ">#{companyName},</if>
+			<if test="shortName != null  and shortName != ''  ">#{shortName},</if>
+			<if test="capital != null  ">#{capital},</if>
+			<if test="companyType != null  ">#{companyType},</if>
+			<if test="legalPerson != null  and legalPerson != ''  ">#{legalPerson},</if>
+			<if test="suid != null  and suid != ''  ">#{suid},</if>
+			<if test="organizationCode != null  and organizationCode != ''  ">#{organizationCode},</if>
+			<if test="bankOpen != null  and bankOpen != ''  ">#{bankOpen},</if>
+			<if test="bankNum != null  and bankNum != ''  ">#{bankNum},</if>
+			<if test="bankAddress != null  and bankAddress != ''  ">#{bankAddress},</if>
+			<if test="address != null  and address != ''  ">#{address},</if>
+			<if test="contacts != null  and contacts != ''  ">#{contacts},</if>
+			<if test="mobilePhone != null  and mobilePhone != ''  ">#{mobilePhone},</if>
+			<if test="email != null  and email != ''  ">#{email},</if>
+			<if test="showState != null  ">#{showState},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="createDate != null  ">#{createDate},</if>
+			<if test="updateDate != null  ">#{updateDate},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjCompanyLibrary" parameterType="HjCompanyLibrary">
+        update hj_company_library
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyName != null  and companyName != ''  ">company_name = #{companyName},</if>
+            <if test="shortName != null  and shortName != ''  ">short_name = #{shortName},</if>
+            <if test="capital != null  ">capital = #{capital},</if>
+            <if test="companyType != null  ">company_type = #{companyType},</if>
+            <if test="legalPerson != null  and legalPerson != ''  ">legal_person = #{legalPerson},</if>
+            <if test="suid != null  and suid != ''  ">suid = #{suid},</if>
+            <if test="organizationCode != null  and organizationCode != ''  ">organization_code = #{organizationCode},</if>
+            <if test="bankOpen != null  and bankOpen != ''  ">bank_open = #{bankOpen},</if>
+            <if test="bankNum != null  and bankNum != ''  ">bank_num = #{bankNum},</if>
+            <if test="bankAddress != null  and bankAddress != ''  ">bank_address = #{bankAddress},</if>
+            <if test="address != null  and address != ''  ">address = #{address},</if>
+            <if test="contacts != null  and contacts != ''  ">contacts = #{contacts},</if>
+            <if test="mobilePhone != null  and mobilePhone != ''  ">mobile_phone = #{mobilePhone},</if>
+            <if test="email != null  and email != ''  ">email = #{email},</if>
+            <if test="showState != null  ">show_state = #{showState},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="createDate != null  ">create_date = #{createDate},</if>
+            <if test="updateDate != null  ">update_date = #{updateDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjCompanyLibraryById" parameterType="Integer">
+        delete from hj_company_library where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjCompanyLibraryByIds" parameterType="String">
+        delete from hj_company_library where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <update id="deleteHjCompanyLibraryByIdsTwo" parameterType="String">
+        update  hj_company_library set show_state=1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+</mapper>

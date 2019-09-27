@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.moduleToPush.mapper.ModuleToPushMapper">
+    
+    <resultMap type="ModuleToPush" id="ModuleToPushResult">
+        <result property="id"    column="id"    />
+        <result property="privilegesId"    column="privilegesId"    />
+        <result property="userId"    column="userId"    />
+        <result property="onOff"    column="on_off"    />
+    </resultMap>
+	
+	<sql id="selectModuleToPushVo">
+        select id, privilegesId, userId, on_off from module_to_push
+    </sql>
+    <select id="selectModuleToPush" parameterType="ModuleToPush" resultMap="ModuleToPushResult">
+        <include refid="selectModuleToPushVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="privilegesId != null "> and privilegesId = #{privilegesId}</if>
+            <if test="userId != null "> and userId = #{userId}</if>
+            <if test="onOff != null "> and on_off = #{onOff}</if>
+        </where>
+    </select>
+    <select id="getModuleToPushList" parameterType="ModuleToPush" resultMap="ModuleToPushResult">
+        select DISTINCT privilegesId,on_off  from module_to_push
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="privilegesId != null "> and privilegesId = #{privilegesId}</if>
+            <if test="userId != null "> and userId = #{userId}</if>
+            <if test="onOff != null "> and on_off = #{onOff}</if>
+        </where>
+    </select>
+	
+    <select id="selectModuleToPushList" parameterType="ModuleToPush" resultMap="ModuleToPushResult">
+        <include refid="selectModuleToPushVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="privilegesId != null "> and privilegesId = #{privilegesId}</if>
+             <if test="userId != null "> and userId = #{userId}</if>
+             <if test="onOff != null "> and on_off = #{onOff}</if>
+         </where>
+    </select>
+    
+    <select id="selectModuleToPushById" parameterType="Integer" resultMap="ModuleToPushResult">
+        <include refid="selectModuleToPushVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertModuleToPush" parameterType="ModuleToPush">
+        insert into module_to_push
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="privilegesId != null  ">privilegesId,</if>
+			<if test="userId != null  ">userId,</if>
+			<if test="onOff != null  ">on_off,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="privilegesId != null  ">#{privilegesId},</if>
+			<if test="userId != null  ">#{userId},</if>
+			<if test="onOff != null  ">#{onOff},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateModuleToPush" parameterType="ModuleToPush">
+        update module_to_push
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="onOff != null  ">on_off = #{onOff},</if>
+        </trim>
+        where privilegesId = #{privilegesId} and userId = #{userId}
+    </update>
+
+	<delete id="deleteModuleToPushById" parameterType="Integer">
+        delete from module_to_push where id = #{id}
+    </delete>
+	
+    <delete id="deleteModuleToPushByIds" parameterType="String">
+        delete from module_to_push where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

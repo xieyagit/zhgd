@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbCraneBinding.mapper.SbCraneBindingMapper">
+    
+    <resultMap type="SbCraneBinding" id="SbCraneBindingResult">
+        <result property="id"    column="id"    />
+        <result property="hxzid"    column="hxzid"    />
+        <result property="pid"    column="pid"    />
+        <result property="userid"    column="userid"    />
+        <result property="dname"    column="dname"    />
+        <result property="isSynchronization"    column="isSynchronization"    />
+        <result property="deviceNo"    column="device_no"    />
+    </resultMap>
+	
+	<sql id="selectSbCraneBindingVo">
+        select id, hxzid, pid, userid, dname, isSynchronization, device_no from sb_crane_binding
+    </sql>
+
+    <select id="selectByHxzId" parameterType="SbCraneBinding" resultMap="SbCraneBindingResult">
+        SELECT * FROM `sb_crane_binding` where pid=#{pid}
+    </select>
+    <select id="selectSbCraneBindingList" parameterType="SbCraneBinding" resultMap="SbCraneBindingResult">
+        <include refid="selectSbCraneBindingVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="hxzid != null  and hxzid != '' "> and hxzid = #{hxzid}</if>
+             <if test="pid != null "> and pid = #{pid}</if>
+             <if test="userid != null "> and userid = #{userid}</if>
+             <if test="dname != null  and dname != '' "> and dname = #{dname}</if>
+             <if test="isSynchronization != null  and isSynchronization != '' "> and isSynchronization = #{isSynchronization}</if>
+             <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbCraneBindingById" parameterType="Integer" resultMap="SbCraneBindingResult">
+        <include refid="selectSbCraneBindingVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbCraneBinding" parameterType="SbCraneBinding">
+        insert into sb_crane_binding
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="hxzid != null  and hxzid != ''  ">hxzid,</if>
+			<if test="pid != null  ">pid,</if>
+			<if test="userid != null  ">userid,</if>
+			<if test="dname != null  and dname != ''  ">dname,</if>
+			<if test="isSynchronization != null  and isSynchronization != ''  ">isSynchronization,</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">device_no,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="hxzid != null  and hxzid != ''  ">#{hxzid},</if>
+			<if test="pid != null  ">#{pid},</if>
+			<if test="userid != null  ">#{userid},</if>
+			<if test="dname != null  and dname != ''  ">#{dname},</if>
+			<if test="isSynchronization != null  and isSynchronization != ''  ">#{isSynchronization},</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbCraneBinding" parameterType="SbCraneBinding">
+        update sb_crane_binding
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="hxzid != null  and hxzid != ''  ">hxzid = #{hxzid},</if>
+            <if test="pid != null  ">pid = #{pid},</if>
+            <if test="userid != null  ">userid = #{userid},</if>
+            <if test="dname != null  and dname != ''  ">dname = #{dname},</if>
+            <if test="isSynchronization != null  and isSynchronization != ''  ">isSynchronization = #{isSynchronization},</if>
+            <if test="deviceNo != null  and deviceNo != ''  ">device_no = #{deviceNo},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbCraneBindingById" parameterType="Integer">
+        delete from sb_crane_binding where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbCraneBindingByIds" parameterType="String">
+        delete from sb_crane_binding where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

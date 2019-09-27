@@ -1,0 +1,144 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-hjCompanyLibrary-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">企业名称：</label>
+				<div class="col-sm-8">
+					<input id="companyName" name="companyName" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">简称：</label>
+				<div class="col-sm-8">
+					<input id="shortName" name="shortName" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">注册资金（：万元）：</label>
+				<div class="col-sm-8">
+					<input id="capital" name="capital" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">单位类型：</label>
+				<div class="col-sm-8">
+					<select id="companyType" name="companyType" class="form-control" >
+						<option value="">请选择单位类型</option>
+						<option th:each="p:${nuit}" th:value="${p.id}" th:text="${p.title}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">法人代表：</label>
+				<div class="col-sm-8">
+					<input id="legalPerson" name="legalPerson" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">社会统一信用代码：</label>
+				<div class="col-sm-8">
+					<input id="suid" name="suid" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">组织机构代码：</label>
+				<div class="col-sm-8">
+					<input id="organizationCode" name="organizationCode" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">基本账户开户银行：</label>
+				<div class="col-sm-8">
+					<input id="bankOpen" name="bankOpen" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">基本账户银行账户：</label>
+				<div class="col-sm-8">
+					<input id="bankNum" name="bankNum" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">开户地址：</label>
+				<div class="col-sm-8">
+					<input id="bankAddress" name="bankAddress" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">单位详细地址：</label>
+				<div class="col-sm-8">
+					<input id="address" name="address" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">负责人：</label>
+				<div class="col-sm-8">
+					<input id="contacts" name="contacts" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">电话：</label>
+				<div class="col-sm-8">
+					<input id="mobilePhone" name="mobilePhone" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">电子邮箱：</label>
+				<div class="col-sm-8">
+					<input id="email" name="email" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">状态（0.显示 1.隐藏）：</label>
+				<div class="col-sm-8">
+					<!--<input id="showState" name="showState" class="form-control" type="text">-->
+					<input type="radio"  name="showState"  th:value="0" checked />显示
+					<input type="radio"  name="showState"  th:value="1" />隐藏
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<input id="remark" name="remark" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "zhgd/hjCompanyLibrary"
+		$("#form-hjCompanyLibrary-add").validate({
+			rules:{
+                companyName:{
+                    required:true,
+                },
+                shortName:{
+                    required:true,
+                },
+                capital:{
+                    number:true,
+                },
+                companyType:{
+                    required:true,
+                },
+                contacts:{
+                    required:true,
+                },
+                mobilePhone:{
+                    required:true,
+                },
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/add", $('#form-hjCompanyLibrary-add').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

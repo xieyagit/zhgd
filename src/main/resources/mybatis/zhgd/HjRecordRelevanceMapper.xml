@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjRecordRelevance.mapper.HjRecordRelevanceMapper">
+    
+    <resultMap type="HjRecordRelevance" id="HjRecordRelevanceResult">
+        <result property="id"    column="id"    />
+        <result property="rectifyName"    column="rectify_name"    />
+        <result property="rectifyDate"    column="rectify_date"    />
+        <result property="typeId"    column="typeId"    />
+        <result property="ponderanceId"    column="ponderanceId"    />
+        <result property="hiddenId"    column="hiddenId"    />
+        <result property="checkArea"    column="check_area"    />
+        <result property="polling"    column="polling"    />
+        <result property="people"    column="people"    />
+    </resultMap>
+	
+	<sql id="selectHjRecordRelevanceVo">
+        select id, rectify_name, rectify_date, typeId, ponderanceId, hiddenId, check_area, polling, people from hj_record_relevance
+    </sql>
+	
+    <select id="selectHjRecordRelevanceList" parameterType="HjRecordRelevance" resultMap="HjRecordRelevanceResult">
+        <include refid="selectHjRecordRelevanceVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="rectifyName != null  and rectifyName != '' "> and rectify_name = #{rectifyName}</if>
+             <if test="rectifyDate != null "> and rectify_date = #{rectifyDate}</if>
+             <if test="typeId != null "> and typeId = #{typeId}</if>
+             <if test="ponderanceId != null "> and ponderanceId = #{ponderanceId}</if>
+             <if test="hiddenId != null "> and hiddenId = #{hiddenId}</if>
+             <if test="checkArea != null "> and check_area = #{checkArea}</if>
+             <if test="polling != null "> and polling = #{polling}</if>
+             <if test="people != null  and people != '' "> and people = #{people}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjRecordRelevanceById" parameterType="Integer" resultMap="HjRecordRelevanceResult">
+        <include refid="selectHjRecordRelevanceVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjRecordRelevance" parameterType="HjRecordRelevance">
+        insert into hj_record_relevance
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="rectifyName != null  and rectifyName != ''  ">rectify_name,</if>
+			<if test="rectifyDate != null  ">rectify_date,</if>
+			<if test="typeId != null  ">typeId,</if>
+			<if test="ponderanceId != null  ">ponderanceId,</if>
+			<if test="hiddenId != null  ">hiddenId,</if>
+			<if test="checkArea != null  ">check_area,</if>
+			<if test="polling != null  ">polling,</if>
+			<if test="people != null  and people != ''  ">people,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="rectifyName != null  and rectifyName != ''  ">#{rectifyName},</if>
+			<if test="rectifyDate != null  ">#{rectifyDate},</if>
+			<if test="typeId != null  ">#{typeId},</if>
+			<if test="ponderanceId != null  ">#{ponderanceId},</if>
+			<if test="hiddenId != null  ">#{hiddenId},</if>
+			<if test="checkArea != null  ">#{checkArea},</if>
+			<if test="polling != null  ">#{polling},</if>
+			<if test="people != null  and people != ''  ">#{people},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjRecordRelevance" parameterType="HjRecordRelevance">
+        update hj_record_relevance
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="rectifyName != null  and rectifyName != ''  ">rectify_name = #{rectifyName},</if>
+            <if test="rectifyDate != null  ">rectify_date = #{rectifyDate},</if>
+            <if test="typeId != null  ">typeId = #{typeId},</if>
+            <if test="ponderanceId != null  ">ponderanceId = #{ponderanceId},</if>
+            <if test="hiddenId != null  ">hiddenId = #{hiddenId},</if>
+            <if test="checkArea != null  ">check_area = #{checkArea},</if>
+            <if test="polling != null  ">polling = #{polling},</if>
+            <if test="people != null  and people != ''  ">people = #{people},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjRecordRelevanceById" parameterType="Integer">
+        delete from hj_record_relevance where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjRecordRelevanceByIds" parameterType="String">
+        delete from hj_record_relevance where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjAttendanceRecord.mapper.HjAttendanceRecordMapper">
+    
+    <resultMap type="HjAttendanceRecord" id="HjAttendanceRecordResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="employeeId"    column="employee_id"    />
+        <result property="passedTime"    column="passed_time"    />
+        <result property="direction"    column="direction"    />
+        <result property="way"    column="way"    />
+        <result property="sitePhoto"    column="site_photo"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="uploadTime"    column="upload_time"    />
+    </resultMap>
+	
+	<sql id="selectHjAttendanceRecordVo">
+        select id, project_id, employee_id, passed_time, direction, way, site_photo, create_date,upload_time from hj_attendance_record
+    </sql>
+
+    <select id="items"  parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
+        SELECT COUNT(r.employee_id) as count
+        FROM hj_attendance_record r INNER JOIN hj_project_workers w
+        ON  w.id = r.employee_id
+        where w.project_id = #{projectId}
+        and r.passed_time LIKE CONCAT(#{passedTime},'%')
+        and direction = 'in'
+
+    </select>
+
+    <select id="ite"  parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
+        SELECT COUNT(r.employee_id) as count
+        FROM hj_attendance_record r INNER JOIN hj_project_workers w
+        ON  w.id = r.employee_id
+        where r.project_id = #{projectId}
+        and r.passed_time LIKE CONCAT(#{passedTime},'%')
+        and direction = 'in'
+        GROUP BY r.employee_id
+    </select>
+
+    <select id="attendance" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
+        select * from (
+            select count(emp_name) `count` ,DATE_SUB(curdate(),INTERVAL 0 DAY) passed_time from hj_project_workers a inner join (select distinct employee_id from hj_attendance_record where passed_time BETWEEN DATE_SUB(curdate(),INTERVAL 0 DAY) AND DATE_SUB(curdate(),INTERVAL -1 DAY) and direction='in' AND project_id = #{projectId}) b on a.id=b.employee_id
+            UNION
+            select count(emp_name) `count` ,DATE_SUB(curdate(),INTERVAL 1 DAY) passed_time from hj_project_workers a inner join (select distinct employee_id from hj_attendance_record where passed_time BETWEEN DATE_SUB(curdate(),INTERVAL 1 DAY) AND DATE_SUB(curdate(),INTERVAL 0 DAY) and direction='in' AND project_id = #{projectId}) b on a.id=b.employee_id
+            UNION
+            select count(emp_name) `count` ,DATE_SUB(curdate(),INTERVAL 2 DAY) passed_time from hj_project_workers a inner join (select distinct employee_id from hj_attendance_record where passed_time BETWEEN DATE_SUB(curdate(),INTERVAL 2 DAY) AND DATE_SUB(curdate(),INTERVAL 1 DAY) and direction='in' AND project_id = #{projectId}) b on a.id=b.employee_id
+			UNION
+            select count(emp_name) `count` ,DATE_SUB(curdate(),INTERVAL 3 DAY) passed_time from hj_project_workers a inner join (select distinct employee_id from hj_attendance_record where passed_time BETWEEN DATE_SUB(curdate(),INTERVAL 3 DAY) AND DATE_SUB(curdate(),INTERVAL 2 DAY) and direction='in' AND project_id = #{projectId}) b on a.id=b.employee_id
+            UNION
+            select count(emp_name) `count` ,DATE_SUB(curdate(),INTERVAL 4 DAY) passed_time from hj_project_workers a inner join (select distinct employee_id from hj_attendance_record where passed_time BETWEEN DATE_SUB(curdate(),INTERVAL 4 DAY) AND DATE_SUB(curdate(),INTERVAL 3 DAY) and direction='in' AND project_id = #{projectId}) b on a.id=b.employee_id
+            UNION
+            select count(emp_name) `count` ,DATE_SUB(curdate(),INTERVAL 5 DAY) passed_time from hj_project_workers a inner join (select distinct employee_id from hj_attendance_record where passed_time BETWEEN DATE_SUB(curdate(),INTERVAL 5 DAY) AND DATE_SUB(curdate(),INTERVAL 4 DAY) and direction='in' AND project_id = #{projectId}) b on a.id=b.employee_id
+            UNION
+            select count(emp_name) `count` ,DATE_SUB(curdate(),INTERVAL 6 DAY) passed_time from hj_project_workers a inner join (select distinct employee_id from hj_attendance_record where passed_time BETWEEN DATE_SUB(curdate(),INTERVAL 6 DAY) AND DATE_SUB(curdate(),INTERVAL 5 DAY) and direction='in' AND project_id = #{projectId}) b on a.id=b.employee_id
+            UNION
+            select count(emp_name) `count` ,DATE_SUB(curdate(),INTERVAL 7 DAY) passed_time from hj_project_workers a inner join (select distinct employee_id from hj_attendance_record where passed_time BETWEEN DATE_SUB(curdate(),INTERVAL 7 DAY) AND DATE_SUB(curdate(),INTERVAL 6 DAY) and direction='in' AND project_id = #{projectId}) b on a.id=b.employee_id
+			UNION
+            select count(emp_name) `count` ,DATE_SUB(curdate(),INTERVAL 8 DAY) passed_time from hj_project_workers a inner join (select distinct employee_id from hj_attendance_record where passed_time BETWEEN DATE_SUB(curdate(),INTERVAL 8 DAY) AND DATE_SUB(curdate(),INTERVAL 7 DAY) and direction='in' AND project_id = #{projectId}) b on a.id=b.employee_id
+        ) as avetsp;
+    </select>
+    <select id="attendances" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
+        select * from (
+            select count(emp_name) count ,DATE_SUB(curdate(),INTERVAL 0 DAY) passed_time from hj_project_workers a inner join (select distinct employee_id from hj_attendance_record where passed_time BETWEEN DATE_SUB(curdate(),INTERVAL 0 DAY) AND DATE_SUB(curdate(),INTERVAL -1 DAY) and direction='in' AND project_id = #{projectId} ) b on a.id=b.employee_id WHERE emp_category=00
+            UNION
+            select count(emp_name) count ,DATE_SUB(curdate(),INTERVAL 1 DAY) passed_time from hj_project_workers a inner join (select distinct employee_id from hj_attendance_record where passed_time BETWEEN DATE_SUB(curdate(),INTERVAL 1 DAY) AND DATE_SUB(curdate(),INTERVAL 0 DAY) and direction='in' AND project_id = #{projectId}) b on a.id=b.employee_id WHERE emp_category=00
+            UNION
+            select count(emp_name) count ,DATE_SUB(curdate(),INTERVAL 2 DAY) passed_time from hj_project_workers a inner join (select distinct employee_id from hj_attendance_record where passed_time BETWEEN DATE_SUB(curdate(),INTERVAL 2 DAY) AND DATE_SUB(curdate(),INTERVAL 1 DAY) and direction='in' AND project_id = #{projectId}) b on a.id=b.employee_id WHERE emp_category=00
+			UNION
+            select count(emp_name) count ,DATE_SUB(curdate(),INTERVAL 3 DAY) passed_time from hj_project_workers a inner join (select distinct employee_id from hj_attendance_record where passed_time BETWEEN DATE_SUB(curdate(),INTERVAL 3 DAY) AND DATE_SUB(curdate(),INTERVAL 2 DAY) and direction='in' AND project_id = #{projectId}) b on a.id=b.employee_id  WHERE emp_category=00
+            UNION
+            select count(emp_name) count ,DATE_SUB(curdate(),INTERVAL 4 DAY) passed_time from hj_project_workers a inner join (select distinct employee_id from hj_attendance_record where passed_time BETWEEN DATE_SUB(curdate(),INTERVAL 4 DAY) AND DATE_SUB(curdate(),INTERVAL 3 DAY) and direction='in' AND project_id = #{projectId}) b on a.id=b.employee_id WHERE emp_category=00
+            UNION
+            select count(emp_name) count ,DATE_SUB(curdate(),INTERVAL 5 DAY) passed_time from hj_project_workers a inner join (select distinct employee_id from hj_attendance_record where passed_time BETWEEN DATE_SUB(curdate(),INTERVAL 5 DAY) AND DATE_SUB(curdate(),INTERVAL 4 DAY) and direction='in' AND project_id = #{projectId}) b on a.id=b.employee_id WHERE emp_category=00
+            UNION
+            select count(emp_name) count ,DATE_SUB(curdate(),INTERVAL 6 DAY) passed_time from hj_project_workers a inner join (select distinct employee_id from hj_attendance_record where passed_time BETWEEN DATE_SUB(curdate(),INTERVAL 6 DAY) AND DATE_SUB(curdate(),INTERVAL 5 DAY) and direction='in' AND project_id = #{projectId}) b on a.id=b.employee_id WHERE emp_category=00
+            UNION
+            select count(emp_name) count ,DATE_SUB(curdate(),INTERVAL 7 DAY) passed_time from hj_project_workers a inner join (select distinct employee_id from hj_attendance_record where passed_time BETWEEN DATE_SUB(curdate(),INTERVAL 7 DAY) AND DATE_SUB(curdate(),INTERVAL 6 DAY) and direction='in' AND project_id = #{projectId}) b on a.id=b.employee_id WHERE emp_category=00
+			UNION
+            select count(emp_name) count ,DATE_SUB(curdate(),INTERVAL 8 DAY) passed_time from hj_project_workers a inner join (select distinct employee_id from hj_attendance_record where passed_time BETWEEN DATE_SUB(curdate(),INTERVAL 8 DAY) AND DATE_SUB(curdate(),INTERVAL 7 DAY) and direction='in' AND project_id = #{projectId}) b on a.id=b.employee_id  WHERE emp_category=00
+        ) as avetsp;
+    </select>
+
+    <select id="labour" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
+        SELECT a.employee_id as `count` FROM hj_attendance_record a INNER JOIN hj_project_workers p
+        ON a.employee_id = p.id
+        WHERE a.passed_time <![CDATA[ >= ]]> CONCAT(#{passedTimes}) and a.passed_time <![CDATA[ <= ]]> CONCAT(#{passedTime},'%') and a.project_id = #{projectId} AND a.direction='in'
+        GROUP BY a.employee_id
+    </select>
+
+
+    <select id="item"  parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
+        SELECT c.id as id, c.construction_name as `name`
+        FROM hj_construction_company c
+        INNER JOIN hj_construction_project p
+        ON c.id = p.construction_id
+        WHERE project_id = #{projectId}
+    </select>
+
+    <select id="its"  parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult" >
+        SELECT COUNT(w.id) as `count`
+        FROM hj_construction_company c INNER JOIN hj_project_workers w
+        ON c.id = w.construction_id
+        WHERE w.construction_id=#{id}
+        and enter_And_Retreat_Condition = 0
+    </select>
+    <select id="itemin"  parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult" >
+        SELECT COUNT(r.id) as count1
+        FROM hj_attendance_record r INNER JOIN hj_project_workers w
+        ON r.employee_id=w.id
+        WHERE w.construction_id= #{id}
+				and r.passed_time LIKE CONCAT(#{passedTime},'%')
+				and  r.direction = 'in'
+        GROUP BY w.emp_name
+    </select>
+    <select id="itemout"  parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult" >
+        SELECT COUNT(r.id) as count2
+        FROM hj_attendance_record r INNER JOIN hj_project_workers w
+        ON r.employee_id=w.id
+        WHERE w.construction_id=#{id} and r.passed_time LIKE CONCAT(#{passedTime},'%') and  r.direction = 'out'
+        GROUP BY w.emp_name
+    </select>
+
+    <select id="turnovers"  parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
+        select (select t.team_name from hj_team t where t.id=w.work_typename_id) as `name`,
+        (select count(c.a) from  (select count(r.id) a,p.work_typename_id from hj_attendance_record r left join hj_project_workers p on r.employee_id=p.id where TO_DAYS(passed_time)=TO_DAYS(curdate())  group by r.employee_id ) c where c.work_typename_id=w.work_typename_id) as `count1`
+        ,count(emp_name) as `count2` from hj_project_workers w where enter_And_Retreat_Condition=0 and project_id=#{projectId} GROUP BY w.work_typename_id
+    </select>
+
+    <select id="turnover" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
+        SELECT p.emp_name as `name`,direction,passed_time FROM hj_attendance_record a INNER JOIN hj_project_workers p ON a.employee_id=p.id
+        WHERE a.project_id = #{projectId}
+        and a.passed_time LIKE CONCAT(#{passedTime},'%')
+    </select>
+
+    <select id="list" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
+        select title, count(job_name) as `count` from hj_project_workers a inner join (
+            select distinct employee_id from hj_attendance_record where TO_DAYS(passed_time)=TO_DAYS(curdate()) and direction='in' and project_id=#{projectId}
+        ) b INNER JOIN hj_dictionaries c on a.id=b.employee_id and a.job_name=c.tag group by job_name
+    </select>
+
+    <select id="lists" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
+        SELECT r.id FROM hj_attendance_record r INNER JOIN hj_project_workers w
+        ON r.employee_id = w.id
+        where TO_DAYS(passed_time)=TO_DAYS(curdate())
+        AND r.project_id = #{projectId}
+        AND w.job_name = #{jobName}
+        GROUP BY employee_id
+    </select>
+
+    <!--<select id="list" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">-->
+        <!--SELECT title,COUNT(job_name) as count-->
+        <!--FROM hj_attendance_record a-->
+        <!--INNER JOIN hj_project_workers p-->
+        <!--INNER JOIN hj_dictionaries d-->
+        <!--ON a.employee_id=p.id-->
+        <!--AND d.tag = p.job_name-->
+        <!--WHERE a.project_id = #{projectId}-->
+        <!--and a.passed_time LIKE CONCAT(#{passedTime},'%')-->
+        <!--GROUP BY p.job_name-->
+    <!--</select>-->
+	
+    <select id="selectHjAttendanceRecordList" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
+        <include refid="selectHjAttendanceRecordVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="projectId != null "> and project_id = #{projectId}</if>
+             <if test="employeeId != null "> and employee_id = #{employeeId}</if>
+             <if test="passedTime != null  and passedTime != '' "> and to_days(passed_time) = to_days(#{passedTime})</if>
+             <if test="direction != null  and direction != '' "> and direction = #{direction}</if>
+             <if test="way != null "> and way = #{way}</if>
+             <if test="sitePhoto != null  and sitePhoto != '' "> and site_photo = #{sitePhoto}</if>
+             <if test="createDate != null "> and create_date = #{createDate}</if>
+             <if test="uploadTime != null  and uploadTime != '' "> and upload_time = #{uploadTime}</if>
+         </where>
+        order by passed_time desc
+    </select>
+    <select id="selectHjAttendanceRecordInAndOut"  resultMap="HjAttendanceRecordResult">
+       select a.id, a.project_id, a.employee_id, a.passed_time, a.direction, a.way, a.site_photo, a.create_date,a.upload_time from hj_project_workers p
+            LEFT JOIN hj_attendance_record a  on p.id=a.employee_id
+            where p.id=#{id} and to_days(a.passed_time)=to_days(#{time}) and a.direction="in" and p.id in(select p.id from hj_project_workers p
+            LEFT JOIN hj_attendance_record a  on p.id=a.employee_id
+            where p.id=#{id} and to_days(a.passed_time)=to_days(#{time}) and a.direction="out"
+            group by p.id)
+            group by p.id
+    </select>
+
+    <select id="addTime"  statementType="CALLABLE" >
+       {call mywhile(#{empId,jdbcType=INTEGER,mode=IN},#{empName,jdbcType=VARCHAR,mode=IN},#{projectId,jdbcType=INTEGER,mode=IN})}
+    </select>
+
+    <select id="selectHjAttendanceRecordListIn" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
+        <include refid="selectHjAttendanceRecordVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+            <if test="employeeId != null "> and employee_id = #{employeeId}</if>
+            <if test="passedTime != null  and passedTime != '' "> and to_days(passed_time) = to_days(#{passedTime})</if>
+            <if test="direction != null  and direction != '' "> and direction = #{direction}</if>
+            <if test="way != null "> and way = #{way}</if>
+            <if test="sitePhoto != null  and sitePhoto != '' "> and site_photo = #{sitePhoto}</if>
+            <if test="createDate != null "> and create_date = #{createDate}</if>
+            <if test="uploadTime != null  and uploadTime != '' "> and upload_time = #{uploadTime}</if>
+        </where>
+        order by passed_time asc limit 1
+    </select>
+    <select id="selectHjAttendanceRecordListOut" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
+        <include refid="selectHjAttendanceRecordVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+            <if test="employeeId != null "> and employee_id = #{employeeId}</if>
+            <if test="passedTime != null  and passedTime != '' "> and to_days(passed_time) = to_days(#{passedTime})</if>
+            <if test="direction != null  and direction != '' "> and direction = #{direction}</if>
+            <if test="way != null "> and way = #{way}</if>
+            <if test="sitePhoto != null  and sitePhoto != '' "> and site_photo = #{sitePhoto}</if>
+            <if test="createDate != null "> and create_date = #{createDate}</if>
+            <if test="uploadTime != null  and uploadTime != '' "> and upload_time = #{uploadTime}</if>
+        </where>
+        order by passed_time desc limit 1
+    </select>
+    
+    <select id="selectHjAttendanceRecordById" parameterType="Integer" resultMap="HjAttendanceRecordResult">
+        <include refid="selectHjAttendanceRecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjAttendanceRecord" parameterType="HjAttendanceRecord">
+        insert into hj_attendance_record
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="projectId != null  ">project_id,</if>
+			<if test="employeeId != null  ">employee_id,</if>
+			<if test="passedTime != null  and passedTime != ''  ">passed_time,</if>
+			<if test="direction != null  and direction != ''  ">direction,</if>
+			<if test="way != null  ">way,</if>
+			<if test="sitePhoto != null  and sitePhoto != ''  ">site_photo,</if>
+			<if test="createDate != null  ">create_date,</if>
+            <if test="uploadTime != null  and uploadTime != '' ">upload_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="projectId != null  ">#{projectId},</if>
+			<if test="employeeId != null  ">#{employeeId},</if>
+			<if test="passedTime != null  and passedTime != ''  ">#{passedTime},</if>
+			<if test="direction != null  and direction != ''  ">#{direction},</if>
+			<if test="way != null  ">#{way},</if>
+			<if test="sitePhoto != null  and sitePhoto != ''  ">#{sitePhoto},</if>
+			<if test="createDate != null  ">#{createDate},</if>
+            <if test="uploadTime != null  and uploadTime != '' ">#{uploadTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjAttendanceRecord" parameterType="HjAttendanceRecord">
+        update hj_attendance_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null  ">project_id = #{projectId},</if>
+            <if test="employeeId != null  ">employee_id = #{employeeId},</if>
+            <if test="passedTime != null  and passedTime != ''  ">passed_time = #{passedTime},</if>
+            <if test="direction != null  and direction != ''  ">direction = #{direction},</if>
+            <if test="way != null  ">way = #{way},</if>
+            <if test="sitePhoto != null  and sitePhoto != ''  ">site_photo = #{sitePhoto},</if>
+            <if test="createDate != null  ">create_date = #{createDate},</if>
+            <if test="uploadTime != null  and uploadTime != '' ">upload_time = #{uploadTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjAttendanceRecordById" parameterType="Integer">
+        delete from hj_attendance_record where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjAttendanceRecordByIds" parameterType="String">
+        delete from hj_attendance_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectWorkerAttendance" resultType="java.lang.Integer">
+      SELECT COUNT(*) FROM (
+        SELECT
+        COUNT(*)
+        FROM
+        hj_attendance_record ar
+        LEFT JOIN hj_project_workers hw ON ar.employee_id = hw.id
+        WHERE
+        <if test="projectId != null  ">
+            ar.project_id = #{projectId}
+        </if>
+        AND to_days(ar.create_date) = to_days(now())
+        AND hw.emp_category = 00
+        GROUP BY
+        ar.employee_id
+        ) t
+    </select>
+
+    <select id="selectAdministrationAttendance" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM (
+        SELECT
+        COUNT(*)
+        FROM
+        hj_attendance_record ar
+        LEFT JOIN hj_project_workers hw ON ar.employee_id = hw.id
+        WHERE
+        <if test="projectId != null  ">
+            ar.project_id = #{projectId}
+        </if>
+        AND to_days(ar.create_date) = to_days(now())
+        AND hw.emp_category != 00
+        GROUP BY
+        ar.employee_id
+         ) t
+    </select>
+
+    <resultMap type="Param" id="ParamResult">
+        <result property="id"    column="id"    />
+        <result property="employeeId"    column="employeeId"    />
+        <result property="name"    column="name"    />
+        <result property="projectName"    column="projectName"    />
+        <result property="companyName"    column="companyName"    />
+        <result property="jobName"    column="jobName"    />
+        <result property="direction"    column="direction"    />
+        <result property="passedTime"    column="passedTime"    />
+        <result property="uploadTime"    column="uploadTime"    />
+        <result property="sitePhoto"    column="site_photo"    />
+    </resultMap>
+
+    <select id="selectAttendanceRecordListTwo" parameterType="Param" resultMap="ParamResult">
+       select  id,
+        employee_id employeeId,
+        (select w.emp_name from hj_project_workers w where w.id=employee_id) name,
+        (select p.project_name from hj_project p where p.id=project_id) projectName,
+        (select c.construction_name from hj_project_workers w join hj_construction_company c on c.id=w.construction_id where w.id=employee_id) companyName,
+        (select d.title from hj_project_workers w join hj_dictionaries d on d.tag=w.job_name where w.id=employee_id ) jobName,
+        direction,
+        passed_time passedTime,
+        upload_time uploadTime
+        ,site_photo
+        from hj_attendance_record
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+            <if test="name != null  and name != '' "> and employee_id in (select w.id from hj_project_workers w where w.emp_name like '%${name}%' )</if>
+            <if test="idCode != null  and idCode != '' "> and employee_id in (select w.id from hj_project_workers w where w.id_code like '%${idCode}%' )</if>
+            <if test="jobCode != null  and jobCode != '' "> and employee_id in (select w.id from hj_project_workers w where w.job_name =#{jobCode} )</if>
+            <if test="teamName != null  and teamName != '' "> and employee_id in (select w.id from hj_project_workers w where w.work_typename_id=#{teamName})</if>
+            <if test="companyId != null  and companyId != '' "> and employee_id in (select w.id from hj_project_workers w where w.construction_id =#{companyId} )</if>
+            <if test="startTime != null  and startTime != '' "> and to_days(#{startTime})<![CDATA[ <=]]>to_days(create_date)</if>
+            <if test="endTime != null  and endTime != '' "> and to_days(#{endTime})<![CDATA[ >=]]>to_days(create_date)</if>
+        </where>
+        order by create_date desc
+    </select>
+
+    <select id="selectAttendanceRecordListThree" parameterType="Integer" resultMap="HjAttendanceRecordResult">
+
+
+        <include refid="selectHjAttendanceRecordVo"/>
+        where
+date_format(passed_time ,'%Y%m') = DATE_FORMAT(CURDATE(),'%Y%m') and employee_id=#{userId} and direction='in' GROUP BY TO_DAYS(passed_time)
+
+
+
+    </select>
+    <!--指定项目今日出勤-->
+    <select id="selectJinRiChuQin" parameterType="Integer" resultMap="HjAttendanceRecordResult">
+        <include refid="selectHjAttendanceRecordVo"/>
+        where
+        project_id=#{pid} and direction ='in' and TO_DAYS(curdate())=TO_DAYS(passed_time) GROUP BY employee_id
+    </select>
+    <!--指定项目关键岗位出勤-->
+    <select id="selectGJGWChuQin" parameterType="Integer" resultMap="HjAttendanceRecordResult">
+        <include refid="selectHjAttendanceRecordVo"/>
+        where
+        project_id=#{pid} and direction ='in' and TO_DAYS(curdate())=TO_DAYS(passed_time) and employee_id in
+
+        (select id from hj_project_workers where (job_name='DD8FE97F3E1FA3B7F71C894F0D7B49A1' or job_name='3BE4F91A3C3E4BF3E3E14E9A143C65C7' or job_name='E303B2F084CCAFA5A32CDC68571CC121' or job_name='764A5294753B5FCE846BD5C64C3874D1' or job_name='4BCE1F084E5E2413384C149B42B0D072' or job_name='6C0A7C1254EB51E1A94CCD318253562B' or job_name='BE86667205808221FAD7ED510E2A8004' ) and project_id =#{pid}) GROUP BY employee_id
+
+    </select>
+    <resultMap type="com.hujiang.project.zhgd.hjAttendanceRecord.domain.DongTai" id="DongTaiResult">
+        <result property="name" column="name"/>
+        <result property="passedTime" column="passedTime"/>
+        <result property="direction" column="direction"/>
+    </resultMap>
+    <!--工人考勤动态-->
+    <select id="selectGRKQDongTai" parameterType="Integer" resultMap="DongTaiResult">
+
+        select id,(select emp_name from hj_project_workers where id=employee_id) name , passed_time passedTime, direction
+from hj_attendance_record where employee_id in (select id from hj_project_workers where project_id=#{pid} and emp_category='00')
+
+and TO_DAYS(curdate())=TO_DAYS(passed_time) ORDER BY passedTime desc  limit 50
+    </select>
+    <!--管理人员考勤动态-->
+    <select id="selectGLKQDongTai" parameterType="Integer" resultMap="DongTaiResult">
+
+        select id,(select emp_name from hj_project_workers where id=employee_id) name , passed_time passedTime, direction
+from hj_attendance_record where employee_id in (select id from hj_project_workers where project_id=#{pid} and emp_category!='00')
+
+and TO_DAYS(curdate())=TO_DAYS(passed_time) ORDER BY passedTime desc  limit 50
+    </select>
+    <resultMap type="com.hujiang.project.zhgd.hjProjectWorkers.domain.TCount" id="TCountResult">
+        <result property="title" column="title"/>
+        <result property="count" column="count"/>
+
+    </resultMap>
+<!--该项目各个参建单位考勤人数-->
+    <select id="getKQCount" resultType="TCount">
+
+select c.construction_name title,count(distinct employee_id) count from hj_attendance_record r join hj_project_workers w on r.employee_id=w.id
+join hj_construction_company c on w.construction_id = c.id
+where w.project_id=#{pid} and TO_DAYS(curdate()) = TO_DAYS(r.passed_time) GROUP BY c.id ORDER BY count desc
+
+    </select>
+    <!--该项目各个参建单位在场人数-->
+    <select id="getZCCount" resultType="TCount">
+
+select c.construction_name title,COUNT(w.id) count from hj_project_workers w join hj_construction_company c on w.construction_id=c.id
+where w.project_id=#{pid} and enter_And_Retreat_Condition=0 GROUP BY construction_id ORDER BY count desc
+
+    </select>
+    <!--在场实时人数-->
+    <select id="selectZCSSRS" parameterType="Integer" resultMap="HjAttendanceRecordResult">
+
+        select id,(select emp_name from hj_project_workers where id=employee_id) name , passed_time passedTime, direction
+from hj_attendance_record where employee_id in (select id from hj_project_workers where project_id=#{pid} and emp_category='00')
+
+and TO_DAYS(curdate())=TO_DAYS(passed_time)  GROUP BY employee_id ORDER BY passedTime desc
+    </select>
+
+</mapper>

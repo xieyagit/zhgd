@@ -1,0 +1,143 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+							<li>
+								项目编号：<input type="text" name="projectId"/>
+							</li>
+
+							<li>
+								员工编号：<input type="text" name="employeeId"/>
+							</li>
+
+							<li>
+								通过时间 ”yyyy-MM-dd hh:mm:ss”：<input type="text" name="passedTime"/>
+							</li>
+
+							<li>
+								通行方向  in—进，out—出：<input type="text" name="direction"/>
+							</li>
+
+							<li>
+								通行方式 1—人脸识别，2—虹膜识别，3—指纹识别，4—掌形识别，5—身份证识别，6—实名卡，7—异常清退（适用于人员没有通过闸机系统出工地而导致人员状态不一致的情况），8—一键开闸(需要与闸机交互)， 9—应急通道（不需要与闸机交互），10—二维码识别，11-其他方式：<input type="text" name="way"/>
+							</li>
+
+							<li>
+								工地现场采集的人脸照片，url：<input type="text" name="sitePhoto"/>
+							</li>
+
+							<li>
+								创建时间：<input type="text" name="createDate"/>
+							</li>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="zhgd:hjAttendanceRecord:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="zhgd:hjAttendanceRecord:edit">
+					<i class="fa fa-edit"></i> 修改
+				</a>
+				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="zhgd:hjAttendanceRecord:remove">
+					<i class="fa fa-remove"></i> 删除
+				</a>
+				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="zhgd:hjAttendanceRecord:export">
+						<i class="fa fa-download"></i> 导出
+				 </a>
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('zhgd:hjAttendanceRecord:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('zhgd:hjAttendanceRecord:remove')}]];
+        var prefix = ctx + "zhgd/hjAttendanceRecord";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "考勤记录",
+				search: false,
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'id', 
+					title : 'ID',
+					visible: false
+				},
+				{
+					field : 'projectId', 
+					title : '项目编号',
+					sortable: true
+				},
+				{
+					field : 'employeeId', 
+					title : '员工编号',
+					sortable: true
+				},
+				{
+					field : 'passedTime', 
+					title : '通过时间 ”yyyy-MM-dd hh:mm:ss”',
+					sortable: true
+				},
+				{
+					field : 'direction', 
+					title : '通行方向  in—进，out—出',
+					sortable: true
+				},
+				{
+					field : 'way', 
+					title : '通行方式 1—人脸识别，2—虹膜识别，3—指纹识别，4—掌形识别，5—身份证识别，6—实名卡，7—异常清退（适用于人员没有通过闸机系统出工地而导致人员状态不一致的情况），8—一键开闸(需要与闸机交互)， 9—应急通道（不需要与闸机交互），10—二维码识别，11-其他方式',
+					sortable: true
+				},
+				{
+					field : 'sitePhoto', 
+					title : '工地现场采集的人脸照片，url',
+					sortable: true
+				},
+				{
+					field : 'createDate', 
+					title : '创建时间',
+					sortable: true
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

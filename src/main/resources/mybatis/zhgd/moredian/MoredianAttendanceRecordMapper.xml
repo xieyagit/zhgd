@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.moredian.moredianAttendanceRecord.mapper.MoredianAttendanceRecordMapper">
+    
+    <resultMap type="MoredianAttendanceRecord" id="MoredianAttendanceRecordResult">
+        <result property="id"    column="id"    />
+        <result property="memberId"    column="member_id"    />
+        <result property="deviceSn"    column="device_sn"    />
+        <result property="recognizeTime"    column="recognize_time"    />
+        <result property="fileKey"    column="file_key"    />
+    </resultMap>
+	
+	<sql id="selectMoredianAttendanceRecordVo">
+        select id, member_id, device_sn, recognize_time, file_key from sb_moredian_attendance_record
+    </sql>
+	
+    <select id="selectMoredianAttendanceRecordList" parameterType="MoredianAttendanceRecord" resultMap="MoredianAttendanceRecordResult">
+        <include refid="selectMoredianAttendanceRecordVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="memberId != null  and memberId != '' "> and member_id = #{memberId}</if>
+             <if test="deviceSn != null  and deviceSn != '' "> and device_sn = #{deviceSn}</if>
+             <if test="recognizeTime != null  and recognizeTime != '' "> and recognize_time = #{recognizeTime}</if>
+             <if test="fileKey != null  and fileKey != '' "> and file_key = #{fileKey}</if>
+         </where>
+    </select>
+    
+    <select id="selectMoredianAttendanceRecordById" parameterType="Integer" resultMap="MoredianAttendanceRecordResult">
+        <include refid="selectMoredianAttendanceRecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMoredianAttendanceRecord" parameterType="MoredianAttendanceRecord">
+        insert into sb_moredian_attendance_record
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="memberId != null  and memberId != ''  ">member_id,</if>
+			<if test="deviceSn != null  and deviceSn != ''  ">device_sn,</if>
+			<if test="recognizeTime != null  and recognizeTime != ''  ">recognize_time,</if>
+			<if test="fileKey != null  and fileKey != ''  ">file_key,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="memberId != null  and memberId != ''  ">#{memberId},</if>
+			<if test="deviceSn != null  and deviceSn != ''  ">#{deviceSn},</if>
+			<if test="recognizeTime != null  and recognizeTime != ''  ">#{recognizeTime},</if>
+			<if test="fileKey != null  and fileKey != ''  ">#{fileKey},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateMoredianAttendanceRecord" parameterType="MoredianAttendanceRecord">
+        update sb_moredian_attendance_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberId != null  and memberId != ''  ">member_id = #{memberId},</if>
+            <if test="deviceSn != null  and deviceSn != ''  ">device_sn = #{deviceSn},</if>
+            <if test="recognizeTime != null  and recognizeTime != ''  ">recognize_time = #{recognizeTime},</if>
+            <if test="fileKey != null  and fileKey != ''  ">file_key = #{fileKey},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteMoredianAttendanceRecordById" parameterType="Integer">
+        delete from sb_moredian_attendance_record where id = #{id}
+    </delete>
+	
+    <delete id="deleteMoredianAttendanceRecordByIds" parameterType="String">
+        delete from sb_moredian_attendance_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

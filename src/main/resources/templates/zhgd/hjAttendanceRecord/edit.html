@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-hjAttendanceRecord-edit" th:object="${hjAttendanceRecord}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">项目编号：</label>
+				<div class="col-sm-8">
+					<input id="projectId" name="projectId" th:field="*{projectId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">员工编号：</label>
+				<div class="col-sm-8">
+					<input id="employeeId" name="employeeId" th:field="*{employeeId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">通过时间 ”yyyy-MM-dd hh:mm:ss”：</label>
+				<div class="col-sm-8">
+					<input id="passedTime" name="passedTime" th:field="*{passedTime}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">通行方向  in—进，out—出：</label>
+				<div class="col-sm-8">
+					<input id="direction" name="direction" th:field="*{direction}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">通行方式 1—人脸识别，2—虹膜识别，3—指纹识别，4—掌形识别，5—身份证识别，6—实名卡，7—异常清退（适用于人员没有通过闸机系统出工地而导致人员状态不一致的情况），8—一键开闸(需要与闸机交互)， 9—应急通道（不需要与闸机交互），10—二维码识别，11-其他方式：</label>
+				<div class="col-sm-8">
+					<input id="way" name="way" th:field="*{way}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">工地现场采集的人脸照片，url：</label>
+				<div class="col-sm-8">
+					<input id="sitePhoto" name="sitePhoto" th:field="*{sitePhoto}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">创建时间：</label>
+				<div class="col-sm-8">
+					<input id="createDate" name="createDate" th:field="*{createDate}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "zhgd/hjAttendanceRecord";
+		$("#form-hjAttendanceRecord-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-hjAttendanceRecord-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

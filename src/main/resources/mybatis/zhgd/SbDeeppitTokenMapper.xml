@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjDeeppit.mapper.SbDeeppitTokenMapper">
+    
+    <resultMap type="SbDeeppitToken" id="DeeppitTokenResult">
+        <result property="id"    column="id"    />
+        <result property="token"    column="token"    />
+        <result property="expiration"    column="expiration"    />
+        <result property="appId"    column="app_id"    />
+    </resultMap>
+	
+	<sql id="selectDeeppitTokenVo">
+        select id, token, expiration, app_id from sb_deeppit_token
+    </sql>
+	
+    <select id="selectSbDeeppitTokenList" parameterType="SbDeeppitToken" resultMap="DeeppitTokenResult">
+        <include refid="selectDeeppitTokenVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="token != null  and token != '' "> and token = #{token}</if>
+             <if test="expiration != null  and expiration != '' "> and expiration = #{expiration}</if>
+             <if test="appId != null  and appId != '' "> and app_id = #{appId}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbDeeppitTokenById" parameterType="Integer" resultMap="DeeppitTokenResult">
+        <include refid="selectDeeppitTokenVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectDeeppitTokenByAppId" parameterType="Integer" resultMap="DeeppitTokenResult">
+        <include refid="selectDeeppitTokenVo"/>
+        where app_d = #{appD}
+    </select>
+        
+    <insert id="insertSbDeeppitToken" parameterType="SbDeeppitToken">
+        insert into sb_deeppit_token
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="token != null  and token != ''  ">token,</if>
+			<if test="expiration != null  and expiration != ''  ">expiration,</if>
+			<if test="appId != null  and appId != ''  ">app_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="token != null  and token != ''  ">#{token},</if>
+			<if test="expiration != null  and expiration != ''  ">#{expiration},</if>
+			<if test="appId != null  and appId != ''  ">#{appId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbDeeppitToken" parameterType="SbDeeppitToken">
+        update sb_deeppit_token
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="token != null  and token != ''  ">token = #{token},</if>
+            <if test="expiration != null  and expiration != ''  ">expiration = #{expiration},</if>
+            <if test="appId != null  and appId != ''  ">app_id = #{appId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbDeeppitTokenById" parameterType="Integer">
+        delete from sb_deeppit_token where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbDeeppitTokenByIds" parameterType="String">
+        delete from sb_deeppit_token where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

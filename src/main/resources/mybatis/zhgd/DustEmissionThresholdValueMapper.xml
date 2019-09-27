@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.dustEmissionThresholdValue.mapper.DustEmissionThresholdValueMapper">
+    
+    <resultMap type="DustEmissionThresholdValue" id="DustEmissionThresholdValueResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="pm25"    column="pm25"    />
+        <result property="pm10"    column="pm10"    />
+        <result property="tsp"    column="tsp"    />
+        <result property="noise"    column="noise"    />
+        <result property="temperature"    column="temperature"    />
+        <result property="humidity"    column="humidity"    />
+        <result property="windSpeed"    column="wind_speed"    />
+    </resultMap>
+	
+	<sql id="selectDustEmissionThresholdValueVo">
+        select id, project_id, pm25, pm10, tsp, noise, temperature, humidity, wind_speed from dust_emission_threshold_value
+    </sql>
+	
+    <select id="selectDustEmissionThresholdValueList" parameterType="DustEmissionThresholdValue" resultMap="DustEmissionThresholdValueResult">
+        <include refid="selectDustEmissionThresholdValueVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="projectId != null "> and project_id = #{projectId}</if>
+             <if test="pm25 != null "> and pm25 = #{pm25}</if>
+             <if test="pm10 != null "> and pm10 = #{pm10}</if>
+             <if test="tsp != null "> and tsp = #{tsp}</if>
+             <if test="noise != null "> and noise = #{noise}</if>
+             <if test="temperature != null "> and temperature = #{temperature}</if>
+             <if test="humidity != null "> and humidity = #{humidity}</if>
+             <if test="windSpeed != null "> and wind_speed = #{windSpeed}</if>
+         </where>
+    </select>
+    <select id="selectDustEmissionThresholdById" parameterType="Integer" resultMap="DustEmissionThresholdValueResult">
+        <include refid="selectDustEmissionThresholdValueVo"/>
+        where project_id = #{projectId}
+    </select>
+    
+    <select id="selectDustEmissionThresholdValueById" parameterType="Integer" resultMap="DustEmissionThresholdValueResult">
+        <include refid="selectDustEmissionThresholdValueVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDustEmissionThresholdValue" parameterType="DustEmissionThresholdValue">
+        insert into dust_emission_threshold_value
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="projectId != null  ">project_id,</if>
+			<if test="pm25 != null  ">pm25,</if>
+			<if test="pm10 != null  ">pm10,</if>
+			<if test="tsp != null  ">tsp,</if>
+			<if test="noise != null  ">noise,</if>
+			<if test="temperature != null  ">temperature,</if>
+			<if test="humidity != null  ">humidity,</if>
+			<if test="windSpeed != null  ">wind_speed,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="projectId != null  ">#{projectId},</if>
+			<if test="pm25 != null  ">#{pm25},</if>
+			<if test="pm10 != null  ">#{pm10},</if>
+			<if test="tsp != null  ">#{tsp},</if>
+			<if test="noise != null  ">#{noise},</if>
+			<if test="temperature != null  ">#{temperature},</if>
+			<if test="humidity != null  ">#{humidity},</if>
+			<if test="windSpeed != null  ">#{windSpeed},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateDustEmissionThresholdValue" parameterType="DustEmissionThresholdValue">
+        update dust_emission_threshold_value
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null  ">project_id = #{projectId},</if>
+            <if test="pm25 != null  ">pm25 = #{pm25},</if>
+            <if test="pm10 != null  ">pm10 = #{pm10},</if>
+            <if test="tsp != null  ">tsp = #{tsp},</if>
+            <if test="noise != null  ">noise = #{noise},</if>
+            <if test="temperature != null  ">temperature = #{temperature},</if>
+            <if test="humidity != null  ">humidity = #{humidity},</if>
+            <if test="windSpeed != null  ">wind_speed = #{windSpeed},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteDustEmissionThresholdValueById" parameterType="Integer">
+        delete from dust_emission_threshold_value where id = #{id}
+    </delete>
+	
+    <delete id="deleteDustEmissionThresholdValueByIds" parameterType="String">
+        delete from dust_emission_threshold_value where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

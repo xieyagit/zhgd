@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-sbProjectDustEmission-edit" th:object="${sbProjectDustEmission}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">项目id：</label>
+				<div class="col-sm-8">
+					<input id="projectId" name="projectId" th:field="*{projectId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">扬尘设备sn：</label>
+				<div class="col-sm-8">
+					<input id="sn" name="sn" th:field="*{sn}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">扬尘设备备注：</label>
+				<div class="col-sm-8">
+					<input id="comments" name="comments" th:field="*{comments}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备类型：</label>
+				<div class="col-sm-8">
+					<input id="type" name="type" th:field="*{type}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">监测项：</label>
+				<div class="col-sm-8">
+					<input id="meOption" name="meOption" th:field="*{meOption}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">安装位置：</label>
+				<div class="col-sm-8">
+					<input id="installAddress" name="installAddress" th:field="*{installAddress}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备安装单位：</label>
+				<div class="col-sm-8">
+					<input id="installCompany" name="installCompany" th:field="*{installCompany}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">安装时间：</label>
+				<div class="col-sm-8">
+					<input id="deviceInstallationDate" name="deviceInstallationDate" th:field="*{deviceInstallationDate}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "zhgd/sbProjectDustEmission";
+		$("#form-sbProjectDustEmission-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-sbProjectDustEmission-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>
