@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbCurrentTemperature.mapper.SbCurrentTemperatureMapper">
+
+    <resultMap type="SbCurrentTemperature" id="SbCurrentTemperatureResult">
+        <result property="id" column="id"/>
+        <result property="electricityBoxId" column="electricity_box_id"/>
+        <result property="current" column="current"/>
+        <result property="envirwarm" column="envirwarm"/>
+        <result property="awarm" column="awarm"/>
+        <result property="bwarm" column="bwarm"/>
+        <result property="cwarm" column="cwarm"/>
+        <result property="nwarm" column="nwarm"/>
+        <result property="tm" column="tm"/>
+        <result property="doorType" column="door_type"/>
+    </resultMap>
+
+    <sql id="selectSbCurrentTemperatureVo">
+        select id, electricity_box_id, current, envirwarm, awarm, bwarm, cwarm, nwarm, tm,door_type from sb_current_temperature
+    </sql>
+    <select id="selectCurrentTemperature" parameterType="SbCurrentTemperature" resultMap="SbCurrentTemperatureResult">
+        <include refid="selectSbCurrentTemperatureVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="electricityBoxId != null  and electricityBoxId != '' "> and electricity_box_id = #{electricityBoxId}</if>
+            <if test="current != null "> and current = #{current}</if>
+            <if test="envirwarm != null "> and envirwarm = #{envirwarm}</if>
+            <if test="awarm != null "> and awarm = #{awarm}</if>
+            <if test="bwarm != null "> and bwarm = #{bwarm}</if>
+            <if test="cwarm != null "> and cwarm = #{cwarm}</if>
+            <if test="nwarm != null "> and nwarm = #{nwarm}</if>
+            <if test="tm != null  and tm != '' "> and tm like"${tm}%" </if>
+            <if test="doorType != null  and doorType != '' "> and door_type= #{doorType} </if>
+        </where>
+        order by tm desc limit 1
+    </select>
+    <select id="kanban" parameterType="SbCurrentTemperature" resultMap="SbCurrentTemperatureResult">
+        SELECT MIN(tm) as tm FROM sb_current_temperature c INNER JOIN sb_project_electricity_box p
+        on c.electricity_box_id = p.electricity_box_id
+        where p.project_id = #{projectId}
+        GROUP BY c.electricity_box_id
+    </select>
+
+    <select id="selectkanban" parameterType="SbCurrentTemperature" resultMap="SbCurrentTemperatureResult">
+      SELECT max(tm) as tm ,envirwarm FROM sb_current_temperature c INNER JOIN sb_project_electricity_box p
+      on c.electricity_box_id = p.electricity_box_id
+      where p.project_id = #{projectId}
+      GROUP BY c.electricity_box_id
+    </select>
+
+    <select id="selectSbCurrentTemperatureList" parameterType="SbCurrentTemperature"
+            resultMap="SbCurrentTemperatureResult">
+        <include refid="selectSbCurrentTemperatureVo"/>
+        <where>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="electricityBoxId != null  and electricityBoxId != '' ">and electricity_box_id =
+                #{electricityBoxId}
+            </if>
+            <if test="current != null ">and current = #{current}</if>
+            <if test="envirwarm != null ">and envirwarm = #{envirwarm}</if>
+            <if test="awarm != null ">and awarm = #{awarm}</if>
+            <if test="bwarm != null ">and bwarm = #{bwarm}</if>
+            <if test="cwarm != null ">and cwarm = #{cwarm}</if>
+            <if test="nwarm != null ">and nwarm = #{nwarm}</if>
+            <if test="tm != null  and tm != '' ">and tm = #{tm}</if>
+            <if test="doorType != null  and doorType != '' ">and door_type = #{doorType}</if>
+        </where>
+        order by id desc
+    </select>
+    <select id="selectSbCurrentTemperatureListTwo" parameterType="SbCurrentTemperature"
+            resultMap="SbCurrentTemperatureResult">
+        <include refid="selectSbCurrentTemperatureVo"/>
+        <where>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="electricityBoxId != null  and electricityBoxId != '' ">and electricity_box_id =
+                #{electricityBoxId}
+            </if>
+            <if test="current != null ">and current = #{current}</if>
+            <if test="envirwarm != null ">and envirwarm = #{envirwarm}</if>
+            <if test="awarm != null ">and awarm = #{awarm}</if>
+            <if test="bwarm != null ">and bwarm = #{bwarm}</if>
+            <if test="cwarm != null ">and cwarm = #{cwarm}</if>
+            <if test="nwarm != null ">and nwarm = #{nwarm}</if>
+            <if test="tm != null  and tm != '' ">and tm = #{tm}</if>
+            <if test="doorType != null  and doorType != '' ">and door_type = #{doorType}</if>
+        </where>
+        order by id desc limit 10
+    </select>
+    <select id="selectSbCurrentTemperatureById" parameterType="Integer" resultMap="SbCurrentTemperatureResult">
+        <include refid="selectSbCurrentTemperatureVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectSbCurrentTemperatureCount" parameterType="String" resultType="Map">
+       select
+            (select  count(current) from  sb_current_temperature where electricity_box_id=#{electricityBoxId} and current&gt;=15) as currentCount,
+            (select  count(envirwarm) from  sb_current_temperature where electricity_box_id=#{electricityBoxId} and envirwarm&gt;=40 ) as envirwarmCount,
+            (select  count(awarm) from  sb_current_temperature where electricity_box_id=#{electricityBoxId} and awarm&gt;=70) as awarmCount,
+            (select  count(bwarm) from  sb_current_temperature where electricity_box_id=#{electricityBoxId} and bwarm&gt;=70) as bwarmCount,
+            (select  count(cwarm) from  sb_current_temperature where electricity_box_id=#{electricityBoxId} and cwarm&gt;=70) as cwarmCount,
+            (select  count(nwarm) from  sb_current_temperature where electricity_box_id=#{electricityBoxId} and nwarm&gt;=70) as nwarmCount
+    </select>
+
+    <select id="selectSbCurrentTemperatureToOne" resultMap="SbCurrentTemperatureResult">
+        <include refid="selectSbCurrentTemperatureVo"/>
+        where electricity_box_id = #{electricityBoxId}
+        order by tm desc limit 1
+    </select>
+    <select id="getSbCurrentTemperatureToOne" resultMap="SbCurrentTemperatureResult">
+        <include refid="selectSbCurrentTemperatureVo"/>
+        where electricity_box_id = #{electricityBoxId} and tm > DATE_SUB(NOW(), INTERVAL 60 MINUTE)
+        order by tm desc limit 1
+    </select>
+
+    <select id="selectSbCurrentTemperatureByTime" parameterType="Map" resultMap="SbCurrentTemperatureResult">
+        <include refid="selectSbCurrentTemperatureVo"/>
+        <where>
+            <if test="startTime != null ">and tm &gt;= #{startTime}</if>
+            <if test="endTime != null ">and tm &lt;= #{endTime}</if>
+            <if test="electricityBoxId != null ">and electricity_box_id=#{electricityBoxId}</if>
+        </where>
+        order by id desc
+    </select>
+    <select id="selectSbCurrentTemperatureByTimes" parameterType="Map" resultMap="SbCurrentTemperatureResult">
+    <include refid="selectSbCurrentTemperatureVo"/>
+    <where>
+        <if test="dateTime != null" >and tm like "${dateTime}%"</if>
+        <if test="sn != null ">and electricity_box_id=#{sn}</if>
+    </where>
+        order by id desc
+</select>
+
+
+
+    <insert id="insertSbCurrentTemperature" parameterType="SbCurrentTemperature">
+        insert into sb_current_temperature
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="electricityBoxId != null  and electricityBoxId != ''  ">electricity_box_id,</if>
+            <if test="current != null  ">current,</if>
+            <if test="envirwarm != null  ">envirwarm,</if>
+            <if test="awarm != null  ">awarm,</if>
+            <if test="bwarm != null  ">bwarm,</if>
+            <if test="cwarm != null  ">cwarm,</if>
+            <if test="nwarm != null  ">nwarm,</if>
+            <if test="tm != null  and tm != ''  ">tm,</if>
+            <if test="doorType != null  and doorType != ''  ">door_type,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">#{id},</if>
+            <if test="electricityBoxId != null  and electricityBoxId != ''  ">#{electricityBoxId},</if>
+            <if test="current != null  ">#{current},</if>
+            <if test="envirwarm != null  ">#{envirwarm},</if>
+            <if test="awarm != null  ">#{awarm},</if>
+            <if test="bwarm != null  ">#{bwarm},</if>
+            <if test="cwarm != null  ">#{cwarm},</if>
+            <if test="nwarm != null  ">#{nwarm},</if>
+            <if test="tm != null  and tm != ''  ">#{tm},</if>
+            <if test="doorType != null  and doorType != ''  ">#{doorType},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSbCurrentTemperature" parameterType="SbCurrentTemperature">
+        update sb_current_temperature
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="electricityBoxId != null  and electricityBoxId != ''  ">electricity_box_id =
+                #{electricityBoxId},
+            </if>
+            <if test="current != null  ">current = #{current},</if>
+            <if test="envirwarm != null  ">envirwarm = #{envirwarm},</if>
+            <if test="awarm != null  ">awarm = #{awarm},</if>
+            <if test="bwarm != null  ">bwarm = #{bwarm},</if>
+            <if test="cwarm != null  ">cwarm = #{cwarm},</if>
+            <if test="nwarm != null  ">nwarm = #{nwarm},</if>
+            <if test="tm != null  and tm != ''  ">tm = #{tm},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSbCurrentTemperatureById" parameterType="Integer">
+        delete from sb_current_temperature where id = #{id}
+    </delete>
+
+    <delete id="deleteSbCurrentTemperatureByIds" parameterType="String">
+        delete from sb_current_temperature where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

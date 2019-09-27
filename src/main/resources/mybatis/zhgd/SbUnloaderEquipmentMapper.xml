@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbUnloaderEquipment.mapper.SbUnloaderEquipmentMapper">
+    
+    <resultMap type="SbUnloaderEquipment" id="SbUnloaderEquipmentResult">
+        <result property="id"    column="id"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="runtime"    column="runtime"    />
+        <result property="operation"    column="operation"    />
+        <result property="hxzid"    column="hxzid"    />
+    </resultMap>
+	
+	<sql id="selectSbUnloaderEquipmentVo">
+        select id, device_no, runtime, operation, hxzid from sb_unloader_equipment
+    </sql>
+    <select id="getSbUnloaderEquipment" parameterType="SbUnloaderEquipment" resultMap="SbUnloaderEquipmentResult">
+        SELECT * FROM `sb_unloader_equipment`
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
+            <if test="runtime != null  and runtime != '' "> and runtime = #{runtime}</if>
+            <if test="operation != null "> and operation = #{operation}</if>
+            <if test="hxzid != null  and hxzid != '' "> and hxzid = #{hxzid}</if>
+        </where>
+        ORDER BY runtime DESC LIMIT 0,1
+    </select>
+    <select id="count" parameterType="SbUnloaderEquipment" resultType="int">
+        SELECT count(*) FROM `sb_unloader_alarmtime` as a
+        LEFT JOIN sb_unloader_binding AS b ON (a.HxzId=b.HxzId)
+        <where>
+            <if test="projectId != null "> and b.Pid = #{projectId}</if>
+            <if test="hxzId != null  and hxzId != '' "> and b.HxzId = #{hxzId}</if>
+            <if test="alarmType != null">and AlarmType=#{alarmType}</if>
+            <if test="startTime != null  and startTime != '' "> and StartTime like "${startTime}%"</if>
+        </where>
+    </select>
+    <select id="selectSbUnloaderEquipmentList" parameterType="SbUnloaderEquipment" resultMap="SbUnloaderEquipmentResult">
+        <include refid="selectSbUnloaderEquipmentVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
+             <if test="runtime != null  and runtime != '' "> and runtime = #{runtime}</if>
+             <if test="operation != null "> and operation = #{operation}</if>
+             <if test="hxzid != null  and hxzid != '' "> and hxzid = #{hxzid}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbUnloaderEquipmentById" parameterType="Integer" resultMap="SbUnloaderEquipmentResult">
+        <include refid="selectSbUnloaderEquipmentVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbUnloaderEquipment" parameterType="SbUnloaderEquipment">
+        insert into sb_unloader_equipment
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">device_no,</if>
+			<if test="runtime != null  and runtime != ''  ">runtime,</if>
+			<if test="operation != null  ">operation,</if>
+			<if test="hxzid != null  and hxzid != ''  ">hxzid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+			<if test="runtime != null  and runtime != ''  ">#{runtime},</if>
+			<if test="operation != null  ">#{operation},</if>
+			<if test="hxzid != null  and hxzid != ''  ">#{hxzid},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbUnloaderEquipment" parameterType="SbUnloaderEquipment">
+        update sb_unloader_equipment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceNo != null  and deviceNo != ''  ">device_no = #{deviceNo},</if>
+            <if test="runtime != null  and runtime != ''  ">runtime = #{runtime},</if>
+            <if test="operation != null  ">operation = #{operation},</if>
+            <if test="hxzid != null  and hxzid != ''  ">hxzid = #{hxzid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbUnloaderEquipmentById" parameterType="Integer">
+        delete from sb_unloader_equipment where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbUnloaderEquipmentByIds" parameterType="String">
+        delete from sb_unloader_equipment where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

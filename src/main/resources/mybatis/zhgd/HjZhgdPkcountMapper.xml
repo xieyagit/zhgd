@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjZhgdPkcount.mapper.HjZhgdPkcountMapper">
+    
+    <resultMap type="HjZhgdPkcount" id="HjZhgdPkcountResult">
+        <result property="id"    column="id"    />
+        <result property="pkcount"    column="pkcount"    />
+        <result property="deptID"    column="deptID"    />
+        <result property="projectId"    column="projectid"    />
+        <result property="carName"    column="carName"    />
+        <result property="sn"    column="sn"    />
+        <result property="snName"    column="snName"    />
+
+    </resultMap>
+	
+	<sql id="selectHjZhgdPkcountVo">
+        select `id`, `pkcount`, `deptID` ,`projectid`,carName,sn,snName from hj_zhgd_pkcount
+    </sql>
+
+    <select id="selectProjectId" parameterType="HjZhgdPkcount" resultMap="HjZhgdPkcountResult">
+        select projectid from hj_zhgd_pkcount
+        where deptID = #{deptId}
+        limit 1
+    </select>
+    <select id="selectAll" parameterType="HjZhgdPkcount" resultMap="HjZhgdPkcountResult">
+        select sn from hj_zhgd_pkcount
+        where deptID = #{deptId} and snName = #{snName}
+    </select>
+    <select id="carpkcount" parameterType="HjZhgdPkcount" resultMap="HjZhgdPkcountResult">
+        select `pkcount` from hj_zhgd_pkcount
+        <where>
+            <if test="deptID != null "> and deptID = #{deptID}</if>
+         </where>
+        limit 1
+    </select>
+
+    <select id="selectHjZhgdPkcountList" parameterType="HjZhgdPkcount" resultMap="HjZhgdPkcountResult">
+        <include refid="selectHjZhgdPkcountVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="pkcount != null "> and pkcount = #{pkcount}</if>
+            <if test="deptID != null "> and deptID = #{deptID}</if>
+            <if test="sn != null and sn != '' "> and sn = #{sn}</if>
+        </where>
+    </select>
+
+    <select id="pkcount" parameterType="HjZhgdPkcount" resultMap="HjZhgdPkcountResult">
+        <include refid="selectHjZhgdPkcountVo"></include>
+        <where>
+            <if test="projectId != null and projectId != '' and projectId != 0 "> and projectid = #{projectId}</if>
+            <if test="deptID != null and deptID != '' and deptID != 0 "> and deptID = #{deptID}</if>
+            <if test="sn != null and sn != '' "> and sn = #{sn}</if>
+        </where>
+    </select>
+
+    <select id="selectHjZhgdPkcountById" parameterType="Integer" resultMap="HjZhgdPkcountResult">
+        <include refid="selectHjZhgdPkcountVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="add" parameterType="HjZhgdPkcount">
+        insert into hj_zhgd_pkcount
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pkcount != null  ">pkcount,</if>
+            <if test="deptID != null  ">deptID,</if>
+            <if test="projectId != null  ">projectid,</if>
+            <if test="carName != null  ">carName,</if>
+            <if test="snName != null  ">snName,</if>
+            <if test="sn != null and sn != ''  ">sn,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pkcount != null  ">#{pkcount},</if>
+            <if test="deptID != null  ">#{deptID},</if>
+            <if test="projectId != null  ">#{projectId},</if>
+            <if test="carName != null  ">#{carName},</if>
+            <if test="snName != null  ">#{snName},</if>
+            <if test="sn != null and sn != '' ">#{sn},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertHjZhgdPkcount" parameterType="HjZhgdPkcount">
+        insert into hj_zhgd_pkcount
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="pkcount != null  ">pkcount,</if>
+			<if test="deptID != null  ">deptID,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="pkcount != null  ">#{pkcount},</if>
+			<if test="deptID != null  ">#{deptID},</if>
+         </trim>
+    </insert>
+
+    <update id="carUpd" parameterType="HjZhgdPkcount">
+        update hj_zhgd_pkcount
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pkcount != null  ">pkcount = #{pkcount},</if>
+        </trim>
+        where deptID = #{deptId}
+    </update>
+
+    <update id="updateHjZhgdPkcount" parameterType="HjZhgdPkcount">
+        update hj_zhgd_pkcount
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pkcount != null  ">pkcount = #{pkcount},</if>
+            <if test="deptID != null  ">deptID = #{deptID},</if>
+            <if test="carName != null  ">carName = #{carName},</if>
+            <if test="sn != null  ">sn = #{sn},</if>
+            <if test="snName != null  ">snName = #{snName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjZhgdPkcountById" parameterType="Integer">
+        delete from hj_zhgd_pkcount where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjZhgdPkcountByIds" parameterType="String">
+        delete from hj_zhgd_pkcount where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-hjSynchronizationInformation-edit" th:object="${hjSynchronizationInformation}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">项目同步编号：</label>
+				<div class="col-sm-8">
+					<input id="projectNumber" name="projectNumber" th:field="*{projectNumber}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">授权账号：</label>
+				<div class="col-sm-8">
+					<input id="apiKey" name="apiKey" th:field="*{apiKey}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">授权密钥：</label>
+				<div class="col-sm-8">
+					<input id="apiSecret" name="apiSecret" th:field="*{apiSecret}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备序号：</label>
+				<div class="col-sm-8">
+					<input id="clientSerial" name="clientSerial" th:field="*{clientSerial}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">项目id：</label>
+				<div class="col-sm-8">
+					<input id="projectId" name="projectId" th:field="*{projectId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">工程编码：</label>
+				<div class="col-sm-8">
+					<input id="engineeringCode" name="engineeringCode" th:field="*{engineeringCode}" class="form-control" type="text">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">对接平台：</label>
+				<div class="col-sm-8">
+					<select id="platformName" name="platformName" class="form-control" th:field="*{platformName}">
+						<option value="">请选择对接平台</option>
+						<option th:each="p:${platform}" th:value="${p.tag}" th:text="${p.title}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">状态：</label>
+				<div class="col-sm-8">
+					<!--<input id="state" name="state" class="form-control" type="text">-->
+					<input type="radio"  name="state"  th:value="0" th:checked="*{state==0}" />审核中
+					<input type="radio"  name="state"  th:value="1" th:checked="*{state==1}"/>运行
+					<input type="radio"  name="state"  th:value="2" th:checked="*{state==2}"/>停止
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "zhgd/hjSynchronizationInformation";
+		$("#form-hjSynchronizationInformation-edit").validate({
+			rules:{
+                projectNumber:{
+                    required:true,
+                },
+                apiKey:{
+                    required:true,
+                },
+                apiSecret:{
+                    required:true,
+                },
+                clientSerial:{
+                    required:true,
+                },
+                projectId:{
+                    required:true,
+                    digits:true
+                },
+                platformName:{
+                    required:true,
+                },
+                state:{
+                    required:true,
+                },
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-hjSynchronizationInformation-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

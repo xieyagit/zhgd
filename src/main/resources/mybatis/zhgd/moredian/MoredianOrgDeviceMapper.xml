@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.moredian.moredianOrgDevice.mapper.MoredianOrgDeviceMapper">
+    
+    <resultMap type="MoredianOrgDevice" id="MoredianOrgDeviceResult">
+        <result property="id"    column="id"    />
+        <result property="orgId"    column="org_id"    />
+        <result property="deviceSn"    column="device_sn"    />
+        <result property="deviceId"    column="device_id"    />
+        <result property="deviceRemark"    column="device_remark"    />
+    </resultMap>
+	
+	<sql id="selectMoredianOrgDeviceVo">
+        select id, org_id, device_sn, device_id, device_remark from sb_moredian_org_device
+    </sql>
+	
+    <select id="selectMoredianOrgDeviceList" parameterType="MoredianOrgDevice" resultMap="MoredianOrgDeviceResult">
+        <include refid="selectMoredianOrgDeviceVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="orgId != null  and orgId != '' "> and org_id = #{orgId}</if>
+             <if test="deviceSn != null  and deviceSn != '' "> and device_sn = #{deviceSn}</if>
+             <if test="deviceId != null  and deviceId != '' "> and device_id = #{deviceId}</if>
+             <if test="deviceRemark != null  and deviceRemark != '' "> and device_remark = #{deviceRemark}</if>
+         </where>
+    </select>
+    
+    <select id="selectMoredianOrgDeviceById" parameterType="Integer" resultMap="MoredianOrgDeviceResult">
+        <include refid="selectMoredianOrgDeviceVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMoredianOrgDevice" parameterType="MoredianOrgDevice">
+        insert into sb_moredian_org_device
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="orgId != null  and orgId != ''  ">org_id,</if>
+			<if test="deviceSn != null  and deviceSn != ''  ">device_sn,</if>
+			<if test="deviceId != null  and deviceId != ''  ">device_id,</if>
+			<if test="deviceRemark != null  and deviceRemark != ''  ">device_remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="orgId != null  and orgId != ''  ">#{orgId},</if>
+			<if test="deviceSn != null  and deviceSn != ''  ">#{deviceSn},</if>
+			<if test="deviceId != null  and deviceId != ''  ">#{deviceId},</if>
+			<if test="deviceRemark != null  and deviceRemark != ''  ">#{deviceRemark},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateMoredianOrgDevice" parameterType="MoredianOrgDevice">
+        update sb_moredian_org_device
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orgId != null  and orgId != ''  ">org_id = #{orgId},</if>
+            <if test="deviceSn != null  and deviceSn != ''  ">device_sn = #{deviceSn},</if>
+            <if test="deviceId != null  and deviceId != ''  ">device_id = #{deviceId},</if>
+            <if test="deviceRemark != null  and deviceRemark != ''  ">device_remark = #{deviceRemark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteMoredianOrgDeviceById" parameterType="Integer">
+        delete from sb_moredian_org_device where id = #{id}
+    </delete>
+	
+    <delete id="deleteMoredianOrgDeviceByIds" parameterType="String">
+        delete from sb_moredian_org_device where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

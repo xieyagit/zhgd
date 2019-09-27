@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-sbElevatorOperator-edit" th:object="${sbElevatorOperator}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备编号：</label>
+				<div class="col-sm-8">
+					<input id="deviceNo" name="deviceNo" th:field="*{deviceNo}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">操作开始时间：</label>
+				<div class="col-sm-8">
+					<input id="startTime" name="startTime" th:field="*{startTime}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">操作结束时间：</label>
+				<div class="col-sm-8">
+					<input id="endTime" name="endTime" th:field="*{endTime}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">方向(1 上行,2 下行)：</label>
+				<div class="col-sm-8">
+					<input id="direction" name="direction" th:field="*{direction}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">最高承重值：</label>
+				<div class="col-sm-8">
+					<input id="maxLoadValue" name="maxLoadValue" th:field="*{maxLoadValue}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">是否发生超载(0.否1.是)：</label>
+				<div class="col-sm-8">
+					<input id="isOverLoad" name="isOverLoad" th:field="*{isOverLoad}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">持卡人姓名：</label>
+				<div class="col-sm-8">
+					<input id="operatorName" name="operatorName" th:field="*{operatorName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">是否非持卡人操作(0.否1.是)：</label>
+				<div class="col-sm-8">
+					<input id="isillegalOperation" name="isillegalOperation" th:field="*{isillegalOperation}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备编号：</label>
+				<div class="col-sm-8">
+					<input id="hxzid" name="hxzid" th:field="*{hxzid}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "zhgd/sbElevatorOperator";
+		$("#form-sbElevatorOperator-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-sbElevatorOperator-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

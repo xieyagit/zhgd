@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjInitiator.mapper.HjInitiatorMapper">
+    
+    <resultMap type="HjInitiator" id="HjInitiatorResult">
+        <result property="id"    column="id"    />
+        <result property="relevanceId"    column="relevanceId"    />
+        <result property="sponsorProblem"    column="sponsor_problem"    />
+        <result property="initiatorName"    column="initiator_name"    />
+        <result property="startingDate"    column="starting_date"    />
+        <result property="problemImg"    column="problem_img"    />
+        <result property="problemRemarks"    column="problem_remarks"    />
+    </resultMap>
+	
+	<sql id="selectHjInitiatorVo">
+        select id, relevanceId, sponsor_problem, initiator_name, starting_date, problem_img, problem_remarks from hj_initiator
+    </sql>
+	
+    <select id="selectHjInitiatorList" parameterType="HjInitiator" resultMap="HjInitiatorResult">
+        <include refid="selectHjInitiatorVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="relevanceId != null "> and relevanceId = #{relevanceId}</if>
+             <if test="sponsorProblem != null  and sponsorProblem != '' "> and sponsor_problem = #{sponsorProblem}</if>
+             <if test="initiatorName != null  and initiatorName != '' "> and initiator_name = #{initiatorName}</if>
+             <if test="startingDate != null "> and starting_date = #{startingDate}</if>
+             <if test="problemImg != null  and problemImg != '' "> and problem_img = #{problemImg}</if>
+             <if test="problemRemarks != null  and problemRemarks != '' "> and problem_remarks = #{problemRemarks}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjInitiatorById" parameterType="Integer" resultMap="HjInitiatorResult">
+        <include refid="selectHjInitiatorVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjInitiator" parameterType="HjInitiator">
+        insert into hj_initiator
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="relevanceId != null  ">relevanceId,</if>
+			<if test="sponsorProblem != null  and sponsorProblem != ''  ">sponsor_problem,</if>
+			<if test="initiatorName != null  and initiatorName != ''  ">initiator_name,</if>
+			<if test="startingDate != null  ">starting_date,</if>
+			<if test="problemImg != null  and problemImg != ''  ">problem_img,</if>
+			<if test="problemRemarks != null  and problemRemarks != ''  ">problem_remarks,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="relevanceId != null  ">#{relevanceId},</if>
+			<if test="sponsorProblem != null  and sponsorProblem != ''  ">#{sponsorProblem},</if>
+			<if test="initiatorName != null  and initiatorName != ''  ">#{initiatorName},</if>
+			<if test="startingDate != null  ">#{startingDate},</if>
+			<if test="problemImg != null  and problemImg != ''  ">#{problemImg},</if>
+			<if test="problemRemarks != null  and problemRemarks != ''  ">#{problemRemarks},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjInitiator" parameterType="HjInitiator">
+        update hj_initiator
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="relevanceId != null  ">relevanceId = #{relevanceId},</if>
+            <if test="sponsorProblem != null  and sponsorProblem != ''  ">sponsor_problem = #{sponsorProblem},</if>
+            <if test="initiatorName != null  and initiatorName != ''  ">initiator_name = #{initiatorName},</if>
+            <if test="startingDate != null  ">starting_date = #{startingDate},</if>
+            <if test="problemImg != null  and problemImg != ''  ">problem_img = #{problemImg},</if>
+            <if test="problemRemarks != null  and problemRemarks != ''  ">problem_remarks = #{problemRemarks},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjInitiatorById" parameterType="Integer">
+        delete from hj_initiator where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjInitiatorByIds" parameterType="String">
+        delete from hj_initiator where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

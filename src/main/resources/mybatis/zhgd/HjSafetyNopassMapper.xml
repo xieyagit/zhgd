@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjSafetyNopass.mapper.HjSafetyNopassMapper">
+    
+    <resultMap type="SafetyNopass" id="SafetyNopassResult">
+        <result property="id"    column="id"    />
+        <result property="safetyId"    column="safetyId"    />
+        <result property="safetyName"    column="safetyName"    />
+        <result property="safetyCreateTime"    column="safetyCreateTime"    />
+        <result property="rectifyResult"    column="rectifyResult"    />
+        <result property="rectifyPhotos"    column="rectifyPhotos"    />
+        <result property="rectifyTime"    column="rectifyTime"    />
+        <result property="reviewOpinions"    column="reviewOpinions"    />
+        <result property="reviewResult"    column="reviewResult"    />
+        <result property="reviewPath"    column="reviewPath"    />
+        <result property="reviewTime"    column="reviewTime"    />
+    </resultMap>
+	
+	<sql id="selectHjSafetyNopassVo">
+        select id, safetyId, safetyName, safetyCreateTime, rectifyResult, rectifyPhotos, rectifyTime, reviewOpinions, reviewResult, reviewPath, reviewTime from hj_safety_nopass
+    </sql>
+
+
+	
+    <select id="selectHjSafetyNopassList" parameterType="SafetyNopass" resultMap="SafetyNopassResult">
+        <include refid="selectHjSafetyNopassVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="safetyId != null "> and safetyId = #{safetyId}</if>
+             <if test="safetyName != null  and safetyName != '' "> and safetyName = #{safetyName}</if>
+             <if test="safetyCreateTime != null  and safetyCreateTime != '' "> and safetyCreateTime = #{safetyCreateTime}</if>
+             <if test="rectifyResult != null  and rectifyResult != '' "> and rectifyResult = #{rectifyResult}</if>
+             <if test="rectifyPhotos != null  and rectifyPhotos != '' "> and rectifyPhotos = #{rectifyPhotos}</if>
+             <if test="rectifyTime != null  and rectifyTime != '' "> and rectifyTime = #{rectifyTime}</if>
+             <if test="reviewOpinions != null  and reviewOpinions != '' "> and reviewOpinions = #{reviewOpinions}</if>
+             <if test="reviewResult != null  and reviewResult != '' "> and reviewResult = #{reviewResult}</if>
+             <if test="reviewPath != null  and reviewPath != '' "> and reviewPath = #{reviewPath}</if>
+             <if test="reviewTime != null  and reviewTime != '' "> and reviewTime = #{reviewTime}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjSafetyNopassById" parameterType="Integer" resultMap="SafetyNopassResult">
+        <include refid="selectHjSafetyNopassVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjSafetyNopass" parameterType="SafetyNopass">
+        insert into hj_safety_nopass
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="safetyId != null  ">safetyId,</if>
+			<if test="safetyName != null  and safetyName != ''  ">safetyName,</if>
+			<if test="safetyCreateTime != null  and safetyCreateTime != ''  ">safetyCreateTime,</if>
+			<if test="rectifyResult != null  and rectifyResult != ''  ">rectifyResult,</if>
+			<if test="rectifyPhotos != null  and rectifyPhotos != ''  ">rectifyPhotos,</if>
+			<if test="rectifyTime != null  and rectifyTime != ''  ">rectifyTime,</if>
+			<if test="reviewOpinions != null  and reviewOpinions != ''  ">reviewOpinions,</if>
+			<if test="reviewResult != null  and reviewResult != ''  ">reviewResult,</if>
+			<if test="reviewPath != null  and reviewPath != ''  ">reviewPath,</if>
+			<if test="reviewTime != null  and reviewTime != ''  ">reviewTime,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="safetyId != null  ">#{safetyId},</if>
+			<if test="safetyName != null  and safetyName != ''  ">#{safetyName},</if>
+			<if test="safetyCreateTime != null  and safetyCreateTime != ''  ">#{safetyCreateTime},</if>
+			<if test="rectifyResult != null  and rectifyResult != ''  ">#{rectifyResult},</if>
+			<if test="rectifyPhotos != null  and rectifyPhotos != ''  ">#{rectifyPhotos},</if>
+			<if test="rectifyTime != null  and rectifyTime != ''  ">#{rectifyTime},</if>
+			<if test="reviewOpinions != null  and reviewOpinions != ''  ">#{reviewOpinions},</if>
+			<if test="reviewResult != null  and reviewResult != ''  ">#{reviewResult},</if>
+			<if test="reviewPath != null  and reviewPath != ''  ">#{reviewPath},</if>
+			<if test="reviewTime != null  and reviewTime != ''  ">#{reviewTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjSafetyNopass" parameterType="SafetyNopass">
+        update hj_safety_nopass
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="safetyId != null  ">safetyId = #{safetyId},</if>
+            <if test="safetyName != null  and safetyName != ''  ">safetyName = #{safetyName},</if>
+            <if test="safetyCreateTime != null  and safetyCreateTime != ''  ">safetyCreateTime = #{safetyCreateTime},</if>
+            <if test="rectifyResult != null  and rectifyResult != ''  ">rectifyResult = #{rectifyResult},</if>
+            <if test="rectifyPhotos != null  and rectifyPhotos != ''  ">rectifyPhotos = #{rectifyPhotos},</if>
+            <if test="rectifyTime != null  and rectifyTime != ''  ">rectifyTime = #{rectifyTime},</if>
+            <if test="reviewOpinions != null  and reviewOpinions != ''  ">reviewOpinions = #{reviewOpinions},</if>
+            <if test="reviewResult != null  and reviewResult != ''  ">reviewResult = #{reviewResult},</if>
+            <if test="reviewPath != null  and reviewPath != ''  ">reviewPath = #{reviewPath},</if>
+            <if test="reviewTime != null  and reviewTime != ''  ">reviewTime = #{reviewTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjSafetyNopassById" parameterType="Integer">
+        delete from hj_safety_nopass where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjSafetyNopassByIds" parameterType="String">
+        delete from hj_safety_nopass where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

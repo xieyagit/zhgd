@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbApiFaceInformation.mapper.SbApiFaceInformationMapper">
+    
+    <resultMap type="SbApiFaceInformation" id="SbApiFaceInformationResult">
+        <result property="id"    column="id"    />
+        <result property="personId"    column="person_id"    />
+        <result property="facialImage"    column="facial_image"    />
+        <result property="equipmentId"    column="equipment_id"    />
+    </resultMap>
+	
+	<sql id="selectSbApiFaceInformationVo">
+        select id, person_id, facial_image, equipment_id from sb_api_face_information
+    </sql>
+	
+    <select id="selectSbApiFaceInformationList" parameterType="SbApiFaceInformation" resultMap="SbApiFaceInformationResult">
+        <include refid="selectSbApiFaceInformationVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="personId != null  and personId != '' "> and person_id = #{personId}</if>
+             <if test="facialImage != null  and facialImage != '' "> and facial_image = #{facialImage}</if>
+             <if test="equipmentId != null  and equipmentId != '' "> and equipment_id = #{equipmentId}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbApiFaceInformationById" parameterType="Integer" resultMap="SbApiFaceInformationResult">
+        <include refid="selectSbApiFaceInformationVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbApiFaceInformation" parameterType="SbApiFaceInformation">
+        insert into sb_api_face_information
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="personId != null  and personId != ''  ">person_id,</if>
+			<if test="facialImage != null  and facialImage != ''  ">facial_image,</if>
+			<if test="equipmentId != null  and equipmentId != ''  ">equipment_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="personId != null  and personId != ''  ">#{personId},</if>
+			<if test="facialImage != null  and facialImage != ''  ">#{facialImage},</if>
+			<if test="equipmentId != null  and equipmentId != ''  ">#{equipmentId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbApiFaceInformation" parameterType="SbApiFaceInformation">
+        update sb_api_face_information
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="personId != null  and personId != ''  ">person_id = #{personId},</if>
+            <if test="facialImage != null  and facialImage != ''  ">facial_image = #{facialImage},</if>
+            <if test="equipmentId != null  and equipmentId != ''  ">equipment_id = #{equipmentId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbApiFaceInformationById" parameterType="Integer">
+        delete from sb_api_face_information where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbApiFaceInformationByIds" parameterType="String">
+        delete from sb_api_face_information where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

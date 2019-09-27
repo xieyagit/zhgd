@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjZhgdDriver.mapper.HjZhgdDriverMapper">
+    
+    <resultMap type="HjZhgdDriver" id="HjZhgdDriverResult">
+        <result property="id"    column="id"    />
+        <result property="driver"    column="driver"    />
+        <result property="vehicle"    column="vehicle"    />
+        <result property="deptId"    column="deptId"    />
+        <result property="projectId"    column="project_id"    />
+    </resultMap>
+	
+	<sql id="selectHjZhgdDriverVo">
+        select id, driver, vehicle from hj_zhgd_driver
+    </sql>
+	
+    <select id="selectHjZhgdDriverList" parameterType="HjZhgdDriver" resultMap="HjZhgdDriverResult">
+        <include refid="selectHjZhgdDriverVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="driver != null  and driver != '' "> and driver = #{driver}</if>
+            <if test="vehicle != null  and vehicle != '' "> and vehicle = #{vehicle}</if>
+            <if test="deptId != null  and deptId != 0 "> and deptId = #{deptId}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjZhgdDriverById" parameterType="Integer" resultMap="HjZhgdDriverResult">
+        <include refid="selectHjZhgdDriverVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjZhgdDriver" parameterType="HjZhgdDriver">
+        insert into hj_zhgd_driver
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="driver != null  and driver != ''  ">driver,</if>
+			<if test="vehicle != null  and vehicle != ''  ">vehicle,</if>
+			<if test="projectId != null  and projectId != ''  ">project_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="driver != null  and driver != ''  ">#{driver},</if>
+			<if test="vehicle != null  and vehicle != ''  ">#{vehicle},</if>
+			<if test="projectId != null  and projectId != ''  ">#{projectId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjZhgdDriver" parameterType="HjZhgdDriver">
+        update hj_zhgd_driver
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="driver != null  and driver != ''  ">driver = #{driver},</if>
+            <if test="vehicle != null  and vehicle != ''  ">vehicle = #{vehicle},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjZhgdDriverById" parameterType="Integer">
+        delete from hj_zhgd_driver where id = #{id}
+    </delete>
+</mapper>

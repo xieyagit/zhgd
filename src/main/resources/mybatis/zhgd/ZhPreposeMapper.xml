@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.zhNode.mapper.ZhPreposeMapper">
+    
+    <resultMap type="ZhPrepose" id="ZhPreposeResult">
+        <result property="id"    column="id"    />
+        <result property="mainPlan"    column="main_plan"    />
+        <result property="preposePian"    column="prepose_pian"    />
+    </resultMap>
+	
+	<sql id="selectZhPreposeVo">
+        select id, main_plan, prepose_pian from zh_prepose
+    </sql>
+	
+    <select id="selectZhPreposeList" parameterType="ZhPrepose" resultMap="ZhPreposeResult">
+        <include refid="selectZhPreposeVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="mainPlan != null "> and main_plan = #{mainPlan}</if>
+             <if test="preposePian != null "> and prepose_pian = #{preposePian}</if>
+         </where>
+    </select>
+    
+    <select id="selectZhPreposeById" parameterType="Integer" resultMap="ZhPreposeResult">
+        <include refid="selectZhPreposeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertZhPrepose" parameterType="ZhPrepose">
+        insert into zh_prepose
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="mainPlan != null  ">main_plan,</if>
+			<if test="preposePian != null  ">prepose_pian,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="mainPlan != null  ">#{mainPlan},</if>
+			<if test="preposePian != null  ">#{preposePian},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateZhPrepose" parameterType="ZhPrepose">
+        update zh_prepose
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mainPlan != null  ">main_plan = #{mainPlan},</if>
+            <if test="preposePian != null  ">prepose_pian = #{preposePian},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteZhPreposeById" parameterType="Integer">
+        delete from zh_prepose where id = #{id}
+    </delete>
+	
+    <delete id="deleteZhPreposeByIds" parameterType="String">
+        delete from zh_prepose where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

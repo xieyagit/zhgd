@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjProjectUser.mapper.HjProjectUserMapper">
+    
+    <resultMap type="HjProjectUser" id="HjProjectUserResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userPhone" column="userPhone"/>
+        <result property="alias" column="alias"/>
+    </resultMap>
+	
+	<sql id="selectHjProjectUserVo">
+        select id, project_id, user_id from hj_project_user
+    </sql>
+	
+    <select id="selectHjProjectUserList" parameterType="HjProjectUser" resultMap="HjProjectUserResult">
+        select p.id, project_id, user_id,s.alias,s.user_phone as userPhone  from hj_project_user AS p
+        LEFT JOIN hj_system_user AS s ON(p.user_id = s.id)
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="projectId != null "> and project_id = #{projectId}</if>
+             <if test="userId != null "> and user_id = #{userId}</if>
+         </where>
+
+    </select>
+    
+    <select id="selectHjProjectUserById" parameterType="Integer" resultMap="HjProjectUserResult">
+        <include refid="selectHjProjectUserVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjProjectUser" parameterType="HjProjectUser">
+        insert into hj_project_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="projectId != null  ">project_id,</if>
+			<if test="userId != null  ">user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="projectId != null  ">#{projectId},</if>
+			<if test="userId != null  ">#{userId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjProjectUser" parameterType="HjProjectUser">
+        update hj_project_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null  ">project_id = #{projectId},</if>
+            <if test="userId != null  ">user_id = #{userId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjProjectUserById" parameterType="Integer">
+        delete from hj_project_user where id = #{id}
+    </delete>
+
+    <delete id="deleteHjProjectUserIds" parameterType="Integer">
+        delete from hj_project_user where
+        <if test="parseInt != null  ">
+        user_id = #{parseInt}
+        </if>
+    </delete>
+	
+    <delete id="deleteHjProjectUserByIds" parameterType="String">
+        delete from hj_project_user where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

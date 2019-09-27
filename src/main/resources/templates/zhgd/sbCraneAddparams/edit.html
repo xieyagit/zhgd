@@ -1,0 +1,137 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-sbCraneAddparams-edit" th:object="${sbCraneAddparams}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备编号--32位：</label>
+				<div class="col-sm-8">
+					<input id="deviceNo" name="deviceNo" th:field="*{deviceNo}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备型号：</label>
+				<div class="col-sm-8">
+					<input id="model" name="model" th:field="*{model}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备名称：</label>
+				<div class="col-sm-8">
+					<input id="name" name="name" th:field="*{name}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">最大幅度（M）：</label>
+				<div class="col-sm-8">
+					<input id="tcMaxscope" name="tcMaxscope" th:field="*{tcMaxscope}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">幅度前减速（M)：</label>
+				<div class="col-sm-8">
+					<input id="tcSbSpeedcut" name="tcSbSpeedcut" th:field="*{tcSbSpeedcut}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">幅度后减速（M)：</label>
+				<div class="col-sm-8">
+					<input id="tcSaSpeedcut" name="tcSaSpeedcut" th:field="*{tcSaSpeedcut}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">最大高度（M)：</label>
+				<div class="col-sm-8">
+					<input id="tcMaxheight" name="tcMaxheight" th:field="*{tcMaxheight}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">附着后最大悬臂高度：</label>
+				<div class="col-sm-8">
+					<input id="tcMaxXbHeight" name="tcMaxXbHeight" th:field="*{tcMaxXbHeight}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">最小高度（M)：</label>
+				<div class="col-sm-8">
+					<input id="tcMinheight" name="tcMinheight" th:field="*{tcMinheight}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">高度上减速(M)：</label>
+				<div class="col-sm-8">
+					<input id="tcHuSpeedcut" name="tcHuSpeedcut" th:field="*{tcHuSpeedcut}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">最小幅度（M）：</label>
+				<div class="col-sm-8">
+					<input id="tcMinscope" name="tcMinscope" th:field="*{tcMinscope}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">高度下减速（M)：</label>
+				<div class="col-sm-8">
+					<input id="tcHbSpeedcut" name="tcHbSpeedcut" th:field="*{tcHbSpeedcut}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">最大载重（T)：</label>
+				<div class="col-sm-8">
+					<input id="tcLoadcapacity" name="tcLoadcapacity" th:field="*{tcLoadcapacity}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">最大幅度允许最大载重（T)：</label>
+				<div class="col-sm-8">
+					<input id="tcMsLoadcapacity" name="tcMsLoadcapacity" th:field="*{tcMsLoadcapacity}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">最大载重达到最大幅度（M)：</label>
+				<div class="col-sm-8">
+					<input id="tcMlMaxscope" name="tcMlMaxscope" th:field="*{tcMlMaxscope}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">塔机倍率（M)：</label>
+				<div class="col-sm-8">
+					<input id="tcMultiple" name="tcMultiple" th:field="*{tcMultiple}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">塔机类型（0-平臂式，1-动臂式，2-其他）：</label>
+				<div class="col-sm-8">
+					<input id="towerType" name="towerType" th:field="*{towerType}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备编号：</label>
+				<div class="col-sm-8">
+					<input id="hxzid" name="hxzid" th:field="*{hxzid}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "zhgd/sbCraneAddparams";
+		$("#form-sbCraneAddparams-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-sbCraneAddparams-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

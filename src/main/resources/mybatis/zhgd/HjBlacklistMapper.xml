@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjBlacklist.mapper.HjBlacklistMapper">
+    
+    <resultMap type="HjBlacklist" id="HjBlacklistResult">
+        <result property="id"    column="id"    />
+        <result property="empName"    column="emp_name"    />
+        <result property="empCode"    column="emp_code"    />
+        <result property="cause"    column="cause"    />
+        <result property="url"    column="url"    />
+    </resultMap>
+	
+	<sql id="selectHjBlacklistVo">
+        select id, emp_name, emp_code, cause, url from hj_blacklist
+    </sql>
+	
+    <select id="selectHjBlacklistList" parameterType="HjBlacklist" resultMap="HjBlacklistResult">
+        <include refid="selectHjBlacklistVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="empName != null  and empName != '' "> and emp_name like"%${empName}%" </if>
+             <if test="empCode != null  and empCode != '' "> and emp_code = #{empCode}</if>
+             <if test="cause != null  and cause != '' "> and cause like"%{cause}%"</if>
+             <if test="url != null  and url != '' "> and url = #{url}</if>
+         </where>
+        order by id desc
+    </select>
+    
+    <select id="selectHjBlacklistById" parameterType="Integer" resultMap="HjBlacklistResult">
+        <include refid="selectHjBlacklistVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjBlacklist" parameterType="HjBlacklist">
+        insert into hj_blacklist
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="empName != null  and empName != ''  ">emp_name,</if>
+			<if test="empCode != null  and empCode != ''  ">emp_code,</if>
+			<if test="cause != null  and cause != ''  ">cause,</if>
+			<if test="url != null  and url != ''  ">url,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="empName != null  and empName != ''  ">#{empName},</if>
+			<if test="empCode != null  and empCode != ''  ">#{empCode},</if>
+			<if test="cause != null  and cause != ''  ">#{cause},</if>
+			<if test="url != null  and url != ''  ">#{url},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjBlacklist" parameterType="HjBlacklist">
+        update hj_blacklist
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="empName != null  and empName != ''  ">emp_name = #{empName},</if>
+            <if test="empCode != null  and empCode != ''  ">emp_code = #{empCode},</if>
+            <if test="cause != null  and cause != ''  ">cause = #{cause},</if>
+            <if test="url != null  and url != ''  ">url = #{url},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjBlacklistById" parameterType="Integer">
+        delete from hj_blacklist where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjBlacklistByIds" parameterType="String">
+        delete from hj_blacklist where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

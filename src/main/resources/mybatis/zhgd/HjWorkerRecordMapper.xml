@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjWorkerRecord.mapper.HjWorkerRecordMapper">
+    
+    <resultMap type="HjWorkerRecord" id="HjWorkerRecordResult">
+        <result property="id"    column="id"    />
+        <result property="idCode"    column="id_code"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="constructionId"    column="construction_id"    />
+        <result property="teamId"    column="team_id"    />
+        <result property="createDate"    column="create_date"    />
+    </resultMap>
+	
+	<sql id="selectHjWorkerRecordVo">
+        select id, id_code, project_id, construction_id, team_id, create_date from hj_worker_record
+    </sql>
+	
+    <select id="selectHjWorkerRecordList" parameterType="HjWorkerRecord" resultMap="HjWorkerRecordResult">
+        <include refid="selectHjWorkerRecordVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="idCode != null  and idCode != '' "> and id_code = #{idCode}</if>
+             <if test="projectId != null "> and project_id = #{projectId}</if>
+             <if test="constructionId != null "> and construction_id = #{constructionId}</if>
+             <if test="teamId != null "> and team_id = #{teamId}</if>
+             <if test="createDate != null "> and create_date = #{createDate}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjWorkerRecordById" parameterType="Integer" resultMap="HjWorkerRecordResult">
+        <include refid="selectHjWorkerRecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjWorkerRecord" parameterType="HjWorkerRecord">
+        insert into hj_worker_record
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="idCode != null  and idCode != ''  ">id_code,</if>
+			<if test="projectId != null  ">project_id,</if>
+			<if test="constructionId != null  ">construction_id,</if>
+			<if test="teamId != null  ">team_id,</if>
+			<if test="createDate != null  ">create_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="idCode != null  and idCode != ''  ">#{idCode},</if>
+			<if test="projectId != null  ">#{projectId},</if>
+			<if test="constructionId != null  ">#{constructionId},</if>
+			<if test="teamId != null  ">#{teamId},</if>
+			<if test="createDate != null  ">#{createDate},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjWorkerRecord" parameterType="HjWorkerRecord">
+        update hj_worker_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="idCode != null  and idCode != ''  ">id_code = #{idCode},</if>
+            <if test="projectId != null  ">project_id = #{projectId},</if>
+            <if test="constructionId != null  ">construction_id = #{constructionId},</if>
+            <if test="teamId != null  ">team_id = #{teamId},</if>
+            <if test="createDate != null  ">create_date = #{createDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjWorkerRecordById" parameterType="Integer">
+        delete from hj_worker_record where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjWorkerRecordByIds" parameterType="String">
+        delete from hj_worker_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

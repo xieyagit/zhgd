@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbElevatorLocatordata.mapper.SbElevatorLocatordataMapper">
+    
+    <resultMap type="SbElevatorLocatordata" id="SbElevatorLocatordataResult">
+        <result property="id"    column="id"    />
+        <result property="hxzId"    column="HxzId"    />
+        <result property="deviceNo"    column="DeviceNo"    />
+        <result property="latitude"    column="Latitude"    />
+        <result property="longitude"    column="Longitude"    />
+    </resultMap>
+	
+	<sql id="selectSbElevatorLocatordataVo">
+        select id, HxzId, DeviceNo, Latitude, Longitude from sb_elevator_locatordata
+    </sql>
+	
+    <select id="selectSbElevatorLocatordataList" parameterType="SbElevatorLocatordata" resultMap="SbElevatorLocatordataResult">
+        <include refid="selectSbElevatorLocatordataVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="hxzId != null  and hxzId != '' "> and HxzId = #{hxzId}</if>
+             <if test="deviceNo != null  and deviceNo != '' "> and DeviceNo = #{deviceNo}</if>
+             <if test="latitude != null  and latitude != '' "> and Latitude = #{latitude}</if>
+             <if test="longitude != null  and longitude != '' "> and Longitude = #{longitude}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbElevatorLocatordataById" parameterType="Integer" resultMap="SbElevatorLocatordataResult">
+        <include refid="selectSbElevatorLocatordataVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbElevatorLocatordata" parameterType="SbElevatorLocatordata">
+        insert into sb_elevator_locatordata
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="hxzId != null  and hxzId != ''  ">HxzId,</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">DeviceNo,</if>
+			<if test="latitude != null  and latitude != ''  ">Latitude,</if>
+			<if test="longitude != null  and longitude != ''  ">Longitude,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="hxzId != null  and hxzId != ''  ">#{hxzId},</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+			<if test="latitude != null  and latitude != ''  ">#{latitude},</if>
+			<if test="longitude != null  and longitude != ''  ">#{longitude},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbElevatorLocatordata" parameterType="SbElevatorLocatordata">
+        update sb_elevator_locatordata
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="hxzId != null  and hxzId != ''  ">HxzId = #{hxzId},</if>
+            <if test="deviceNo != null  and deviceNo != ''  ">DeviceNo = #{deviceNo},</if>
+            <if test="latitude != null  and latitude != ''  ">Latitude = #{latitude},</if>
+            <if test="longitude != null  and longitude != ''  ">Longitude = #{longitude},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbElevatorLocatordataById" parameterType="Integer">
+        delete from sb_elevator_locatordata where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbElevatorLocatordataByIds" parameterType="String">
+        delete from sb_elevator_locatordata where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

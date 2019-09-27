@@ -1,0 +1,136 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-sbCraneAddparams-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备编号--32位：</label>
+				<div class="col-sm-8">
+					<input id="deviceNo" name="deviceNo" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备型号：</label>
+				<div class="col-sm-8">
+					<input id="model" name="model" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备名称：</label>
+				<div class="col-sm-8">
+					<input id="name" name="name" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">最大幅度（M）：</label>
+				<div class="col-sm-8">
+					<input id="tcMaxscope" name="tcMaxscope" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">幅度前减速（M)：</label>
+				<div class="col-sm-8">
+					<input id="tcSbSpeedcut" name="tcSbSpeedcut" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">幅度后减速（M)：</label>
+				<div class="col-sm-8">
+					<input id="tcSaSpeedcut" name="tcSaSpeedcut" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">最大高度（M)：</label>
+				<div class="col-sm-8">
+					<input id="tcMaxheight" name="tcMaxheight" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">附着后最大悬臂高度：</label>
+				<div class="col-sm-8">
+					<input id="tcMaxXbHeight" name="tcMaxXbHeight" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">最小高度（M)：</label>
+				<div class="col-sm-8">
+					<input id="tcMinheight" name="tcMinheight" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">高度上减速(M)：</label>
+				<div class="col-sm-8">
+					<input id="tcHuSpeedcut" name="tcHuSpeedcut" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">最小幅度（M）：</label>
+				<div class="col-sm-8">
+					<input id="tcMinscope" name="tcMinscope" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">高度下减速（M)：</label>
+				<div class="col-sm-8">
+					<input id="tcHbSpeedcut" name="tcHbSpeedcut" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">最大载重（T)：</label>
+				<div class="col-sm-8">
+					<input id="tcLoadcapacity" name="tcLoadcapacity" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">最大幅度允许最大载重（T)：</label>
+				<div class="col-sm-8">
+					<input id="tcMsLoadcapacity" name="tcMsLoadcapacity" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">最大载重达到最大幅度（M)：</label>
+				<div class="col-sm-8">
+					<input id="tcMlMaxscope" name="tcMlMaxscope" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">塔机倍率（M)：</label>
+				<div class="col-sm-8">
+					<input id="tcMultiple" name="tcMultiple" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">塔机类型（0-平臂式，1-动臂式，2-其他）：</label>
+				<div class="col-sm-8">
+					<input id="towerType" name="towerType" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备编号：</label>
+				<div class="col-sm-8">
+					<input id="hxzid" name="hxzid" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "zhgd/sbCraneAddparams"
+		$("#form-sbCraneAddparams-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/add", $('#form-sbCraneAddparams-add').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

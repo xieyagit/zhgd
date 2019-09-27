@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.vehicleEquipment.mapper.VehicleEquipmentMapper">
+    
+    <resultMap type="VehicleEquipment" id="VehicleEquipmentResult">
+        <result property="id"    column="id"    />
+        <result property="address"    column="Address"    />
+        <result property="addressIP"    column="AddressIP"    />
+        <result property="assistAddressIP"    column="AssistAddressIP"    />
+        <result property="cameraMac"    column="Camera_Mac"    />
+        <result property="computerIp"    column="Computer_IP"    />
+        <result property="devID"    column="DevID"    />
+        <result property="devName"    column="DevName"    />
+        <result property="devType"    column="DevType"    />
+        <result property="gUID"    column="GUID"    />
+        <result property="inOROut"    column="InOROut"    />
+        <result property="deptID"    column="DeptID"    />
+        <result property="pkCount"    column="PkCount"    />
+        <result property="writeInTime"    column="writeInTime"    />
+    </resultMap>
+	
+	<sql id="selectVehicleEquipmentVo">
+        select id, Address, AddressIP, AssistAddressIP, Camera_Mac, Computer_IP, DevID, DevName, DevType, GUID, InOROut, DeptID, PkCount,writeInTime from hj_zhgd_vehicle_equipment
+    </sql>
+	
+    <select id="selectVehicleEquipmentList" parameterType="VehicleEquipment" resultMap="VehicleEquipmentResult">
+        <include refid="selectVehicleEquipmentVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="address != null "> and Address = #{address}</if>
+             <if test="addressIP != null  and addressIP != '' "> and AddressIP = #{addressIP}</if>
+             <if test="assistAddressIP != null  and assistAddressIP != '' "> and AssistAddressIP = #{assistAddressIP}</if>
+             <if test="cameraMac != null  and cameraMac != '' "> and Camera_Mac = #{cameraMac}</if>
+             <if test="computerIp != null  and computerIp != '' "> and Computer_IP = #{computerIp}</if>
+             <if test="devID != null "> and DevID = #{devID}</if>
+             <if test="devName != null  and devName != '' "> and DevName = #{devName}</if>
+             <if test="devType != null "> and DevType = #{devType}</if>
+             <if test="gUID != null  and gUID != '' "> and GUID = #{gUID}</if>
+             <if test="inOROut != null "> and InOROut = #{inOROut}</if>
+             <if test="deptID != null "> and DeptID = #{deptID}</if>
+             <if test="pkCount != null "> and PkCount = #{pkCount}</if>
+             <if test="writeInTime != null "> and writeInTime = #{writeInTime}</if>
+         </where>
+    </select>
+
+    <select id="selectresidue" parameterType="Integer" resultMap="VehicleEquipmentResult">
+        select PkCount from hj_zhgd_vehicle_equipment where id = (select max(id) from hj_zhgd_vehicle_equipment where DeptID = #{deptID})
+    </select>
+
+    <select id="selectVehicleEquipmentById" parameterType="Integer" resultMap="VehicleEquipmentResult">
+        <include refid="selectVehicleEquipmentVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectVehive" resultMap="VehicleEquipmentResult">
+     SELECT * FROM hj_zhgd_vehicle_equipment h WHERE h.Camera_Mac = #{camera_mac} AND h.DeptID = #{deptID} ORDER BY h.writeInTime DESC LIMIT 1
+    </select>
+        
+    <insert id="insertVehicleEquipment" parameterType="VehicleEquipment">
+        insert into hj_zhgd_vehicle_equipment
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="address != null  ">Address,</if>
+			<if test="addressIP != null  and addressIP != ''  ">AddressIP,</if>
+			<if test="assistAddressIP != null  and assistAddressIP != ''  ">AssistAddressIP,</if>
+			<if test="cameraMac != null  and cameraMac != ''  ">Camera_Mac,</if>
+			<if test="computerIp != null  and computerIp != ''  ">Computer_IP,</if>
+			<if test="devID != null  ">DevID,</if>
+			<if test="devName != null  and devName != ''  ">DevName,</if>
+			<if test="devType != null  ">DevType,</if>
+			<if test="gUID != null  and gUID != ''  ">GUID,</if>
+			<if test="inOROut != null  ">InOROut,</if>
+			<if test="deptID != null  ">DeptID,</if>
+			<if test="pkCount != null  ">PkCount,</if>
+            <if test="writeInTime != null  ">writeInTime,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="address != null  ">#{address},</if>
+			<if test="addressIP != null  and addressIP != ''  ">#{addressIP},</if>
+			<if test="assistAddressIP != null  and assistAddressIP != ''  ">#{assistAddressIP},</if>
+			<if test="cameraMac != null  and cameraMac != ''  ">#{cameraMac},</if>
+			<if test="computerIp != null  and computerIp != ''  ">#{computerIp},</if>
+			<if test="devID != null  ">#{devID},</if>
+			<if test="devName != null  and devName != ''  ">#{devName},</if>
+			<if test="devType != null  ">#{devType},</if>
+			<if test="gUID != null  and gUID != ''  ">#{gUID},</if>
+			<if test="inOROut != null  ">#{inOROut},</if>
+			<if test="deptID != null  ">#{deptID},</if>
+			<if test="pkCount != null  ">#{pkCount},</if>
+            <if test="writeInTime != null  ">#{writeInTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateVehicleEquipment" parameterType="VehicleEquipment">
+        update hj_zhgd_vehicle_equipment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="address != null  ">Address = #{address},</if>
+            <if test="addressIP != null  and addressIP != ''  ">AddressIP = #{addressIP},</if>
+            <if test="assistAddressIP != null  and assistAddressIP != ''  ">AssistAddressIP = #{assistAddressIP},</if>
+            <if test="cameraMac != null  and cameraMac != ''  ">Camera_Mac = #{cameraMac},</if>
+            <if test="computerIp != null  and computerIp != ''  ">Computer_IP = #{computerIp},</if>
+            <if test="devID != null  ">DevID = #{devID},</if>
+            <if test="devName != null  and devName != ''  ">DevName = #{devName},</if>
+            <if test="devType != null  ">DevType = #{devType},</if>
+            <if test="gUID != null  and gUID != ''  ">GUID = #{gUID},</if>
+            <if test="inOROut != null  ">InOROut = #{inOROut},</if>
+            <if test="deptID != null  ">DeptID = #{deptID},</if>
+            <if test="pkCount != null  ">PkCount = #{pkCount},</if>
+            <if test="writeInTime != null  ">writeInTime = #{writeInTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteVehicleEquipmentById" parameterType="Integer">
+        delete from hj_zhgd_vehicle_equipment where id = #{id}
+    </delete>
+	
+    <delete id="deleteVehicleEquipmentByIds" parameterType="String">
+        delete from hj_zhgd_vehicle_equipment where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

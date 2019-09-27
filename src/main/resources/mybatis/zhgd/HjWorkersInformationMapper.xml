@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjWorkersInformation.mapper.HjWorkersInformationMapper">
+
+    <resultMap type="HjWorkersInformation" id="HjWorkersInformationResult">
+        <result property="id"    column="id"    />
+        <result property="laborContract"    column="labor_contract"    />
+        <result property="twoSystems"    column="two_systems"    />
+        <result property="enter"    column="enter"    />
+        <result property="come"    column="come"    />
+        <result property="identity"    column="identity"    />
+        <result property="material"    column="material"    />
+        <result property="userId"    column="user_id"    />
+        <result property="projectId"    column="projectId"    />
+    </resultMap>
+	
+	<sql id="selectHjWorkersInformationVo">
+        select id, labor_contract, two_systems, enter, come, `identity`, user_id, material from hj_workers_information
+    </sql>
+
+    <select id="company" parameterType="HjWorkersInformation" resultMap="HjWorkersInformationResult">
+        SELECT c.id as constructionId, c.construction_name as empName from hj_construction_company c INNER JOIN hj_project_workers p on c.id = p.construction_id
+        where p.project_id = #{projectId}
+        GROUP BY c.construction_name
+    </select>
+    <select id="dictionaries" parameterType="HjWorkersInformation" resultMap="HjWorkersInformationResult">
+        SELECT tag as jobName,title
+        from hj_dictionaries d INNER JOIN hj_project_workers p
+        ON d.tag = p.job_name
+        WHERE p.project_id = #{projectId}
+        GROUP BY title
+    </select>
+    <select id="team" parameterType="HjWorkersInformation" resultMap="HjWorkersInformationResult">
+         SELECT id,team_name as empName FROM hj_team
+          where project_id = #{projectId}
+    </select>
+    <select id="sele" parameterType="HjWorkersInformation" resultMap="HjWorkersInformationResult">
+         SELECT id, labor_contract, two_systems, enter, come, `identity`, user_id, material from hj_workers_information
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="selectzhiliaoqiquan" resultType="Integer">
+         SELECT COUNT(id) FROM hj_workers_information WHERE material = 1
+    </select>
+
+    <select id="all" resultType="Integer">
+         SELECT COUNT(emp_name) FROM hj_project_workers
+         where project_id=#{projectId}
+    </select>
+
+    <select id="jyht" resultType="Integer">
+         SELECT COUNT(w.id) FROM hj_project_workers p LEFT JOIN  hj_workers_information w ON w.user_id = p.`id`  where labor_contract  !='' and  project_id=#{projectId} and come != ''
+    </select>
+
+    <select id="lzqrs" resultType="Integer">
+         SELECT COUNT(w.id) FROM hj_project_workers p LEFT JOIN  hj_workers_information w ON w.user_id = p.`id` where two_systems  !='' and  project_id=#{projectId} and come != ''
+    </select>
+
+    <select id="jcqrs" resultType="Integer">
+         SELECT COUNT(w.id) FROM hj_project_workers p LEFT JOIN  hj_workers_information w ON w.user_id = p.`id` where enter  !='' and  project_id=#{projectId} and come != ''
+    </select>
+
+    <select id="sfzfyj" resultType="Integer">
+         SELECT COUNT(w.id) FROM hj_project_workers p LEFT JOIN  hj_workers_information w ON w.user_id = p.`id` where `identity`  !='' and  project_id=#{projectId} and come != ''
+    </select>
+
+    <select id="come" resultType="Integer">
+         SELECT COUNT(w.id) FROM hj_project_workers p LEFT JOIN  hj_workers_information w ON w.user_id = p.`id` where come  !=''  and  project_id=#{projectId} and come != ''
+    </select>
+
+    <select id="zaichsng" resultType="Integer">
+        SELECT COUNT(emp_name) FROM hj_project_workers
+        where project_id=#{projectId} and enter_And_Retreat_Condition = 0
+    </select>
+
+    <select id="selectall" parameterType="HjWorkersInformation" resultMap="HjWorkersInformationResult">
+        SELECT p.id as id,p.emp_name as empName,labor_contract,two_systems,enter,come,`identity`,material
+        FROM hj_project_workers p LEFT JOIN  hj_workers_information w ON w.user_id = p.`id`
+       <where>
+            <if test="empName != null and empName != ''"> and p.emp_name like concat( '%',#{empName},'%')</if>
+            <if test="idCode != null and idCode != '' "> and p.id_code like concat('%',#{idCode},'%')</if>
+            <if test="jobName != null and jobName != '' "> and p.job_name = #{jobName}</if>
+            <if test="workTypenameId != null and workTypenameId != '' and workTypenameId != 0 "> and p.work_typename_id = #{workTypenameId}</if>
+            <if test="empDept != null and empDept != '' "> and p.emp_dept = #{empDept}</if>
+            <if test="enterAndRetreatCondition != null and enterAndRetreatCondition != '' and enterAndRetreatCondition != 0 "> and p.enter_And_Retreat_Condition = #{enterAndRetreatCondition}</if>
+            <if test="material != null and  material != '' "> and w.material = #{material}</if>
+            <if test="constructionId != null and constructionId != '' and constructionId != 0 "> and p.construction_id = #{constructionId}</if>
+            <if test="projectId != null and projectId != '' and projectId != 0 "> and p.project_id = #{projectId}</if>
+            <if test="userId != null and userId != 0"> and user_id = #{userId}</if>
+            and p.enter_And_Retreat_Condition = 0
+        </where>
+    </select>
+
+    <select id="selectalls" parameterType="HjWorkersInformation" resultMap="HjWorkersInformationResult">
+        SELECT p.id as id,p.emp_name as empName,labor_contract,two_systems,enter,come,`identity`,material
+        FROM hj_project_workers p LEFT JOIN  hj_workers_information w ON w.user_id = p.`id`
+        <where>
+            <if test="empName != null and empName != ''"> and p.emp_name like concat( '%',#{empName},'%')</if>
+            <if test="idCode != null and idCode != '' "> and p.id_code like concat(#{idCode},'%')</if>
+            <if test="jobName != null and jobName != '' "> and p.job_name = #{jobName}</if>
+            <if test="workTypenameId != null and workTypenameId != '' and workTypenameId != 0 "> and p.work_typename_id = #{workTypenameId}</if>
+            <if test="empDept != null and empDept != '' "> and p.emp_dept = #{empDept}</if>
+            <if test="enterAndRetreatCondition != null and enterAndRetreatCondition != '' and enterAndRetreatCondition != 0 "> and p.enter_And_Retreat_Condition = #{enterAndRetreatCondition}</if>
+            <if test="material != null and  material != '' "> and w.material = #{material}</if>
+            <if test="constructionId != null and constructionId != '' and constructionId != 0 "> and p.construction_id = #{constructionId}</if>
+            <if test="projectId != null and projectId != '' and projectId != 0 "> and p.project_id = #{projectId}</if>
+            <if test="userId != null and userId != 0"> and user_id = #{userId}</if>
+            and p.enter_And_Retreat_Condition = 0
+        </where>
+    </select>
+
+    <select id="selectHjWorkersInformationList" parameterType="HjWorkersInformation" resultMap="HjWorkersInformationResult">
+        <include refid="selectHjWorkersInformationVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="laborContract != null  and laborContract != '' "> and labor_contract = #{laborContract}</if>
+             <if test="twoSystems != null  and twoSystems != '' "> and two_systems = #{twoSystems}</if>
+             <if test="enter != null  and enter != '' "> and enter = #{enter}</if>
+             <if test="come != null  and come != '' "> and come = #{come}</if>
+             <if test="identity != null  and identity != '' "> and identity = #{identity}</if>
+             <if test="userId != null "> and user_id = #{userId}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjWorkersInformationById" parameterType="Integer" resultMap="HjWorkersInformationResult">
+        <include refid="selectHjWorkersInformationVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insteradd" parameterType="HjWorkersInformation">
+        insert into hj_workers_information
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="laborContract != null  and laborContract != ''  ">labor_contract,</if>
+            <if test="twoSystems != null  and twoSystems != ''  ">two_systems,</if>
+            <if test="enter != null  and enter != ''  ">enter,</if>
+            <if test="come != null  and come != ''  ">come,</if>
+            <if test="identity != null  and identity != ''  ">identity,</if>
+            <if test="userId != null  ">user_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="laborContract != null  and laborContract != ''  ">#{laborContract},</if>
+            <if test="twoSystems != null  and twoSystems != ''  ">#{twoSystems},</if>
+            <if test="enter != null  and enter != ''  ">#{enter},</if>
+            <if test="come != null  and come != ''  ">#{come},</if>
+            <if test="identity != null  and identity != ''  ">#{identity},</if>
+            <if test="userId != null  ">#{userId},</if>
+        </trim>
+    </insert>
+
+
+
+    <insert id="insertHjWorkersInformation" parameterType="HjWorkersInformation">
+        insert into hj_workers_information
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="laborContract != null  and laborContract != ''  ">labor_contract,</if>
+			<if test="twoSystems != null  and twoSystems != ''  ">two_systems,</if>
+			<if test="enter != null  and enter != ''  ">enter,</if>
+			<if test="come != null  and come != ''  ">come,</if>
+			<if test="identity != null  and identity != ''  ">identity,</if>
+			<if test="userId != null  ">user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="laborContract != null  and laborContract != ''  ">#{laborContract},</if>
+			<if test="twoSystems != null  and twoSystems != ''  ">#{twoSystems},</if>
+			<if test="enter != null  and enter != ''  ">#{enter},</if>
+			<if test="come != null  and come != ''  ">#{come},</if>
+			<if test="identity != null  and identity != ''  ">#{identity},</if>
+			<if test="userId != null  ">#{userId},</if>
+         </trim>
+    </insert>
+
+    <update id="update1" parameterType="HjWorkersInformation">
+        update hj_workers_information set labor_contract = #{laborContract}
+
+        where user_id = #{userId}
+    </update>
+    <update id="update2" parameterType="HjWorkersInformation">
+        update hj_workers_information SET
+            two_systems = #{twoSystems}
+        where user_id = #{userId}
+    </update>
+    <update id="update3" parameterType="HjWorkersInformation">
+        update hj_workers_information
+        set enter = #{enter}
+        where user_id = #{userId}
+    </update>
+    <update id="update4" parameterType="HjWorkersInformation">
+        update hj_workers_information SET
+            come = #{come}
+        where user_id = #{userId}
+    </update>
+    <update id="update5" parameterType="HjWorkersInformation">
+        update hj_workers_information
+        SET
+            `identity` = #{identity}
+        where user_id = #{userId}
+    </update>
+    <update id="update" parameterType="HjWorkersInformation">
+        update hj_workers_information
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="laborContract != null  and laborContract != ''  ">labor_contract = #{laborContract},</if>
+            <if test="twoSystems != null  and twoSystems != ''  ">two_systems = #{twoSystems},</if>
+            <if test="enter != null  and enter != ''  ">enter = #{enter},</if>
+            <if test="come != null  and come != ''  ">come = #{come},</if>
+            <if test="identity != null  and identity != ''  ">identity = #{identity},</if>
+        </trim>
+        where user_id = #{userId}
+    </update>
+    <update id="updatematerial" parameterType="HjWorkersInformation">
+        UPDATE hj_workers_information
+        <trim prefix="SET" suffixOverrides=",">
+             material = 1
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updatematerials" parameterType="HjWorkersInformation">
+        UPDATE hj_workers_information
+        <trim prefix="SET" suffixOverrides=",">
+            material = 0
+        </trim>
+        where user_id = #{userId}
+    </update>
+    <update id="updateHjWorkersInformation" parameterType="HjWorkersInformation">
+        update hj_workers_information
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="laborContract != null  and laborContract != ''  ">labor_contract = #{laborContract},</if>
+            <if test="twoSystems != null  and twoSystems != ''  ">two_systems = #{twoSystems},</if>
+            <if test="enter != null  and enter != ''  ">enter = #{enter},</if>
+            <if test="come != null  and come != ''  ">come = #{come},</if>
+            <if test="identity != null  and identity != ''  ">identity = #{identity},</if>
+            <if test="userId != null  ">user_id = #{userId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="delete" parameterType="Integer">
+        delete from hj_workers_information where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjWorkersInformationByIds" parameterType="String">
+        delete from hj_workers_information where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

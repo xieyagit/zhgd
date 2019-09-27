@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjDeeppit.mapper.SbProjectDeeppitStructuresMapper">
+    
+    <resultMap type="SbProjectDeeppitStructures" id="SbProjectDeeppitStructuresResult">
+        <result property="id"    column="id"    />
+        <result property="structuresId"    column="structures_id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="appD"    column="app_d"    />
+        <result property="appSecret"    column="app_secret"    />
+        <result property="supplier"    column="supplier"    />
+    </resultMap>
+
+	<sql id="selectSbProjectDeeppitStructuresVo">
+        select id, structures_id, project_id, user_id, app_d, app_secret，supplier from sb_project_deeppit_structures
+    </sql>
+
+    <select id="selectSbProjectDeeppitStructuresList" parameterType="SbProjectDeeppitStructures" resultMap="SbProjectDeeppitStructuresResult">
+        <include refid="selectSbProjectDeeppitStructuresVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="structuresId != null "> and structures_id = #{structuresId}</if>
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="appD != null  and appD != '' "> and app_d = #{appD}</if>
+            <if test="appSecret != null  and appSecret != '' "> and app_secret = #{appSecret}</if>
+            <if test="supplier != null  and supplier != '' "> and supplier = #{supplier}</if>
+         </where>
+    </select>
+
+    <select id="selectSbProjectDeeppitStructuresListS" parameterType="SbProjectDeeppitStructures" resultMap="SbProjectDeeppitStructuresResult">
+       select #{structuresId} in (select structures_id from sb_project_deeppit_structures)
+    </select>
+
+    <select id="selectSbProjectDeeppitStructuresById" parameterType="Integer" resultMap="SbProjectDeeppitStructuresResult">
+        <include refid="selectSbProjectDeeppitStructuresVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSbProjectDeeppitStructures" parameterType="SbProjectDeeppitStructures">
+        insert into sb_project_deeppit_structures
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="structuresId != null  ">structures_id,</if>
+            <if test="projectId != null  ">project_id,</if>
+            <if test="userId != null  ">user_id,</if>
+            <if test="appD != null  and appD != ''  ">app_d,</if>
+            <if test="appSecret != null  and appSecret != ''  ">app_secret,</if>
+            <if test="supplier != null  and supplier != ''  ">supplier,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">#{id},</if>
+            <if test="structuresId != null  ">#{structuresId},</if>
+            <if test="projectId != null  ">#{projectId},</if>
+            <if test="userId != null  ">#{userId},</if>
+            <if test="appD != null  and appD != ''  ">#{appD},</if>
+            <if test="appSecret != null  and appSecret != ''  ">#{appSecret},</if>
+            <if test="supplier != null  and supplier != ''  ">#{supplier},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSbProjectDeeppitStructures" parameterType="SbProjectDeeppitStructures">
+        update sb_project_deeppit_structures
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="structuresId != null  ">structures_id = #{structuresId},</if>
+            <if test="projectId != null  ">project_id = #{projectId},</if>
+            <if test="userId != null  ">user_id = #{userId},</if>
+            <if test="appD != null  and appD != ''  ">app_d = #{appD},</if>
+            <if test="appSecret != null  and appSecret != ''  ">app_secret = #{appSecret},</if>
+            <if test="supplier != null  and supplier != ''  ">supplier = #{supplier},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbProjectDeeppitStructuresById" parameterType="Integer">
+        delete from sb_project_deeppit_structures where id = #{id}
+    </delete>
+
+    <delete id="deleteSbProjectDeeppitStructuresByIds" parameterType="String">
+        delete from sb_project_deeppit_structures where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

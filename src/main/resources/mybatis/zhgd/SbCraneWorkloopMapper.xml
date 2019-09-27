@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbCraneWorkloop.mapper.SbCraneWorkloopMapper">
+    
+    <resultMap type="SbCraneWorkloop" id="SbCraneWorkloopResult">
+        <result property="id"    column="id"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="maxMomentRatio"    column="max_moment_ratio"    />
+        <result property="exceedingNum"    column="exceeding_num"    />
+        <result property="maxWindSpeed"    column="max_wind_speed"    />
+        <result property="isOverWindSpeed"    column="is_over_wind_speed"    />
+        <result property="maxRange"    column="max_range"    />
+        <result property="maxHeight"    column="max_height"    />
+        <result property="hxzid"    column="hxzid"    />
+    </resultMap>
+	
+	<sql id="selectSbCraneWorkloopVo">
+        select id, device_no, start_time, end_time, max_moment_ratio, exceeding_num, max_wind_speed, is_over_wind_speed, max_range, max_height, hxzid from sb_crane_workloop
+    </sql>
+	
+    <select id="selectSbCraneWorkloopList" parameterType="SbCraneWorkloop" resultMap="SbCraneWorkloopResult">
+        <include refid="selectSbCraneWorkloopVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
+             <if test="startTime != null  and startTime != '' "> and start_time = #{startTime}</if>
+             <if test="endTime != null  and endTime != '' "> and end_time = #{endTime}</if>
+             <if test="maxMomentRatio != null "> and max_moment_ratio = #{maxMomentRatio}</if>
+             <if test="exceedingNum != null "> and exceeding_num = #{exceedingNum}</if>
+             <if test="maxWindSpeed != null "> and max_wind_speed = #{maxWindSpeed}</if>
+             <if test="isOverWindSpeed != null "> and is_over_wind_speed = #{isOverWindSpeed}</if>
+             <if test="maxRange != null "> and max_range = #{maxRange}</if>
+             <if test="maxHeight != null "> and max_height = #{maxHeight}</if>
+             <if test="hxzid != null  and hxzid != '' "> and hxzid = #{hxzid}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbCraneWorkloopById" parameterType="Integer" resultMap="SbCraneWorkloopResult">
+        <include refid="selectSbCraneWorkloopVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbCraneWorkloop" parameterType="SbCraneWorkloop">
+        insert into sb_crane_workloop
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">device_no,</if>
+			<if test="startTime != null  and startTime != ''  ">start_time,</if>
+			<if test="endTime != null  and endTime != ''  ">end_time,</if>
+			<if test="maxMomentRatio != null  ">max_moment_ratio,</if>
+			<if test="exceedingNum != null  ">exceeding_num,</if>
+			<if test="maxWindSpeed != null  ">max_wind_speed,</if>
+			<if test="isOverWindSpeed != null  ">is_over_wind_speed,</if>
+			<if test="maxRange != null  ">max_range,</if>
+			<if test="maxHeight != null  ">max_height,</if>
+			<if test="hxzid != null  and hxzid != ''  ">hxzid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+			<if test="startTime != null  and startTime != ''  ">#{startTime},</if>
+			<if test="endTime != null  and endTime != ''  ">#{endTime},</if>
+			<if test="maxMomentRatio != null  ">#{maxMomentRatio},</if>
+			<if test="exceedingNum != null  ">#{exceedingNum},</if>
+			<if test="maxWindSpeed != null  ">#{maxWindSpeed},</if>
+			<if test="isOverWindSpeed != null  ">#{isOverWindSpeed},</if>
+			<if test="maxRange != null  ">#{maxRange},</if>
+			<if test="maxHeight != null  ">#{maxHeight},</if>
+			<if test="hxzid != null  and hxzid != ''  ">#{hxzid},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbCraneWorkloop" parameterType="SbCraneWorkloop">
+        update sb_crane_workloop
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceNo != null  and deviceNo != ''  ">device_no = #{deviceNo},</if>
+            <if test="startTime != null  and startTime != ''  ">start_time = #{startTime},</if>
+            <if test="endTime != null  and endTime != ''  ">end_time = #{endTime},</if>
+            <if test="maxMomentRatio != null  ">max_moment_ratio = #{maxMomentRatio},</if>
+            <if test="exceedingNum != null  ">exceeding_num = #{exceedingNum},</if>
+            <if test="maxWindSpeed != null  ">max_wind_speed = #{maxWindSpeed},</if>
+            <if test="isOverWindSpeed != null  ">is_over_wind_speed = #{isOverWindSpeed},</if>
+            <if test="maxRange != null  ">max_range = #{maxRange},</if>
+            <if test="maxHeight != null  ">max_height = #{maxHeight},</if>
+            <if test="hxzid != null  and hxzid != ''  ">hxzid = #{hxzid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbCraneWorkloopById" parameterType="Integer">
+        delete from sb_crane_workloop where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbCraneWorkloopByIds" parameterType="String">
+        delete from sb_crane_workloop where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

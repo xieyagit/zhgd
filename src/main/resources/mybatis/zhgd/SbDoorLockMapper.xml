@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbDoorLock.mapper.SbDoorLockMapper">
+    
+    <resultMap type="SbDoorLock" id="SbDoorLockResult">
+        <result property="id"    column="id"    />
+        <result property="electricityBoxId"    column="electricity_box_id"    />
+        <result property="lockType"    column="lock_type"    />
+        <result property="doorType"    column="door_type"    />
+        <result property="handleTime"    column="handle_time"    />
+        <result property="opendoorTime"    column="opendoor_time"    />
+        <result property="closedoorTime"    column="closedoor_time"    />
+        <result property="openlockTime"    column="openlock_time"    />
+        <result property="closelockTime"    column="closelock_time"    />
+    </resultMap>
+	
+	<sql id="selectSbDoorLockVo">
+        select id, electricity_box_id, lock_type, door_type, handle_time, opendoor_time, closedoor_time, openlock_time, closelock_time from sb_door_lock
+    </sql>
+	
+    <select id="selectSbDoorLockList" parameterType="SbDoorLock" resultMap="SbDoorLockResult">
+        <include refid="selectSbDoorLockVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="electricityBoxId != null  and electricityBoxId != '' "> and electricity_box_id = #{electricityBoxId}</if>
+             <if test="lockType != null  and lockType != '' "> and lock_type = #{lockType}</if>
+             <if test="doorType != null  and doorType != '' "> and door_type = #{doorType}</if>
+             <if test="handleTime != null  and handleTime != '' "> and handle_time = #{handleTime}</if>
+             <if test="opendoorTime != null  and opendoorTime != '' "> and opendoor_time = #{opendoorTime}</if>
+             <if test="closedoorTime != null  and closedoorTime != '' "> and closedoor_time = #{closedoorTime}</if>
+             <if test="openlockTime != null  and openlockTime != '' "> and openlock_time = #{openlockTime}</if>
+             <if test="closelockTime != null  and closelockTime != '' "> and closelock_time = #{closelockTime}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbDoorLockById" parameterType="Integer" resultMap="SbDoorLockResult">
+        <include refid="selectSbDoorLockVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectSbDoorLockToOne" parameterType="String" resultMap="SbDoorLockResult">
+        <include refid="selectSbDoorLockVo"/>
+        where electricity_box_id = #{electricityBoxId} order by handle_time desc limit 1
+    </select>
+        
+    <insert id="insertSbDoorLock" parameterType="SbDoorLock">
+        insert into sb_door_lock
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="electricityBoxId != null  and electricityBoxId != ''  ">electricity_box_id,</if>
+			<if test="lockType != null  and lockType != ''  ">lock_type,</if>
+			<if test="doorType != null  and doorType != ''  ">door_type,</if>
+			<if test="handleTime != null  and handleTime != ''  ">handle_time,</if>
+			<if test="opendoorTime != null  and opendoorTime != ''  ">opendoor_time,</if>
+			<if test="closedoorTime != null  and closedoorTime != ''  ">closedoor_time,</if>
+			<if test="openlockTime != null  and openlockTime != ''  ">openlock_time,</if>
+			<if test="closelockTime != null  and closelockTime != ''  ">closelock_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="electricityBoxId != null  and electricityBoxId != ''  ">#{electricityBoxId},</if>
+			<if test="lockType != null  and lockType != ''  ">#{lockType},</if>
+			<if test="doorType != null  and doorType != ''  ">#{doorType},</if>
+			<if test="handleTime != null  and handleTime != ''  ">#{handleTime},</if>
+			<if test="opendoorTime != null  and opendoorTime != ''  ">#{opendoorTime},</if>
+			<if test="closedoorTime != null  and closedoorTime != ''  ">#{closedoorTime},</if>
+			<if test="openlockTime != null  and openlockTime != ''  ">#{openlockTime},</if>
+			<if test="closelockTime != null  and closelockTime != ''  ">#{closelockTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbDoorLock" parameterType="SbDoorLock">
+        update sb_door_lock
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="electricityBoxId != null  and electricityBoxId != ''  ">electricity_box_id = #{electricityBoxId},</if>
+            <if test="lockType != null  and lockType != ''  ">lock_type = #{lockType},</if>
+            <if test="doorType != null  and doorType != ''  ">door_type = #{doorType},</if>
+            <if test="handleTime != null  and handleTime != ''  ">handle_time = #{handleTime},</if>
+            <if test="opendoorTime != null  and opendoorTime != ''  ">opendoor_time = #{opendoorTime},</if>
+            <if test="closedoorTime != null  and closedoorTime != ''  ">closedoor_time = #{closedoorTime},</if>
+            <if test="openlockTime != null  and openlockTime != ''  ">openlock_time = #{openlockTime},</if>
+            <if test="closelockTime != null  and closelockTime != ''  ">closelock_time = #{closelockTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbDoorLockById" parameterType="Integer">
+        delete from sb_door_lock where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbDoorLockByIds" parameterType="String">
+        delete from sb_door_lock where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

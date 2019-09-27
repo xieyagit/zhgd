@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-sbElevatorAddbasicinfo-edit" th:object="${sbElevatorAddbasicinfo}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备编号：</label>
+				<div class="col-sm-8">
+					<input id="deviceNo" name="deviceNo" th:field="*{deviceNo}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备型号：</label>
+				<div class="col-sm-8">
+					<input id="model" name="model" th:field="*{model}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备名称：</label>
+				<div class="col-sm-8">
+					<input id="name" name="name" th:field="*{name}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备用户编号：</label>
+				<div class="col-sm-8">
+					<input id="uid" name="uid" th:field="*{uid}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备证书日期：</label>
+				<div class="col-sm-8">
+					<input id="license" name="license" th:field="*{license}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备发证日期：</label>
+				<div class="col-sm-8">
+					<input id="licenseStartDate" name="licenseStartDate" th:field="*{licenseStartDate}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备有效日期：</label>
+				<div class="col-sm-8">
+					<input id="licenseEndDate" name="licenseEndDate" th:field="*{licenseEndDate}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备照片：</label>
+				<div class="col-sm-8">
+					<input id="photos" name="photos" th:field="*{photos}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备产权单位：</label>
+				<div class="col-sm-8">
+					<input id="propertyUnit" name="propertyUnit" th:field="*{propertyUnit}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备制造商：</label>
+				<div class="col-sm-8">
+					<input id="mnufacturerBusiness" name="mnufacturerBusiness" th:field="*{mnufacturerBusiness}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备维保商：</label>
+				<div class="col-sm-8">
+					<input id="maiWarBus" name="maiWarBus" th:field="*{maiWarBus}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备检测商：</label>
+				<div class="col-sm-8">
+					<input id="testingBusiness" name="testingBusiness" th:field="*{testingBusiness}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备进场时间：</label>
+				<div class="col-sm-8">
+					<input id="inDate" name="inDate" th:field="*{inDate}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备出场时间：</label>
+				<div class="col-sm-8">
+					<input id="outDate" name="outDate" th:field="*{outDate}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">监测设备厂商：</label>
+				<div class="col-sm-8">
+					<input id="monDeviceMan" name="monDeviceMan" th:field="*{monDeviceMan}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">监测设备安装日期：</label>
+				<div class="col-sm-8">
+					<input id="deviceInstallationDate" name="deviceInstallationDate" th:field="*{deviceInstallationDate}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备编号：</label>
+				<div class="col-sm-8">
+					<input id="hxzid" name="hxzid" th:field="*{hxzid}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "zhgd/sbElevatorAddbasicinfo";
+		$("#form-sbElevatorAddbasicinfo-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-sbElevatorAddbasicinfo-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbElevatorAddparams.mapper.SbElevatorAddparamsMapper">
+    
+    <resultMap type="SbElevatorAddparams" id="SbElevatorAddparamsResult">
+        <result property="id"    column="id"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="model"    column="model"    />
+        <result property="name"    column="name"    />
+        <result property="lLoadCapacity"    column="L_Load_Capacity"    />
+        <result property="lHeight"    column="L_Height"    />
+        <result property="lHeight2"    column="L_Height2"    />
+        <result property="lUpcollect"    column="L_UpCollect"    />
+        <result property="lDowncollection"    column="L_DownCollection"    />
+        <result property="lGearmodules"    column="L_GearModules"    />
+        <result property="lLowlimit"    column="L_LowLimit"    />
+        <result property="lMContract"    column="L_M_Contract"    />
+        <result property="lSContract"    column="L_S_Contract"    />
+        <result property="lMonitorstyle"    column="L_MonitorStyle"    />
+        <result property="lSections"    column="L_Sections"    />
+        <result property="lControlstyle"    column="L_ControlStyle"    />
+        <result property="lLimitCapacity"    column="L_Limit_Capacity"    />
+        <result property="hxzid"    column="hxzid"    />
+    </resultMap>
+	<resultMap id="OptionsElevatorResult" type="OptionsElevator">
+        <result property="id" column="id"/>
+        <result property="capacity" column="capacity"/>
+        <result property="deviceNo" column="deviceNo"/>
+        <result property="projectId" column="projectId"/>
+        <result property="elevatorName" column="elevatorName"/>
+        <result property="hxzId" column="hxzId"/>
+    </resultMap>
+	<sql id="selectSbElevatorAddparamsVo">
+        select id, device_no, model, name, L_Load_Capacity, L_Height, L_Height2, L_UpCollect, L_DownCollection, L_GearModules, L_LowLimit, L_M_Contract, L_S_Contract, L_MonitorStyle, L_Sections, L_ControlStyle, L_Limit_Capacity, hxzid from sb_elevator_addparams
+    </sql>
+	<select id="getElevatorList" parameterType="OptionsElevator" resultMap="OptionsElevatorResult">
+        SELECT b.id as id,b.pid as projectId,a.hxzid as hxzId,a.L_Load_Capacity as capacity,b.dname AS elevatorName,b.device_no as deviceNo
+        FROM `sb_elevator_binding` AS b
+        LEFT JOIN sb_elevator_addparams AS a ON(b.hxzid=a.hxzid)
+        where 1=1
+        <if test="projectId != null">and pid = #{projectId}</if>
+    </select>
+    <insert id="insertElevator" parameterType="OptionsElevator">
+        insert into sb_elevator_binding
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deviceNo != null  and deviceNo != ''  ">device_no,</if>
+            <if test="elevatorName != null  and elevatorName != ''  ">dname,</if>
+            <if test="hxzId != null  and hxzId != ''  ">hxzid,</if>
+            <if test="projectId != null">pid,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+            <if test="elevatorName != null  and elevatorName != ''  ">#{elevatorName},</if>
+            <if test="hxzId != null  and hxzId != ''  ">#{hxzId},</if>
+            <if test="projectId != null">#{projectId}</if>
+        </trim>
+    </insert>
+    <update id="updateElevator" parameterType="OptionsElevator">
+        update sb_elevator_binding
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceNo != null  and deviceNo != ''  ">device_no = #{deviceNo},</if>
+            <if test="elevatorName != null  and elevatorName != ''  ">dname = #{elevatorName},</if>
+            <if test="hxzId != null  and hxzId != ''  ">hxzid = #{hxzId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <delete id="deleteElevator" parameterType="Integer">
+        delete from sb_elevator_binding where id = #{id}
+    </delete>
+
+    <select id="selectSbElevatorAddparamsList" parameterType="SbElevatorAddparams" resultMap="SbElevatorAddparamsResult">
+        <include refid="selectSbElevatorAddparamsVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
+             <if test="model != null  and model != '' "> and model = #{model}</if>
+             <if test="name != null  and name != '' "> and name = #{name}</if>
+             <if test="lLoadCapacity != null "> and L_Load_Capacity = #{lLoadCapacity}</if>
+             <if test="lHeight != null "> and L_Height = #{lHeight}</if>
+             <if test="lHeight2 != null "> and L_Height2 = #{lHeight2}</if>
+             <if test="lUpcollect != null "> and L_UpCollect = #{lUpcollect}</if>
+             <if test="lDowncollection != null "> and L_DownCollection = #{lDowncollection}</if>
+             <if test="lGearmodules != null "> and L_GearModules = #{lGearmodules}</if>
+             <if test="lLowlimit != null "> and L_LowLimit = #{lLowlimit}</if>
+             <if test="lMContract != null "> and L_M_Contract = #{lMContract}</if>
+             <if test="lSContract != null "> and L_S_Contract = #{lSContract}</if>
+             <if test="lMonitorstyle != null "> and L_MonitorStyle = #{lMonitorstyle}</if>
+             <if test="lSections != null "> and L_Sections = #{lSections}</if>
+             <if test="lControlstyle != null "> and L_ControlStyle = #{lControlstyle}</if>
+             <if test="lLimitCapacity != null "> and L_Limit_Capacity = #{lLimitCapacity}</if>
+             <if test="hxzid != null  and hxzid != '' "> and hxzid = #{hxzid}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbElevatorAddparamsById" parameterType="Integer" resultMap="SbElevatorAddparamsResult">
+        <include refid="selectSbElevatorAddparamsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbElevatorAddparams" parameterType="SbElevatorAddparams">
+        insert into sb_elevator_addparams
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">device_no,</if>
+			<if test="model != null  and model != ''  ">model,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="lLoadCapacity != null  ">L_Load_Capacity,</if>
+			<if test="lHeight != null  ">L_Height,</if>
+			<if test="lHeight2 != null  ">L_Height2,</if>
+			<if test="lUpcollect != null  ">L_UpCollect,</if>
+			<if test="lDowncollection != null  ">L_DownCollection,</if>
+			<if test="lGearmodules != null  ">L_GearModules,</if>
+			<if test="lLowlimit != null  ">L_LowLimit,</if>
+			<if test="lMContract != null  ">L_M_Contract,</if>
+			<if test="lSContract != null  ">L_S_Contract,</if>
+			<if test="lMonitorstyle != null  ">L_MonitorStyle,</if>
+			<if test="lSections != null  ">L_Sections,</if>
+			<if test="lControlstyle != null  ">L_ControlStyle,</if>
+			<if test="lLimitCapacity != null  ">L_Limit_Capacity,</if>
+			<if test="hxzid != null  and hxzid != ''  ">hxzid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+			<if test="model != null  and model != ''  ">#{model},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="lLoadCapacity != null  ">#{lLoadCapacity},</if>
+			<if test="lHeight != null  ">#{lHeight},</if>
+			<if test="lHeight2 != null  ">#{lHeight2},</if>
+			<if test="lUpcollect != null  ">#{lUpcollect},</if>
+			<if test="lDowncollection != null  ">#{lDowncollection},</if>
+			<if test="lGearmodules != null  ">#{lGearmodules},</if>
+			<if test="lLowlimit != null  ">#{lLowlimit},</if>
+			<if test="lMContract != null  ">#{lMContract},</if>
+			<if test="lSContract != null  ">#{lSContract},</if>
+			<if test="lMonitorstyle != null  ">#{lMonitorstyle},</if>
+			<if test="lSections != null  ">#{lSections},</if>
+			<if test="lControlstyle != null  ">#{lControlstyle},</if>
+			<if test="lLimitCapacity != null  ">#{lLimitCapacity},</if>
+			<if test="hxzid != null  and hxzid != ''  ">#{hxzid},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbElevatorAddparams" parameterType="SbElevatorAddparams">
+        update sb_elevator_addparams
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceNo != null  and deviceNo != ''  ">device_no = #{deviceNo},</if>
+            <if test="model != null  and model != ''  ">model = #{model},</if>
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="lLoadCapacity != null  ">L_Load_Capacity = #{lLoadCapacity},</if>
+            <if test="lHeight != null  ">L_Height = #{lHeight},</if>
+            <if test="lHeight2 != null  ">L_Height2 = #{lHeight2},</if>
+            <if test="lUpcollect != null  ">L_UpCollect = #{lUpcollect},</if>
+            <if test="lDowncollection != null  ">L_DownCollection = #{lDowncollection},</if>
+            <if test="lGearmodules != null  ">L_GearModules = #{lGearmodules},</if>
+            <if test="lLowlimit != null  ">L_LowLimit = #{lLowlimit},</if>
+            <if test="lMContract != null  ">L_M_Contract = #{lMContract},</if>
+            <if test="lSContract != null  ">L_S_Contract = #{lSContract},</if>
+            <if test="lMonitorstyle != null  ">L_MonitorStyle = #{lMonitorstyle},</if>
+            <if test="lSections != null  ">L_Sections = #{lSections},</if>
+            <if test="lControlstyle != null  ">L_ControlStyle = #{lControlstyle},</if>
+            <if test="lLimitCapacity != null  ">L_Limit_Capacity = #{lLimitCapacity},</if>
+            <if test="hxzid != null  and hxzid != ''  ">hxzid = #{hxzid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbElevatorAddparamsById" parameterType="Integer">
+        delete from sb_elevator_addparams where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbElevatorAddparamsByIds" parameterType="String">
+        delete from sb_elevator_addparams where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

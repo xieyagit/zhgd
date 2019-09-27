@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjProject.mapper.HjProjectMapper">
+    
+    <resultMap type="HjProject" id="HjProjectResult">
+        <result property="id"    column="id"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="shortName"    column="short_name"    />
+        <result property="projectPrincipal"    column="project_principal"    />
+        <result property="phone"    column="phone"    />
+        <result property="projectType"    column="project_type"    />
+        <result property="projectState"    column="project_state"    />
+        <result property="projectNumber"    column="project_number"    />
+        <result property="projectRegion"    column="project_region"    />
+        <result property="builderLicense"    column="builder_license"    />
+        <result property="projectAddress"    column="project_address"    />
+        <result property="startingTime"    column="starting_time"    />
+        <result property="finishTime"    column="finish_time"    />
+        <result property="constructionId"    column="construction_id"    />
+        <result property="supervisorId"    column="supervisor_id"    />
+        <result property="acreage"    column="acreage"    />
+        <result property="projectCost"    column="project_cost"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="securityCode"    column="security_code"    />
+        <result property="qualityNumber"    column="quality_number"    />
+        <result property="designOrganization"    column="design_organization"    />
+        <result property="explorationUnit"    column="exploration_unit"    />
+        <result property="remark"    column="remark"    />
+        <result property="projectImage"    column="project_image"    />
+        <result property="showState"    column="show_state"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="updateDate"    column="update_date"    />
+        <result property="faceGroup"    column="face_group"    />
+        <result property="itemId"    column="itemId"    />
+    </resultMap>
+	
+	<sql id="selectHjProjectVo">
+        select * from hj_project
+    </sql>
+
+    <select id="day" resultMap="HjProjectResult" parameterType="HjProject">
+        select starting_time from hj_project
+        where id=#{id}
+    </select>
+
+    <select id="kanban" resultMap="HjProjectResult" parameterType="HjProject">
+        select project_name,project_cost,acreage,construction_name as constructionName,p.remark as remark
+        FROM hj_project p INNER JOIN hj_construction_company c
+        ON p.construction_id = c.id
+        <where>
+            <if test="id != 0 and id != null and id != '' "> and p.id = #{id}</if>
+        </where>
+    </select>
+
+    <select id="kanbans" resultMap="HjProjectResult" parameterType="HjProject">
+        select project_name,project_cost,acreage,construction_name as constructionName,p.remark as remark
+        FROM hj_project p INNER JOIN hj_construction_company c
+        ON p.construction_id = c.id
+        <where>
+            <if test= "id != null and id != '' and id != 0"> and p.id = #{id}</if>
+        </where>
+    </select>
+
+    <select id="item" resultMap="HjProjectResult" parameterType="HjProject">
+        SELECT c.construction_name as `name`
+        FROM hj_construction_company c INNER JOIN hj_construction_project p
+        ON c.id = p.construction_id
+        where p.project_id = #{id}
+        and c.company_type = 1
+    </select>
+
+    <select id="selectHjProjectListTwo" resultMap="HjProjectResult" parameterType="Integer">
+
+    <include refid="selectHjProjectVo"/>
+    where id in (select project_id from hj_company_project where company_id = #{companyId})
+</select>
+
+   <!-- <select id="selectHjProjectListR" resultMap="HjProjectResult" parameterType="HjProject">
+        <include refid="selectHjProjectVo"/>
+        where id in (select project_id from hj_company_project where company_id = #{companyId}) and project_region = #{region}
+    </select>-->
+
+
+
+    <select id="selectHjProjectListR" resultMap="HjProjectResult" >
+        <include refid="selectHjProjectVo"/>
+        where id in (select project_id from hj_company_project where company_id = #{companyId})
+        <if test="region != 0"> and project_region like #{region}"%"</if>
+    </select>
+
+    <select id="infoHjProjectR" resultType="java.lang.Double" >
+        select sum(project_cost) FROM `hj_project` where id in (select project_id from hj_company_project where company_id = #{companyId})
+        <if test="region != 0"> and project_region like #{region}"%"</if>
+    </select>
+
+
+    <select id="infoPWorkertR" resultType="java.lang.Integer" >
+        select count(*) from hj_project_workers where project_id in (select project_id from hj_company_project where company_id = #{companyId}) and enter_And_Retreat_Condition=0
+    </select>
+
+
+    <select id="infoPWorkingR" resultType="java.lang.Integer" >
+        SELECT count(*) from hj_attendance_record where project_id in (select project_id from hj_company_project where company_id = #{companyId}) and direction ='in' and TO_DAYS(curdate())=TO_DAYS(passed_time)
+    </select>
+
+    <select id="infoConstructionR" resultType="java.lang.Integer" >
+        select count(*) from hj_construction_project where project_id in (select project_id from hj_company_project where company_id = #{companyId})
+    </select>
+
+    <select id="selectProjectPage" parameterType="Map" resultMap="HjProjectResult">
+        <include refid="selectHjProjectVo"/>
+        <where>
+            <if test="hj.id != null "> and id = #{hj.id}</if>
+            <if test="hj.projectName != null  and hj.projectName != '' "> and project_name like"%${hj.projectName}%" </if>
+            <if test="hj.shortName != null  and hj.shortName != '' "> and short_name = #{hj.shortName}</if>
+            <if test="hj.projectPrincipal != null  and hj.projectPrincipal != '' "> and project_principal = #{hj.projectPrincipal}</if>
+            <if test="hj.phone != null  and hj.phone != '' "> and phone = #{hj.phone}</if>
+            <if test="hj.projectType != null  and hj.projectType != '' "> and project_type = #{hj.projectType}</if>
+            <if test="hj.projectState != null  and hj.projectState != '' "> and project_state = #{hj.projectState}</if>
+            <if test="hj.projectNumber != null "> and project_number = #{hj.projectNumber}</if>
+            <if test="hj.projectRegion != null  and hj.projectRegion != '' "> and project_region = #{hj.projectRegion}</if>
+            <if test="hj.builderLicense != null  and hj.builderLicense != '' "> and builder_license = #{hj.builderLicense}</if>
+            <if test="hj.projectAddress != null  and hj.projectAddress != '' "> and project_address = #{hj.projectAddress}</if>
+            <if test="hj.startingTime != null "> and starting_time = #{hj.startingTime}</if>
+            <if test="hj.finishTime != null "> and finish_time = #{hj.finishTime}</if>
+            <if test="hj.constructionId != null "> and construction_id = #{hj.constructionId}</if>
+            <if test="hj.supervisorId != null "> and supervisor_id = #{hj.supervisorId}</if>
+            <if test="hj.acreage != null  and hj.acreage != '' "> and acreage = #{hj.acreage}</if>
+            <if test="hj.projectCost != null  and projectCost != '' "> and project_cost = #{hj.projectCost}</if>
+            <if test="hj.longitude != null  and hj.longitude != '' "> and longitude = #{hj.longitude}</if>
+            <if test="hj.latitude != null  and hj.latitude != '' "> and latitude = #{hj.latitude}</if>
+            <if test="hj.securityCode != null  and hj.securityCode != '' "> and security_code = #{hj.securityCode}</if>
+            <if test="hj.qualityNumber != null  and hj.qualityNumber != '' "> and quality_number = #{hj.qualityNumber}</if>
+            <if test="hj.designOrganization != null  and hj.designOrganization != '' "> and design_organization = #{hj.designOrganization}</if>
+            <if test="hj.explorationUnit != null  and hj.explorationUnit != '' "> and exploration_unit = #{hj.explorationUnit}</if>
+            <if test="hj.remark != null  and hj.remark != '' "> and remark = #{hj.remark}</if>
+            <if test="hj.projectImage != null  and hj.projectImage != '' "> and project_image = #{hj.projectImage}</if>
+            <if test="hj.showState == null or hj.showState != null "> and show_state = 0</if>
+            <if test="hj.createDate != null "> and create_date = #{hj.createDate}</if>
+            <if test="hj.updateDate != null  and hj.updateDate != '' "> and update_date = #{hj.updateDate}</if>
+            <if test="hj.faceGroup != null  and hj.faceGroup != '' "> and face_group = #{hj.faceGroup}</if>
+            <if test="cid != null  and cid != ''">and id in(select project_id from hj_company_project where company_id=#{cid})</if>
+        </where>
+    </select>
+
+    <select id="selectHjProjectList" parameterType="HjProject" resultMap="HjProjectResult">
+        <include refid="selectHjProjectVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="itemId != null "> and itemId = #{itemId}</if>
+             <if test="projectName != null  and projectName != '' "> and project_name = #{projectName}</if>
+             <if test="shortName != null  and shortName != '' "> and short_name = #{shortName}</if>
+             <if test="projectPrincipal != null  and projectPrincipal != '' "> and project_principal = #{projectPrincipal}</if>
+             <if test="phone != null  and phone != '' "> and phone = #{phone}</if>
+             <if test="projectType != null  and projectType != '' "> and project_type = #{projectType}</if>
+             <if test="projectState != null  and projectState != '' "> and project_state = #{projectState}</if>
+             <if test="projectNumber != null "> and project_number = #{projectNumber}</if>
+             <if test="projectRegion != null  and projectRegion != '' "> and project_region = #{projectRegion}</if>
+             <if test="builderLicense != null  and builderLicense != '' "> and builder_license = #{builderLicense}</if>
+             <if test="projectAddress != null  and projectAddress != '' "> and project_address = #{projectAddress}</if>
+             <if test="startingTime != null "> and starting_time = #{startingTime}</if>
+             <if test="finishTime != null "> and finish_time = #{finishTime}</if>
+             <if test="constructionId != null "> and construction_id = #{constructionId}</if>
+             <if test="supervisorId != null "> and supervisor_id = #{supervisorId}</if>
+             <if test="acreage != null  and acreage != '' "> and acreage = #{acreage}</if>
+             <if test="projectCost != null  and projectCost != '' "> and project_cost = #{projectCost}</if>
+             <if test="longitude != null  and longitude != '' "> and longitude = #{longitude}</if>
+             <if test="latitude != null  and latitude != '' "> and latitude = #{latitude}</if>
+             <if test="securityCode != null  and securityCode != '' "> and security_code = #{securityCode}</if>
+             <if test="qualityNumber != null  and qualityNumber != '' "> and quality_number = #{qualityNumber}</if>
+             <if test="designOrganization != null  and designOrganization != '' "> and design_organization = #{designOrganization}</if>
+             <if test="explorationUnit != null  and explorationUnit != '' "> and exploration_unit = #{explorationUnit}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+             <if test="projectImage != null  and projectImage != '' "> and project_image = #{projectImage}</if>
+             <if test="showState != null "> and show_state = #{showState}</if>
+             <if test="createDate != null "> and create_date = #{createDate}</if>
+             <if test="updateDate != null  and updateDate != '' "> and update_date = #{updateDate}</if>
+             <if test="faceGroup != null  and faceGroup != '' "> and face_group = #{faceGroup}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjProjectById" parameterType="Integer" resultMap="HjProjectResult">
+        <include refid="selectHjProjectVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjProject" parameterType="HjProject">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into hj_project
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="itemId != null  ">itemId,</if>
+			<if test="projectName != null  and projectName != ''  ">project_name,</if>
+			<if test="shortName != null  and shortName != ''  ">short_name,</if>
+			<if test="projectPrincipal != null  and projectPrincipal != ''  ">project_principal,</if>
+			<if test="phone != null  and phone != ''  ">phone,</if>
+			<if test="projectType != null  and projectType != ''  ">project_type,</if>
+			<if test="projectState != null  and projectState != ''  ">project_state,</if>
+			<if test="projectNumber != null  ">project_number,</if>
+			<if test="projectRegion != null  and projectRegion != ''  ">project_region,</if>
+			<if test="builderLicense != null  and builderLicense != ''  ">builder_license,</if>
+			<if test="projectAddress != null  and projectAddress != ''  ">project_address,</if>
+			<if test="startingTime != null  ">starting_time,</if>
+			<if test="finishTime != null  ">finish_time,</if>
+			<if test="constructionId != null  ">construction_id,</if>
+			<if test="supervisorId != null  ">supervisor_id,</if>
+			<if test="acreage != null  and acreage != ''  ">acreage,</if>
+			<if test="projectCost != null  and projectCost != ''  ">project_cost,</if>
+			<if test="longitude != null  and longitude != ''  ">longitude,</if>
+			<if test="latitude != null  and latitude != ''  ">latitude,</if>
+			<if test="securityCode != null  and securityCode != ''  ">security_code,</if>
+			<if test="qualityNumber != null  and qualityNumber != ''  ">quality_number,</if>
+			<if test="designOrganization != null  and designOrganization != ''  ">design_organization,</if>
+			<if test="explorationUnit != null  and explorationUnit != ''  ">exploration_unit,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="projectImage != null  and projectImage != ''  ">project_image,</if>
+			<if test="showState != null  ">show_state,</if>
+			<if test="createDate != null  ">create_date,</if>
+			<if test="updateDate != null  and updateDate != ''  ">update_date,</if>
+			<if test="faceGroup != null  and faceGroup != ''  ">face_group,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="itemId != null  ">#{itemId},</if>
+			<if test="projectName != null  and projectName != ''  ">#{projectName},</if>
+			<if test="shortName != null  and shortName != ''  ">#{shortName},</if>
+			<if test="projectPrincipal != null  and projectPrincipal != ''  ">#{projectPrincipal},</if>
+			<if test="phone != null  and phone != ''  ">#{phone},</if>
+			<if test="projectType != null  and projectType != ''  ">#{projectType},</if>
+			<if test="projectState != null  and projectState != ''  ">#{projectState},</if>
+			<if test="projectNumber != null  ">#{projectNumber},</if>
+			<if test="projectRegion != null  and projectRegion != ''  ">#{projectRegion},</if>
+			<if test="builderLicense != null  and builderLicense != ''  ">#{builderLicense},</if>
+			<if test="projectAddress != null  and projectAddress != ''  ">#{projectAddress},</if>
+			<if test="startingTime != null  ">#{startingTime},</if>
+			<if test="finishTime != null  ">#{finishTime},</if>
+			<if test="constructionId != null  ">#{constructionId},</if>
+			<if test="supervisorId != null  ">#{supervisorId},</if>
+			<if test="acreage != null  and acreage != ''  ">#{acreage},</if>
+			<if test="projectCost != null  and projectCost != ''  ">#{projectCost},</if>
+			<if test="longitude != null  and longitude != ''  ">#{longitude},</if>
+			<if test="latitude != null  and latitude != ''  ">#{latitude},</if>
+			<if test="securityCode != null  and securityCode != ''  ">#{securityCode},</if>
+			<if test="qualityNumber != null  and qualityNumber != ''  ">#{qualityNumber},</if>
+			<if test="designOrganization != null  and designOrganization != ''  ">#{designOrganization},</if>
+			<if test="explorationUnit != null  and explorationUnit != ''  ">#{explorationUnit},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="projectImage != null  and projectImage != ''  ">#{projectImage},</if>
+			<if test="showState != null  ">#{showState},</if>
+			<if test="createDate != null  ">#{createDate},</if>
+			<if test="updateDate != null  and updateDate != ''  ">#{updateDate},</if>
+			<if test="faceGroup != null  and faceGroup != ''  ">#{faceGroup},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjProject" parameterType="HjProject">
+        update hj_project
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectName != null  and projectName != ''  ">project_name = #{projectName},</if>
+            <if test="shortName != null  and shortName != ''  ">short_name = #{shortName},</if>
+            <if test="projectPrincipal != null  and projectPrincipal != ''  ">project_principal = #{projectPrincipal},</if>
+            <if test="phone != null  and phone != ''  ">phone = #{phone},</if>
+            <if test="projectType != null  and projectType != ''  ">project_type = #{projectType},</if>
+            <if test="projectState != null  and projectState != ''  ">project_state = #{projectState},</if>
+            <if test="projectNumber != null  ">project_number = #{projectNumber},</if>
+            <if test="projectRegion != null  and projectRegion != ''  ">project_region = #{projectRegion},</if>
+            <if test="builderLicense != null  and builderLicense != ''  ">builder_license = #{builderLicense},</if>
+            <if test="projectAddress != null  and projectAddress != ''  ">project_address = #{projectAddress},</if>
+            <if test="startingTime != null  ">starting_time = #{startingTime},</if>
+            <if test="finishTime != null  ">finish_time = #{finishTime},</if>
+            <if test="itemId != null  ">itemId = #{itemId},</if>
+            <if test="constructionId != null  ">construction_id = #{constructionId},</if>
+            <if test="supervisorId != null  ">supervisor_id = #{supervisorId},</if>
+            <if test="acreage != null  and acreage != ''  ">acreage = #{acreage},</if>
+            <if test="projectCost != null  and projectCost != ''  ">project_cost = #{projectCost},</if>
+            <if test="longitude != null  and longitude != ''  ">longitude = #{longitude},</if>
+            <if test="latitude != null  and latitude != ''  ">latitude = #{latitude},</if>
+            <if test="securityCode != null  and securityCode != ''  ">security_code = #{securityCode},</if>
+            <if test="qualityNumber != null  and qualityNumber != ''  ">quality_number = #{qualityNumber},</if>
+            <if test="designOrganization != null  and designOrganization != ''  ">design_organization = #{designOrganization},</if>
+            <if test="explorationUnit != null  and explorationUnit != ''  ">exploration_unit = #{explorationUnit},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="projectImage != null  and projectImage != ''  ">project_image = #{projectImage},</if>
+            <if test="showState != null  ">show_state = #{showState},</if>
+            <if test="createDate != null  ">create_date = #{createDate},</if>
+            <if test="updateDate != null  and updateDate != ''  ">update_date = #{updateDate},</if>
+            <if test="faceGroup != null  and faceGroup != ''  ">face_group = #{faceGroup},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjProjectById" parameterType="Integer">
+        delete from hj_project where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjProjectByIds" parameterType="String">
+        delete from hj_project where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="hiddenHjProjectByIds" parameterType="String">
+        update hj_project set show_state=1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

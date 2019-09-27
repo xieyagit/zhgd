@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.moredian.moredianPerson.mapper.MoredianPersonMapper">
+    
+    <resultMap type="MoredianPerson" id="MoredianPersonResult">
+        <result property="id"    column="id"    />
+        <result property="tpUserId"    column="tp_user_id"    />
+        <result property="memberName"    column="member_name"    />
+        <result property="verifyFace"    column="verify_face"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="memberId"    column="member_id"    />
+        <result property="orgId"    column="org_id"    />
+    </resultMap>
+	
+	<sql id="selectMoredianPersonVo">
+        select id, tp_user_id, member_name, verify_face, mobile, member_id, org_id from sb_moredian_person
+    </sql>
+	
+    <select id="selectMoredianPersonList" parameterType="MoredianPerson" resultMap="MoredianPersonResult">
+        <include refid="selectMoredianPersonVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="tpUserId != null "> and tp_user_id = #{tpUserId}</if>
+             <if test="memberName != null  and memberName != '' "> and member_name = #{memberName}</if>
+             <if test="verifyFace != null  and verifyFace != '' "> and verify_face = #{verifyFace}</if>
+             <if test="mobile != null  and mobile != '' "> and mobile = #{mobile}</if>
+             <if test="memberId != null  and memberId != '' "> and member_id = #{memberId}</if>
+             <if test="orgId != null  and orgId != '' "> and org_id = #{orgId}</if>
+         </where>
+    </select>
+    
+    <select id="selectMoredianPersonById" parameterType="Integer" resultMap="MoredianPersonResult">
+        <include refid="selectMoredianPersonVo"/>
+        where id = #{id}
+    </select>
+
+
+        
+    <insert id="insertMoredianPerson" parameterType="MoredianPerson">
+        insert into sb_moredian_person
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="tpUserId != null  ">tp_user_id,</if>
+			<if test="memberName != null  and memberName != ''  ">member_name,</if>
+			<if test="verifyFace != null  and verifyFace != ''  ">verify_face,</if>
+			<if test="mobile != null  and mobile != ''  ">mobile,</if>
+			<if test="memberId != null  and memberId != ''  ">member_id,</if>
+			<if test="orgId != null  and orgId != ''  ">org_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="tpUserId != null  ">#{tpUserId},</if>
+			<if test="memberName != null  and memberName != ''  ">#{memberName},</if>
+			<if test="verifyFace != null  and verifyFace != ''  ">#{verifyFace},</if>
+			<if test="mobile != null  and mobile != ''  ">#{mobile},</if>
+			<if test="memberId != null  and memberId != ''  ">#{memberId},</if>
+			<if test="orgId != null  and orgId != ''  ">#{orgId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateMoredianPerson" parameterType="MoredianPerson">
+        update sb_moredian_person
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tpUserId != null  ">tp_user_id = #{tpUserId},</if>
+            <if test="memberName != null  and memberName != ''  ">member_name = #{memberName},</if>
+            <if test="verifyFace != null  and verifyFace != ''  ">verify_face = #{verifyFace},</if>
+            <if test="mobile != null  and mobile != ''  ">mobile = #{mobile},</if>
+            <if test="memberId != null  and memberId != ''  ">member_id = #{memberId},</if>
+            <if test="orgId != null  and orgId != ''  ">org_id = #{orgId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteMoredianPersonById" parameterType="Integer">
+        delete from sb_moredian_person where id = #{id}
+    </delete>
+	
+    <delete id="deleteMoredianPersonByIds" parameterType="String">
+        delete from sb_moredian_person where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

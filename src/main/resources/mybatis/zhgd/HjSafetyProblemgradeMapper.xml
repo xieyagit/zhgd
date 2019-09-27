@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjSafetyProblemgrade.mapper.HjSafetyProblemgradeMapper">
+    
+    <resultMap type="HjSafetyProblemgrade" id="HjSafetyProblemgradeResult">
+        <result property="id"    column="id"    />
+        <result property="grade"    column="grade"    />
+    </resultMap>
+	
+	<sql id="selectHjSafetyProblemgradeVo">
+        select id, grade from hj_safety_problemgrade
+    </sql>
+	
+    <select id="selectHjSafetyProblemgradeList" parameterType="HjSafetyProblemgrade" resultMap="HjSafetyProblemgradeResult">
+        <include refid="selectHjSafetyProblemgradeVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="grade != null  and grade != '' "> and grade = #{grade}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjSafetyProblemgradeById" parameterType="Integer" resultMap="HjSafetyProblemgradeResult">
+        <include refid="selectHjSafetyProblemgradeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjSafetyProblemgrade" parameterType="HjSafetyProblemgrade">
+        insert into hj_safety_problemgrade
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="grade != null  and grade != ''  ">grade,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="grade != null  and grade != ''  ">#{grade},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjSafetyProblemgrade" parameterType="HjSafetyProblemgrade">
+        update hj_safety_problemgrade
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="grade != null  and grade != ''  ">grade = #{grade},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjSafetyProblemgradeById" parameterType="Integer">
+        delete from hj_safety_problemgrade where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjSafetyProblemgradeByIds" parameterType="String">
+        delete from hj_safety_problemgrade where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

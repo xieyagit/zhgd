@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjSynchronizationInformation.mapper.HjSynchronizationInformationMapper">
+    
+    <resultMap type="HjSynchronizationInformation" id="HjSynchronizationInformationResult">
+        <result property="id"    column="id"    />
+        <result property="projectNumber"    column="project_number"    />
+        <result property="apiKey"    column="api_key"    />
+        <result property="apiSecret"    column="api_secret"    />
+        <result property="clientSerial"    column="client_serial"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="engineeringCode"    column="engineering_code"    />
+        <result property="platformName"    column="platform_name"    />
+        <result property="state"    column="state"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="updateDate"    column="update_date"    />
+        <result property="apiType"    column="api_type"    />
+    </resultMap>
+	
+	<sql id="selectHjSynchronizationInformationVo">
+        select id, project_number, api_key, api_secret, client_serial, project_id, engineering_code, platform_name, state, create_date, update_date, api_type from hj_synchronization_information
+    </sql>
+
+    <select id="getProjectSynchronizationInfoByPlatformname" parameterType="HjSynchronizationInformation" resultMap="HjSynchronizationInformationResult">
+        <include refid="selectHjSynchronizationInformationVo"/>
+        <where>
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+            <if test="platformName != null  and platformName != '' "> and platform_name = #{platformName}</if>
+            <if test="apiType != null  and apiType != '' "> and api_type = #{apiType}</if>
+        </where>
+    </select>
+
+    <select id="selectHjSynchronizationInformationList" parameterType="HjSynchronizationInformation" resultMap="HjSynchronizationInformationResult">
+        <include refid="selectHjSynchronizationInformationVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="projectNumber != null  and projectNumber != '' "> and project_number = #{projectNumber}</if>
+             <if test="apiKey != null  and apiKey != '' "> and api_key = #{apiKey}</if>
+             <if test="apiSecret != null  and apiSecret != '' "> and api_secret = #{apiSecret}</if>
+             <if test="clientSerial != null  and clientSerial != '' "> and client_serial = #{clientSerial}</if>
+             <if test="projectId != null "> and project_id = #{projectId}</if>
+             <if test="engineeringCode != null  and engineeringCode != '' "> and engineering_code = #{engineeringCode}</if>
+             <if test="platformName != null  and platformName != '' "> and platform_name = #{platformName}</if>
+             <if test="state != null "> and state = #{state}</if>
+             <if test="createDate != null "> and create_date = #{createDate}</if>
+             <if test="updateDate != null  and updateDate != '' "> and update_date = #{updateDate}</if>
+             <if test="apiType != null  and apiType != '' "> and api_type = #{apiType}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjSynchronizationInformationById" parameterType="Integer" resultMap="HjSynchronizationInformationResult">
+        <include refid="selectHjSynchronizationInformationVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjSynchronizationInformation" parameterType="HjSynchronizationInformation">
+        insert into hj_synchronization_information
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="projectNumber != null  and projectNumber != ''  ">project_number,</if>
+			<if test="apiKey != null  and apiKey != ''  ">api_key,</if>
+			<if test="apiSecret != null  and apiSecret != ''  ">api_secret,</if>
+			<if test="clientSerial != null  and clientSerial != ''  ">client_serial,</if>
+			<if test="projectId != null  ">project_id,</if>
+			<if test="engineeringCode != null  and engineeringCode != ''  ">engineering_code,</if>
+			<if test="platformName != null  and platformName != ''  ">platform_name,</if>
+			<if test="state != null  ">state,</if>
+			<if test="createDate != null  ">create_date,</if>
+			<if test="updateDate != null  and updateDate != ''  ">update_date,</if>
+			<if test="apiType != null  and apiType != ''  ">api_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="projectNumber != null  and projectNumber != ''  ">#{projectNumber},</if>
+			<if test="apiKey != null  and apiKey != ''  ">#{apiKey},</if>
+			<if test="apiSecret != null  and apiSecret != ''  ">#{apiSecret},</if>
+			<if test="clientSerial != null  and clientSerial != ''  ">#{clientSerial},</if>
+			<if test="projectId != null  ">#{projectId},</if>
+			<if test="engineeringCode != null  and engineeringCode != ''  ">#{engineeringCode},</if>
+			<if test="platformName != null  and platformName != ''  ">#{platformName},</if>
+			<if test="state != null  ">#{state},</if>
+			<if test="createDate != null  ">#{createDate},</if>
+			<if test="updateDate != null  and updateDate != ''  ">#{updateDate},</if>
+			<if test="apiType != null  and apiType != ''  ">#{apiType},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjSynchronizationInformation" parameterType="HjSynchronizationInformation">
+        update hj_synchronization_information
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectNumber != null  and projectNumber != ''  ">project_number = #{projectNumber},</if>
+            <if test="apiKey != null  and apiKey != ''  ">api_key = #{apiKey},</if>
+            <if test="apiSecret != null  and apiSecret != ''  ">api_secret = #{apiSecret},</if>
+            <if test="clientSerial != null  and clientSerial != ''  ">client_serial = #{clientSerial},</if>
+            <if test="projectId != null  ">project_id = #{projectId},</if>
+            <if test="engineeringCode != null  and engineeringCode != ''  ">engineering_code = #{engineeringCode},</if>
+            <if test="platformName != null  and platformName != ''  ">platform_name = #{platformName},</if>
+            <if test="state != null  ">state = #{state},</if>
+            <if test="createDate != null  ">create_date = #{createDate},</if>
+            <if test="updateDate != null  and updateDate != ''  ">update_date = #{updateDate},</if>
+            <if test="apiType != null  and apiType != ''  ">api_type = #{apiType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjSynchronizationInformationById" parameterType="Integer">
+        delete from hj_synchronization_information where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjSynchronizationInformationByIds" parameterType="String">
+        delete from hj_synchronization_information where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

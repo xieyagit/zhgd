@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-hjProjectPersonnelSynchronization-edit" th:object="${hjProjectPersonnelSynchronization}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">hj_project 外键 id：</label>
+				<div class="col-sm-8">
+					<input id="projectId" name="projectId" th:field="*{projectId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">项目同步信息id：</label>
+				<div class="col-sm-8">
+					<input id="synchronizationInformationId" name="synchronizationInformationId" th:field="*{synchronizationInformationId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">项目工人id：</label>
+				<div class="col-sm-8">
+					<input id="projectWorkerId" name="projectWorkerId" th:field="*{projectWorkerId}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "zhgd/hjProjectPersonnelSynchronization";
+		$("#form-hjProjectPersonnelSynchronization-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-hjProjectPersonnelSynchronization-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

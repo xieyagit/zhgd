@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjFileSize.mapper.HjFileSizeMapper">
+    
+    <resultMap type="HjFileSize" id="HjFileSizeResult">
+        <result property="projectId"    column="project_id"    />
+        <result property="fileSize"    column="file_size"    />
+    </resultMap>
+	
+	<sql id="selectHjFileSizeVo">
+        select project_id, file_size from hj_file_size
+    </sql>
+	
+    <select id="selectHjFileSizeList" parameterType="HjFileSize" resultMap="HjFileSizeResult">
+        <include refid="selectHjFileSizeVo"/>
+        <where>  
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+             <if test="fileSize != null "> and file_size = #{fileSize}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjFileSizeById" parameterType="Integer" resultMap="HjFileSizeResult">
+        <include refid="selectHjFileSizeVo"/>
+        where project_id = #{projectId}
+    </select>
+
+        
+    <insert id="insertHjFileSize" parameterType="HjFileSize">
+        insert into hj_file_size
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="projectId != null  ">project_id,</if>
+			<if test="fileSize != null  ">file_size,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="projectId != null  ">#{projectId},</if>
+			<if test="fileSize != null  ">#{fileSize},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjFileSize" parameterType="HjFileSize">
+        update hj_file_size
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fileSize != null  ">file_size = #{fileSize},</if>
+        </trim>
+        where project_id = #{projectId}
+    </update>
+
+	<delete id="deleteHjFileSizeById" parameterType="Integer">
+        delete from hj_file_size where project_id = #{projectId}
+    </delete>
+	
+    <delete id="deleteHjFileSizeByIds" parameterType="String">
+        delete from hj_file_size where project_id in 
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+    </delete>
+    
+</mapper>

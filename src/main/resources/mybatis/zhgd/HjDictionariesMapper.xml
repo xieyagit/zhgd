@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjDictionaries.mapper.HjDictionariesMapper">
+    
+    <resultMap type="HjDictionaries" id="HjDictionariesResult">
+        <result property="id"    column="id"    />
+        <result property="tag"    column="tag"    />
+        <result property="groupTitle"    column="group_title"    />
+        <result property="category"    column="category"    />
+        <result property="title"    column="title"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="updateDate"    column="update_date"    />
+    </resultMap>
+    <resultMap type="Dictionaries" id="DictionariesResult">
+        <result property="tag"    column="tag"    />
+        <result property="groupTitle"    column="group_title"    />
+        <result property="title"    column="title"    />
+    </resultMap>
+	
+	<sql id="selectHjDictionariesVo">
+        select id, tag, group_title, category, title, create_date, update_date from hj_dictionaries
+    </sql>
+	
+    <select id="selectHjDictionariesList" parameterType="HjDictionaries" resultMap="HjDictionariesResult">
+        <include refid="selectHjDictionariesVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="tag != null  and tag != '' "> and tag = #{tag}</if>
+             <if test="groupTitle != null  and groupTitle != '' "> and group_title = #{groupTitle}</if>
+             <if test="category != null  and category != '' "> and category = #{category}</if>
+             <if test="title != null  and title != '' "> and title like '%${title}%'</if>
+             <if test="createDate != null "> and create_date = #{createDate}</if>
+             <if test="updateDate != null "> and update_date = #{updateDate}</if>
+         </where>
+    </select>
+
+    <select id="getHjDictionariesList" parameterType="Dictionaries" resultMap="DictionariesResult">
+        SELECT tag,group_title,title FROM `hj_dictionaries` where category = #{category}
+    </select>
+
+    <select id="selectWorkType" parameterType="HjDictionaries" resultMap="HjDictionariesResult">
+        <include refid="selectHjDictionariesVo"/>
+          WHERE category = 'WORK_TYPE' LIMIT 20
+    </select>
+
+    <sql id="Group_List_Condition" >
+        <where >
+            <if test="title != null  and title != '' ">
+                and h.title LIKE  CONCAT('%',#{title},'%')
+            </if>
+            <if test="category != null  and category != '' ">
+                and h.category = #{category}
+            </if>
+        </where>
+    </sql>
+
+
+    <select id="queryWorkType" parameterType="HjDictionaries" resultMap="HjDictionariesResult">
+        SELECT * FROM hj_dictionaries h
+        <include refid="Group_List_Condition" />
+    </select>
+    
+    <select id="selectHjDictionariesById" parameterType="Integer" resultMap="HjDictionariesResult">
+        <include refid="selectHjDictionariesVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjDictionaries" parameterType="HjDictionaries">
+        insert into hj_dictionaries
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="tag != null  and tag != ''  ">tag,</if>
+			<if test="groupTitle != null  and groupTitle != ''  ">group_title,</if>
+			<if test="category != null  and category != ''  ">category,</if>
+			<if test="title != null  and title != ''  ">title,</if>
+			<if test="createDate != null  ">create_date,</if>
+			<if test="updateDate != null  ">update_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="tag != null  and tag != ''  ">#{tag},</if>
+			<if test="groupTitle != null  and groupTitle != ''  ">#{groupTitle},</if>
+			<if test="category != null  and category != ''  ">#{category},</if>
+			<if test="title != null  and title != ''  ">#{title},</if>
+			<if test="createDate != null  ">#{createDate},</if>
+			<if test="updateDate != null  ">#{updateDate},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjDictionaries" parameterType="HjDictionaries">
+        update hj_dictionaries
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tag != null  and tag != ''  ">tag = #{tag},</if>
+            <if test="groupTitle != null  and groupTitle != ''  ">group_title = #{groupTitle},</if>
+            <if test="category != null  and category != ''  ">category = #{category},</if>
+            <if test="title != null  and title != ''  ">title = #{title},</if>
+            <if test="createDate != null  ">create_date = #{createDate},</if>
+            <if test="updateDate != null  ">update_date = #{updateDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjDictionariesById" parameterType="Integer">
+        delete from hj_dictionaries where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjDictionariesByIds" parameterType="String">
+        delete from hj_dictionaries where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <!--删除星河工种专用-->
+    <delete id="deleteHjDictionariesByTwo" >
+        delete from hj_dictionaries where group_title='星河工种'
+    </delete>
+</mapper>

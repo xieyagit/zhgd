@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbElevatorElectrify.mapper.SbElevatorElectrifyMapper">
+    
+    <resultMap type="SbElevatorElectrify" id="SbElevatorElectrifyResult">
+        <result property="id"    column="id"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="runtime"    column="runtime"    />
+        <result property="operation"    column="operation"    />
+        <result property="hxzid"    column="hxzid"    />
+    </resultMap>
+	
+	<sql id="selectSbElevatorElectrifyVo">
+        select id, device_no, runtime, operation, hxzid from sb_elevator_electrify
+    </sql>
+	
+    <select id="selectSbElevatorElectrifyList" parameterType="SbElevatorElectrify" resultMap="SbElevatorElectrifyResult">
+        <include refid="selectSbElevatorElectrifyVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
+             <if test="runtime != null  and runtime != '' "> and runtime = #{runtime}</if>
+             <if test="operation != null "> and operation = #{operation}</if>
+             <if test="hxzid != null  and hxzid != '' "> and hxzid = #{hxzid}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbElevatorElectrifyById" parameterType="Integer" resultMap="SbElevatorElectrifyResult">
+        <include refid="selectSbElevatorElectrifyVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbElevatorElectrify" parameterType="SbElevatorElectrify">
+        insert into sb_elevator_electrify
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">device_no,</if>
+			<if test="runtime != null  and runtime != ''  ">runtime,</if>
+			<if test="operation != null  ">operation,</if>
+			<if test="hxzid != null  and hxzid != ''  ">hxzid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+			<if test="runtime != null  and runtime != ''  ">#{runtime},</if>
+			<if test="operation != null  ">#{operation},</if>
+			<if test="hxzid != null  and hxzid != ''  ">#{hxzid},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbElevatorElectrify" parameterType="SbElevatorElectrify">
+        update sb_elevator_electrify
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceNo != null  and deviceNo != ''  ">device_no = #{deviceNo},</if>
+            <if test="runtime != null  and runtime != ''  ">runtime = #{runtime},</if>
+            <if test="operation != null  ">operation = #{operation},</if>
+            <if test="hxzid != null  and hxzid != ''  ">hxzid = #{hxzid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbElevatorElectrifyById" parameterType="Integer">
+        delete from sb_elevator_electrify where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbElevatorElectrifyByIds" parameterType="String">
+        delete from sb_elevator_electrify where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbProjectElectricityBox.mapper.SbProjectElectricityBoxMapper">
+    
+    <resultMap type="SbProjectElectricityBox" id="SbProjectElectricityBoxResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="comments"    column="comments"    />
+        <result property="electricityBoxId"    column="electricity_box_id"    />
+        <result property="electricityBoxName"    column="electricity_box_name"    />
+        <result property="tempLimit"    column="temp_limit"    />
+        <result property="elecLimit"    column="elec_limit"    />
+        <result property="aroundTemp"    column="around_temp"    />
+        <result property="type"    column="type"    />
+    </resultMap>
+	
+	<sql id="selectSbProjectElectricityBoxVo">
+        select id, project_id, comments, electricity_box_id, electricity_box_name, temp_limit, elec_limit, around_temp, type from sb_project_electricity_box
+    </sql>
+	
+    <select id="selectSbProjectElectricityBoxList" parameterType="SbProjectElectricityBox" resultMap="SbProjectElectricityBoxResult">
+        <include refid="selectSbProjectElectricityBoxVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="projectId != null "> and project_id = #{projectId}</if>
+             <if test="comments != null  and comments != '' "> and comments = #{comments}</if>
+             <if test="electricityBoxId != null  and electricityBoxId != '' "> and electricity_box_id = #{electricityBoxId}</if>
+             <if test="electricityBoxName != null  and electricityBoxName != '' "> and electricity_box_name = #{electricityBoxName}</if>
+             <if test="tempLimit != null "> and temp_limit = #{tempLimit}</if>
+             <if test="elecLimit != null "> and elec_limit = #{elecLimit}</if>
+             <if test="aroundTemp != null "> and around_temp = #{aroundTemp}</if>
+             <if test="type != null "> and type = #{type}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbProjectElectricityBoxById" parameterType="Integer" resultMap="SbProjectElectricityBoxResult">
+        <include refid="selectSbProjectElectricityBoxVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbProjectElectricityBox" parameterType="SbProjectElectricityBox">
+        insert into sb_project_electricity_box
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="projectId != null  ">project_id,</if>
+			<if test="comments != null  and comments != ''  ">comments,</if>
+			<if test="electricityBoxId != null  and electricityBoxId != ''  ">electricity_box_id,</if>
+			<if test="electricityBoxName != null  and electricityBoxName != ''  ">electricity_box_name,</if>
+			<if test="tempLimit != null  ">temp_limit,</if>
+			<if test="elecLimit != null  ">elec_limit,</if>
+			<if test="aroundTemp != null  ">around_temp,</if>
+			<if test="type != null  ">type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="projectId != null  ">#{projectId},</if>
+			<if test="comments != null  and comments != ''  ">#{comments},</if>
+			<if test="electricityBoxId != null  and electricityBoxId != ''  ">#{electricityBoxId},</if>
+			<if test="electricityBoxName != null  and electricityBoxName != ''  ">#{electricityBoxName},</if>
+			<if test="tempLimit != null  ">#{tempLimit},</if>
+			<if test="elecLimit != null  ">#{elecLimit},</if>
+			<if test="aroundTemp != null  ">#{aroundTemp},</if>
+			<if test="type != null  ">#{type},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbProjectElectricityBox" parameterType="SbProjectElectricityBox">
+        update sb_project_electricity_box
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null  ">project_id = #{projectId},</if>
+            <if test="comments != null  and comments != ''  ">comments = #{comments},</if>
+            <if test="electricityBoxId != null  and electricityBoxId != ''  ">electricity_box_id = #{electricityBoxId},</if>
+            <if test="electricityBoxName != null  and electricityBoxName != ''  ">electricity_box_name = #{electricityBoxName},</if>
+            <if test="tempLimit != null  ">temp_limit = #{tempLimit},</if>
+            <if test="elecLimit != null  ">elec_limit = #{elecLimit},</if>
+            <if test="aroundTemp != null  ">around_temp = #{aroundTemp},</if>
+            <if test="type != null  ">type = #{type},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbProjectElectricityBoxById" parameterType="Integer">
+        delete from sb_project_electricity_box where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbProjectElectricityBoxByIds" parameterType="String">
+        delete from sb_project_electricity_box where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

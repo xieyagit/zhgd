@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbEquipmentRecord.mapper.SbEquipmentRecordMapper">
+    
+    <resultMap type="SbEquipmentRecord" id="SbEquipmentRecordResult">
+        <result property="id"    column="id"    />
+        <result property="imei"    column="imei"    />
+        <result property="xloc"    column="xloc"    />
+        <result property="yloc"    column="yloc"    />
+        <result property="bat"    column="bat"    />
+        <result property="rssi"    column="rssi"    />
+        <result property="watchDate"    column="watchDate"    />
+        <result property="createDate"    column="createDate"    />
+        <result property="isPosition"    column="isPosition"    />
+        <result property="address"    column="address"    />
+    </resultMap>
+	
+	<sql id="selectSbEquipmentRecordVo">
+        select id, imei, xloc, yloc, bat, rssi, watchDate, createDate, isPosition, address from sb_equipment_record
+    </sql>
+	
+    <select id="selectSbEquipmentRecordList" parameterType="SbEquipmentRecord" resultMap="SbEquipmentRecordResult">
+        <include refid="selectSbEquipmentRecordVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="imei != null  and imei != '' "> and imei = #{imei}</if>
+             <if test="xloc != null "> and xloc = #{xloc}</if>
+             <if test="yloc != null "> and yloc = #{yloc}</if>
+             <if test="bat != null "> and bat = #{bat}</if>
+             <if test="rssi != null  and rssi != '' "> and rssi = #{rssi}</if>
+             <if test="watchDate != null "> and watchDate = #{watchDate}</if>
+             <if test="createDate != null "> and createDate = #{createDate}</if>
+             <if test="isPosition != null  and isPosition != '' "> and isPosition = #{isPosition}</if>
+             <if test="address != null  and address != '' "> and address = #{address}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbEquipmentRecordById" parameterType="Integer" resultMap="SbEquipmentRecordResult">
+        <include refid="selectSbEquipmentRecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbEquipmentRecord" parameterType="SbEquipmentRecord">
+        insert into sb_equipment_record
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="imei != null  and imei != ''  ">imei,</if>
+			<if test="xloc != null  ">xloc,</if>
+			<if test="yloc != null  ">yloc,</if>
+			<if test="bat != null  ">bat,</if>
+			<if test="rssi != null  and rssi != ''  ">rssi,</if>
+			<if test="watchDate != null  ">watchDate,</if>
+			<if test="createDate != null  ">createDate,</if>
+			<if test="isPosition != null  and isPosition != ''  ">isPosition,</if>
+			<if test="address != null  and address != ''  ">address,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="imei != null  and imei != ''  ">#{imei},</if>
+			<if test="xloc != null  ">#{xloc},</if>
+			<if test="yloc != null  ">#{yloc},</if>
+			<if test="bat != null  ">#{bat},</if>
+			<if test="rssi != null  and rssi != ''  ">#{rssi},</if>
+			<if test="watchDate != null  ">#{watchDate},</if>
+			<if test="createDate != null  ">#{createDate},</if>
+			<if test="isPosition != null  and isPosition != ''  ">#{isPosition},</if>
+			<if test="address != null  and address != ''  ">#{address},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbEquipmentRecord" parameterType="SbEquipmentRecord">
+        update sb_equipment_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="imei != null  and imei != ''  ">imei = #{imei},</if>
+            <if test="xloc != null  ">xloc = #{xloc},</if>
+            <if test="yloc != null  ">yloc = #{yloc},</if>
+            <if test="bat != null  ">bat = #{bat},</if>
+            <if test="rssi != null  and rssi != ''  ">rssi = #{rssi},</if>
+            <if test="watchDate != null  ">watchDate = #{watchDate},</if>
+            <if test="createDate != null  ">createDate = #{createDate},</if>
+            <if test="isPosition != null  and isPosition != ''  ">isPosition = #{isPosition},</if>
+            <if test="address != null  and address != ''  ">address = #{address},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbEquipmentRecordById" parameterType="Integer">
+        delete from sb_equipment_record where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbEquipmentRecordByIds" parameterType="String">
+        delete from sb_equipment_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

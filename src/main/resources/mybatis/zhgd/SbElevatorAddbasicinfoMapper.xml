@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbElevatorAddbasicinfo.mapper.SbElevatorAddbasicinfoMapper">
+    
+    <resultMap type="SbElevatorAddbasicinfo" id="SbElevatorAddbasicinfoResult">
+        <result property="id"    column="id"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="model"    column="model"    />
+        <result property="name"    column="name"    />
+        <result property="uid"    column="uid"    />
+        <result property="license"    column="license"    />
+        <result property="licenseStartDate"    column="license_start_date"    />
+        <result property="licenseEndDate"    column="license_end_date"    />
+        <result property="photos"    column="photos"    />
+        <result property="propertyUnit"    column="property_unit"    />
+        <result property="mnufacturerBusiness"    column="mnufacturer_business"    />
+        <result property="maiWarBus"    column="mai_war_bus"    />
+        <result property="testingBusiness"    column="testing_business"    />
+        <result property="inDate"    column="in_date"    />
+        <result property="outDate"    column="out_date"    />
+        <result property="monDeviceMan"    column="mon_device_man"    />
+        <result property="deviceInstallationDate"    column="device_installation_date"    />
+        <result property="hxzid"    column="hxzid"    />
+    </resultMap>
+	
+	<sql id="selectSbElevatorAddbasicinfoVo">
+        select id, device_no, model, name, uid, license, license_start_date, license_end_date, photos, property_unit, mnufacturer_business, mai_war_bus, testing_business, in_date, out_date, mon_device_man, device_installation_date, hxzid from sb_elevator_addbasicinfo
+    </sql>
+	
+    <select id="selectSbElevatorAddbasicinfoList" parameterType="SbElevatorAddbasicinfo" resultMap="SbElevatorAddbasicinfoResult">
+        <include refid="selectSbElevatorAddbasicinfoVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
+             <if test="model != null  and model != '' "> and model = #{model}</if>
+             <if test="name != null  and name != '' "> and name = #{name}</if>
+             <if test="uid != null  and uid != '' "> and uid = #{uid}</if>
+             <if test="license != null  and license != '' "> and license = #{license}</if>
+             <if test="licenseStartDate != null  and licenseStartDate != '' "> and license_start_date = #{licenseStartDate}</if>
+             <if test="licenseEndDate != null  and licenseEndDate != '' "> and license_end_date = #{licenseEndDate}</if>
+             <if test="photos != null  and photos != '' "> and photos = #{photos}</if>
+             <if test="propertyUnit != null  and propertyUnit != '' "> and property_unit = #{propertyUnit}</if>
+             <if test="mnufacturerBusiness != null  and mnufacturerBusiness != '' "> and mnufacturer_business = #{mnufacturerBusiness}</if>
+             <if test="maiWarBus != null  and maiWarBus != '' "> and mai_war_bus = #{maiWarBus}</if>
+             <if test="testingBusiness != null  and testingBusiness != '' "> and testing_business = #{testingBusiness}</if>
+             <if test="inDate != null  and inDate != '' "> and in_date = #{inDate}</if>
+             <if test="outDate != null  and outDate != '' "> and out_date = #{outDate}</if>
+             <if test="monDeviceMan != null  and monDeviceMan != '' "> and mon_device_man = #{monDeviceMan}</if>
+             <if test="deviceInstallationDate != null  and deviceInstallationDate != '' "> and device_installation_date = #{deviceInstallationDate}</if>
+             <if test="hxzid != null  and hxzid != '' "> and hxzid = #{hxzid}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbElevatorAddbasicinfoById" parameterType="Integer" resultMap="SbElevatorAddbasicinfoResult">
+        <include refid="selectSbElevatorAddbasicinfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbElevatorAddbasicinfo" parameterType="SbElevatorAddbasicinfo">
+        insert into sb_elevator_addbasicinfo
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">device_no,</if>
+			<if test="model != null  and model != ''  ">model,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="uid != null  and uid != ''  ">uid,</if>
+			<if test="license != null  and license != ''  ">license,</if>
+			<if test="licenseStartDate != null  and licenseStartDate != ''  ">license_start_date,</if>
+			<if test="licenseEndDate != null  and licenseEndDate != ''  ">license_end_date,</if>
+			<if test="photos != null  and photos != ''  ">photos,</if>
+			<if test="propertyUnit != null  and propertyUnit != ''  ">property_unit,</if>
+			<if test="mnufacturerBusiness != null  and mnufacturerBusiness != ''  ">mnufacturer_business,</if>
+			<if test="maiWarBus != null  and maiWarBus != ''  ">mai_war_bus,</if>
+			<if test="testingBusiness != null  and testingBusiness != ''  ">testing_business,</if>
+			<if test="inDate != null  and inDate != ''  ">in_date,</if>
+			<if test="outDate != null  and outDate != ''  ">out_date,</if>
+			<if test="monDeviceMan != null  and monDeviceMan != ''  ">mon_device_man,</if>
+			<if test="deviceInstallationDate != null  and deviceInstallationDate != ''  ">device_installation_date,</if>
+			<if test="hxzid != null  and hxzid != ''  ">hxzid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+			<if test="model != null  and model != ''  ">#{model},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="uid != null  and uid != ''  ">#{uid},</if>
+			<if test="license != null  and license != ''  ">#{license},</if>
+			<if test="licenseStartDate != null  and licenseStartDate != ''  ">#{licenseStartDate},</if>
+			<if test="licenseEndDate != null  and licenseEndDate != ''  ">#{licenseEndDate},</if>
+			<if test="photos != null  and photos != ''  ">#{photos},</if>
+			<if test="propertyUnit != null  and propertyUnit != ''  ">#{propertyUnit},</if>
+			<if test="mnufacturerBusiness != null  and mnufacturerBusiness != ''  ">#{mnufacturerBusiness},</if>
+			<if test="maiWarBus != null  and maiWarBus != ''  ">#{maiWarBus},</if>
+			<if test="testingBusiness != null  and testingBusiness != ''  ">#{testingBusiness},</if>
+			<if test="inDate != null  and inDate != ''  ">#{inDate},</if>
+			<if test="outDate != null  and outDate != ''  ">#{outDate},</if>
+			<if test="monDeviceMan != null  and monDeviceMan != ''  ">#{monDeviceMan},</if>
+			<if test="deviceInstallationDate != null  and deviceInstallationDate != ''  ">#{deviceInstallationDate},</if>
+			<if test="hxzid != null  and hxzid != ''  ">#{hxzid},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbElevatorAddbasicinfo" parameterType="SbElevatorAddbasicinfo">
+        update sb_elevator_addbasicinfo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceNo != null  and deviceNo != ''  ">device_no = #{deviceNo},</if>
+            <if test="model != null  and model != ''  ">model = #{model},</if>
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="uid != null  and uid != ''  ">uid = #{uid},</if>
+            <if test="license != null  and license != ''  ">license = #{license},</if>
+            <if test="licenseStartDate != null  and licenseStartDate != ''  ">license_start_date = #{licenseStartDate},</if>
+            <if test="licenseEndDate != null  and licenseEndDate != ''  ">license_end_date = #{licenseEndDate},</if>
+            <if test="photos != null  and photos != ''  ">photos = #{photos},</if>
+            <if test="propertyUnit != null  and propertyUnit != ''  ">property_unit = #{propertyUnit},</if>
+            <if test="mnufacturerBusiness != null  and mnufacturerBusiness != ''  ">mnufacturer_business = #{mnufacturerBusiness},</if>
+            <if test="maiWarBus != null  and maiWarBus != ''  ">mai_war_bus = #{maiWarBus},</if>
+            <if test="testingBusiness != null  and testingBusiness != ''  ">testing_business = #{testingBusiness},</if>
+            <if test="inDate != null  and inDate != ''  ">in_date = #{inDate},</if>
+            <if test="outDate != null  and outDate != ''  ">out_date = #{outDate},</if>
+            <if test="monDeviceMan != null  and monDeviceMan != ''  ">mon_device_man = #{monDeviceMan},</if>
+            <if test="deviceInstallationDate != null  and deviceInstallationDate != ''  ">device_installation_date = #{deviceInstallationDate},</if>
+            <if test="hxzid != null  and hxzid != ''  ">hxzid = #{hxzid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbElevatorAddbasicinfoById" parameterType="Integer">
+        delete from sb_elevator_addbasicinfo where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbElevatorAddbasicinfoByIds" parameterType="String">
+        delete from sb_elevator_addbasicinfo where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

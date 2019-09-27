@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjSystemPrivileges.mapper.HjSystemPrivilegesMapper">
+
+    <resultMap type="HjSystemPrivileges" id="HjSystemPrivilegesResult">
+        <result property="id" column="id"/>
+        <result property="privilegesName" column="privileges_name"/>
+        <result property="url" column="url"/>
+        <result property="privilegesType" column="privileges_type"/>
+        <result property="whetherOrNotVisible" column="whether_or_not_visible"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="createDate" column="create_date"/>
+        <result property="updateDate" column="update_date"/>
+        <result property="appOrPc" column="app_or_pc"/>
+    </resultMap>
+
+    <resultMap type="com.hujiang.project.zhgd.hjSystemPrivileges.domain.SystemRoleParam" id="SystemRoleParamResult">
+        <result property="id"    column="id"    />
+        <result property="privilegesName"    column="privileges_name"    />
+        <result property="url"    column="url"    />
+        <result property="privilegesType"    column="privileges_type"    />
+        <result property="whetherOrNotVisible"    column="whether_or_not_visible"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="appOrPc"    column="app_or_pc"    />
+    </resultMap>
+
+    <sql id="selectHjSystemPrivilegesVo">
+        select id, privileges_name, url, privileges_type, whether_or_not_visible, parent_id, create_date, update_date, app_or_pc from hj_system_privileges
+    </sql>
+
+    <select id="selectHjSystemPrivilegesList" parameterType="HjSystemPrivileges" resultMap="HjSystemPrivilegesResult">
+        <include refid="selectHjSystemPrivilegesVo"/>
+        <where>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="privilegesName != null  and privilegesName != '' ">and privileges_name = #{privilegesName}</if>
+            <if test="url != null  and url != '' ">and url = #{url}</if>
+            <if test="privilegesType != null ">and privileges_type = #{privilegesType}</if>
+            <if test="whetherOrNotVisible != null ">and whether_or_not_visible = #{whetherOrNotVisible}</if>
+            <if test="parentId != null ">and parent_id = #{parentId}</if>
+            <if test="createDate != null ">and create_date = #{createDate}</if>
+            <if test="updateDate != null ">and update_date = #{updateDate}</if>
+            <if test="appOrPc != null ">and app_or_pc = #{appOrPc}</if>
+        </where>
+    </select>
+
+    <select id="selectHjSystemPrivilegesById" parameterType="Integer" resultMap="HjSystemPrivilegesResult">
+        <include refid="selectHjSystemPrivilegesVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertHjSystemPrivileges" parameterType="HjSystemPrivileges">
+        insert into hj_system_privileges
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="privilegesName != null  and privilegesName != ''  ">privileges_name,</if>
+            <if test="url != null  and url != ''  ">url,</if>
+            <if test="privilegesType != null  ">privileges_type,</if>
+            <if test="whetherOrNotVisible != null  ">whether_or_not_visible,</if>
+            <if test="parentId != null  ">parent_id,</if>
+            <if test="createDate != null  ">create_date,</if>
+            <if test="updateDate != null  ">update_date,</if>
+            <if test="appOrPc != null  ">app_or_pc,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">#{id},</if>
+            <if test="privilegesName != null  and privilegesName != ''  ">#{privilegesName},</if>
+            <if test="url != null  and url != ''  ">#{url},</if>
+            <if test="privilegesType != null  ">#{privilegesType},</if>
+            <if test="whetherOrNotVisible != null  ">#{whetherOrNotVisible},</if>
+            <if test="parentId != null  ">#{parentId},</if>
+            <if test="createDate != null  ">#{createDate},</if>
+            <if test="updateDate != null  ">#{updateDate},</if>
+            <if test="appOrPc != null  ">#{appOrPc},</if>
+        </trim>
+    </insert>
+
+    <update id="updateHjSystemPrivileges" parameterType="HjSystemPrivileges">
+        update hj_system_privileges
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="privilegesName != null  and privilegesName != ''  ">privileges_name = #{privilegesName},</if>
+            <if test="url != null  and url != ''  ">url = #{url},</if>
+            <if test="privilegesType != null  ">privileges_type = #{privilegesType},</if>
+            <if test="whetherOrNotVisible != null  ">whether_or_not_visible = #{whetherOrNotVisible},</if>
+            <if test="parentId != null  ">parent_id = #{parentId},</if>
+            <if test="createDate != null  ">create_date = #{createDate},</if>
+            <if test="updateDate != null  ">update_date = #{updateDate},</if>
+            <if test="appOrPc != null  ">app_or_pc = #{appOrPc},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHjSystemPrivilegesById" parameterType="Integer">
+        delete from hj_system_privileges where id = #{id}
+    </delete>
+
+    <delete id="deleteHjSystemPrivilegesByIds" parameterType="String">
+        delete from hj_system_privileges where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--根据用户id查询pc或app菜单权限-->
+    <select id="selectHjSystemPrivilegesByUser" resultMap="HjSystemPrivilegesResult">
+        SELECT distinct p.id,p.privileges_name,p.url
+        FROM hj_user_role ur,hj_system_role r,hj_system_privileges p,hj_role_privileges rp
+        WHERE ur.user_id=#{uid}
+        AND ur.role_id=r.id
+        AND rp.role_id=r.id
+        AND p.id=rp.privileges_id
+        AND p.whether_or_not_visible=0
+        AND P.app_or_pc=#{appOrPc}
+        AND p.privileges_type=0
+        <if test="parentId!=null">AND p.parent_id=#{parentId}</if>
+
+
+        ORDER BY p.create_date DESC
+
+    </select>
+
+
+    <select id="selectSystemPrivileges" parameterType="com.hujiang.project.zhgd.hjSystemPrivileges.domain.SystemRoleParam" resultMap="SystemRoleParamResult">
+        SELECT
+        hs.id,
+        hs.privileges_name,
+        hs.privileges_type,
+        hs.url,
+        hs.whether_or_not_visible,
+        hs.parent_id,
+        hs.app_or_pc
+        FROM
+        hj_system_privileges hs
+        LEFT JOIN hj_role_privileges hr ON hr.privileges_id = hs.id
+        LEFT JOIN hj_user_role ur ON ur.role_id = hr.role_id
+        WHERE
+        hs.whether_or_not_visible = 0
+        <if test="userId != null ">
+          and  ur.user_id = #{userId}
+        </if>
+        group by hs.id
+    </select>
+    <select id="getPrivilegesOne" parameterType="com.hujiang.project.zhgd.hjSystemPrivileges.domain.SystemRoleParam" resultMap="SystemRoleParamResult">
+        SELECT
+        hs.id,
+        hs.privileges_name,
+        hs.privileges_type,
+        hs.url,
+        hs.whether_or_not_visible,
+        hs.parent_id,
+        hs.app_or_pc
+        FROM
+        hj_system_privileges hs
+        LEFT JOIN hj_role_privileges hr ON hr.privileges_id = hs.id
+        LEFT JOIN hj_user_role ur ON ur.role_id = hr.role_id
+        WHERE
+        hs.whether_or_not_visible = 0
+        and parent_id = 0
+        <if test="userId != null ">
+            and  ur.user_id = #{userId}
+        </if>
+        group by hs.id
+    </select>
+    <select id="getPrivilegesTwo" parameterType="com.hujiang.project.zhgd.hjSystemPrivileges.domain.SystemRoleParam" resultMap="SystemRoleParamResult">
+        SELECT
+        hs.id,
+        hs.privileges_name,
+        hs.privileges_type,
+        hs.url,
+        hs.whether_or_not_visible,
+        hs.parent_id,
+        hs.app_or_pc
+        FROM
+        hj_system_privileges hs
+        LEFT JOIN hj_role_privileges hr ON hr.privileges_id = hs.id
+        LEFT JOIN hj_user_role ur ON ur.role_id = hr.role_id
+        WHERE
+        hs.whether_or_not_visible = 0
+        <if test="parentId != null ">
+            and parent_id = #{parentId}
+        </if>
+        <if test="userId != null ">
+            and  ur.user_id = #{userId}
+        </if>
+        group by hs.id
+    </select>
+</mapper>

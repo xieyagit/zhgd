@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.kqbb.mapper.KqbbMapper">
+    
+    <resultMap type="Kqbb" id="KqbbResult">
+        <result property="projectId"    column="project_id"    />
+        <result property="empId"    column="emp_id"    />
+        <result property="empName"    column="emp_name"    />
+        <result property="aTime"    column="a_time"    />
+        <result property="manHour"    column="man_hour"    />
+    </resultMap>
+    <resultMap type="BG" id="BGResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+    </resultMap>
+	<sql id="selectKqbbVo">
+        select project_id, emp_id, emp_name, a_time, man_hour from kqbb
+    </sql>
+	
+    <select id="selectKqbbList" parameterType="Kqbb" resultMap="KqbbResult">
+        <include refid="selectKqbbVo"/>
+        <where>  
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+             <if test="empId != null "> and emp_id = #{empId}</if>
+             <if test="empName != null  and empName != '' "> and emp_name = #{empName}</if>
+             <if test="aTime != null  and aTime != '' "> and to_days(a_time) = to_days(#{aTime})</if>
+             <if test="manHour != null "> and man_hour = #{manHour}</if>
+         </where>
+    </select>
+    <select id="selectKqbbListBb" parameterType="Integer" resultMap="BGResult">
+        select id,emp_name as `name` from hj_project_workers where project_id=#{projectId}
+    </select>
+    
+    <select id="selectKqbbById" parameterType="Integer" resultMap="KqbbResult">
+        <include refid="selectKqbbVo"/>
+        where project_id = #{projectId}
+    </select>
+        
+    <insert id="insertKqbb" parameterType="Kqbb">
+        insert into kqbb
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="projectId != null  ">project_id,</if>
+			<if test="empId != null  ">emp_id,</if>
+			<if test="empName != null  and empName != ''  ">emp_name,</if>
+			<if test="aTime != null  and aTime != ''  ">a_time,</if>
+			<if test="manHour != null  ">man_hour,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="projectId != null  ">#{projectId},</if>
+			<if test="empId != null  ">#{empId},</if>
+			<if test="empName != null  and empName != ''  ">#{empName},</if>
+			<if test="aTime != null  and aTime != ''  ">#{aTime},</if>
+			<if test="manHour != null  ">#{manHour},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateKqbb" parameterType="Kqbb">
+        update kqbb
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="empId != null  ">emp_id = #{empId},</if>
+            <if test="empName != null  and empName != ''  ">emp_name = #{empName},</if>
+            <if test="aTime != null  and aTime != ''  ">a_time = #{aTime},</if>
+            <if test="manHour != null  ">man_hour = #{manHour},</if>
+        </trim>
+        where project_id = #{projectId}
+    </update>
+
+	<delete id="deleteKqbbById" parameterType="Integer">
+        delete from kqbb where project_id = #{projectId}
+    </delete>
+	
+    <delete id="deleteKqbbByIds" parameterType="String">
+        delete from kqbb where project_id in 
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+    </delete>
+    
+</mapper>

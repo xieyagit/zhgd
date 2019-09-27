@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjghformwork.mapper.HighformworkDisplayMapper">
+    
+    <resultMap type="HighformworkDisplay" id="HighformworkDisplayResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="checked"    column="checked"    />
+        <result property="timeDivision"    column="time_division"    />
+        <result property="reserved"    column="reserved"    />
+        <result property="supplier"    column="supplier"    />
+        <result property="displayKey"    column="display_key"    />
+    </resultMap>
+	
+	<sql id="selectHighformworkDisplayVo">
+        select id, name, checked, time_division, reserved,supplier, display_key  from sb_highformwork_display
+    </sql>
+	
+    <select id="selectHighformworkDisplayList" parameterType="HighformworkDisplay" resultMap="HighformworkDisplayResult">
+        <include refid="selectHighformworkDisplayVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="name != null  and name != '' "> and name = #{name}</if>
+             <if test="checked != null  and checked != '' "> and checked = #{checked}</if>
+             <if test="timeDivision != null  and timeDivision != '' "> and time_division = #{timeDivision}</if>
+             <if test="reserved != null  and reserved != '' "> and reserved = #{reserved}</if>
+            <if test="supplier != null  and supplier != '' "> and supplier = #{supplier}</if>
+            <if test="displayKey != null  and displayKey != '' "> and display_key = #{displayKey}</if>
+         </where>
+    </select>
+    
+    <select id="selectHighformworkDisplayById" parameterType="Integer" resultMap="HighformworkDisplayResult">
+        <include refid="selectHighformworkDisplayVo"/>
+        where displayKey = #{display_key}
+    </select>
+        
+    <insert id="insertHighformworkDisplay" parameterType="HighformworkDisplay">
+        insert into sb_highformwork_display
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="checked != null  and checked != ''  ">checked,</if>
+			<if test="timeDivision != null  and timeDivision != ''  ">time_division,</if>
+			<if test="reserved != null  and reserved != ''  ">reserved,</if>
+            <if test="supplier != null  and supplier != '' "> supplier,</if>
+            <if test="displayKey != null  and displayKey != '' "> display_key,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="checked != null  and checked != ''  ">#{checked},</if>
+			<if test="timeDivision != null  and timeDivision != ''  ">#{timeDivision},</if>
+			<if test="reserved != null  and reserved != ''  ">#{reserved},</if>
+            <if test="supplier != null  and supplier != '' ">#{supplier},</if>
+            <if test="displayKey != null  and displayKey != '' "> #{displayKey},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHighformworkDisplay" parameterType="HighformworkDisplay">
+        update sb_highformwork_display
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="checked != null  and checked != ''  ">checked = #{checked},</if>
+            <if test="timeDivision != null  and timeDivision != ''  ">time_division = #{timeDivision},</if>
+            <if test="reserved != null  and reserved != ''  ">reserved = #{reserved},</if>
+            <if test="supplier != null  and supplier != '' ">supplier = #{supplier},</if>
+            <if test="displayKey != null  and displayKey != '' ">display_key = #{displayKey},</if>
+        </trim>
+        where display_key = #{displayKey}
+    </update>
+
+	<delete id="deleteHighformworkDisplayById" parameterType="Integer">
+        delete from sb_deeppit_display where displayKey #{displayKey}
+    </delete>
+	
+    <delete id="deleteHighformworkDisplayByIds" parameterType="String">
+        delete from sb_deeppit_display where displayKey in
+        <foreach item="displayKey" collection="array" open="(" separator="," close=")">
+            #{displayKey}
+        </foreach>
+    </delete>
+    
+</mapper>

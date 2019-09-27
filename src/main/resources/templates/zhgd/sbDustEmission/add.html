@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-sbDustEmission-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">扬尘设备sn：</label>
+				<div class="col-sm-8">
+					<input id="sn" name="sn" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">获取时间：</label>
+				<div class="col-sm-8">
+					<input id="date" name="date" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">PM2.5 扬尘,单位:μg/m3：</label>
+				<div class="col-sm-8">
+					<input id="pm25" name="pm25" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">PM10 扬尘,单位:μg/m3：</label>
+				<div class="col-sm-8">
+					<input id="pm10" name="pm10" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">扬尘Tsp：</label>
+				<div class="col-sm-8">
+					<input id="tsp" name="tsp" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">噪声,单位:DB：</label>
+				<div class="col-sm-8">
+					<input id="noise" name="noise" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">温度,单位:℃：</label>
+				<div class="col-sm-8">
+					<input id="temperature" name="temperature" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">湿度：</label>
+				<div class="col-sm-8">
+					<input id="humidity" name="humidity" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">风速,单位:km/h：</label>
+				<div class="col-sm-8">
+					<input id="windSpeed" name="windSpeed" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">风向,0-15：</label>
+				<div class="col-sm-8">
+					<input id="winddirection" name="winddirection" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">风力：</label>
+				<div class="col-sm-8">
+					<input id="windPower" name="windPower" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">气压：</label>
+				<div class="col-sm-8">
+					<input id="airPressure" name="airPressure" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "zhgd/sbDustEmission"
+		$("#form-sbDustEmission-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/add", $('#form-sbDustEmission-add').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

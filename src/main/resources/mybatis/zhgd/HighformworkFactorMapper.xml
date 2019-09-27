@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjghformwork.mapper.HighformworkFactorMapper">
+    
+    <resultMap type="HighformworkFactor" id="HighformworkFactorResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="portrait"    column="portrait"    />
+        <result property="labels"    column="labels"    />
+        <result property="distance"    column="distance"    />
+        <result property="reserved"    column="reserved"    />
+        <result property="supplier"    column="supplier"    />
+        <result property="factorKey"    column="factor_key"    />
+    </resultMap>
+	
+	<sql id="selectHighformworkFactorVo">
+        select id, name, portrait, labels, distance, reserved, supplier, factor_key   from sb_highformwork_factor
+    </sql>
+	
+    <select id="selectHighformworkFactorList" parameterType="HighformworkFactor" resultMap="HighformworkFactorResult">
+        <include refid="selectHighformworkFactorVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="name != null  and name != '' "> and name = #{name}</if>
+             <if test="portrait != null  and portrait != '' "> and portrait = #{portrait}</if>
+             <if test="labels != null  and labels != '' "> and labels = #{labels}</if>
+             <if test="distance != null  and distance != '' "> and distance = #{distance}</if>
+             <if test="reserved != null  and reserved != '' "> and reserved = #{reserved}</if>
+            <if test="supplier != null  and supplier != '' "> and supplier = #{supplier}</if>
+            <if test="factorKey != null  and factorKey != '' "> and factor_key = #{factorKey}</if>
+         </where>
+    </select>
+    
+    <select id="selectHighformworkFactorById" parameterType="Integer" resultMap="HighformworkFactorResult">
+        <include refid="selectHighformworkFactorVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHighformworkFactor" parameterType="HighformworkFactor">
+        insert into sb_highformwork_factor
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="portrait != null  and portrait != ''  ">portrait,</if>
+			<if test="labels != null  and labels != ''  ">labels,</if>
+			<if test="distance != null  and distance != ''  ">distance,</if>
+			<if test="reserved != null  and reserved != ''  ">reserved,</if>
+            <if test="supplier != null  and supplier != '' ">supplier,</if>
+            <if test="factorKey != null  and factorKey != '' ">factor_key,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="portrait != null  and portrait != ''  ">#{portrait},</if>
+			<if test="labels != null  and labels != ''  ">#{labels},</if>
+			<if test="distance != null  and distance != ''  ">#{distance},</if>
+			<if test="reserved != null  and reserved != ''  ">#{reserved},</if>
+            <if test="supplier != null  and supplier != '' ">#{supplier},</if>
+            <if test="factorKey != null  and factorKey != '' ">#{factorKey},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHighformworkFactor" parameterType="HighformworkFactor">
+        update sb_highformwork_factor
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="portrait != null  and portrait != ''  ">portrait = #{portrait},</if>
+            <if test="labels != null  and labels != ''  ">labels = #{labels},</if>
+            <if test="distance != null  and distance != ''  ">distance = #{distance},</if>
+            <if test="reserved != null  and reserved != ''  ">reserved = #{reserved},</if>
+            <if test="supplier != null  and supplier != '' "> supplier = #{supplier},</if>
+            <if test="factorKey != null  and factorKey != '' "> factor_key = #{factorKey},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHighformworkFactorById" parameterType="Integer">
+        delete from sb_deeppit_factor where id = #{factorKey}
+    </delete>
+	
+    <delete id="deleteHighformworkFactorByIds" parameterType="String">
+        delete from sb_deeppit_factor where factorKey in
+        <foreach item="factorKey" collection="array" open="(" separator="," close=")">
+            #{factorKey}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbElevatorAddrecord.mapper.SbElevatorAddrecordMapper">
+
+    <resultMap type="SbElevatorAddrecord" id="SbElevatorAddrecordResult">
+        <result property="id"    column="id"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="runtime"    column="runtime"    />
+        <result property="laod"    column="laod"    />
+        <result property="loadRatio"    column="load_ratio"    />
+        <result property="sign"    column="sign"    />
+        <result property="loadingCapacity"    column="loading_capacity"    />
+        <result property="operatorName"    column="operator_name"    />
+        <result property="icNum"    column="ic_num"    />
+        <result property="direction"    column="direction"    />
+        <result property="height"    column="height"    />
+        <result property="realTimeFlag"    column="real_time_flag"    />
+        <result property="status"    column="status"    />
+        <result property="brakingDistance"    column="braking_distance"    />
+        <result property="isUpWarning"    column="is_up_warning"    />
+        <result property="isDownWarning"    column="is_down_warning"    />
+        <result property="isSafetyDeviceWarn"    column="is_safety_device_warn"    />
+        <result property="isOverWarning"    column="is_over_warning"    />
+        <result property="isForwardWarning"    column="is_forward_warning"    />
+        <result property="isBackwardWarning"    column="is_backward_warning"    />
+        <result property="hxzid"    column="hxzid"    />
+        <result property="peopleCntAlarm"    column="PeopleCntAlarm"    />
+        <result property="weightAlarm"    column="WeightAlarm"    />
+        <result property="speedAlarm"    column="SpeedAlarm"    />
+        <result property="obliguityXAlarm"    column="ObliguityXAlarm"    />
+        <result property="obliguityYAlarm"    column="ObliguityYAlarm"    />
+        <result property="speed"    column="Speed"    />
+        <result property="windSpeed"    column="WindSpeed"    />
+        <result property="windLevel"    column="WindLevel"    />
+        <result property="floor"    column="Floor"    />
+        <result property="obliguityX"    column="ObliguityX"    />
+        <result property="obliguityY"    column="ObliguityY"    />
+    </resultMap>
+
+	<resultMap id="ElevatorAddRecordResult" type="ElevatorAddRecord">
+        <result property="emp_name" column="emp_name"/>
+        <result property="runtime" column="runtime"/>
+        <result property="face_url" column="face_url"/>
+    </resultMap>
+	<sql id="selectSbElevatorAddrecordVo">
+        select id, device_no, runtime, laod, load_ratio, sign, loading_capacity, operator_name, ic_num, direction, height, real_time_flag, status, braking_distance, is_up_warning, is_down_warning, is_safety_device_warn, is_over_warning, is_forward_warning, is_backward_warning, hxzid
+        ,PeopleCntAlarm,WeightAlarm,SpeedAlarm,ObliguityXAlarm,ObliguityYAlarm,Speed,WindSpeed,WindLevel,Floor,ObliguityX,ObliguityY
+        from sb_elevator_addrecord
+
+    </sql>
+
+    <select id="cranes"  parameterType="SbElevatorAddrecord" resultMap="SbElevatorAddrecordResult">
+        SELECT runtime,laod,operator_name,height,is_up_warning,is_down_warning,SpeedAlarm,userid
+        FROM sb_elevator_addrecord a
+        INNER JOIN sb_elevator_binding b
+        ON a.device_no=b.device_no
+        <where>
+            <if test="pid != null and pid != 0 "> and pid = #{pid}</if>
+        </where>
+        ORDER BY runtime DESC limit 1
+    </select>
+
+    <select id="crane"  parameterType="SbElevatorAddrecord" resultMap="SbElevatorAddrecordResult">
+        SELECT MAX(a.runtime) as maxRuntime,MIN(a.runtime) as minRuntime
+        FROM sb_elevator_addrecord a
+        INNER JOIN sb_elevator_binding b
+        ON a.device_no=b.device_no
+        <where>
+            <if test="pid != null and pid != 0 "> and pid = #{pid}</if>
+        </where>
+        GROUP BY a.device_no
+    </select>
+
+	<select id="selectSbElevatorAddRecord" parameterType="SbElevatorAddrecord" resultMap="SbElevatorAddrecordResult">
+        SELECT a.id, a.device_no, runtime, laod, load_ratio, sign, loading_capacity, operator_name, ic_num,
+        direction, height, real_time_flag, status, braking_distance, is_up_warning, is_down_warning, is_safety_device_warn, is_over_warning, is_forward_warning, is_backward_warning,a.hxzid
+        ,PeopleCntAlarm,WeightAlarm,SpeedAlarm,ObliguityXAlarm,ObliguityYAlarm,Speed,WindSpeed,WindLevel,Floor,ObliguityX,ObliguityY
+        FROM sb_elevator_addrecord a
+        LEFT JOIN sb_elevator_binding b ON (a.hxzid=b.hxzid)
+        WHERE 1=1
+        <if test="hxzId != null and hxzId != ''">AND b.hxzid = #{hxzId}</if>
+        AND runtime like "${runtime}%"
+        AND runtime > DATE_SUB(NOW(), INTERVAL 60 MINUTE)
+        ORDER BY runtime desc LIMIT 0,1
+    </select>
+
+    <select id="selectElevatorAddRecordName" parameterType="ElevatorAddRecord" resultMap="ElevatorAddRecordResult">
+        SELECT w.emp_name,a.runtime,w.face_url FROM sb_elevator_binding b
+        LEFT JOIN hj_project_workers w ON (w.id=b.userid)
+        LEFT JOIN sb_elevator_addrecord a ON (a.hxzid=b.hxzid)
+        WHERE 1=1
+        <if test="hxzId != null and hxzId != ''">AND b.hxzid = #{hxzId}</if>
+        <if test="projectId != null and projectId != ''">AND b.pid = #{projectId}</if>
+        AND runtime like "${runtime}%"
+        ORDER BY runtime LIMIT 0,1
+    </select>
+
+    <select id="selectSbElevatorAddrecordList" parameterType="SbElevatorAddrecord" resultMap="SbElevatorAddrecordResult">
+        <include refid="selectSbElevatorAddrecordVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
+            <if test="runtime != null  and runtime != '' "> and runtime = #{runtime}</if>
+            <if test="laod != null "> and laod = #{laod}</if>
+            <if test="loadRatio != null "> and load_ratio = #{loadRatio}</if>
+            <if test="sign != null "> and sign = #{sign}</if>
+            <if test="loadingCapacity != null "> and loading_capacity = #{loadingCapacity}</if>
+            <if test="operatorName != null  and operatorName != '' "> and operator_name = #{operatorName}</if>
+            <if test="icNum != null "> and ic_num = #{icNum}</if>
+            <if test="direction != null "> and direction = #{direction}</if>
+            <if test="height != null "> and height = #{height}</if>
+            <if test="realTimeFlag != null "> and real_time_flag = #{realTimeFlag}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="brakingDistance != null "> and braking_distance = #{brakingDistance}</if>
+            <if test="isUpWarning != null "> and is_up_warning = #{isUpWarning}</if>
+            <if test="isDownWarning != null "> and is_down_warning = #{isDownWarning}</if>
+            <if test="isSafetyDeviceWarn != null "> and is_safety_device_warn = #{isSafetyDeviceWarn}</if>
+            <if test="isOverWarning != null "> and is_over_warning = #{isOverWarning}</if>
+            <if test="isForwardWarning != null "> and is_forward_warning = #{isForwardWarning}</if>
+            <if test="isBackwardWarning != null "> and is_backward_warning = #{isBackwardWarning}</if>
+            <if test="hxzid != null  and hxzid != '' "> and hxzid = #{hxzid}</if>
+            <if test="peopleCntAlarm != null "> and PeopleCntAlarm = #{peopleCntAlarm}</if>
+            <if test="weightAlarm != null "> and WeightAlarm = #{weightAlarm}</if>
+            <if test="speedAlarm != null "> and SpeedAlarm = #{speedAlarm}</if>
+            <if test="obliguityXAlarm != null "> and ObliguityXAlarm = #{obliguityXAlarm}</if>
+            <if test="obliguityYAlarm != null "> and ObliguityYAlarm = #{obliguityYAlarm}</if>
+            <if test="speed != null "> and Speed = #{speed}</if>
+            <if test="windSpeed != null "> and WindSpeed = #{windSpeed}</if>
+            <if test="windLevel != null "> and WindLevel = #{windLevel}</if>
+            <if test="floor != null "> and Floor = #{floor}</if>
+            <if test="obliguityX != null "> and ObliguityX = #{obliguityX}</if>
+            <if test="obliguityY != null "> and ObliguityY = #{obliguityY}</if>
+        </where>
+    </select>
+
+    <select id="selectSbElevatorAddrecordById" parameterType="Integer" resultMap="SbElevatorAddrecordResult">
+        <include refid="selectSbElevatorAddrecordVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSbElevatorAddrecord" parameterType="SbElevatorAddrecord">
+        insert into sb_elevator_addrecord
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="deviceNo != null  and deviceNo != ''  ">device_no,</if>
+            <if test="runtime != null  and runtime != ''  ">runtime,</if>
+            <if test="laod != null  ">laod,</if>
+            <if test="loadRatio != null  ">load_ratio,</if>
+            <if test="sign != null  ">sign,</if>
+            <if test="loadingCapacity != null  ">loading_capacity,</if>
+            <if test="operatorName != null  and operatorName != ''  ">operator_name,</if>
+            <if test="icNum != null  ">ic_num,</if>
+            <if test="direction != null  ">direction,</if>
+            <if test="height != null  ">height,</if>
+            <if test="realTimeFlag != null  ">real_time_flag,</if>
+            <if test="status != null  ">status,</if>
+            <if test="brakingDistance != null  ">braking_distance,</if>
+            <if test="isUpWarning != null  ">is_up_warning,</if>
+            <if test="isDownWarning != null  ">is_down_warning,</if>
+            <if test="isSafetyDeviceWarn != null  ">is_safety_device_warn,</if>
+            <if test="isOverWarning != null  ">is_over_warning,</if>
+            <if test="isForwardWarning != null  ">is_forward_warning,</if>
+            <if test="isBackwardWarning != null  ">is_backward_warning,</if>
+            <if test="hxzid != null  and hxzid != ''  ">hxzid,</if>
+            <if test="peopleCntAlarm != null  ">PeopleCntAlarm,</if>
+            <if test="weightAlarm != null  ">WeightAlarm,</if>
+            <if test="speedAlarm != null  ">SpeedAlarm,</if>
+            <if test="obliguityXAlarm != null  ">ObliguityXAlarm,</if>
+            <if test="obliguityYAlarm != null  ">ObliguityYAlarm,</if>
+            <if test="speed != null  ">Speed,</if>
+            <if test="windSpeed != null  ">WindSpeed,</if>
+            <if test="windLevel != null  ">WindLevel,</if>
+            <if test="floor != null  ">Floor,</if>
+            <if test="obliguityX != null  ">ObliguityX,</if>
+            <if test="obliguityY != null  ">ObliguityY,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">#{id},</if>
+            <if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+            <if test="runtime != null  and runtime != ''  ">#{runtime},</if>
+            <if test="laod != null  ">#{laod},</if>
+            <if test="loadRatio != null  ">#{loadRatio},</if>
+            <if test="sign != null  ">#{sign},</if>
+            <if test="loadingCapacity != null  ">#{loadingCapacity},</if>
+            <if test="operatorName != null  and operatorName != ''  ">#{operatorName},</if>
+            <if test="icNum != null  ">#{icNum},</if>
+            <if test="direction != null  ">#{direction},</if>
+            <if test="height != null  ">#{height},</if>
+            <if test="realTimeFlag != null  ">#{realTimeFlag},</if>
+            <if test="status != null  ">#{status},</if>
+            <if test="brakingDistance != null  ">#{brakingDistance},</if>
+            <if test="isUpWarning != null  ">#{isUpWarning},</if>
+            <if test="isDownWarning != null  ">#{isDownWarning},</if>
+            <if test="isSafetyDeviceWarn != null  ">#{isSafetyDeviceWarn},</if>
+            <if test="isOverWarning != null  ">#{isOverWarning},</if>
+            <if test="isForwardWarning != null  ">#{isForwardWarning},</if>
+            <if test="isBackwardWarning != null  ">#{isBackwardWarning},</if>
+            <if test="hxzid != null  and hxzid != ''  ">#{hxzid},</if>
+            <if test="peopleCntAlarm != null  ">#{peopleCntAlarm},</if>
+            <if test="weightAlarm != null  ">#{weightAlarm},</if>
+            <if test="speedAlarm != null  ">#{speedAlarm},</if>
+            <if test="obliguityXAlarm != null  ">#{obliguityXAlarm},</if>
+            <if test="obliguityYAlarm != null  ">#{obliguityYAlarm},</if>
+            <if test="speed != null  ">#{speed},</if>
+            <if test="windSpeed != null  ">#{windSpeed},</if>
+            <if test="windLevel != null  ">#{windLevel},</if>
+            <if test="floor != null  ">#{floor},</if>
+            <if test="obliguityX != null  ">#{obliguityX},</if>
+            <if test="obliguityY != null  ">#{obliguityY},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSbElevatorAddrecord" parameterType="SbElevatorAddrecord">
+        update sb_elevator_addrecord
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceNo != null  and deviceNo != ''  ">device_no = #{deviceNo},</if>
+            <if test="runtime != null  and runtime != ''  ">runtime = #{runtime},</if>
+            <if test="laod != null  ">laod = #{laod},</if>
+            <if test="loadRatio != null  ">load_ratio = #{loadRatio},</if>
+            <if test="sign != null  ">sign = #{sign},</if>
+            <if test="loadingCapacity != null  ">loading_capacity = #{loadingCapacity},</if>
+            <if test="operatorName != null  and operatorName != ''  ">operator_name = #{operatorName},</if>
+            <if test="icNum != null  ">ic_num = #{icNum},</if>
+            <if test="direction != null  ">direction = #{direction},</if>
+            <if test="height != null  ">height = #{height},</if>
+            <if test="realTimeFlag != null  ">real_time_flag = #{realTimeFlag},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="brakingDistance != null  ">braking_distance = #{brakingDistance},</if>
+            <if test="isUpWarning != null  ">is_up_warning = #{isUpWarning},</if>
+            <if test="isDownWarning != null  ">is_down_warning = #{isDownWarning},</if>
+            <if test="isSafetyDeviceWarn != null  ">is_safety_device_warn = #{isSafetyDeviceWarn},</if>
+            <if test="isOverWarning != null  ">is_over_warning = #{isOverWarning},</if>
+            <if test="isForwardWarning != null  ">is_forward_warning = #{isForwardWarning},</if>
+            <if test="isBackwardWarning != null  ">is_backward_warning = #{isBackwardWarning},</if>
+            <if test="hxzid != null  and hxzid != ''  ">hxzid = #{hxzid},</if>
+            <if test="peopleCntAlarm != null  ">PeopleCntAlarm = #{peopleCntAlarm},</if>
+            <if test="weightAlarm != null  ">WeightAlarm = #{weightAlarm},</if>
+            <if test="speedAlarm != null  ">SpeedAlarm = #{speedAlarm},</if>
+            <if test="obliguityXAlarm != null  ">ObliguityXAlarm = #{obliguityXAlarm},</if>
+            <if test="obliguityYAlarm != null  ">ObliguityYAlarm = #{obliguityYAlarm},</if>
+            <if test="speed != null  ">Speed = #{speed},</if>
+            <if test="windSpeed != null  ">WindSpeed = #{windSpeed},</if>
+            <if test="windLevel != null  ">WindLevel = #{windLevel},</if>
+            <if test="floor != null  ">Floor = #{floor},</if>
+            <if test="obliguityX != null  ">ObliguityX = #{obliguityX},</if>
+            <if test="obliguityY != null  ">ObliguityY = #{obliguityY},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSbElevatorAddrecordById" parameterType="Integer">
+        delete from sb_elevator_addrecord where id = #{id}
+    </delete>
+
+    <delete id="deleteSbElevatorAddrecordByIds" parameterType="String">
+        delete from sb_elevator_addrecord where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="selectElevatorCount" parameterType="Map" resultMap="SbElevatorAddrecordResult">
+        <include refid="selectSbElevatorAddrecordVo"/>
+        where STR_TO_DATE(runtime,'%Y-%m-%d %H:%i:%s') > STR_TO_DATE(#{time},'%Y-%m-%d %H:%i:%s') and hxzid in (select hxzid from sb_crane_binding where pid=${pid}) GROUP BY hxzid
+    </select>
+    <!--载重报警-->
+    <select id="selectElevatorCountTwo" parameterType="Map" resultType="Integer">
+        select count(*) from sb_elevator_addrecord
+        where to_days(runtime) = to_days(#{time})
+        and WeightAlarm = 1
+        <if test="pid != null  and pid != '' ">and hxzid in (select hxzid from sb_crane_binding where pid=${pid})</if>
+        <if test="hxzid != null  and hxzid != '' "> and hxzid =#{hxzid}</if>
+    </select>
+    <!--人数报警-->
+    <select id="selectElevatorCountThree" parameterType="Map" resultType="Integer">
+        select count(*) from sb_elevator_addrecord
+        where to_days(runtime) = to_days(#{time})
+        and PeopleCntAlarm = 1
+        <if test="pid != null  and pid != '' ">and hxzid in (select hxzid from sb_crane_binding where pid=${pid})</if>
+        <if test="hxzid != null  and hxzid != '' "> and hxzid =#{hxzid}</if>
+    </select>
+    <!--速度报警-->
+    <select id="selectElevatorCountFour" parameterType="Map" resultType="Integer">
+        select count(*) from sb_elevator_addrecord
+        where to_days(runtime) = to_days(#{time})
+        and SpeedAlarm = 1
+        <if test="pid != null  and pid != '' ">and hxzid in (select hxzid from sb_crane_binding where pid=${pid})</if>
+        <if test="hxzid != null  and hxzid != '' "> and hxzid =#{hxzid}</if>
+    </select>
+    <!--倾斜报警-->
+    <select id="selectElevatorCountFive" parameterType="Map" resultType="Integer">
+        select count(*) from sb_elevator_addrecord
+        where to_days(runtime) = to_days(#{time})
+        and (ObliguityXAlarm = 1 or ObliguityYAlarm=1)
+        <if test="pid != null  and pid != '' ">and hxzid in (select hxzid from sb_crane_binding where pid=${pid})</if>
+        <if test="hxzid != null  and hxzid != '' "> and hxzid =#{hxzid}</if>
+    </select>
+    <!--上限位报警-->
+    <select id="selectElevatorCountSix" parameterType="Map" resultType="Integer">
+        select count(*) from sb_elevator_addrecord
+        where to_days(runtime) = to_days(#{time})
+        and is_up_warning=1
+        <if test="pid != null  and pid != '' ">and hxzid in (select hxzid from sb_crane_binding where pid=${pid})</if>
+        <if test="hxzid != null  and hxzid != '' "> and hxzid =#{hxzid}</if>
+    </select>
+    <!--下限位报警-->
+    <select id="selectElevatorCountSeven" parameterType="Map" resultType="Integer">
+        select count(*) from sb_elevator_addrecord
+        where to_days(runtime) = to_days(#{time})
+        and is_down_warning=1
+        <if test="pid != null  and pid != '' ">and hxzid in (select hxzid from sb_crane_binding where pid=${pid})</if>
+        <if test="hxzid != null  and hxzid != '' "> and hxzid =#{hxzid}</if>
+    </select>
+
+    <select id="selectSbElevatorAddrecordListTwo" parameterType="SbElevatorAddrecord" resultMap="SbElevatorAddrecordResult">
+        <include refid="selectSbElevatorAddrecordVo"/>
+        where hxzid=#{hxzid} and STR_TO_DATE(runtime,'%Y-%m-%d %H:%i:%s') > STR_TO_DATE(#{runtime},'%Y-%m-%d %H:%i:%s')    order by runtime desc limit 0,1
+    </select>
+    <select id="selectSbElevatorAddrecordListThree" parameterType="Map" resultMap="SbElevatorAddrecordResult">
+        <include refid="selectSbElevatorAddrecordVo"/>
+        where hxzid=#{hxzid}
+        <if test="time != null  and time != '' ">
+            and to_days(runtime)=to_days(#{time})
+        </if>
+        <if test="status != null  and status != '' ">
+            and WeightAlarm= ${status}
+        </if>
+        order by runtime desc
+    </select>
+
+</mapper>

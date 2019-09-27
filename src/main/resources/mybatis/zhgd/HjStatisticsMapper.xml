@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjStatistics.mapper.HjStatisticsMapper">
+    
+    <resultMap type="HjStatistics" id="HjStatisticsResult">
+        <result property="id"    column="id"    />
+        <result property="time"    column="time"    />
+        <result property="type"    column="type"    />
+        <result property="numberOne"    column="number_one"    />
+        <result property="numberTwo"    column="number_two"    />
+        <result property="projectId"    column="projectId"    />
+    </resultMap>
+	
+	<sql id="selectHjStatisticsVo">
+        select id, time, type, number_one, number_two,projectId from hj_statistics
+    </sql>
+	
+    <select id="selectHjStatisticsList" parameterType="HjStatistics" resultMap="HjStatisticsResult">
+        <include refid="selectHjStatisticsVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="time != null "> and time = #{time}</if>
+             <if test="type != null  and type != '' "> and type = #{type}</if>
+             <if test="numberOne != null "> and number_one = #{numberOne}</if>
+             <if test="numberTwo != null "> and number_two = #{numberTwo}</if>
+             <if test="projectId != null "> and projectId = #{projectId}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjStatisticsById" parameterType="Integer" resultMap="HjStatisticsResult">
+        <include refid="selectHjStatisticsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjStatistics" parameterType="HjStatistics">
+        insert into hj_statistics
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="time != null  ">time,</if>
+			<if test="type != null  and type != ''  ">type,</if>
+			<if test="numberOne != null  ">number_one,</if>
+			<if test="numberTwo != null  ">number_two,</if>
+			<if test="projectId != null  ">projectId,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="time != null  ">#{time},</if>
+			<if test="type != null  and type != ''  ">#{type},</if>
+			<if test="numberOne != null  ">#{numberOne},</if>
+			<if test="numberTwo != null  ">#{numberTwo},</if>
+			<if test="projectId != null  ">#{projectId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjStatistics" parameterType="HjStatistics">
+        update hj_statistics
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="time != null  ">time = #{time},</if>
+            <if test="type != null  and type != ''  ">type = #{type},</if>
+            <if test="numberOne != null  ">number_one = #{numberOne},</if>
+            <if test="numberTwo != null  ">number_two = #{numberTwo},</if>
+            <if test="projectId != null  ">projectId = #{projectId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjStatisticsById" parameterType="Integer">
+        delete from hj_statistics where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjStatisticsByIds" parameterType="String">
+        delete from hj_statistics where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <!-- -->
+    <select id="selectOneOne" parameterType="Map" resultType="Integer">
+
+select count(*) from hj_project_workers  where enter_And_Retreat_Condition=0 and project_id=#{pid} and emp_category!='00'
+
+    </select>
+    <select id="selectOneTwo" parameterType="Map" resultType="Integer">
+select count(*) from ( select id from hj_attendance_record where project_id=#{pid} and TO_DAYS(#{time})=TO_DAYS(create_date)
+and employee_id in (select w.id from hj_Project_workers w where w.project_id=#{pid} and w.emp_category!='00') GROUP BY employee_id) t
+
+    </select>
+    <select id="selectTwoOne" parameterType="Map" resultType="Integer">
+select count(*) from hj_project_workers  where enter_And_Retreat_Condition=0 and project_id=#{pid} and emp_category='00'
+    </select>
+    <select id="selectTwoTwo" parameterType="Map" resultType="Integer">
+
+select count(*) from ( select id from hj_attendance_record where project_id=#{pid} and TO_DAYS(#{time})=TO_DAYS(create_date)
+and employee_id in (select w.id from hj_Project_workers w where w.project_id=#{pid} and w.emp_category='00') GROUP BY employee_id) t
+
+    </select>
+    <select id="selectOneThree" parameterType="Map" resultType="Integer">
+select count(*) from hj_project_workers  where  project_id=#{pid} and emp_category!='00'
+
+    </select>
+    <select id="selectTwoThree" parameterType="Map" resultType="Integer">
+select count(*) from hj_project_workers  where  project_id=#{pid} and emp_category='00'
+
+    </select>
+    <select id="selectFour" parameterType="Map" resultType="Integer">
+select count(*) from hj_project_workers  where enter_And_Retreat_Condition=0 and project_id=#{pid} and emp_category='00' and isTrain=0
+    </select>
+    <select id="selectHjStatisticsListTwo" parameterType="Map" resultMap="HjStatisticsResult">
+        <include refid="selectHjStatisticsVo"/>
+        <where>
+
+            <if test="startTime != null and startTime != ''"> and to_days(time)<![CDATA[ >=]]>to_days(#{startTime})</if>
+            <if test="endTime != null and endTime != ''"> and to_days(time)<![CDATA[ <=]]>to_days(#{endTime})</if>
+            <if test="type != null  and type != '' "> and type = #{type}</if>
+
+            <if test="projectId != null "> and projectId = #{projectId}</if>
+            GROUP BY time, projectId ,type
+        </where>
+    </select>
+</mapper>

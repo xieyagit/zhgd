@@ -1,0 +1,668 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjSafetyAbarbeitung.mapper.HjSafetyAbarbeitungMapper">
+    
+    <resultMap type="HjSafetyAbarbeitung" id="HjSafetyAbarbeitungResult">
+        <result property="id"    column="id"    />
+        <result property="status"    column="status"    />
+        <result property="initiatorId"    column="initiatorId"    />
+        <result property="areaId"    column="areaId"    />
+        <result property="initiatorId"    column="initiatorId"    />
+        <result property="rectifyId"    column="rectifyId"    />
+        <result property="reviewId"    column="reviewId"    />
+        <result property="constructionId"    column="constructionId"    />
+        <result property="safetyPhotos"    column="safetyPhotos"    />
+        <result property="hiddenId"    column="hiddenId"    />
+        <result property="problemGradeId"    column="problemGradeId"    />
+        <result property="safetyDescribe"    column="safetyDescribe"    />
+        <result property="safetyRequire"    column="safetyRequire"    />
+        <result property="safetyDeadline" column="safetyDeadline"/>
+        <result property="initiatorTime" column="initiatorTime"/>
+        <result property="creationTime" column="creationTime"/>
+        <result property="makeId" column="makeId"/>
+    </resultMap>
+
+    <resultMap type="Safety" id="SafetyResult">
+        <result property="constructionId" column="constructionId"/>
+        <result property="constructionName" column="constructionName"/>
+        <result property="userId" column="userId"/>
+        <result property="userName" column="userName"/>
+        <result property="hiddenId" column="hiddenId"/>
+        <result property="hiddenName" column="hiddenName"/>
+        <result property="gradeId" column="gradeId"/>
+        <result property="gradeName" column="gradeName"/>
+    </resultMap>
+
+    <resultMap id="SafetyRectificationResult" type="SafetyRectification">
+        <result property="status" column="status"/>
+        <result property="safetyId" column="safetyId"/>
+        <result property="safetyCreateTime" column="safetyCreateTime"/>
+        <result property="hiddenName" column="hiddenName"/>
+        <result property="areaName" column="areaName"/>
+        <result property="constructionName" column="constructionName"/>
+        <result property="gradeName" column="gradeName"/>
+        <result property="safetyPhotos" column="safetyPhotos"/>
+        <result property="safetyDescribe" column="safetyDescribe"/>
+        <result property="initiatorName" column="initiatorName"/>
+        <result property="initiatorTime" column="initiatorTime"/>
+        <result property="rectifyName" column="rectifyName"/>
+        <result property="safetyDeadline" column="safetyDeadline"/>
+        <result property="safetyRequire" column="safetyRequire"/>
+        <result property="reviewOpinions" column="reviewOpinions"/>
+        <result property="reviewPath" column="reviewPath"/>
+        <result property="reviewName" column="reviewName"/>
+        <result property="reviewOpinions" column="reviewOpinions"/>
+        <result property="reviewResult" column="reviewResult"/>
+        <result property="userId" column="userId"/>
+        <result property="safetyDescribe" column="safetyDescribe"/>
+    </resultMap>
+    <resultMap id="ProjectResult" type="Project">
+        <result property="projectId" column="projectId"/>
+        <result property="constructionId" column="constructionId"/>
+    </resultMap>
+    
+    <resultMap id="HjSafetyNoPassResult" type="HjSafetyNoPass">
+        <result property="id" column="id"/>
+        <result property="safetyId" column="safetyId"/>
+        <result property="safetyName" column="safetyName"/>
+        <result property="safetyCreateTime" column="safetyCreateTime"/>
+        <result property="rectifyResult" column="rectifyResult"/>
+        <result property="rectifyPhotos" column="rectifyPhotos"/>
+        <result property="rectifyTime" column="rectifyTime"/>
+        <result property="reviewOpinions" column="reviewOpinions"/>
+        <result property="reviewResult" column="reviewResult"/>
+        <result property="reviewPath" column="reviewPath"/>
+        <result property="reviewTime" column="reviewTime"/>
+        <result property="initiatorName" column="initiatorName"/>
+        <result property="reviewName" column="reviewName"/>
+        <result property="makeId" column="makeId"/>
+    </resultMap>
+    <resultMap id="PcYieldResult" type="PcYield">
+        <result property="checkdSum" column="checkdSum"/>
+        <result property="noQualified" column="noQualified"/>
+        <result property="qualified" column="qualified"/>
+        <result property="yield" column="yield"/>
+    </resultMap>
+    <resultMap id="PcInspectionRecordResult" type="PcInspectionRecord">
+        <result property="safetyId" column="safetyId"/>
+        <result property="status" column="status"/>
+        <result property="safetyDescribe" column="safetyDescribe"/>
+        <result property="gradeName" column="gradeName"/>
+        <result property="areaName" column="areaName"/>
+        <result property="hiddenName" column="hiddenName"/>
+        <result property="initiatorName" column="initiatorName"/>
+        <result property="initiatorTime" column="initiatorTime"/>
+        <result property="rectifyName" column="rectifyName"/>
+        <result property="constructionName" column="constructionName"/>
+        <result property="safetyDeadline" column="safetyDeadline"/>
+    </resultMap>
+    <resultMap id="PcManagementResult" type="PcManagement">
+        <result property="safetyId" column="safetyId"/>
+        <result property="status" column="status"/>
+        <result property="initiatorName" column="initiatorName"/>
+        <result property="initiatorTime" column="initiatorTime"/>
+        <result property="constructionName" column="constructionName"/>
+    </resultMap>
+	
+	<sql id="selectHjSafetyAbarbeitungVo">
+        select * from hj_safety_abarbeitung
+    </sql>
+    <select id="getProject" parameterType="Project" resultMap="ProjectResult">
+        SELECT project_id as projectId  FROM `hj_construction_project` where construction_id=#{constructionId}
+    </select>
+    <!--获取责任分包单位-->
+    <select id="getConstructionList" parameterType="Safety" resultMap="SafetyResult">
+        SELECT
+	        c.id AS constructionId,c.construction_name AS constructionName
+        FROM
+			hj_construction_company AS c
+        LEFT JOIN hj_construction_project AS p ON (p.construction_id = c.id)
+        WHERE
+            show_state = 0
+            and
+	        p.project_id = #{projectId}
+    </select>
+
+    <!--检查区域-->
+    <select id="getAreaList" parameterType="Safety" resultMap="SafetyResult">
+        SELECT
+	      a.id AS areaId,
+	      a.area AS areaName
+        FROM
+	      hj_safety_area AS a
+        LEFT JOIN hj_construction_area AS c ON (a.id = c.areaId)
+        WHERE
+	      c.constructionId = #{constructionId}
+    </select>
+    <!--获取整改人和复查人-->
+    <select id="getUserList" parameterType="Safety" resultMap="SafetyResult">
+      SELECT
+	        w.id AS userId,
+	        w.user_name AS userName
+        FROM
+			hj_system_user AS w
+        LEFT JOIN hj_area_user AS u ON (u.userId = w.id)
+        WHERE
+	      u.areaId = #{areaId}
+    </select>
+    <!--查询问题隐患列表-->
+    <select id="getHiddenList" parameterType="Safety" resultMap="SafetyResult">
+        SELECT
+	        id AS hiddenId,
+	        hidden_name AS hiddenName
+        FROM
+	        hj_safety_hidden
+    </select>
+    <!--查询问题级别列表-->
+    <select id="getGradeList" parameterType="Safety" resultMap="SafetyResult">
+        SELECT
+	        id AS gradeId,
+	        grade AS gradeName
+        FROM
+	        hj_safety_problemgrade
+    </select>
+    <select id="getSafetyCount" parameterType="HjSafetyNoPass" resultType="int">
+      SELECT count(*) FROM `hj_safety_nopass`where safetyId=#{safetyId}
+    </select>
+
+   <!-- 添加安全巡检-->
+    <insert id="sponsorSafety" parameterType="HjSafetyAbarbeitung" useGeneratedKeys="true" keyProperty="id">
+        insert into hj_safety_abarbeitung
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="differentiate != null  ">differentiate,</if>
+            <if test="status != null  ">status,</if>
+            <if test="constructionId != null  ">constructionId,</if>
+            <if test="areaId != null  ">areaId,</if>
+            <if test="safetyPhotos != null  and safetyPhotos != ''  ">safetyPhotos,</if>
+            <if test="hiddenId != null  ">hiddenId,</if>
+            <if test="safetyDescribe != null  and safetyDescribe != ''  ">`safetyDescribe`,</if>
+            <if test="problemGradeId != null  ">problemGradeId,</if>
+            <if test="initiatorId != null and initiatorId != ''">initiatorId,</if>
+            <if test="rectifyId != null  ">rectifyId,</if>
+            <if test="reviewId != null  ">reviewId,</if>
+            <if test="safetyDeadline !=null and safetyDeadline != ''">safetyDeadline,</if>
+            <if test="makeId != null  ">makeId,</if>
+            <if test="safetyRequire != null  and safetyRequire != ''  ">safetyRequire,</if>
+            <if test="initiatorTime != null and  initiatorTime != ''">initiatorTime,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="differentiate != null  ">#{differentiate},</if>
+            <if test="status != null  ">#{status},</if>
+            <if test="constructionId != null  ">#{constructionId},</if>
+            <if test="areaId != null  ">#{areaId},</if>
+            <if test="safetyPhotos != null  and safetyPhotos != ''  ">#{safetyPhotos},</if>
+            <if test="hiddenId != null ">#{hiddenId},</if>
+            <if test="safetyDescribe != null  and safetyDescribe != ''  ">#{safetyDescribe},</if>
+            <if test="problemGradeId != null  ">#{problemGradeId},</if>
+            <if test="initiatorId != null and initiatorId != ''">#{initiatorId},</if>
+            <if test="rectifyId != null  ">#{rectifyId},</if>
+            <if test="reviewId != null  ">#{reviewId},</if>
+            <if test="safetyDeadline !=null and safetyDeadline != ''">#{safetyDeadline},</if>
+            <if test="makeId != null  ">#{makeId},</if>
+            <if test="safetyRequire != null  and safetyRequire != ''  ">#{safetyRequire},</if>
+            <if test="initiatorTime != null and  initiatorTime != ''">#{initiatorTime},</if>
+        </trim>
+    </insert>
+    <insert id="sponsorSafetyTwo" parameterType="HjSafetyNoPass">
+        insert into hj_safety_nopass
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="safetyId != null  ">safetyId,</if>
+            <if test="safetyName != null and safetyName != '' ">safetyName,</if>
+            <if test="safetyCreateTime != null and safetyCreateTime != '' ">safetyCreateTime,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="safetyId != null  ">#{safetyId},</if>
+            <if test="safetyName != null and safetyName != '' ">#{safetyName},</if>
+            <if test="safetyCreateTime != null  and safetyCreateTime != ''  ">#{safetyCreateTime},</if>
+        </trim>
+    </insert>
+
+     <!--待整改列表-->
+    <select id="getAfterRectificationList" parameterType="SafetyRectification" resultMap="SafetyRectificationResult">
+        SELECT
+        a.id AS safetyId,
+        s.area AS areaName,
+        a.safetyRequire,
+        a.safetyDescribe AS safetyDescribe,
+        (
+        SELECT
+        user_name AS initiatorName
+        FROM
+        hj_system_user AS w
+        WHERE
+        w.id = a.initiatorId
+        ) AS initiatorName,
+        a.safetyDeadline,
+        a.safetyPhotos,
+        p.grade AS gradeName,
+        (
+        SELECT
+        user_name AS rectifyName
+        FROM
+        hj_system_user AS w
+        WHERE
+        w.id = a.rectifyId
+        ) AS rectifyName,
+        (
+        SELECT
+        user_name AS reviewName
+        FROM
+        hj_system_user AS w
+        WHERE
+        w.id = a.reviewId
+        ) AS reviewName
+        FROM
+        hj_safety_abarbeitung AS a
+        LEFT JOIN hj_safety_area AS s ON (a.areaId = s.id)
+        LEFT JOIN hj_safety_problemgrade AS p ON (a.problemGradeId = p.id)
+        LEFT JOIN hj_construction_project AS cp ON (
+        cp.construction_id = a.constructionId
+        )
+        WHERE 1=1
+            <if test="userId != null and userId != ''">
+                AND a.initiatorId = #{userId}
+                <if test="statusId != null and statusId != ''">AND a.`status` = #{statusId} </if>
+                <if test="differentiate != null">AND a.`differentiate` = #{differentiate}</if>
+                <if test="projectId != null and projectId != ''">AND cp.project_id = #{projectId}</if>
+                OR a.rectifyId = #{userId}
+                <if test="statusId != null and statusId != ''">AND a.`status` = #{statusId} </if>
+                <if test="differentiate != null">AND a.`differentiate` = #{differentiate}</if>
+                <if test="projectId != null and projectId != ''">AND cp.project_id = #{projectId}</if>
+                OR FIND_IN_SET(#{userId},a.makeId)
+                <if test="statusId != null and statusId != ''">AND a.`status` = #{statusId} </if>
+                <if test="differentiate != null">AND a.`differentiate` = #{differentiate}</if>
+                <if test="projectId != null and projectId != ''">AND cp.project_id = #{projectId}</if>
+                OR reviewId =#{userId}
+                <if test="statusId != null and statusId != ''">AND a.`status` = #{statusId} </if>
+                <if test="differentiate != null">AND a.`differentiate` = #{differentiate}</if>
+                <if test="projectId != null and projectId != ''">AND cp.project_id = #{projectId}</if>
+                ORDER BY initiatorTime DESC
+        </if>
+    </select>
+
+    <select id="getAfterRectificationNoPass" parameterType="HjSafetyNoPass" resultMap="HjSafetyNoPassResult">
+        SELECT
+            *
+        FROM
+            hj_safety_nopass
+        WHERE 1=1
+            <if test="safetyId != null and safetyId != ''">
+                and safetyId = #{safetyId}
+            </if>
+        ORDER BY safetyCreateTime DESC limit 0,1
+    </select>
+    <!--待整改详情-->
+    <select id="getAfterRectificationDetails" parameterType="SafetyRectification" resultMap="SafetyRectificationResult">
+        SELECT
+        a.status AS status,
+        n.safetyId AS safetyId,
+        n.safetyCreateTime,
+        h.hidden_name AS hiddenName,
+        s.area AS areaName,
+        a.constructionId AS constructionId,
+        cc.construction_name AS constructionName,
+        p.grade AS gradeName,
+        a.safetyPhotos,
+        a.safetyDescribe,(
+        SELECT
+        user_name AS initiatorName
+        FROM
+        hj_system_user AS w
+        WHERE
+        w.id = a.initiatorId
+        ) AS initiatorName,
+        a.initiatorTime,(
+        SELECT
+        user_name AS rectifyName
+        FROM
+        hj_system_user AS w
+        WHERE
+        w.id = a.rectifyId
+        ) AS rectifyName,
+        a.safetyDeadline,
+        a.safetyRequire,
+        a.makeId,
+        n.rectifyResult,
+        n.rectifyTime,
+        n.rectifyPhotos,
+        (
+        SELECT
+        user_name AS reviewName
+        FROM
+        hj_system_user AS w
+        WHERE
+        w.id = a.reviewId
+        ) AS reviewName,
+        n.reviewOpinions,
+        n.reviewResult,
+        n.reviewPath,
+        n.reviewTime,
+        a.initiatorId,
+        a.rectifyId,
+        a.reviewId,
+        a.hiddenId,
+        a.areaId
+        FROM
+        hj_safety_nopass AS n
+        LEFT JOIN hj_safety_abarbeitung AS a ON(a.id=n.safetyId)
+        LEFT JOIN hj_safety_hidden AS h ON (a.hiddenId = h.id)
+        LEFT JOIN hj_safety_area AS s ON (a.areaId = s.id)
+        LEFT JOIN hj_construction_company AS cc ON (a.constructionId = cc.id)
+        LEFT JOIN hj_safety_problemgrade AS p ON (a.problemGradeId = p.id)
+        WHERE 1=1
+        <if test="safetyId != null and safetyId != ''">
+          and  safetyId = #{safetyId}
+        </if>
+        ORDER BY safetyCreateTime DESC LIMIT 0,1
+    </select>
+    <!--流程-->
+    <select id="getAfterRectificationDetailsList" parameterType="HjSafetyNoPass" resultMap="HjSafetyNoPassResult">
+        SELECT
+        (
+        SELECT
+        user_name AS createName
+        FROM
+        hj_system_user AS w
+        WHERE
+        w.id = a.initiatorId
+        ) AS initiatorName,
+        n.safetyCreateTime,
+        (
+        SELECT
+        user_name AS createName
+        FROM
+        hj_system_user AS w
+        WHERE
+        w.id = a.rectifyId
+        ) AS rectifyName,
+        n.rectifyTime,
+        (
+        SELECT
+        user_name AS createName
+        FROM
+        hj_system_user AS w
+        WHERE
+        w.id = a.reviewId
+        ) AS reviewName,
+        n.reviewTime,
+        n.reviewOpinions
+        FROM
+        hj_safety_nopass AS n
+        LEFT JOIN hj_safety_abarbeitung AS a ON (a.id = n.safetyId)
+        where 1=1
+        <if test="safetyId != null and safetyId != ''">
+           and safetyId = #{safetyId}
+        </if>
+        ORDER BY safetyCreateTime DESC
+    </select>
+    <!--提交整改完后的信息-->
+    <update id="alterRectification" parameterType="HjSafetyAbarbeitung">
+        UPDATE hj_safety_abarbeitung
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="rectifyResult != null  and rectifyResult != '' ">rectifyResult = #{rectifyResult},</if>
+            <if test="rectifyPhotos != null  and rectifyPhotos != '' ">rectifyPhotos = #{rectifyPhotos},</if>
+            <if test="rectifyTime != null and rectifyTime != '' ">rectifyTime = #{rectifyTime},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="safetyName != null and safetyName != '' ">safetyName = #{safetyName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="alterStatus" parameterType="HjSafetyAbarbeitung">
+        UPDATE hj_safety_abarbeitung
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="status != null  ">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="alterSafetyNoPass" parameterType="HjSafetyNoPass">
+        UPDATE hj_safety_nopass
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="rectifyResult != null  and rectifyResult != '' ">rectifyResult = #{rectifyResult},</if>
+            <if test="rectifyPhotos != null  and rectifyPhotos != '' ">rectifyPhotos = #{rectifyPhotos},</if>
+            <if test="rectifyTime != null and rectifyTime != '' ">rectifyTime = #{rectifyTime},</if>
+            <if test="safetyName != null and safetyName != '' ">safetyName = #{safetyName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="alertReviewPassTwo" parameterType="HjSafetyAbarbeitung">
+        UPDATE hj_safety_nopass
+        <trim prefix="SET" suffixOverrides=",">
+        <if test="safetyName != null and safetyName != '' ">safetyName = #{safetyName},</if>
+        <if test="reviewOpinions != null  and reviewOpinions != '' ">reviewOpinions = #{reviewOpinions},</if>
+        <if test="reviewResult != null  and reviewResult != '' ">reviewResult = #{reviewResult},</if>
+        <if test="reviewPath != null and reviewPath != '' ">reviewPath = #{reviewPath},</if>
+        <if test="reviewTime != null and reviewTime != '' ">reviewTime = #{reviewTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <!--查询整改标题-->
+    <select id="getDescribe" parameterType="HjSafetyAbarbeitung" resultMap="HjSafetyAbarbeitungResult">
+        SELECT
+            *
+        FROM
+            hj_safety_abarbeitung AS a
+        where 1=1
+        <if test="safetyId != null and safetyId != ''">
+            and a.id = #{safetyId}
+        </if>
+    </select>
+
+    <!-- 未通过：添加安全巡检-->
+    <insert id="sponsorReviewNoPass" parameterType="HjSafetyNoPass">
+        insert into hj_safety_nopass
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="safetyId != null  ">safetyId,</if>
+            <if test="safetyName != null and safetyName != ''">safetyName,</if>
+            <if test="safetyCreateTime !=null and safetyCreateTime != ''">safetyCreateTime,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="safetyId != null  ">#{safetyId},</if>
+            <if test="safetyName !=null and safetyName != ''">#{safetyName},</if>
+            <if test="safetyCreateTime != null and safetyCreateTime != '' ">#{safetyCreateTime},</if>
+        </trim>
+    </insert>
+
+    <select id="selectHjSafetyAbarbeitungList" parameterType="HjSafetyAbarbeitung" resultMap="HjSafetyAbarbeitungResult">
+        <include refid="selectHjSafetyAbarbeitungVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="status != null "> and status = #{status}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjSafetyAbarbeitungById" parameterType="Integer" resultMap="HjSafetyAbarbeitungResult">
+        <include refid="selectHjSafetyAbarbeitungVo"/>
+        where id = #{id}
+    </select>
+    <delete id="deleteSafety" parameterType="Integer">
+        delete from hj_safety_abarbeitung where id = #{id}
+    </delete>
+    <delete id="deleteNoPass" parameterType="Integer">
+        DELETE FROM hj_safety_nopass WHERE safetyId=#{safetyId}
+    </delete>
+    <!--pc-->
+    <select id="statisticsCount" parameterType="HjSafetyAbarbeitung" resultType="int">
+        SELECT count(*)
+        FROM hj_safety_abarbeitung AS a
+        LEFT JOIN hj_safety_area AS s ON (a.areaId = s.id)
+        LEFT JOIN hj_safety_problemgrade AS p ON (a.problemGradeId = p.id)
+        LEFT JOIN hj_construction_project AS cp ON (
+        cp.construction_id = a.constructionId
+        ) where 1=1
+        <if test="status != null and status != ''">and status=#{status}</if>
+        <if test="differentiate != null and differentiate != ''">and  differentiate=#{differentiate}</if>
+        <if test="projectId != null and projectId != ''">AND cp.project_id = #{projectId}</if>
+        <if test="startTime != null and startTime != '' and endTime != null and startTime != ''">
+                and Date(initiatorTime) BETWEEN #{startTime} and #{endTime}
+            </if>
+
+    </select>
+
+    <select id="getQualifiedList" parameterType="PcYield" resultMap="PcYieldResult">
+        SELECT
+        count(*) AS checkdSum,
+        AVG(`status`=3)*100 AS yield,
+        SUM(`status`=1) AS noQualified,
+        SUM(`status`=3) AS qualified
+        FROM hj_safety_abarbeitung AS a
+        LEFT JOIN hj_safety_area AS s ON (a.areaId = s.id)
+        LEFT JOIN hj_safety_problemgrade AS p ON (a.problemGradeId = p.id)
+        LEFT JOIN hj_construction_project AS cp ON (
+        cp.construction_id = a.constructionId
+        ) where 1=1
+        <if test="differentiate != null and differentiate != ''">and  differentiate=#{differentiate}</if>
+        <if test="projectId != null and projectId != ''">AND cp.project_id = #{projectId}</if>
+        <if test="startTime != null and startTime != '' and endTime != null and startTime != ''">
+              and Date(initiatorTime) BETWEEN #{startTime} and #{endTime}
+        </if>
+    </select>
+    <select id="getInspectionRecordList" parameterType="PcInspectionRecord" resultMap="PcInspectionRecordResult">
+        SELECT
+        a.id AS safetyId,
+        a.safetyDescribe AS safetyDescribe ,
+        p.grade AS gradeName,
+        s.area AS areaName,
+        h.hidden_name AS hiddenName,
+        (
+        SELECT
+        user_name AS initiatorName
+        FROM
+        hj_system_user AS w
+        WHERE
+        w.id = a.initiatorId
+        ) AS initiatorName,
+        a.initiatorTime,(
+        SELECT
+        user_name AS rectifyName
+        FROM
+        hj_system_user AS w
+        WHERE
+        w.id = a.rectifyId
+        ) AS rectifyName,
+        cc.construction_name AS constructionName,
+        a.safetyDeadline AS safetyDeadline,
+        a.`status` AS `status`
+        FROM
+        hj_safety_abarbeitung AS a
+        LEFT JOIN hj_safety_hidden AS h ON (a.hiddenId = h.id)
+        LEFT JOIN hj_safety_area AS s ON (a.areaId = s.id)
+        LEFT JOIN hj_construction_company AS cc ON (a.constructionId = cc.id)
+        LEFT JOIN hj_safety_problemgrade AS p ON (a.problemGradeId = p.id)
+        LEFT JOIN hj_construction_project AS cp ON (
+        cp.construction_id = a.constructionId
+        )
+        WHERE 1=1
+        <if test="status != null and status != ''">AND a.`status` = #{status}</if>
+        <if test="hiddenId != null and hiddenId != ''">AND a.hiddenId = #{hiddenId}</if>
+        <if test="initiatorTime != null and initiatorTime != ''">AND a.initiatorTime LIKE  CONCAT(#{initiatorTime},'%')</if>
+        <if test="initiatorId != null and initiatorId != ''">AND a.initiatorId = #{initiatorId}</if>
+        <if test="rectifyId != null and rectifyId != ''">AND a.rectifyId = #{rectifyId}</if>
+        <if test="reviewId != null and reviewId != ''">AND a.reviewId = #{reviewId}</if>
+        <if test="constructionId != null and constructionId != ''">AND a.constructionId = #{constructionId}</if>
+        <if test="areaId != null and areaId != ''">AND a.areaId = #{areaId}</if>
+        <if test="problemGradeId != null and problemGradeId != ''">AND a.problemGradeId = #{problemGradeId}</if>
+        <if test="differentiate != null and differentiate != ''">AND a.differentiate = #{differentiate}</if>
+        <if test="projectId != null and projectId != ''">AND cp.project_id = #{projectId}</if>
+    </select>
+    <select id="getManagementList" parameterType="PcManagement" resultMap="PcManagementResult">
+        SELECT
+        n.safetyId AS safetyId,
+        (
+        SELECT
+        user_name AS initiatorName
+        FROM
+        hj_system_user AS w
+        WHERE
+        w.id = a.initiatorId
+        ) AS initiatorName,
+        cc.construction_name AS constructionName,
+        a.`status` AS `status`
+        FROM
+        hj_safety_abarbeitung AS a
+        LEFT JOIN hj_safety_nopass AS n ON(a.id=n.safetyId)
+        LEFT JOIN hj_safety_hidden AS h ON (a.hiddenId = h.id)
+        LEFT JOIN hj_safety_area AS s ON (a.areaId = s.id)
+        LEFT JOIN hj_construction_company AS cc ON (a.constructionId = cc.id)
+        LEFT JOIN hj_safety_problemgrade AS p ON (a.problemGradeId = p.id)
+        LEFT JOIN hj_construction_project AS cp ON (
+        cp.construction_id = a.constructionId
+        )
+        WHERE 1=1
+        <if test="status != null and status != ''">AND a.`status` =#{status}</if>
+        <if test="initiatorId != null and initiatorId != ''">AND a.initiatorId = #{initiatorId}</if>
+        <if test="rectifyId != null and rectifyId != ''">AND a.rectifyId = #{rectifyId}</if>
+        <if test="reviewId != null and reviewId != ''">AND a.reviewId = #{reviewId}</if>
+        <if test="constructionId != null and constructionId != ''">AND a.constructionId = #{constructionId}</if>
+        <if test="projectId != null and projectId != ''">AND cp.project_id = #{projectId}</if>
+        <if test="differentiate != null and differentiate != ''">AND a.differentiate = #{differentiate}</if>
+        GROUP BY safetyId
+    </select>
+    <select id="getManagementByTime" parameterType="PcManagement" resultMap="PcManagementResult">
+    SELECT safetyCreateTime as initiatorTime FROM hj_safety_nopass
+    where 1=1
+        <if test="safetyId != null and safetyId != ''">AND safetyId=#{safetyId} </if>
+        <if test="initiatorTime != null and initiatorTime != ''">AND safetyCreateTime LIKE CONCAT(#{initiatorTime},'%')</if>
+    ORDER BY safetyCreateTime DESC LIMIT 0,1
+    </select>
+
+    <update id="updateSafety" parameterType="UpdateSafety">
+        update hj_safety_abarbeitung set initiatorId = #{initiatorId},rectifyId = #{rectifyId},reviewId = #{reviewId},
+        makeId = #{makeId},initiatorTime = #{initiatorTime},areaId = #{areaId},safetyRequire = #{safetyRequire},hiddenId = #{hiddenId},
+        safetyDeadline = #{safetyDeadline}
+        where id = #{id}
+    </update>
+    <!--<trim prefix="SET" suffixOverrides=",">-->
+    <!--<if test="rectifyTime != null and rectifyTime != '' ">rectifyTime = #{rectifyTime},</if>-->
+    <!--<if test="reviewTime != null and reviewTime != '' ">reviewTime = #{reviewTime},</if>-->
+    <!--</trim>-->
+    <update id="updateNoPass" parameterType="UpdateSafety">
+        update hj_safety_nopass set rectifyTime = #{rectifyTime},reviewTime = #{reviewTime}
+        where id = #{safetyId}
+    </update>
+
+    <insert id="insertHjSafetyAbarbeitung" parameterType="HjSafetyAbarbeitung">
+        insert into hj_safety_abarbeitung
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="status != null  ">status,</if>
+			<if test="constructionId != null  ">constructionId,</if>
+			<if test="photos != null  and photos != ''  ">photos,</if>
+			<if test="hiddenId != null  ">hiddenId,</if>
+			<if test="describe != null  and describe != ''  ">describe,</if>
+			<if test="problemGradeId != null  ">problemGradeId,</if>
+			<if test="abarbeitungId != null  ">abarbeitungId,</if>
+			<if test="reviewId != null  ">reviewId,</if>
+			<if test="deadline != null  ">deadline,</if>
+			<if test="makeId != null  ">makeId,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="constructionId != null  ">#{constructionId},</if>
+			<if test="photos != null  and photos != ''  ">#{photos},</if>
+			<if test="hiddenId != null  ">#{hiddenId},</if>
+			<if test="describe != null  and describe != ''  ">#{describe},</if>
+			<if test="problemGradeId != null  ">#{problemGradeId},</if>
+			<if test="abarbeitungId != null  ">#{abarbeitungId},</if>
+			<if test="reviewId != null  ">#{reviewId},</if>
+			<if test="deadline != null  ">#{deadline},</if>
+			<if test="makeId != null  ">#{makeId},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+         </trim>
+    </insert>
+	 
+
+
+
+	
+    <delete id="deleteHjSafetyAbarbeitungByIds" parameterType="String">
+        delete from hj_safety_abarbeitung where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

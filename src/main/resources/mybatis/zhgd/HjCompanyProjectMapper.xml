@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjCompanyProject.mapper.HjCompanyProjectMapper">
+    
+    <resultMap type="HjCompanyProject" id="HjCompanyProjectResult">
+        <result property="id"    column="id"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="projectId"    column="project_id"    />
+    </resultMap>
+	
+	<sql id="selectHjCompanyProjectVo">
+        select id, company_id, project_id from hj_company_project
+    </sql>
+	
+    <select id="selectHjCompanyProjectList" parameterType="HjCompanyProject" resultMap="HjCompanyProjectResult">
+        <include refid="selectHjCompanyProjectVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="companyId != null "> and company_id = #{companyId}</if>
+             <if test="projectId != null "> and project_id = #{projectId}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjCompanyProjectById" parameterType="Integer" resultMap="HjCompanyProjectResult">
+        <include refid="selectHjCompanyProjectVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertHjCompanyProject" parameterType="HjCompanyProject">
+        insert into hj_company_project
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="companyId != null  ">company_id,</if>
+			<if test="projectId != null  ">project_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="companyId != null  ">#{companyId},</if>
+			<if test="projectId != null  ">#{projectId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjCompanyProject" parameterType="HjCompanyProject">
+        update hj_company_project
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyId != null  ">company_id = #{companyId},</if>
+            <if test="projectId != null  ">project_id = #{projectId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjCompanyProjectById" parameterType="Integer">
+        delete from hj_company_project where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjCompanyProjectByIds" parameterType="String">
+        delete from hj_company_project where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

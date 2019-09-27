@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjCompanyUser.mapper.HjCompanyUserMapper">
+    
+    <resultMap type="HjCompanyUser" id="HjCompanyUserResult">
+        <result property="id"    column="id"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="userId"    column="user_id"    />
+    </resultMap>
+	
+	<sql id="selectHjCompanyUserVo">
+        select id, company_id, user_id from hj_company_user
+    </sql>
+	
+    <select id="selectHjCompanyUserList" parameterType="HjCompanyUser" resultMap="HjCompanyUserResult">
+        <include refid="selectHjCompanyUserVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="companyId != null "> and company_id = #{companyId}</if>
+             <if test="userId != null "> and user_id = #{userId}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjCompanyUserById" parameterType="Integer" resultMap="HjCompanyUserResult">
+        <include refid="selectHjCompanyUserVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjCompanyUser" parameterType="HjCompanyUser">
+        insert into hj_company_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="companyId != null  ">company_id,</if>
+			<if test="userId != null  ">user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="companyId != null  ">#{companyId},</if>
+			<if test="userId != null  ">#{userId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjCompanyUser" parameterType="HjCompanyUser">
+        update hj_company_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyId != null  ">company_id = #{companyId},</if>
+            <if test="userId != null  ">user_id = #{userId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjCompanyUserById" parameterType="Integer">
+        delete from hj_company_user where id = #{id}
+    </delete>
+
+    <delete id="deleteHjCompanyUserId" parameterType="Integer">
+        delete from hj_company_user where
+        <if test="parseInt != null  ">
+            user_id = #{parseInt}
+        </if>
+    </delete>
+	
+    <delete id="deleteHjCompanyUserByIds" parameterType="String">
+        delete from hj_company_user where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjProjectPersonnelSynchronization.mapper.HjProjectPersonnelSynchronizationMapper">
+    
+    <resultMap type="HjProjectPersonnelSynchronization" id="HjProjectPersonnelSynchronizationResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="synchronizationInformationId"    column="synchronization_information_id"    />
+        <result property="projectWorkerId"    column="project_worker_id"    />
+    </resultMap>
+	
+	<sql id="selectHjProjectPersonnelSynchronizationVo">
+        select id, project_id, synchronization_information_id, project_worker_id from hj_project_personnel_synchronization
+    </sql>
+	
+    <select id="selectHjProjectPersonnelSynchronizationList" parameterType="HjProjectPersonnelSynchronization" resultMap="HjProjectPersonnelSynchronizationResult">
+        <include refid="selectHjProjectPersonnelSynchronizationVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="projectId != null "> and project_id = #{projectId}</if>
+             <if test="synchronizationInformationId != null "> and synchronization_information_id = #{synchronizationInformationId}</if>
+             <if test="projectWorkerId != null "> and project_worker_id = #{projectWorkerId}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjProjectPersonnelSynchronizationById" parameterType="Integer" resultMap="HjProjectPersonnelSynchronizationResult">
+        <include refid="selectHjProjectPersonnelSynchronizationVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjProjectPersonnelSynchronization" parameterType="HjProjectPersonnelSynchronization">
+        insert into hj_project_personnel_synchronization
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="projectId != null  ">project_id,</if>
+			<if test="synchronizationInformationId != null  ">synchronization_information_id,</if>
+			<if test="projectWorkerId != null  ">project_worker_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="projectId != null  ">#{projectId},</if>
+			<if test="synchronizationInformationId != null  ">#{synchronizationInformationId},</if>
+			<if test="projectWorkerId != null  ">#{projectWorkerId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjProjectPersonnelSynchronization" parameterType="HjProjectPersonnelSynchronization">
+        update hj_project_personnel_synchronization
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null  ">project_id = #{projectId},</if>
+            <if test="synchronizationInformationId != null  ">synchronization_information_id = #{synchronizationInformationId},</if>
+            <if test="projectWorkerId != null  ">project_worker_id = #{projectWorkerId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjProjectPersonnelSynchronizationById" parameterType="Integer">
+        delete from hj_project_personnel_synchronization where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjProjectPersonnelSynchronizationByIds" parameterType="String">
+        delete from hj_project_personnel_synchronization where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

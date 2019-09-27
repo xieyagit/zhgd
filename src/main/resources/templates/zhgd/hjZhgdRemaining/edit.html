@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-hjZhgdRemaining-edit" th:object="${hjZhgdRemaining}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">总车位数：</label>
+				<div class="col-sm-8">
+					<input id="remainingSpace" name="remainingSpace" th:field="*{remainingSpace}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">关联工地id：</label>
+				<div class="col-sm-8">
+					<input id="siteId" name="siteId" th:field="*{siteId}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "zhgd/hjZhgdRemaining";
+		$("#form-hjZhgdRemaining-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-hjZhgdRemaining-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

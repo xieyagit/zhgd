@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjDeeppit.mapper.SbDeeppitStructuresMapper">
+    
+    <resultMap type="SbDeeppitStructures" id="SbDeeppitStructuresResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="typeId"    column="type_id"    />
+        <result property="typeName"    column="type_name"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="portrait"    column="portrait"    />
+        <result property="reservedO"    column="reserved_o"    />
+        <result property="reserved2T"    column="reserved2_t"    />
+        <result property="supplier"    column="supplier"    />
+        <result property="masterKey"    column="masterKey"    />
+    </resultMap>
+	
+	<sql id="selectSbDeeppitStructuresVo">
+        select id, name, type_id, type_name, latitude, longitude, portrait, reserved_o, reserved2_t,supplier,masterKey  from sb_deeppit_structures
+    </sql>
+	
+    <select id="selectSbDeeppitStructuresList" parameterType="SbDeeppitStructures" resultMap="SbDeeppitStructuresResult">
+        <include refid="selectSbDeeppitStructuresVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="name != null  and name != '' "> and name = #{name}</if>
+             <if test="typeId != null "> and type_id = #{typeId}</if>
+             <if test="typeName != null  and typeName != '' "> and type_name = #{typeName}</if>
+             <if test="latitude != null  and latitude != '' "> and latitude = #{latitude}</if>
+             <if test="longitude != null  and longitude != '' "> and longitude = #{longitude}</if>
+             <if test="portrait != null  and portrait != '' "> and portrait = #{portrait}</if>
+             <if test="reservedO != null  and reservedO != '' "> and reserved_o = #{reservedO}</if>
+            <if test="reserved2T != null  and reserved2T != '' "> and reserved2_t = #{reserved2T}</if>
+            <if test="supplier != null  and supplier != '' "> and supplier = #{supplier}</if>
+            <if test="masterKey != null  and masterKey != '' "> and masterKey = #{masterKey}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbDeeppitStructuresByMasterKey" parameterType="String" resultMap="SbDeeppitStructuresResult">
+        <include refid="selectSbDeeppitStructuresVo"/>
+        where masterKey = #{masterKey}
+    </select>
+        
+    <insert id="insertSbDeeppitStructures" parameterType="SbDeeppitStructures">
+        insert into sb_deeppit_structures
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="typeId != null  ">type_id,</if>
+			<if test="typeName != null  and typeName != ''  ">type_name,</if>
+			<if test="latitude != null  and latitude != ''  ">latitude,</if>
+			<if test="longitude != null  and longitude != ''  ">longitude,</if>
+			<if test="portrait != null  and portrait != ''  ">portrait,</if>
+			<if test="reservedO != null  and reservedO != ''  ">reserved_o,</if>
+            <if test="reserved2T != null  and reserved2T != ''  ">reserved2_t,</if>
+            <if test="supplier != null  and reserved2T != ''  ">supplier,</if>
+            <if test="masterKey != null  and reserved2T != ''  ">masterKey,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="typeId != null  ">#{typeId},</if>
+			<if test="typeName != null  and typeName != ''  ">#{typeName},</if>
+			<if test="latitude != null  and latitude != ''  ">#{latitude},</if>
+			<if test="longitude != null  and longitude != ''  ">#{longitude},</if>
+			<if test="portrait != null  and portrait != ''  ">#{portrait},</if>
+			<if test="reservedO != null  and reservedO != ''  ">#{reservedO},</if>
+			<if test="reserved2T != null  and reserved2T != ''  ">#{reserved2T},</if>
+            <if test="supplier != null ">#{supplier},</if>
+            <if test="masterKey != null  and masterKey != '' ">#{masterKey},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbDeeppitStructures" parameterType="SbDeeppitStructures">
+        update sb_deeppit_structures
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="typeId != null  ">type_id = #{typeId},</if>
+            <if test="typeName != null  and typeName != ''  ">type_name = #{typeName},</if>
+            <if test="latitude != null  and latitude != ''  ">latitude = #{latitude},</if>
+            <if test="longitude != null  and longitude != ''  ">longitude = #{longitude},</if>
+            <if test="portrait != null  and portrait != ''  ">portrait = #{portrait},</if>
+            <if test="reservedO != null  and reservedO != ''  ">reserved_o = #{reservedO},</if>
+            <if test="reserved2T != null  and reserved2T != ''  ">reserved2_t = #{reserved2T},</if>
+            <if test="supplier != null ">supplier = #{supplier},</if>
+            <if test="masterKey != null  and masterKey != ''"> masterKey = #{masterKey},</if>
+        </trim>
+        where masterKey = #{masterKey}
+    </update>
+
+	<delete id="deleteSbDeeppitStructuresById" parameterType="Integer">
+        delete from sb_deeppit_structures where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbDeeppitStructuresByIds" parameterType="String">
+        delete from sb_deeppit_structures where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

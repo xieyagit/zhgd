@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbExcessiveDust.mapper.SbExcessiveDustMapper">
+    
+    <resultMap type="SbExcessiveDust" id="SbExcessiveDustResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="sn"    column="sn" />
+        <result property="alert"    column="alert"    />
+        <result property="createTime"    column="createTime"    />
+        <result property="grade"    column="grade"    />
+        <result property="userId" column="userId"/>
+        <result property="privilegesId" column="privilegesId"/>
+    </resultMap>
+	
+	<sql id="selectSbExcessiveDustVo">
+        select * from sb_excessive_dust
+    </sql>
+	
+    <select id="selectSbExcessiveDustList" parameterType="SbExcessiveDust" resultMap="SbExcessiveDustResult">
+        <include refid="selectSbExcessiveDustVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="title != null  and title != '' "> and title = #{title}</if>
+             <if test="userId != null and userId != ''">and userId = #{userId}</if>
+             <if test="alert != null  and alert != '' "> and alert = #{alert}</if>
+             <if test="createTime != null "> and createTime = #{createTime}</if>
+             <if test="grade != null  and grade != '' "> and grade = #{grade}</if>
+            <if test="status != null  and status != '' "> and status = #{status}</if>
+            <if test="privilegesId != null">and privilegesId = #{privilegesId}</if>
+         </where>
+        ORDER BY createTime DESC
+    </select>
+    <select id="getExcessiveCount" parameterType="HjSafetyCommission" resultType="int">
+      SELECT count(*) FROM `sb_excessive_dust`where projectId=#{projectId} and userId = #{userId} and status = 1
+    </select>
+    <select id="selectSbExcessiveDustById" parameterType="Integer" resultMap="SbExcessiveDustResult">
+        <include refid="selectSbExcessiveDustVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbExcessiveDust" parameterType="SbExcessiveDust">
+        insert into sb_excessive_dust
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="status != null">`status`,</if>
+			<if test="title != null  and title != ''  ">title,</if>
+            <if test="projectId != null and projectId != ''">projectId,</if>
+            <if test="sn != null  and sn != ''  ">sn,</if>
+            <if test="userId != null and userId != ''">userId,</if>
+			<if test="alert != null  and alert != ''  ">alert,</if>
+			<if test="createTime != null  ">createTime,</if>
+			<if test="grade != null  and grade != ''  ">grade,</if>
+            <if test="privilegesId != null">privilegesId,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="status != null">#{status},</if>
+			<if test="title != null  and title != ''  ">#{title},</if>
+            <if test="projectId != null and projectId != ''">#{projectId},</if>
+            <if test="sn != null  and sn != ''  ">#{sn},</if>
+            <if test="userId != null and userId != ''">#{userId},</if>
+			<if test="alert != null  and alert != ''  ">#{alert},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="grade != null  and grade != ''  ">#{grade},</if>
+            <if test="privilegesId != null">#{privilegesId},</if>
+        </trim>
+    </insert>
+	 
+    <update id="updateSbExcessiveDust" parameterType="SbExcessiveDust">
+        update sb_excessive_dust
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null  and title != ''  ">title = #{title},</if>
+            <if test="projectId != null and projectId != ''">projectId = #{projectId},</if>
+            <if test="sn != null  and sn != ''  ">sn = #{sn},</if>
+            <if test="userId != null and userId != ''">userId = #{userId},</if>
+            <if test="alert != null  and alert != ''  ">alert = #{alert},</if>
+            <if test="createTime != null  ">createTime = #{createTime},</if>
+            <if test="grade != null  and grade != ''  ">grade = #{grade},</if>
+            <if test="status != null">`status` = #{status},</if>
+            <if test="privilegesId != null">privilegesId = #{privilegesId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbExcessiveDustById" parameterType="Integer">
+        delete from sb_excessive_dust where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbExcessiveDustByIds" parameterType="String">
+        delete from sb_excessive_dust where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

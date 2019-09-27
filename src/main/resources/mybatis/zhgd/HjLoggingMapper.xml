@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjLogging.mapper.HjLoggingMapper">
+    
+    <resultMap type="HjLogging" id="HjLoggingResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="loggingType"    column="logging_type"    />
+        <result property="loggingTime"    column="logging_time"    />
+        <result property="loggingMessage"    column="logging_message"    />
+        <result property="loggingResult"    column="logging_result"    />
+        <result property="loggingData"    column="logging_data"    />
+        <result property="inOut"    column="inOut"    />
+        <result property="userName"    column="user_name"    />
+        <result property="userId"    column="user_id"    />
+        <result property="loggingTag"    column="logging_tag"    />
+    </resultMap>
+	
+	<sql id="selectHjLoggingVo">
+        select id, project_id, logging_type, logging_time, logging_message, logging_result, logging_data, `inOut`, user_name, user_id, logging_tag from hj_logging
+    </sql>
+	
+    <select id="selectHjLoggingList" parameterType="HjLogging" resultMap="HjLoggingResult">
+        <include refid="selectHjLoggingVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="projectId != null "> and project_id = #{projectId}</if>
+             <if test="loggingType != null "> and logging_type = #{loggingType}</if>
+             <if test="loggingTime != null  and loggingTime != '' "> and logging_time = #{loggingTime}</if>
+             <if test="loggingMessage != null  and loggingMessage != '' "> and logging_message = #{loggingMessage}</if>
+             <if test="loggingResult != null "> and logging_result = #{loggingResult}</if>
+             <if test="loggingData != null  and loggingData != '' "> and logging_data = #{loggingData}</if>
+             <if test="inOut != null and inOut != ''  "> and `inOut` = #{inOut}</if>
+             <if test="userName != null  and userName != '' "> and user_name = #{userName}</if>
+             <if test="userId != null "> and user_id = #{userId}</if>
+             <if test="loggingTag != null  and loggingTag != '' "> and logging_tag = #{loggingTag}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjLoggingById" parameterType="Integer" resultMap="HjLoggingResult">
+        <include refid="selectHjLoggingVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectHjLoggingListNew" parameterType="Map" resultMap="HjLoggingResult">
+       select l.id, l.project_id, l.logging_time,l.logging_type, l.logging_message, l.logging_result, l.logging_data, l.`inOut`, l.user_name, l.user_id, d.title as logging_tag
+         from hj_logging l
+         LEFT JOIN hj_dictionaries d ON  d.tag=l.logging_tag
+        <where>
+            <if test="projectId != null "> and l.project_id = #{projectId}</if>
+            <if test="startTime != null    and startTime != ''  "> and l.logging_time  &gt;= #{startTime} </if>
+            <if test="endTime != null and endTime != '' "> and l.logging_time  &lt;= #{endTime}</if>
+            <if test="userName != null  and userName != '' "> and l.user_name like"%${userName}%"</if>
+        </where>
+order by logging_time desc
+    </select>
+        
+    <insert id="insertHjLogging" parameterType="HjLogging">
+        insert into hj_logging
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="projectId != null  ">project_id,</if>
+			<if test="loggingType != null  ">logging_type,</if>
+			<if test="loggingTime != null  and loggingTime != ''  ">logging_time,</if>
+			<if test="loggingMessage != null  and loggingMessage != ''  ">logging_message,</if>
+			<if test="loggingResult != null  ">logging_result,</if>
+			<if test="loggingData != null  and loggingData != ''  ">logging_data,</if>
+			<if test="inOut != null and inOut != ''  ">`inOut`,</if>
+			<if test="userName != null  and userName != ''  ">user_name,</if>
+			<if test="userId != null  ">user_id,</if>
+			<if test="loggingTag != null  and loggingTag != ''  ">logging_tag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="projectId != null  ">#{projectId},</if>
+			<if test="loggingType != null  ">#{loggingType},</if>
+			<if test="loggingTime != null  and loggingTime != ''  ">#{loggingTime},</if>
+			<if test="loggingMessage != null  and loggingMessage != ''  ">#{loggingMessage},</if>
+			<if test="loggingResult != null  ">#{loggingResult},</if>
+			<if test="loggingData != null  and loggingData != ''  ">#{loggingData},</if>
+			<if test="inOut != null and inOut != ''  ">#{inOut},</if>
+			<if test="userName != null  and userName != ''  ">#{userName},</if>
+			<if test="userId != null  ">#{userId},</if>
+			<if test="loggingTag != null  and loggingTag != ''  ">#{loggingTag},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjLogging" parameterType="HjLogging">
+        update hj_logging
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null  ">project_id = #{projectId},</if>
+            <if test="loggingType != null  ">logging_type = #{loggingType},</if>
+            <if test="loggingTime != null  and loggingTime != ''  ">logging_time = #{loggingTime},</if>
+            <if test="loggingMessage != null  and loggingMessage != ''  ">logging_message = #{loggingMessage},</if>
+            <if test="loggingResult != null  ">logging_result = #{loggingResult},</if>
+            <if test="loggingData != null  and loggingData != ''  ">logging_data = #{loggingData},</if>
+            <if test="inOut != null and inOut != ''  ">`inOut` = #{inOut},</if>
+            <if test="userName != null  and userName != ''  ">user_name = #{userName},</if>
+            <if test="userId != null  ">user_id = #{userId},</if>
+            <if test="loggingTag != null  and loggingTag != ''  ">logging_tag = #{loggingTag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjLoggingById" parameterType="Integer">
+        delete from hj_logging where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjLoggingByIds" parameterType="String">
+        delete from hj_logging where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

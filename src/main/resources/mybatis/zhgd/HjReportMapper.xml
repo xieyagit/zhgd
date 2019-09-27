@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjReport.mapper.HjReportMapper">
+
+    <resultMap type="HjReport" id="HjReportResult">
+        <result property="id"    column="id"    />
+        <result property="beginTime"    column="begin_time"    />
+        <result property="finishTime"    column="finish_time"    />
+        <result property="reportDesignation"    column="report_designation"    />
+        <result property="reportName"    column="report_name"    />
+        <result property="reportDate"    column="report_date"    />
+        <result property="reportType"    column="report_type"    />
+        <result property="issue"    column="issue"    />
+        <result property="solution"    column="solution"    />
+        <result property="remark"    column="remark"    />
+        <result property="projectId"    column="projectId"    />
+    </resultMap>
+	
+	<sql id="selectHjReportVo">
+        select id, begin_time, finish_time, report_designation, report_name, report_date, report_type, issue, solution, remark,projectId from hj_report
+    </sql>
+
+    <select id="selects" parameterType="HjReport" resultMap="HjReportResult">
+        <include refid="selectHjReportVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="reportName != null and reportName != '' "> and report_name = #{reportName}</if>
+            <if test="reportType != null "> and report_type = #{reportType}</if>
+            <if test="beginTime != null  and beginTime != '' "> and begin_time <![CDATA[ >=]]> #{beginTime}</if>
+            <if test="finishTime != null and finishTime != '' "> and finish_time <![CDATA[ <=]]> #{finishTime}</if>
+            <if test="projectId != null and projectId != '' and projectId != 0"> and projectId = #{projectId}</if>
+        </where>
+        order by report_date desc
+    </select>
+    <select id="select"  parameterType="HjReport" resultMap="HjReportResult">
+        <include refid="selectHjReportVo"/>
+        <where>
+           <if test="id != null "> and id = #{id}</if>
+            <if test="reportName != null and reportName != '' "> and report_name like LIKE CONCAT(#{reportName}, '%')</if>
+            <if test="reportType != null "> and report_type = #{reportType}</if>
+            <if test="beginTime != null  and beginTime != '' ">and report_date <![CDATA[ >=]]> #{beginTime}</if>
+            <if test="finishTime != null and finishTime != '' "> and report_date <![CDATA[ <=]]> #{finishTime}</if>
+            <if test="projectId != null and projectId != '' and projectId != 0"> and projectId = #{projectId}</if>
+        </where>
+        order by report_date desc
+    </select>
+
+
+    <select id="selectHjReportList" parameterType="HjReport" resultMap="HjReportResult">
+        <include refid="selectHjReportVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="reportDesignation != null  and reportDesignation != '' "> and report_designation = #{reportDesignation}</if>
+             <if test="reportName != null  and reportName != '' "> and report_name = #{reportName}</if>
+             <if test="reportDate != null "> and report_date = #{reportDate}</if>
+             <if test="reportType != null "> and report_type = #{reportType}</if>
+             <if test="issue != null  and issue != '' "> and issue = #{issue}</if>
+             <if test="solution != null  and solution != '' "> and solution = #{solution}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjReportById" parameterType="Integer" resultMap="HjReportResult">
+        <include refid="selectHjReportVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insterall" parameterType="HjReport">
+        insert into hj_report
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="beginTime != null  ">begin_time,</if>
+            <if test="finishTime != null  ">finish_time,</if>
+            <if test="reportDesignation != null  and reportDesignation != ''  ">report_designation,</if>
+            <if test="reportName != null  and reportName != ''  ">report_name,</if>
+            <if test="reportDate != null  ">report_date,</if>
+            <if test="reportType != null  ">report_type,</if>
+            <if test="issue != null  and issue != ''  ">issue,</if>
+            <if test="solution != null  and solution != ''  ">solution,</if>
+            <if test="remark != null  and remark != ''  ">remark,</if>
+            <if test="projectId != null  and projectId != '' and projectId != 0 ">projectId,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="beginTime != null  ">#{beginTime},</if>
+            <if test="finishTime != null  ">#{finishTime},</if>
+            <if test="reportDesignation != null  and reportDesignation != ''  ">#{reportDesignation},</if>
+            <if test="reportName != null  and reportName != ''  ">#{reportName},</if>
+            <if test="reportDate != null  ">#{reportDate},</if>
+            <if test="reportType != null  ">#{reportType},</if>
+            <if test="issue != null  and issue != ''  ">#{issue},</if>
+            <if test="solution != null  and solution != ''  ">#{solution},</if>
+            <if test="remark != null  and remark != ''  ">#{remark},</if>
+            <if test="projectId != null  and projectId != ''and projectId != 0  ">#{projectId},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertHjReport" parameterType="HjReport">
+        insert into hj_report
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="reportDesignation != null  and reportDesignation != ''  ">report_designation,</if>
+			<if test="reportName != null  and reportName != ''  ">report_name,</if>
+			<if test="reportDate != null  ">report_date,</if>
+			<if test="reportType != null  ">report_type,</if>
+			<if test="issue != null  and issue != ''  ">issue,</if>
+			<if test="solution != null  and solution != ''  ">solution,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="reportDesignation != null  and reportDesignation != ''  ">#{reportDesignation},</if>
+			<if test="reportName != null  and reportName != ''  ">#{reportName},</if>
+			<if test="reportDate != null  ">#{reportDate},</if>
+			<if test="reportType != null  ">#{reportType},</if>
+			<if test="issue != null  and issue != ''  ">#{issue},</if>
+			<if test="solution != null  and solution != ''  ">#{solution},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjReport" parameterType="HjReport">
+        update hj_report
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="reportDesignation != null  and reportDesignation != ''  ">report_designation = #{reportDesignation},</if>
+            <if test="reportName != null  and reportName != ''  ">report_name = #{reportName},</if>
+            <if test="reportDate != null  ">report_date = #{reportDate},</if>
+            <if test="reportType != null  ">report_type = #{reportType},</if>
+            <if test="issue != null  and issue != ''  ">issue = #{issue},</if>
+            <if test="solution != null  and solution != ''  ">solution = #{solution},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="delete" parameterType="Integer">
+        delete from hj_report where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjReportByIds" parameterType="String">
+        delete from hj_report where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

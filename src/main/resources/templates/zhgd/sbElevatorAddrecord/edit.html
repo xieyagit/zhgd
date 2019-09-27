@@ -1,0 +1,215 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-sbElevatorAddrecord-edit" th:object="${sbElevatorAddrecord}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备编号：</label>
+				<div class="col-sm-8">
+					<input id="deviceNo" name="deviceNo" th:field="*{deviceNo}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">运行时,格式为yyyy-MM-dd hh:mm:ss，：</label>
+				<div class="col-sm-8">
+					<input id="runtime" name="runtime" th:field="*{runtime}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">载重（T）：</label>
+				<div class="col-sm-8">
+					<input id="laod" name="laod" th:field="*{laod}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">载重比：</label>
+				<div class="col-sm-8">
+					<input id="loadRatio" name="loadRatio" th:field="*{loadRatio}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">左右笼标记(0单笼,1左笼,2右笼)：</label>
+				<div class="col-sm-8">
+					<input id="sign" name="sign" th:field="*{sign}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">载重人数：</label>
+				<div class="col-sm-8">
+					<input id="loadingCapacity" name="loadingCapacity" th:field="*{loadingCapacity}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">升降机司机名字：</label>
+				<div class="col-sm-8">
+					<input id="operatorName" name="operatorName" th:field="*{operatorName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">IC卡号：</label>
+				<div class="col-sm-8">
+					<input id="icNum" name="icNum" th:field="*{icNum}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">方向(0停止,1上行,2下行)：</label>
+				<div class="col-sm-8">
+					<input id="direction" name="direction" th:field="*{direction}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">高度：</label>
+				<div class="col-sm-8">
+					<input id="height" name="height" th:field="*{height}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">实时标志(0历史数据,1实时数据)：</label>
+				<div class="col-sm-8">
+					<input id="realTimeFlag" name="realTimeFlag" th:field="*{realTimeFlag}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">状态(32监理授64加节模式128 下限位报警)：</label>
+				<div class="col-sm-8">
+					<input id="status" name="status" th:field="*{status}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">制动距离：</label>
+				<div class="col-sm-8">
+					<input id="brakingDistance" name="brakingDistance" th:field="*{brakingDistance}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">是否上限位报警（0-否，1-是，2-无上限位）：</label>
+				<div class="col-sm-8">
+					<input id="isUpWarning" name="isUpWarning" th:field="*{isUpWarning}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">是否下限位报警( 0-否，1-是，2-无下限位）：</label>
+				<div class="col-sm-8">
+					<input id="isDownWarning" name="isDownWarning" th:field="*{isDownWarning}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">是否安全器报警(0.否1.是)：</label>
+				<div class="col-sm-8">
+					<input id="isSafetyDeviceWarn" name="isSafetyDeviceWarn" th:field="*{isSafetyDeviceWarn}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">是否超重报警(0.否1.是)：</label>
+				<div class="col-sm-8">
+					<input id="isOverWarning" name="isOverWarning" th:field="*{isOverWarning}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">是否前限位报警(0.否1.是)：</label>
+				<div class="col-sm-8">
+					<input id="isForwardWarning" name="isForwardWarning" th:field="*{isForwardWarning}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">是否后限位报警(0.否1.是)：</label>
+				<div class="col-sm-8">
+					<input id="isBackwardWarning" name="isBackwardWarning" th:field="*{isBackwardWarning}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备编号：</label>
+				<div class="col-sm-8">
+					<input id="hxzid" name="hxzid" th:field="*{hxzid}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">人数报警0:正常1:报警：</label>
+				<div class="col-sm-8">
+					<input id="peopleCntAlarm" name="peopleCntAlarm" th:field="*{peopleCntAlarm}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">载重报警0:正常1:报警：</label>
+				<div class="col-sm-8">
+					<input id="weightAlarm" name="weightAlarm" th:field="*{weightAlarm}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">速度报警0:正常1:报警：</label>
+				<div class="col-sm-8">
+					<input id="speedAlarm" name="speedAlarm" th:field="*{speedAlarm}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">倾角X报警0:正常1:报警：</label>
+				<div class="col-sm-8">
+					<input id="obliguityXAlarm" name="obliguityXAlarm" th:field="*{obliguityXAlarm}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">倾角Y报警0:正常1:报警：</label>
+				<div class="col-sm-8">
+					<input id="obliguityYAlarm" name="obliguityYAlarm" th:field="*{obliguityYAlarm}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">速度：</label>
+				<div class="col-sm-8">
+					<input id="speed" name="speed" th:field="*{speed}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">风速：</label>
+				<div class="col-sm-8">
+					<input id="windSpeed" name="windSpeed" th:field="*{windSpeed}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">风级：</label>
+				<div class="col-sm-8">
+					<input id="windLevel" name="windLevel" th:field="*{windLevel}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">楼层：</label>
+				<div class="col-sm-8">
+					<input id="floor" name="floor" th:field="*{floor}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">倾角X：</label>
+				<div class="col-sm-8">
+					<input id="obliguityX" name="obliguityX" th:field="*{obliguityX}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">倾角Y：</label>
+				<div class="col-sm-8">
+					<input id="obliguityY" name="obliguityY" th:field="*{obliguityY}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "zhgd/sbElevatorAddrecord";
+		$("#form-sbElevatorAddrecord-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-sbElevatorAddrecord-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

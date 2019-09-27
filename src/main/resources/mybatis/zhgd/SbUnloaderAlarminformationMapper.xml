@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbUnloaderAlarminformation.mapper.SbUnloaderAlarminformationMapper">
+    
+    <resultMap type="SbUnloaderAlarminformation" id="SbUnloaderAlarminformationResult">
+        <result property="id"    column="id"    />
+        <result property="deviceNo"    column="DeviceNo"    />
+        <result property="hxzId"    column="HxzId"    />
+        <result property="startTime"    column="StartTime"    />
+        <result property="endTime"    column="EndTime"    />
+        <result property="alarmType"    column="AlarmType"    />
+        <result property="maxValue"    column="MaxValue"    />
+        <result property="maxValuePercent"    column="MaxValuePercent"    />
+    </resultMap>
+	
+	<sql id="selectSbUnloaderAlarminformationVo">
+        select id, DeviceNo, HxzId, StartTime, EndTime, AlarmType, MaxValue, MaxValuePercent from sb_unloader_alarminformation
+    </sql>
+	
+    <select id="selectSbUnloaderAlarminformationList" parameterType="SbUnloaderAlarminformation" resultMap="SbUnloaderAlarminformationResult">
+        <include refid="selectSbUnloaderAlarminformationVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="deviceNo != null  and deviceNo != '' "> and DeviceNo = #{deviceNo}</if>
+             <if test="hxzId != null  and hxzId != '' "> and HxzId = #{hxzId}</if>
+             <if test="startTime != null  and startTime != '' "> and StartTime = #{startTime}</if>
+             <if test="endTime != null  and endTime != '' "> and EndTime = #{endTime}</if>
+             <if test="alarmType != null "> and AlarmType = #{alarmType}</if>
+             <if test="maxValue != null "> and MaxValue = #{maxValue}</if>
+             <if test="maxValuePercent != null "> and MaxValuePercent = #{maxValuePercent}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbUnloaderAlarminformationById" parameterType="Integer" resultMap="SbUnloaderAlarminformationResult">
+        <include refid="selectSbUnloaderAlarminformationVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbUnloaderAlarminformation" parameterType="SbUnloaderAlarminformation">
+        insert into sb_unloader_alarminformation
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">DeviceNo,</if>
+			<if test="hxzId != null  and hxzId != ''  ">HxzId,</if>
+			<if test="startTime != null  and startTime != ''  ">StartTime,</if>
+			<if test="endTime != null  and endTime != ''  ">EndTime,</if>
+			<if test="alarmType != null  ">`AlarmType`,</if>
+			<if test="maxValue != null  ">`MaxValue`,</if>
+			<if test="maxValuePercent != null  ">`MaxValuePercent`,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+			<if test="hxzId != null  and hxzId != ''  ">#{hxzId},</if>
+			<if test="startTime != null  and startTime != ''  ">#{startTime},</if>
+			<if test="endTime != null  and endTime != ''  ">#{endTime},</if>
+			<if test="alarmType != null  ">#{alarmType},</if>
+			<if test="maxValue != null  ">#{maxValue},</if>
+			<if test="maxValuePercent != null  ">#{maxValuePercent},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbUnloaderAlarminformation" parameterType="SbUnloaderAlarminformation">
+        update sb_unloader_alarminformation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceNo != null  and deviceNo != ''  ">DeviceNo = #{deviceNo},</if>
+            <if test="hxzId != null  and hxzId != ''  ">HxzId = #{hxzId},</if>
+            <if test="startTime != null  and startTime != ''  ">StartTime = #{startTime},</if>
+            <if test="endTime != null  and endTime != ''  ">EndTime = #{endTime},</if>
+            <if test="alarmType != null  ">AlarmType = #{alarmType},</if>
+            <if test="maxValue != null  ">MaxValue = #{maxValue},</if>
+            <if test="maxValuePercent != null  ">MaxValuePercent = #{maxValuePercent},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbUnloaderAlarminformationById" parameterType="Integer">
+        delete from sb_unloader_alarminformation where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbUnloaderAlarminformationByIds" parameterType="String">
+        delete from sb_unloader_alarminformation where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

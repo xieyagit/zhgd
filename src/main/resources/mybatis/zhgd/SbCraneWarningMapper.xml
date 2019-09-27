@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbCraneWarning.mapper.SbCraneWarningMapper">
+    
+    <resultMap type="SbCraneWarning" id="SbCraneWarningResult">
+        <result property="id"    column="id"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="runtime"    column="runtime"    />
+        <result property="load"    column="load"    />
+        <result property="loadRatio"    column="load_ratio"    />
+        <result property="moment"    column="moment"    />
+        <result property="momentRatio"    column="moment_ratio"    />
+        <result property="slewingSpeed"    column="slewing_speed"    />
+        <result property="height"    column="height"    />
+        <result property="range"    column="range"    />
+        <result property="magnification"    column="magnification"    />
+        <result property="sensorStatus"    column="sensor_status"    />
+        <result property="normalWorkEarlyWarnState"    column="normal_work_early_warn_state"    />
+        <result property="normalWorkWarnStatus"    column="normal_work_warn_status"    />
+        <result property="regionLimitEarlyWarnStatus"    column="region_limit_early_warn_status"    />
+        <result property="regionLimitWarnStatus"    column="region_limit_warn_status"    />
+        <result property="groupTowerEarlyWarnStatus"    column="group_tower_early_warn_status"    />
+        <result property="groupTowerWarnStatus"    column="group_tower_warn_status"    />
+        <result property="windSpeed"    column="wind_speed"    />
+        <result property="hxzid"    column="hxzid"    />
+    </resultMap>
+	
+	<sql id="selectSbCraneWarningVo">
+        select id, device_no, runtime, `load`, load_ratio, moment, moment_ratio, slewing_speed, height, `range`, magnification, sensor_status, normal_work_early_warn_state, normal_work_warn_status, region_limit_early_warn_status, region_limit_warn_status, group_tower_early_warn_status, group_tower_warn_status, wind_speed, hxzid from sb_crane_warning
+    </sql>
+	
+    <select id="selectSbCraneWarningList" parameterType="SbCraneWarning" resultMap="SbCraneWarningResult">
+        <include refid="selectSbCraneWarningVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
+             <if test="runtime != null  and runtime != '' "> and runtime = #{runtime}</if>
+             <if test="load != null "> and `load` = #{load}</if>
+             <if test="loadRatio != null "> and load_ratio = #{loadRatio}</if>
+             <if test="moment != null "> and moment = #{moment}</if>
+             <if test="momentRatio != null "> and moment_ratio = #{momentRatio}</if>
+             <if test="slewingSpeed != null "> and slewing_speed = #{slewingSpeed}</if>
+             <if test="height != null "> and height = #{height}</if>
+             <if test="range != null "> and `range` = #{range}</if>
+             <if test="magnification != null "> and magnification = #{magnification}</if>
+             <if test="sensorStatus != null "> and sensor_status = #{sensorStatus}</if>
+             <if test="normalWorkEarlyWarnState != null "> and normal_work_early_warn_state = #{normalWorkEarlyWarnState}</if>
+             <if test="normalWorkWarnStatus != null "> and normal_work_warn_status = #{normalWorkWarnStatus}</if>
+             <if test="regionLimitEarlyWarnStatus != null "> and region_limit_early_warn_status = #{regionLimitEarlyWarnStatus}</if>
+             <if test="regionLimitWarnStatus != null "> and region_limit_warn_status = #{regionLimitWarnStatus}</if>
+             <if test="groupTowerEarlyWarnStatus != null "> and group_tower_early_warn_status = #{groupTowerEarlyWarnStatus}</if>
+             <if test="groupTowerWarnStatus != null "> and group_tower_warn_status = #{groupTowerWarnStatus}</if>
+             <if test="windSpeed != null "> and wind_speed = #{windSpeed}</if>
+             <if test="hxzid != null  and hxzid != '' "> and hxzid = #{hxzid}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbCraneWarningById" parameterType="Long" resultMap="SbCraneWarningResult">
+        <include refid="selectSbCraneWarningVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbCraneWarning" parameterType="SbCraneWarning">
+        insert into sb_crane_warning
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">device_no,</if>
+			<if test="runtime != null  and runtime != ''  ">runtime,</if>
+			<if test="load != null  ">`load`,</if>
+			<if test="loadRatio != null  ">load_ratio,</if>
+			<if test="moment != null  ">moment,</if>
+			<if test="momentRatio != null  ">moment_ratio,</if>
+			<if test="slewingSpeed != null  ">slewing_speed,</if>
+			<if test="height != null  ">height,</if>
+			<if test="range != null  ">`range`,</if>
+			<if test="magnification != null  ">magnification,</if>
+			<if test="sensorStatus != null  ">sensor_status,</if>
+			<if test="normalWorkEarlyWarnState != null  ">normal_work_early_warn_state,</if>
+			<if test="normalWorkWarnStatus != null  ">normal_work_warn_status,</if>
+			<if test="regionLimitEarlyWarnStatus != null  ">region_limit_early_warn_status,</if>
+			<if test="regionLimitWarnStatus != null  ">region_limit_warn_status,</if>
+			<if test="groupTowerEarlyWarnStatus != null  ">group_tower_early_warn_status,</if>
+			<if test="groupTowerWarnStatus != null  ">group_tower_warn_status,</if>
+			<if test="windSpeed != null  ">wind_speed,</if>
+			<if test="hxzid != null  and hxzid != ''  ">hxzid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+			<if test="runtime != null  and runtime != ''  ">#{runtime},</if>
+			<if test="load != null  ">#{load},</if>
+			<if test="loadRatio != null  ">#{loadRatio},</if>
+			<if test="moment != null  ">#{moment},</if>
+			<if test="momentRatio != null  ">#{momentRatio},</if>
+			<if test="slewingSpeed != null  ">#{slewingSpeed},</if>
+			<if test="height != null  ">#{height},</if>
+			<if test="range != null  ">#{range},</if>
+			<if test="magnification != null  ">#{magnification},</if>
+			<if test="sensorStatus != null  ">#{sensorStatus},</if>
+			<if test="normalWorkEarlyWarnState != null  ">#{normalWorkEarlyWarnState},</if>
+			<if test="normalWorkWarnStatus != null  ">#{normalWorkWarnStatus},</if>
+			<if test="regionLimitEarlyWarnStatus != null  ">#{regionLimitEarlyWarnStatus},</if>
+			<if test="regionLimitWarnStatus != null  ">#{regionLimitWarnStatus},</if>
+			<if test="groupTowerEarlyWarnStatus != null  ">#{groupTowerEarlyWarnStatus},</if>
+			<if test="groupTowerWarnStatus != null  ">#{groupTowerWarnStatus},</if>
+			<if test="windSpeed != null  ">#{windSpeed},</if>
+			<if test="hxzid != null  and hxzid != ''  ">#{hxzid},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbCraneWarning" parameterType="SbCraneWarning">
+        update sb_crane_warning
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceNo != null  and deviceNo != ''  ">device_no = #{deviceNo},</if>
+            <if test="runtime != null  and runtime != ''  ">runtime = #{runtime},</if>
+            <if test="load != null  ">`load` = #{load},</if>
+            <if test="loadRatio != null  ">load_ratio = #{loadRatio},</if>
+            <if test="moment != null  ">moment = #{moment},</if>
+            <if test="momentRatio != null  ">moment_ratio = #{momentRatio},</if>
+            <if test="slewingSpeed != null  ">slewing_speed = #{slewingSpeed},</if>
+            <if test="height != null  ">height = #{height},</if>
+            <if test="range != null  ">`range` = #{range},</if>
+            <if test="magnification != null  ">magnification = #{magnification},</if>
+            <if test="sensorStatus != null  ">sensor_status = #{sensorStatus},</if>
+            <if test="normalWorkEarlyWarnState != null  ">normal_work_early_warn_state = #{normalWorkEarlyWarnState},</if>
+            <if test="normalWorkWarnStatus != null  ">normal_work_warn_status = #{normalWorkWarnStatus},</if>
+            <if test="regionLimitEarlyWarnStatus != null  ">region_limit_early_warn_status = #{regionLimitEarlyWarnStatus},</if>
+            <if test="regionLimitWarnStatus != null  ">region_limit_warn_status = #{regionLimitWarnStatus},</if>
+            <if test="groupTowerEarlyWarnStatus != null  ">group_tower_early_warn_status = #{groupTowerEarlyWarnStatus},</if>
+            <if test="groupTowerWarnStatus != null  ">group_tower_warn_status = #{groupTowerWarnStatus},</if>
+            <if test="windSpeed != null  ">wind_speed = #{windSpeed},</if>
+            <if test="hxzid != null  and hxzid != ''  ">hxzid = #{hxzid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbCraneWarningById" parameterType="Long">
+        delete from sb_crane_warning where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbCraneWarningByIds" parameterType="String">
+        delete from sb_crane_warning where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <!--碰撞报警-->
+    <select id="selectCraneCountOne" parameterType="Map" resultType="Integer">
+        select count(*) from sb_crane_warning where TO_DAYS(runtime) =TO_DAYS(#{time})  and group_tower_warn_status=2
+        <if test="pid != null  and pid != '' "> and hxzid in (select hxzid from sb_crane_binding where pid=${pid})</if>
+        <if test="hxzid != null  and hxzid != '' "> and hxzid =#{hxzid}</if>
+    </select>
+    <!--传感器报警-->
+    <select id="selectCraneCountTwo" parameterType="Map" resultType="Integer">
+        select count(*) from sb_crane_warning where TO_DAYS(runtime) =TO_DAYS(#{time})  and sensor_status=2
+        <if test="pid != null  and pid != '' "> and hxzid in (select hxzid from sb_crane_binding where pid=${pid})</if>
+        <if test="hxzid != null  and hxzid != '' "> and hxzid =#{hxzid}</if>
+    </select>
+    <!--禁入区报警-->
+    <select id="selectCraneCountThree" parameterType="Map" resultType="Integer">
+        select count(*) from sb_crane_warning where TO_DAYS(runtime) =TO_DAYS(#{time})  and region_limit_warn_status=2
+        <if test="pid != null  and pid != '' "> and hxzid in (select hxzid from sb_crane_binding where pid=${pid})</if>
+        <if test="hxzid != null  and hxzid != '' "> and hxzid =#{hxzid}</if>
+    </select>
+</mapper>

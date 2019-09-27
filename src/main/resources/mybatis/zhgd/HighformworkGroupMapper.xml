@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjghformwork.mapper.HighformworkGroupMapper">
+    
+    <resultMap type="HighformworkGroup" id="HighformworkGroupResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="type"    column="type"    />
+        <result property="reserved"    column="reserved"    />
+        <result property="supplier"    column="supplier"    />
+        <result property="groupKey"    column="group_key"    />
+    </resultMap>
+	
+	<sql id="selectHighformworkGroupVo">
+        select id, name, type, reserved, supplier, group_key from sb_highformwork_group
+    </sql>
+	
+    <select id="selectHighformworkGroupList" parameterType="HighformworkGroup" resultMap="HighformworkGroupResult">
+        <include refid="selectHighformworkGroupVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="name != null  and name != '' "> and name = #{name}</if>
+             <if test="type != null  and type != '' "> and type = #{type}</if>
+             <if test="reserved != null  and reserved != '' "> and reserved = #{reserved}</if>
+            <if test="supplier != null  and supplier != '' "> and supplier = #{supplier}</if>
+            <if test="groupKey != null  and groupKey != '' "> and group_key = #{groupKey}</if>
+         </where>
+    </select>
+    
+    <select id="selectHighformworkGroupById" parameterType="Integer" resultMap="HighformworkGroupResult">
+        <include refid="selectHighformworkGroupVo"/>
+        where group_key = #{groupKey}
+    </select>
+        
+    <insert id="insertHighformworkGroup" parameterType="HighformworkGroup">
+        insert into sb_highformwork_group
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="type != null  and type != ''  ">type,</if>
+			<if test="reserved != null  and reserved != ''  ">reserved,</if>
+            <if test="supplier != null  and supplier != '' ">supplier,</if>
+            <if test="groupKey != null  and groupKey != '' ">group_key,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="type != null  and type != ''  ">#{type},</if>
+			<if test="reserved != null  and reserved != ''  ">#{reserved},</if>
+            <if test="supplier != null  and supplier != '' ">#{supplier},</if>
+            <if test="groupKey != null  and groupKey != '' ">#{groupKey},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHighformworkGroup" parameterType="HighformworkGroup">
+        update sb_highformwork_group
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="type != null  and type != ''  ">type = #{type},</if>
+            <if test="reserved != null  and reserved != ''  ">reserved = #{reserved},</if>
+            <if test="supplier != null  and supplier != '' "> supplier = #{supplier},</if>
+            <if test="groupKey != null  and groupKey != '' "> group_key = #{groupKey},</if>
+        </trim>
+        where group_key = #{groupKey}
+    </update>
+
+	<delete id="deleteHighformworkGroupById" parameterType="Integer">
+        delete from sb_deeppit_group where group_key = #{groupKey}
+    </delete>
+	
+    <delete id="deleteHighformworkGroupByIds" parameterType="String">
+        delete from sb_deeppit_group where groupKey in
+        <foreach item="groupKey" collection="array" open="(" separator="," close=")">
+            #{groupKey}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbCraneElectrify.mapper.SbCraneElectrifyMapper">
+    
+    <resultMap type="SbCraneElectrify" id="SbCraneElectrifyResult">
+        <result property="id"    column="id"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="runtime"    column="runtime"    />
+        <result property="operation"    column="operation"    />
+        <result property="hxzid"    column="hxzid"    />
+    </resultMap>
+	
+	<sql id="selectSbCraneElectrifyVo">
+        select id, device_no, runtime, operation, hxzid from sb_crane_electrify
+    </sql>
+	
+    <select id="selectSbCraneElectrifyList" parameterType="SbCraneElectrify" resultMap="SbCraneElectrifyResult">
+        <include refid="selectSbCraneElectrifyVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
+             <if test="runtime != null  and runtime != '' "> and runtime = #{runtime}</if>
+             <if test="operation != null "> and operation = #{operation}</if>
+             <if test="hxzid != null  and hxzid != '' "> and hxzid = #{hxzid}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbCraneElectrifyById" parameterType="Long" resultMap="SbCraneElectrifyResult">
+        <include refid="selectSbCraneElectrifyVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbCraneElectrify" parameterType="SbCraneElectrify">
+        insert into sb_crane_electrify
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">device_no,</if>
+			<if test="runtime != null  and runtime != ''  ">runtime,</if>
+			<if test="operation != null  ">operation,</if>
+			<if test="hxzid != null  and hxzid != ''  ">hxzid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+			<if test="runtime != null  and runtime != ''  ">#{runtime},</if>
+			<if test="operation != null  ">#{operation},</if>
+			<if test="hxzid != null  and hxzid != ''  ">#{hxzid},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbCraneElectrify" parameterType="SbCraneElectrify">
+        update sb_crane_electrify
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceNo != null  and deviceNo != ''  ">device_no = #{deviceNo},</if>
+            <if test="runtime != null  and runtime != ''  ">runtime = #{runtime},</if>
+            <if test="operation != null  ">operation = #{operation},</if>
+            <if test="hxzid != null  and hxzid != ''  ">hxzid = #{hxzid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbCraneElectrifyById" parameterType="Long">
+        delete from sb_crane_electrify where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbCraneElectrifyByIds" parameterType="String">
+        delete from sb_crane_electrify where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

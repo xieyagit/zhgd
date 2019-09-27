@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbDeviceimei.mapper.SbDeviceimeiMapper">
+    
+    <resultMap type="SbDeviceimei" id="SbDeviceimeiResult">
+        <result property="id"    column="id"    />
+        <result property="imei"    column="imei"    />
+    </resultMap>
+	
+	<sql id="selectSbDeviceimeiVo">
+        select id, imei from sb_deviceimei
+    </sql>
+
+    <select id="selectDeviceimeiListAll" resultType="String">
+        SELECT imei FROM sb_deviceimei
+    </select>
+	
+    <select id="selectSbDeviceimeiList" parameterType="SbDeviceimei" resultMap="SbDeviceimeiResult">
+        <include refid="selectSbDeviceimeiVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="imei != null  and imei != '' "> and imei = #{imei}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbDeviceimeiById" parameterType="Integer" resultMap="SbDeviceimeiResult">
+        <include refid="selectSbDeviceimeiVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbDeviceimei" parameterType="SbDeviceimei">
+        insert into sb_deviceimei
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="imei != null  and imei != ''  ">imei,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="imei != null  and imei != ''  ">#{imei},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbDeviceimei" parameterType="SbDeviceimei">
+        update sb_deviceimei
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="imei != null  and imei != ''  ">imei = #{imei},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbDeviceimeiById" parameterType="Integer">
+        delete from sb_deviceimei where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbDeviceimeiByIds" parameterType="String">
+        delete from sb_deviceimei where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

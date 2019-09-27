@@ -1,0 +1,168 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+
+                        <li>
+                            账户：<input type="text" name="userAccount"/>
+                        </li>
+                        <li class="selected">
+                            账户状态：<select id="userState" name="userState">
+                            <option >请选择状态</option>
+                            <option th:text="全部"></option>
+                            <option   th:value="0" th:text="禁用"></option>
+                            <option   th:value="1" th:text="启用"></option>
+
+                        </select>
+                        </li>
+                        <li class="selected">
+                            账户类型：<select id="userType" name="userState">
+                            <option >请选择类型</option>
+                            <option th:text="全部"></option>
+                            <option   th:value="0" th:text="集团"></option>
+                            <option   th:value="1" th:text="公司"></option>
+                            <option   th:value="2" th:text="项目"></option>
+
+                        </select>
+                        </li>
+                        <li class="selected">
+                            集团（公司）：<select id="companyType" name="companyType">
+                            <option value="">请选择集团（公司）</option>
+                            <option th:each="p:${company}" th:value="${p.id}" th:selected="${cid==p.id}" th:text="${p.companyName}"></option>
+                        </select>
+                        </li>
+
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                    class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+            <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="zhgd:hjSystemUser:add">
+                <i class="fa fa-plus"></i> 添加
+            </a>
+           <!-- <a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()"
+               shiro:hasPermission="zhgd:hjSystemUser:edit">
+                <i class="fa fa-edit"></i> 修改
+            </a>
+            <a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()"
+               shiro:hasPermission="zhgd:hjSystemUser:remove">
+                <i class="fa fa-remove"></i> 删除
+            </a>-->
+            <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="zhgd:hjSystemUser:export">
+                <i class="fa fa-download"></i> 导出
+            </a>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table" data-mobile-responsive="true"></table>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('zhgd:hjSystemUser:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('zhgd:hjSystemUser:remove')}]];
+    var prefix = ctx + "zhgd/hjSystemUser";
+
+    $(function () {
+        var options = {
+            url: prefix + "/list",
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            modalName: "系统用户",
+            search: false,
+            showExport: true,
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'id',
+                    title: 'ID',
+                    visible: false
+                },
+                {
+                    field: 'userName',
+                    title: '名称',
+                    sortable: true
+                },
+                {
+                    field: 'userPhone',
+                    title: '联系电话',
+                    sortable: true
+                },
+                {
+                    field: 'userAccount',
+                    title: '账户',
+                    sortable: true
+                },
+                {
+                    field: 'userState',
+                    title: '账户状态',
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                        return value == 0 ? "禁用" : "启用";
+                    }
+                },
+                {
+                    field: 'userType',
+                    title: '账户类型',
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                        return value == 0 ? "集团" : (value == 1 ? "公司" : "项目");
+                    }
+                },
+                {
+                    field: 'entry',
+                    title: '登录项',
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                        return value == 0 ? "app" : (value == 1 ? "pc" : "pc+app");
+                    }
+                },
+                {
+                    field: 'creator',
+                    title: '创建者（添加规则：角色名-用户名）',
+                    sortable: false
+                },
+                {
+                    field: 'createDate',
+                    title: '创建时间',
+                    sortable: true
+                },
+                {
+                    field: 'updateDate',
+                    title: '修改时间',
+                    sortable: true
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+</script>
+</body>
+</html>

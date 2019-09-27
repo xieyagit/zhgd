@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjDeviceProjectworkers.mapper.HjDeviceProjectworkersMapper">
+    
+    <resultMap type="HjDeviceProjectworkers" id="HjDeviceProjectworkersResult">
+        <result property="id"    column="id"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="projectWorkersId"    column="project_workers_id"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+	
+	<sql id="selectHjDeviceProjectworkersVo">
+        select id, device_no, project_workers_id,status from hj_device_projectworkers
+    </sql>
+	
+    <select id="selectHjDeviceProjectworkersList" parameterType="HjDeviceProjectworkers" resultMap="HjDeviceProjectworkersResult">
+        <include refid="selectHjDeviceProjectworkersVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
+             <if test="projectWorkersId != null "> and project_workers_id = #{projectWorkersId}</if>
+             <if test="status != null and status != '' "> and status = #{status}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjDeviceProjectworkersById" parameterType="Integer" resultMap="HjDeviceProjectworkersResult">
+        <include refid="selectHjDeviceProjectworkersVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjDeviceProjectworkers" parameterType="HjDeviceProjectworkers">
+        insert into hj_device_projectworkers
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">device_no,</if>
+			<if test="status != null  and status != ''  ">status,</if>
+			<if test="projectWorkersId != null  ">project_workers_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+			<if test="status != null  and status != ''  ">#{status},</if>
+			<if test="projectWorkersId != null  ">#{projectWorkersId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjDeviceProjectworkers" parameterType="HjDeviceProjectworkers">
+        update hj_device_projectworkers
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceNo != null  and deviceNo != ''  ">device_no = #{deviceNo},</if>
+            <if test="status != null  and status != ''  ">status = #{status},</if>
+            <if test="projectWorkersId != null  ">project_workers_id = #{projectWorkersId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="updateHjDeviceProjectworkersTwo" parameterType="HjDeviceProjectworkers">
+        update hj_device_projectworkers set status=#{status}
+        <where>
+            <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
+            <if test="projectWorkersId != null "> and project_workers_id = #{projectWorkersId}</if>
+        </where>
+    </update>
+	<delete id="deleteHjDeviceProjectworkersById" parameterType="Integer">
+        delete from hj_device_projectworkers where id = #{id}
+    </delete>
+    <delete id="deleteHjDeviceProjectworkersTwo" parameterType="HjDeviceProjectworkers">
+        delete from hj_device_projectworkers where device_no = #{deviceNo} and project_workers_id =#{projectWorkersId}
+    </delete>
+    <delete id="deleteIds" parameterType="Map">
+        delete from hj_device_projectworkers where device_no = #{deviceNo} and project_workers_id =#{projectWorkersId}
+    </delete>
+    <delete id="deleteHjDeviceProjectworkersByIds" parameterType="String">
+        delete from hj_device_projectworkers where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <resultMap type="HjProjectWorkers" id="HjProjectWorkersResult">
+        <result property="id" column="id"/>
+        <result property="empName" column="emp_name"/>
+        <result property="idCode" column="id_code"/>
+        <result property="empSex" column="emp_sex"/>
+        <result property="faceUrl" column="face_url"/>
+    </resultMap>
+    <select id="selectHjProjectworkersList" parameterType="Map" resultMap="HjProjectWorkersResult">
+         select p.id,p.emp_name,p.id_code,p.emp_sex,p.face_url from hj_project_workers p where
+         p.id not in (select d.project_workers_id from hj_device_projectworkers d where device_no=#{deviceNo})
+        and p.project_id = #{projectId}
+    </select>
+
+    <select id="selectHjProjectworkersListTwo" parameterType="Map" resultMap="HjProjectWorkersResult">
+         select p.id,p.emp_name,p.id_code,p.emp_sex,p.face_url from hj_project_workers p where
+         p.id  in (select d.project_workers_id from hj_device_projectworkers d where device_no=#{deviceNo} and status=#{status}) limit 5
+    </select>
+    <resultMap type="HjDeviceProjectworkersParam" id="HjDeviceProjectworkersParamResult">
+        <result property="did" column="did"/>
+        <result property="pid" column="pid"/>
+        <result property="empName" column="emp_name"/>
+        <result property="faceUrl" column="face_url"/>
+        <result property="status" column="status"/>
+    </resultMap>
+    <select id="selectHjProjectworkersListThree" parameterType="Map" resultMap="HjDeviceProjectworkersParamResult">
+        select d.id did,p.id pid,p.emp_name,p.face_url,d.status from hj_project_workers p left join hj_device_projectworkers d on d.project_workers_id=p.id
+where  d.device_no=#{deviceNo} and d.status!=#{status} and  d.status!='3'
+    </select>
+</mapper>

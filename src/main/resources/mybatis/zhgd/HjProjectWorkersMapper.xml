@@ -1,0 +1,708 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjProjectWorkers.mapper.HjProjectWorkersMapper">
+
+    <resultMap type="HjProjectWorkers" id="HjProjectWorkersResult">
+        <result property="id" column="id"/>
+        <result property="empName" column="emp_name"/>
+        <result property="idCode" column="id_code"/>
+        <result property="empPhon" column="emp_phon"/>
+        <result property="empSex" column="emp_sex"/>
+        <result property="empNation" column="emp_nation"/>
+        <result property="idAddress" column="id_address"/>
+        <result property="idAgency" column="id_agency"/>
+        <result property="idValiddate" column="id_validdate"/>
+        <result property="dateOfBirth" column="date_of_birth"/>
+        <result property="nativePlace" column="native_place"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="workTypenameId" column="work_typename_id"/>
+        <result property="isTeam" column="is_team"/>
+        <result property="cwrIskeypsn" column="cwr_iskeypsn"/>
+        <result property="jobTypename" column="job_typename"/>
+        <result property="jobName" column="job_name"/>
+        <result property="empCategory" column="emp_category"/>
+        <result property="ifContract" column="if_contract"/>
+        <result property="empDept" column="emp_dept"/>
+        <result property="obDept" column="ob_dept"/>
+        <result property="empBankname" column="emp_bankname"/>
+        <result property="empCardnum" column="emp_cardnum"/>
+        <result property="accountType" column="account_type"/>
+        <result property="accountAddress" column="account_address"/>
+        <result property="credential" column="credential"/>
+        <result property="remark" column="remark"/>
+        <result property="contract" column="contract"/>
+        <result property="entrance" column="entrance"/>
+        <result property="exeunt" column="exeunt"/>
+        <result property="workConfirm" column="workConfirm"/>
+        <result property="iDCardPDF" column="iDCardPDF"/>
+        <result property="isTrain" column="isTrain"/>
+        <result property="faceUrl" column="face_url"/>
+        <result property="empNaticeplace" column="emp_naticeplace"/>
+        <result property="idphotoScan" column="idphoto_scan"/>
+        <result property="idphotoScan2" column="idphoto_scan2"/>
+        <result property="bankCardUrl" column="bank_card_url"/>
+        <result property="projectId" column="project_id"/>
+        <result property="enterAndRetreatCondition" column="enter_And_Retreat_Condition"/>
+        <result property="faceToken" column="faceToken"/>
+        <result property="createDate" column="create_date"/>
+        <result property="updateDate" column="update_date"/>
+        <result property="constructionId" column="construction_id"/>
+        <result property="information" column="information"/>
+    </resultMap>
+
+
+    <resultMap type="com.hujiang.project.zhgd.hjProjectWorkers.domain.ProjectWorkersParam"
+               id="ProjectWorkersParamResult">
+        <result property="id" column="id"/>
+        <result property="empName" column="emp_name"/>
+        <result property="idCode" column="id_code"/>
+        <result property="empPhon" column="emp_phon"/>
+        <result property="empSex" column="emp_sex"/>
+        <result property="empNation" column="emp_nation"/>
+        <result property="idAddress" column="id_address"/>
+        <result property="idAgency" column="id_agency"/>
+        <result property="idValiddate" column="id_validdate"/>
+        <result property="nativePlace" column="native_place"/>
+        <result property="empBankname" column="emp_bankname"/>
+        <result property="empCardnum" column="emp_cardnum"/>
+        <result property="faceUrl" column="face_url"/>
+        <result property="idphotoScan" column="idphoto_scan"/>
+        <result property="idphotoScan2" column="idphoto_scan2"/>
+        <result property="bankCardUrl" column="bank_card_url"/>
+        <result property="dateOfBirth" column="date_of_birth"/>
+    </resultMap>
+
+    <resultMap type="com.hujiang.project.zhgd.hjProjectWorkers.domain.EmpNameParam" id="EmpNameParamResult">
+        <result property="id" column="id"/>
+        <result property="empName" column="emp_name"/>
+        <result property="faceUrl" column="face_url"/>
+        <result property="projectId" column="project_id"/>
+    </resultMap>
+
+
+    <resultMap type="com.hujiang.project.zhgd.hjProjectWorkers.domain.ProjectWorkers" id="ProjectWorkersResult">
+        <result property="workersId" column="workersId"/>
+        <result property="projectId" column="projectId"/>
+        <result property="empPhon" column="empPhon"/>
+        <result property="isTeam" column="isTeam"/>
+        <result property="startTime" column="startTime"/>
+        <result property="titleName" column="titleName"/>
+        <result property="personneType" column="personneType"/>
+        <result property="typeName" column="typeName"/>
+        <result property="projectName" column="projectName"/>
+        <result property="teamName" column="teamName"/>
+        <result property="constructionName" column="constructionName"/>
+    </resultMap>
+
+
+    <resultMap type="com.hujiang.project.zhgd.hjProjectWorkers.domain.SignParam" id="SignParamResult">
+        <result property="id" column="id"/>
+        <result property="contract" column="contract"/>
+        <result property="entrance" column="entrance"/>
+        <result property="exeunt" column="exeunt"/>
+        <result property="workConfirm" column="workConfirm"/>
+        <result property="iDCardPDF" column="iDCardPDF"/>
+        <result property="isTrain" column="isTrain"/>
+        <result property="information" column="information"/>
+    </resultMap>
+
+    <resultMap type="com.hujiang.project.zhgd.hjProjectWorkers.domain.ProjectWorkerPC" id="ProjectWorkerPCResult">
+        <result property="id" column="id"/>
+        <result property="empName" column="emp_name"/>
+        <result property="isTeam" column="is_team"/>
+        <result property="enterAndRetreatCondition" column="enter_And_Retreat_Condition"/>
+        <result property="title" column="title"/>
+        <result property="teamName" column="team_name"/>
+        <result property="constructionName" column="construction_name"/>
+        <result property="projectName" column="project_name"/>
+    </resultMap>
+
+    <resultMap type="com.hujiang.project.zhgd.hjProjectWorkers.domain.PdfWorkers" id="PdfWorkersResult">
+        <result property="empName" column="emp_name"/>
+        <result property="idCode" column="id_code"/>
+        <result property="empSex" column="emp_sex"/>
+        <result property="empPhon" column="emp_phon"/>
+        <result property="startTime" column="start_time"/>
+        <result property="companyName" column="company_name"/>
+        <result property="title" column="title"/>
+        <result property="teamName" column="team_name"/>
+        <result property="constructionName" column="construction_name"/>
+        <result property="projectName" column="project_name"/>
+        <result property="isTeam" column="is_team"/>
+        <result property="legalPerson" column="legal_person"/>
+        <result property="contacts" column="contacts"/>
+        <result property="address" column="address"/>
+        <result property="dateOfBirth" column="date_of_birth"/>
+        <result property="projectAddress" column="project_address"/>
+        <result property="startingTime" column="starting_time"/>
+        <result property="idphotoScan" column="idphoto_scan"/>
+        <result property="idphotoScan2" column="idphoto_scan2"/>
+    </resultMap>
+
+
+    <select id="jyht" parameterType="HjProjectWorkers" resultMap="HjProjectWorkersResult">
+        SELECT COUNT(emp_name) as `count` from hj_project_workers
+        <where>
+            <if test="contract != null"> and  contract = #{contract} </if>
+             <if test="projectId != null"> AND project_id = #{projectId}</if>
+        </where>
+    </select>
+
+    <select id="jc" parameterType="HjProjectWorkers" resultMap="HjProjectWorkersResult">
+        SELECT COUNT(emp_name) as `count` from hj_project_workers
+        <where>
+            <if test="contract != null"> and  entrance = #{contract} </if>
+            <if test="projectId!= null"> AND project_id = #{projectId}</if>
+        </where>
+    </select>
+
+    <select id="tc" parameterType="HjProjectWorkers" resultMap="HjProjectWorkersResult">
+        SELECT COUNT(emp_name) as `count` from hj_project_workers
+        <where>
+            <if test="projectId != 0"> and project_id =#{projectId}</if>
+            <if test="contract != null"> and  exeunt = #{contract} </if>
+            and enter_And_Retreat_Condition = 1
+        </where>
+    </select>
+
+    <select id="lzqrs" parameterType="HjProjectWorkers" resultMap="HjProjectWorkersResult">
+        SELECT COUNT(emp_name) as `count` from hj_project_workers
+        <where>
+            <if test="contract != null"> and  workConfirm = #{contract} </if>
+            <if test="projectId!= null"> AND project_id = #{projectId}</if>
+        </where>
+    </select>
+
+    <select id="seleimg" parameterType="HjProjectWorkers" resultMap="HjProjectWorkersResult">
+        select face_url,emp_name
+        from sb_crane_addrecord a
+        INNER JOIN sb_crane_binding b
+        INNER JOIN hj_project_workers w
+        ON a.hxzid = b.hxzid
+        AND b.pid = w.project_id
+        <where>
+            <if test="userid != null"> and  w.id = #{userid} </if>
+        </where>
+        GROUP BY emp_name
+    </select>
+
+    <select id="seleimgs" parameterType="HjProjectWorkers" resultMap="HjProjectWorkersResult">
+        select face_url ,emp_name
+        from sb_elevator_addrecord a
+        INNER JOIN sb_elevator_binding b
+        INNER JOIN hj_project_workers w
+        ON a.hxzid = b.hxzid AND b.pid = w.project_id
+        <where>
+            <if test="userid != null"> and  w.id = #{userid} </if>
+        </where>
+        GROUP BY emp_name
+    </select>
+
+    <select id="listcounts" parameterType="HjProjectWorkers" resultMap="HjProjectWorkersResult">
+        SELECT count(hj_project_workers.id) as `count`
+        FROM hj_project_workers INNER JOIN hj_attendance_record ON hj_project_workers.id = hj_attendance_record.employee_id
+        <where>
+            <if test="projectId != 0"> and hj_project_workers.project_id=#{projectId} </if>
+            <if test="passedTime != null "> and passed_time LIKE CONCAT(#{passedTime},'%') </if>
+            <if test="ids == 0 "> AND emp_category=00 </if>/*工人考勤*/
+            <if test="ids == 1 "> AND emp_category!=00 </if>/*管理考勤*/
+            AND enter_And_Retreat_Condition=0
+            and direction = 'in'
+        </where>
+        group by hj_attendance_record.employee_id
+    </select>
+    <select id="listcount" parameterType="HjProjectWorkers" resultMap="HjProjectWorkersResult">
+        SELECT count(id) as `count`
+        FROM hj_project_workers
+        where
+             hj_project_workers.project_id=#{projectId}
+            AND enter_And_Retreat_Condition=0
+    </select>
+
+    <select id="selectProjectWorkersListPC" parameterType="com.hujiang.project.zhgd.hjProjectWorkers.domain.HjProjectWorkers" resultMap="ProjectWorkerPCResult">
+        select pw.id,pw.emp_name,pw.is_team,pw.enter_And_Retreat_Condition,d.title,t.team_name,cc.construction_name,p.project_name from hj_project_workers pw
+          LEFT JOIN hj_dictionaries d ON pw.job_name= d.tag
+          LEFT JOIN hj_team t ON pw.work_typename_id=t.id
+          LEFT JOIN hj_construction_company cc ON cc.id = pw.construction_id
+          LEFT JOIN hj_project p ON p.id=pw.project_id
+        <where>
+            <if test="empName != null  and empName != '' ">and pw.emp_name like"%${empName}%"</if>
+            <if test="idCode != null  and idCode != '' ">and pw.id_code like"%${idCode}%"</if>
+            <if test="empPhon != null ">and pw.emp_phon like"%${empPhon}%"</if>
+            <if test="jobName != null  and jobName != '' ">and pw.job_name = #{jobName}</if>
+            <if test="workTypenameId != null ">and pw.work_typename_id = #{workTypenameId}</if>
+            <if test="enterAndRetreatCondition != null ">and pw.enter_And_Retreat_Condition = #{enterAndRetreatCondition}</if>
+            <if test="constructionId != null">and pw.construction_id = #{constructionId}</if>
+            <if test="projectId != null">and pw.project_id = #{projectId}</if>
+            <if test="startTime != null  and startTime != '' ">	and pw.id not in (select employee_id from hj_attendance_record where project_id=21 and TO_DAYS(passed_time)>=TO_DAYS(#{startTime}) and TO_DAYS(passed_time)<![CDATA[ <=]]>TO_DAYS(#{endTime}))
+                and pw.enter_And_Retreat_Condition=0
+            </if>
+        </where>
+        order by pw.create_date desc
+    </select>
+
+
+    <select id="selectSignParam" parameterType="com.hujiang.project.zhgd.hjProjectWorkers.domain.SignParam"
+            resultMap="SignParamResult">
+        SELECT
+        hw.id,
+        hw.contract,
+        hw.entrance,
+        hw.workConfirm,
+        hw.iDCardPDF,
+        hw.exeunt,
+        hw.isTrain,
+        hw.information
+        FROM
+        hj_project_workers hw
+        WHERE
+        <if test="id != null  ">
+            hw.id = #{id}
+        </if>
+    </select>
+
+
+    <select id="selectConstructionProject"
+            parameterType="com.hujiang.project.zhgd.hjProjectWorkers.domain.ProjectWorkers"
+            resultMap="ProjectWorkersResult">
+        SELECT
+        hw.id as workersId,
+        hw.project_id as projectId,
+        hw.emp_phon as empPhon,
+        hw.is_team as isTeam,
+        hw.start_time as startTime,
+        hd.title AS titleName,
+        hi.title AS personneType,
+        hq.title AS typeName,
+        hp.project_name as projectName,
+        ht.team_name as teamName,
+        cc.construction_name as constructionName
+        FROM
+        hj_project_workers hw
+        LEFT JOIN hj_project hp ON hp.id = hw.project_id
+        LEFT JOIN hj_team ht ON ht.id = hw.work_typename_id
+        LEFT JOIN hj_construction_company cc ON cc.id = hw.construction_id
+        LEFT JOIN hj_dictionaries hd ON hd.tag = hw.job_name
+        LEFT JOIN hj_dictionaries hi ON hi.tag = hw.emp_category
+        LEFT JOIN hj_dictionaries hq ON hq.tag = hw.job_typename
+        WHERE
+        <if test="workersId != null">
+            hw.id = #{workersId}
+        </if>
+        <if test="projectId != null">
+            and hw.project_id = #{projectId}
+        </if>
+    </select>
+
+    <sql id="selectHjProjectWorkersVo">
+        select id, emp_name, id_code, emp_phon, emp_sex, emp_nation, id_address, id_agency, id_validdate, date_of_birth, native_place, start_time, end_time, work_typename_id, is_team, cwr_iskeypsn, information,job_typename, job_name, emp_category, if_contract, emp_dept, ob_dept, emp_bankname, emp_cardnum, account_type, account_address, credential, remark, contract, entrance, exeunt, workConfirm, iDCardPDF, isTrain, face_url, emp_naticeplace, idphoto_scan, idphoto_scan2, bank_card_url, project_id, enter_And_Retreat_Condition, faceToken, create_date, update_date,construction_id from hj_project_workers
+
+</sql>
+
+    <select id="selectHjProjectWorkersList" parameterType="HjProjectWorkers" resultMap="HjProjectWorkersResult">
+        <include refid="selectHjProjectWorkersVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="empName != null  and empName != '' "> and emp_name like"%${empName}%"</if>
+             <if test="idCode != null  and idCode != '' "> and id_code = #{idCode}</if>
+             <if test="empPhon != null and empPhon != '' "> and emp_phon = #{empPhon}</if>
+             <if test="empSex != null  and empSex != '' "> and emp_sex = #{empSex}</if>
+             <if test="empNation != null  and empNation != '' "> and emp_nation = #{empNation}</if>
+             <if test="idAddress != null  and idAddress != '' "> and id_address = #{idAddress}</if>
+             <if test="idAgency != null  and idAgency != '' "> and id_agency = #{idAgency}</if>
+             <if test="idValiddate != null  and idValiddate != '' "> and id_validdate = #{idValiddate}</if>
+             <if test="dateOfBirth != null  and dateOfBirth != '' "> and date_of_birth = #{dateOfBirth}</if>
+             <if test="nativePlace != null  and nativePlace != '' "> and native_place = #{nativePlace}</if>
+             <if test="startTime != null  and startTime != '' "> and start_time = #{startTime}</if>
+             <if test="endTime != null  and endTime != '' "> and end_time = #{endTime}</if>
+             <if test="workTypenameId != null "> and work_typename_id = #{workTypenameId}</if>
+             <if test="isTeam != null "> and is_team = #{isTeam}</if>
+             <if test="cwrIskeypsn != null  and cwrIskeypsn != '' "> and cwr_iskeypsn = #{cwrIskeypsn}</if>
+             <if test="jobTypename != null  and jobTypename != '' "> and job_typename = #{jobTypename}</if>
+             <if test="jobName != null  and jobName != '' "> and job_name = #{jobName}</if>
+             <if test="empCategory != null  and empCategory != '' "> and emp_category = #{empCategory}</if>
+             <if test="ifContract != null "> and if_contract = #{ifContract}</if>
+             <if test="empDept != null  and empDept != '' "> and emp_dept = #{empDept}</if>
+             <if test="obDept != null  and obDept != '' "> and ob_dept = #{obDept}</if>
+             <if test="empBankname != null  and empBankname != '' "> and emp_bankname = #{empBankname}</if>
+             <if test="empCardnum != null  and empCardnum != '' "> and emp_cardnum = #{empCardnum}</if>
+             <if test="accountType != null  and accountType != '' "> and account_type = #{accountType}</if>
+             <if test="accountAddress != null  and accountAddress != '' "> and account_address = #{accountAddress}</if>
+             <if test="credential != null  and credential != '' "> and credential = #{credential}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+             <if test="contract != null "> and contract = #{contract}</if>
+             <if test="entrance != null "> and entrance = #{entrance}</if>
+             <if test="exeunt != null "> and exeunt = #{exeunt}</if>
+             <if test="workConfirm != null "> and workConfirm = #{workConfirm}</if>
+             <if test="iDCardPDF != null "> and iDCardPDF = #{iDCardPDF}</if>
+             <if test="isTrain != null "> and isTrain = #{isTrain}</if>
+             <if test="faceUrl != null  and faceUrl != '' "> and face_url = #{faceUrl}</if>
+             <if test="empNaticeplace != null  and empNaticeplace != '' "> and emp_naticeplace = #{empNaticeplace}</if>
+             <if test="idphotoScan != null  and idphotoScan != '' "> and idphoto_scan = #{idphotoScan}</if>
+             <if test="idphotoScan2 != null  and idphotoScan2 != '' "> and idphoto_scan2 = #{idphotoScan2}</if>
+             <if test="bankCardUrl != null  and bankCardUrl != '' "> and bank_card_url = #{bankCardUrl}</if>
+             <if test="projectId != null "> and project_id = #{projectId}</if>
+             <if test="enterAndRetreatCondition != null "> and enter_And_Retreat_Condition = #{enterAndRetreatCondition}</if>
+             <if test="faceToken != null  and faceToken != '' "> and faceToken = #{faceToken}</if>
+             <if test="createDate != null "> and create_date = #{createDate}</if>
+             <if test="updateDate != null  and updateDate != '' "> and update_date = #{updateDate}</if>
+            <if test="constructionId != null"> and construction_id = #{constructionId}</if>
+            <if test="information != null"> and information = #{information}</if>
+        </where>
+    </select>
+
+    <select id="selectHjProjectWorkersById" parameterType="Integer" resultMap="HjProjectWorkersResult">
+        <include refid="selectHjProjectWorkersVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectHjProjectWorkersByIdCode" parameterType="HjProjectWorkers" resultMap="HjProjectWorkersResult">
+        <include refid="selectHjProjectWorkersVo"/>
+        where id_code = #{idCode} and project_id = #{projectId}
+    </select>
+    <select id="getProjectWorkersById" parameterType="HjProjectWorkers" resultMap="HjProjectWorkersResult">
+        <include refid="selectHjProjectWorkersVo"/>
+        where id_code = #{idCode}
+    </select>
+
+    <select id="selectHjProjectWorkersNotMoreDianByprojectId" parameterType="Integer" resultMap="HjProjectWorkersResult">
+        select * from hj_project_workers where project_id=#{projectId} and enter_And_Retreat_Condition=0 and id not in(select tp_user_id from sb_moredian_person)
+    </select>
+
+    <insert id="insertHjProjectWorkers" parameterType="HjProjectWorkers">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into hj_project_workers
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="empName != null  and empName != ''  ">emp_name,</if>
+			<if test="idCode != null  and idCode != ''  ">id_code,</if>
+            <if test="empPhon != null and empPhon != '' ">emp_phon,</if>
+			<if test="empSex != null  and empSex != ''  ">emp_sex,</if>
+			<if test="empNation != null  and empNation != ''  ">emp_nation,</if>
+			<if test="idAddress != null  and idAddress != ''  ">id_address,</if>
+			<if test="idAgency != null  and idAgency != ''  ">id_agency,</if>
+			<if test="idValiddate != null  and idValiddate != ''  ">id_validdate,</if>
+			<if test="dateOfBirth != null  and dateOfBirth != ''  ">date_of_birth,</if>
+			<if test="nativePlace != null  and nativePlace != ''  ">native_place,</if>
+			<if test="startTime != null  and startTime != ''  ">start_time,</if>
+			<if test="endTime != null  and endTime != ''  ">end_time,</if>
+			<if test="workTypenameId != null  ">work_typename_id,</if>
+			<if test="isTeam != null  ">is_team,</if>
+			<if test="cwrIskeypsn != null  and cwrIskeypsn != ''  ">cwr_iskeypsn,</if>
+			<if test="jobTypename != null  and jobTypename != ''  ">job_typename,</if>
+			<if test="jobName != null  and jobName != ''  ">job_name,</if>
+			<if test="empCategory != null  and empCategory != ''  ">emp_category,</if>
+			<if test="ifContract != null  ">if_contract,</if>
+			<if test="empDept != null  and empDept != ''  ">emp_dept,</if>
+			<if test="obDept != null  and obDept != ''  ">ob_dept,</if>
+			<if test="empBankname != null  and empBankname != ''  ">emp_bankname,</if>
+			<if test="empCardnum != null  and empCardnum != ''  ">emp_cardnum,</if>
+			<if test="accountType != null  and accountType != ''  ">account_type,</if>
+			<if test="accountAddress != null  and accountAddress != ''  ">account_address,</if>
+			<if test="credential != null  and credential != ''  ">credential,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="contract != null  ">contract,</if>
+			<if test="entrance != null  ">entrance,</if>
+			<if test="exeunt != null  ">exeunt,</if>
+			<if test="workConfirm != null  ">workConfirm,</if>
+			<if test="iDCardPDF != null  ">iDCardPDF,</if>
+			<if test="isTrain != null  ">isTrain,</if>
+			<if test="faceUrl != null  and faceUrl != ''  ">face_url,</if>
+			<if test="empNaticeplace != null  and empNaticeplace != ''  ">emp_naticeplace,</if>
+			<if test="idphotoScan != null  and idphotoScan != ''  ">idphoto_scan,</if>
+			<if test="idphotoScan2 != null  and idphotoScan2 != ''  ">idphoto_scan2,</if>
+			<if test="bankCardUrl != null  and bankCardUrl != ''  ">bank_card_url,</if>
+			<if test="projectId != null  ">project_id,</if>
+			<if test="enterAndRetreatCondition != null  ">enter_And_Retreat_Condition,</if>
+			<if test="faceToken != null  and faceToken != ''  ">faceToken,</if>
+			<if test="createDate != null  ">create_date,</if>
+			<if test="updateDate != null  and updateDate != ''  ">update_date,</if>
+            <if test="constructionId != null ">construction_id,</if>
+            <if test="information != null">information,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="empName != null  and empName != ''  ">#{empName},</if>
+			<if test="idCode != null  and idCode != ''  ">#{idCode},</if>
+            <if test="empPhon != null and empPhon != '' ">#{empPhon},</if>
+			<if test="empSex != null  and empSex != ''  ">#{empSex},</if>
+			<if test="empNation != null  and empNation != ''  ">#{empNation},</if>
+			<if test="idAddress != null  and idAddress != ''  ">#{idAddress},</if>
+			<if test="idAgency != null  and idAgency != ''  ">#{idAgency},</if>
+			<if test="idValiddate != null  and idValiddate != ''  ">#{idValiddate},</if>
+			<if test="dateOfBirth != null  and dateOfBirth != ''  ">#{dateOfBirth},</if>
+			<if test="nativePlace != null  and nativePlace != ''  ">#{nativePlace},</if>
+			<if test="startTime != null  and startTime != ''  ">#{startTime},</if>
+			<if test="endTime != null  and endTime != ''  ">#{endTime},</if>
+			<if test="workTypenameId != null  ">#{workTypenameId},</if>
+			<if test="isTeam != null  ">#{isTeam},</if>
+			<if test="cwrIskeypsn != null  and cwrIskeypsn != ''  ">#{cwrIskeypsn},</if>
+			<if test="jobTypename != null  and jobTypename != ''  ">#{jobTypename},</if>
+			<if test="jobName != null  and jobName != ''  ">#{jobName},</if>
+			<if test="empCategory != null  and empCategory != ''  ">#{empCategory},</if>
+			<if test="ifContract != null  ">#{ifContract},</if>
+			<if test="empDept != null  and empDept != ''  ">#{empDept},</if>
+			<if test="obDept != null  and obDept != ''  ">#{obDept},</if>
+			<if test="empBankname != null  and empBankname != ''  ">#{empBankname},</if>
+			<if test="empCardnum != null  and empCardnum != ''  ">#{empCardnum},</if>
+			<if test="accountType != null  and accountType != ''  ">#{accountType},</if>
+			<if test="accountAddress != null  and accountAddress != ''  ">#{accountAddress},</if>
+			<if test="credential != null  and credential != ''  ">#{credential},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="contract != null  ">#{contract},</if>
+			<if test="entrance != null  ">#{entrance},</if>
+			<if test="exeunt != null  ">#{exeunt},</if>
+			<if test="workConfirm != null  ">#{workConfirm},</if>
+			<if test="iDCardPDF != null  ">#{iDCardPDF},</if>
+			<if test="isTrain != null  ">#{isTrain},</if>
+			<if test="faceUrl != null  and faceUrl != ''  ">#{faceUrl},</if>
+			<if test="empNaticeplace != null  and empNaticeplace != ''  ">#{empNaticeplace},</if>
+			<if test="idphotoScan != null  and idphotoScan != ''  ">#{idphotoScan},</if>
+			<if test="idphotoScan2 != null  and idphotoScan2 != ''  ">#{idphotoScan2},</if>
+			<if test="bankCardUrl != null  and bankCardUrl != ''  ">#{bankCardUrl},</if>
+			<if test="projectId != null  ">#{projectId},</if>
+			<if test="enterAndRetreatCondition != null  ">#{enterAndRetreatCondition},</if>
+			<if test="faceToken != null  and faceToken != ''  ">#{faceToken},</if>
+			<if test="createDate != null  ">#{createDate},</if>
+			<if test="updateDate != null  and updateDate != ''  ">#{updateDate},</if>
+            <if test="constructionId != null">#{constructionId},</if>
+            <if test="information != null">#{information},</if>
+        </trim>
+    </insert>
+
+    <update id="updateHjProjectWorkers" parameterType="HjProjectWorkers">
+        update hj_project_workers
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="empName != null  and empName != ''  ">emp_name = #{empName},</if>
+            <if test="idCode != null  and idCode != ''  ">id_code = #{idCode},</if>
+            <if test="empPhon != null and empPhon != '' ">emp_phon = #{empPhon},</if>
+            <if test="empSex != null  and empSex != ''  ">emp_sex = #{empSex},</if>
+            <if test="empNation != null  and empNation != ''  ">emp_nation = #{empNation},</if>
+            <if test="idAddress != null    ">id_address = #{idAddress},</if>
+            <if test="idAgency != null    ">id_agency = #{idAgency},</if>
+            <if test="idValiddate != null   ">id_validdate = #{idValiddate},</if>
+            <if test="dateOfBirth != null    ">date_of_birth = #{dateOfBirth},</if>
+            <if test="nativePlace != null   ">native_place = #{nativePlace},</if>
+            <if test="startTime != null  and startTime != ''  ">start_time = #{startTime},</if>
+            <if test="endTime != null  and endTime != ''  ">end_time = #{endTime},</if>
+            <if test="workTypenameId != null  ">work_typename_id = #{workTypenameId},</if>
+            <if test="isTeam != null  ">is_team = #{isTeam},</if>
+            <if test="cwrIskeypsn != null  and cwrIskeypsn != ''  ">cwr_iskeypsn = #{cwrIskeypsn},</if>
+            <if test="jobTypename != null  and jobTypename != ''  ">job_typename = #{jobTypename},</if>
+            <if test="jobName != null  and jobName != ''  ">job_name = #{jobName},</if>
+            <if test="empCategory != null  and empCategory != ''  ">emp_category = #{empCategory},</if>
+            <if test="ifContract != null  ">if_contract = #{ifContract},</if>
+            <if test="empDept != null  and empDept != ''  ">emp_dept = #{empDept},</if>
+            <if test="obDept != null  and obDept != ''  ">ob_dept = #{obDept},</if>
+            <if test="empBankname != null  ">emp_bankname = #{empBankname},</if>
+            <if test="empCardnum != null   ">emp_cardnum = #{empCardnum},</if>
+            <if test="accountType != null    ">account_type = #{accountType},</if>
+            <if test="accountAddress != null   ">account_address = #{accountAddress},</if>
+            <if test="credential != null    ">credential = #{credential},</if>
+            <if test="remark != null    ">remark = #{remark},</if>
+            <if test="contract != null  ">contract = #{contract},</if>
+            <if test="entrance != null  ">entrance = #{entrance},</if>
+            <if test="exeunt != null  ">exeunt = #{exeunt},</if>
+            <if test="workConfirm != null  ">workConfirm = #{workConfirm},</if>
+            <if test="iDCardPDF != null  ">iDCardPDF = #{iDCardPDF},</if>
+            <if test="isTrain != null  ">isTrain = #{isTrain},</if>
+            <if test="faceUrl != null  and faceUrl != ''  ">face_url = #{faceUrl},</if>
+            <if test="empNaticeplace != null  and empNaticeplace != ''  ">emp_naticeplace = #{empNaticeplace},</if>
+            <if test="idphotoScan != null  and idphotoScan != ''  ">idphoto_scan = #{idphotoScan},</if>
+            <if test="idphotoScan2 != null  and idphotoScan2 != ''  ">idphoto_scan2 = #{idphotoScan2},</if>
+            <if test="bankCardUrl != null    ">bank_card_url = #{bankCardUrl},</if>
+            <if test="projectId != null  ">project_id = #{projectId},</if>
+            <if test="enterAndRetreatCondition != null  ">enter_And_Retreat_Condition = #{enterAndRetreatCondition},
+            </if>
+            <if test="faceToken != null  and faceToken != ''  ">faceToken = #{faceToken},</if>
+            <if test="createDate != null  ">create_date = #{createDate},</if>
+            <if test="updateDate != null  and updateDate != ''  ">update_date = #{updateDate},</if>
+            <if test="constructionId != null">construction_id = #{constructionId},</if>
+            <if test="information != null">information = #{information}</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHjProjectWorkersById" parameterType="Integer">
+        delete from hj_project_workers where id = #{id}
+    </delete>
+
+    <delete id="deleteHjProjectWorkersByIds" parameterType="String">
+        delete from hj_project_workers where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectPdfWorkers" resultMap="PdfWorkersResult">
+        select p.idphoto_scan,p.idphoto_scan2,p.emp_name,p.id_code,p.date_of_birth,p.emp_sex,p.emp_phon,p.start_time,p.is_team,p.construction_name,p.legal_person,p.contacts,p.address,p.project_name,p.team_name,p.title,cl.company_name,
+          p.project_address,p.starting_time
+        from pdf p
+        LEFT JOIN hj_company_library cl ON cl.id=p.construction_id
+        where  p.wid in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <update id="updateHjProjectWorkersOutOrIn" >
+      update hj_project_workers set enter_And_Retreat_Condition=#{tag} where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    <update id="updateHjProjectWorkersOutOrInTwo" >
+        update hj_project_workers set enter_And_Retreat_Condition=#{tag} where id = #{id}
+    </update>
+
+
+    <select id="selectsCeneNumber" resultType="java.lang.Integer">
+        SELECT
+        COUNT(*)
+        FROM
+        hj_project_workers hw
+        WHERE
+        hw.enter_And_Retreat_Condition = 0
+        AND hw.emp_category = 00
+        <if test="projectId != null  ">
+            AND hw.project_id = #{projectId}
+        </if>
+    </select>
+
+
+    <select id="selectsAdministrationNumber" resultType="java.lang.Integer">
+        SELECT
+        COUNT(*)
+        FROM
+        hj_project_workers hw
+        WHERE
+        hw.enter_And_Retreat_Condition = 0
+        AND hw.emp_category != 00
+        <if test="projectId != null  ">
+            AND hw.project_id = #{projectId}
+        </if>
+    </select>
+
+    <select id="selectHjProjectWorkersListEmp" resultType="java.lang.Integer">
+        SELECT
+        COUNT(*)
+        FROM
+        hj_project_workers hw
+        WHERE
+         hw.emp_category != 00
+        <if test="projectId != null  ">
+            AND hw.project_id = #{projectId}
+        </if>
+    </select>
+
+
+    <sql id="User_List_Condition" >
+        <where >
+            <if test="projectId != null  ">
+                hw.project_id = #{projectId}
+            </if>
+            <if test="empName != null and empName != ''  ">
+               and hw.emp_name like "%"#{empName}"%"
+            </if>
+            order by hw.create_date DESC
+        </where>
+    </sql>
+
+
+    <select id="selectProjectWorkersCount" resultType="java.lang.Integer">
+        SELECT
+        COUNT(*)
+        FROM
+        hj_project_workers hw
+        <include refid="User_List_Condition" />
+    </select>
+
+
+    <select id="selectProjectWorkers" parameterType="com.hujiang.project.zhgd.hjProjectWorkers.domain.EmpNameParam"
+            resultMap="EmpNameParamResult">
+        SELECT
+        hw.id,
+        hw.emp_name,
+        hw.face_url,
+        hw.project_id
+        FROM
+        hj_project_workers hw
+        <include refid="User_List_Condition" />
+        <if test="offset != null &amp;&amp; limit != null">
+            limit ${offset},${limit}
+        </if>
+    </select>
+
+    <select id="selectProjectWorkersDetails"
+            parameterType="com.hujiang.project.zhgd.hjProjectWorkers.domain.ProjectWorkersParam"
+            resultMap="ProjectWorkersParamResult">
+        SELECT
+        hw.id,
+        hw.emp_name,
+        hw.face_url,
+        hw.project_id,
+        hw.emp_sex,
+        hw.emp_nation,
+        hw.id_code,
+        hw.date_of_birth,
+        hw.id_address,
+        hw.id_agency,
+        hw.id_validdate,
+        hw.emp_cardnum,
+        hw.emp_bankname,
+        hw.face_url,
+        hw.idphoto_scan,
+        hw.idphoto_scan2,
+        hw.bank_card_url
+        FROM
+        hj_project_workers hw
+        WHERE
+        <if test="id != null  ">
+            hw.id = #{id}
+        </if>
+    </select>
+
+
+    <select id="selectEmpCategory" parameterType="Integer" resultMap="HjProjectWorkersResult">
+       SELECT * FROM hj_project_workers h WHERE h.project_id=#{pid}
+    </select>
+
+    <!--指定项目在场人数-->
+    <select id="selectOnLineCount" parameterType="Integer" resultType="Integer">
+      select count(*) from hj_project_workers where project_id=#{pid} and enter_And_Retreat_Condition=0
+    </select>
+    <!--在场关键岗位人数-->
+    <select id="selectOnLineCountGj" parameterType="Integer" resultType="Integer">
+      select COUNT(*) from hj_project_workers where (job_name='DD8FE97F3E1FA3B7F71C894F0D7B49A1' or job_name='3BE4F91A3C3E4BF3E3E14E9A143C65C7' or job_name='E303B2F084CCAFA5A32CDC68571CC121' or job_name='764A5294753B5FCE846BD5C64C3874D1' or job_name='4BCE1F084E5E2413384C149B42B0D072' or job_name='6C0A7C1254EB51E1A94CCD318253562B' or job_name='BE86667205808221FAD7ED510E2A8004' )
+      and project_id =#{pid} and enter_And_Retreat_Condition=0
+    </select>
+    <resultMap type="com.hujiang.project.zhgd.hjProjectWorkers.domain.Cqgztj" id="CqgztjResult">
+        <result property="rs" column="rs"/>
+        <result property="jobNames" column="jobNames"/>
+    </resultMap>
+    <!--出勤工种统计-->
+    <select id="selectCqgztj" parameterType="Integer" resultMap="CqgztjResult">
+    select count(*) rs,(select title from hj_dictionaries where tag=job_name) jobNames from hj_project_workers where id in
+(select employee_id from hj_attendance_record where project_id=#{pid} and direction ='in' and TO_DAYS(curdate())=TO_DAYS(passed_time) GROUP BY employee_id) GROUP BY job_name order by rs desc
+    </select>
+
+    <resultMap type="com.hujiang.project.zhgd.hjProjectWorkers.domain.InOROut" id="InOrOutResult">
+        <result property="faceUrl" column="face_url"/>
+        <result property="empName" column="empName"/>
+        <result property="jobName" column="jobName"/>
+        <result property="teamName" column="teamName"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
+    <select id="selectInOrOutKB" parameterType="Integer" resultMap="InOrOutResult">
+select w.emp_name empName,w.face_url,
+( case  when w.enter_And_Retreat_Condition=0 then '在场' else '离场' end) status,
+(select title from hj_dictionaries where tag=w.job_name) jobName,
+(select team_name from hj_team where w.work_typename_id=id) teamName from hj_project_workers w where w.id=#{id}
+    </select>
+
+</mapper>

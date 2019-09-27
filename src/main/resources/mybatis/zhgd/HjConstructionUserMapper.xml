@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjConstructionUser.mapper.HjConstructionUserMapper">
+    
+    <resultMap type="HjConstructionUser" id="HjConstructionUserResult">
+        <result property="id"    column="id"    />
+        <result property="constructionId"    column="constructionId"    />
+        <result property="userId"    column="userId"    />
+    </resultMap>
+	
+	<sql id="selectHjConstructionUserVo">
+        select id, constructionId, userId from hj_construction_user
+    </sql>
+	
+    <select id="selectHjConstructionUserList" parameterType="HjConstructionUser" resultMap="HjConstructionUserResult">
+        <include refid="selectHjConstructionUserVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="constructionId != null "> and constructionId = #{constructionId}</if>
+             <if test="userId != null "> and userId = #{userId}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjConstructionUserById" parameterType="Integer" resultMap="HjConstructionUserResult">
+        <include refid="selectHjConstructionUserVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjConstructionUser" parameterType="HjConstructionUser">
+        insert into hj_construction_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="constructionId != null  ">constructionId,</if>
+			<if test="userId != null  ">userId,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="constructionId != null  ">#{constructionId},</if>
+			<if test="userId != null  ">#{userId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjConstructionUser" parameterType="HjConstructionUser">
+        update hj_construction_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="constructionId != null  ">constructionId = #{constructionId},</if>
+            <if test="userId != null  ">userId = #{userId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjConstructionUserById" parameterType="Integer">
+        delete from hj_construction_user where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjConstructionUserByIds" parameterType="String">
+        delete from hj_construction_user where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

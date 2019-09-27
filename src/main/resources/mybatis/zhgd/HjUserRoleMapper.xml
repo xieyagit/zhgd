@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjUserRole.mapper.HjUserRoleMapper">
+    
+    <resultMap type="HjUserRole" id="HjUserRoleResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="roleId"    column="role_id"    />
+    </resultMap>
+	
+	<sql id="selectHjUserRoleVo">
+        select id, user_id, role_id from hj_user_role
+    </sql>
+    <select id="getHjUserRoleListByIds" parameterType="HjUserRole" resultMap="HjUserRoleResult">
+        <include refid="selectHjUserRoleVo"/>
+        <where>
+            <if test="ids != null and ids != '' ">
+                and user_id in
+                <foreach item="id" collection="ids" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectHjUserRoleList" parameterType="HjUserRole" resultMap="HjUserRoleResult">
+        <include refid="selectHjUserRoleVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="userId != null "> and user_id = #{userId}</if>
+             <if test="roleId != null "> and role_id = #{roleId}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjUserRoleById" parameterType="Integer" resultMap="HjUserRoleResult">
+        <include refid="selectHjUserRoleVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjUserRole" parameterType="HjUserRole">
+        insert into hj_user_role
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="userId != null  ">user_id,</if>
+			<if test="roleId != null  ">role_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="userId != null  ">#{userId},</if>
+			<if test="roleId != null  ">#{roleId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjUserRole" parameterType="HjUserRole">
+        update hj_user_role
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null  ">user_id = #{userId},</if>
+            <if test="roleId != null  ">role_id = #{roleId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjUserRoleById" parameterType="Integer">
+        delete from hj_user_role where id = #{id}
+    </delete>
+
+    <delete id="deleteHjUserRoleId" parameterType="Integer">
+        delete from hj_user_role where
+        <if test="parseInt != null  ">
+         role_id = #{parseInt}
+        </if>
+    </delete>
+
+    <delete id="deleteHjUserId" parameterType="Integer">
+        delete from hj_user_role where
+        <if test="parseInt != null  ">
+            user_id = #{parseInt}
+        </if>
+    </delete>
+	
+    <delete id="deleteHjUserRoleByIds" parameterType="String">
+        delete from hj_user_role where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

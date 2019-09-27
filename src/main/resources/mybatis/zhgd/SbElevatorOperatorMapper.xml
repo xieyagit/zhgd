@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbElevatorOperator.mapper.SbElevatorOperatorMapper">
+    
+    <resultMap type="SbElevatorOperator" id="SbElevatorOperatorResult">
+        <result property="id"    column="id"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="direction"    column="direction"    />
+        <result property="maxLoadValue"    column="max_load_value"    />
+        <result property="isOverLoad"    column="is_over_load"    />
+        <result property="operatorName"    column="operator_name"    />
+        <result property="isillegalOperation"    column="isIllegal_operation"    />
+        <result property="hxzid"    column="hxzid"    />
+    </resultMap>
+	
+	<sql id="selectSbElevatorOperatorVo">
+        select id, device_no, start_time, end_time, direction, max_load_value, is_over_load, operator_name, isIllegal_operation, hxzid from sb_elevator_operator
+    </sql>
+	
+    <select id="selectSbElevatorOperatorList" parameterType="SbElevatorOperator" resultMap="SbElevatorOperatorResult">
+        <include refid="selectSbElevatorOperatorVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
+             <if test="startTime != null  and startTime != '' "> and start_time = #{startTime}</if>
+             <if test="endTime != null  and endTime != '' "> and end_time = #{endTime}</if>
+             <if test="direction != null "> and direction = #{direction}</if>
+             <if test="maxLoadValue != null "> and max_load_value = #{maxLoadValue}</if>
+             <if test="isOverLoad != null "> and is_over_load = #{isOverLoad}</if>
+             <if test="operatorName != null  and operatorName != '' "> and operator_name = #{operatorName}</if>
+             <if test="isillegalOperation != null "> and isIllegal_operation = #{isillegalOperation}</if>
+             <if test="hxzid != null  and hxzid != '' "> and hxzid = #{hxzid}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbElevatorOperatorById" parameterType="Integer" resultMap="SbElevatorOperatorResult">
+        <include refid="selectSbElevatorOperatorVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbElevatorOperator" parameterType="SbElevatorOperator">
+        insert into sb_elevator_operator
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">device_no,</if>
+			<if test="startTime != null  and startTime != ''  ">start_time,</if>
+			<if test="endTime != null  and endTime != ''  ">end_time,</if>
+			<if test="direction != null  ">direction,</if>
+			<if test="maxLoadValue != null  ">max_load_value,</if>
+			<if test="isOverLoad != null  ">is_over_load,</if>
+			<if test="operatorName != null  and operatorName != ''  ">operator_name,</if>
+			<if test="isillegalOperation != null  ">isIllegal_operation,</if>
+			<if test="hxzid != null  and hxzid != ''  ">hxzid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+			<if test="startTime != null  and startTime != ''  ">#{startTime},</if>
+			<if test="endTime != null  and endTime != ''  ">#{endTime},</if>
+			<if test="direction != null  ">#{direction},</if>
+			<if test="maxLoadValue != null  ">#{maxLoadValue},</if>
+			<if test="isOverLoad != null  ">#{isOverLoad},</if>
+			<if test="operatorName != null  and operatorName != ''  ">#{operatorName},</if>
+			<if test="isillegalOperation != null  ">#{isillegalOperation},</if>
+			<if test="hxzid != null  and hxzid != ''  ">#{hxzid},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbElevatorOperator" parameterType="SbElevatorOperator">
+        update sb_elevator_operator
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceNo != null  and deviceNo != ''  ">device_no = #{deviceNo},</if>
+            <if test="startTime != null  and startTime != ''  ">start_time = #{startTime},</if>
+            <if test="endTime != null  and endTime != ''  ">end_time = #{endTime},</if>
+            <if test="direction != null  ">direction = #{direction},</if>
+            <if test="maxLoadValue != null  ">max_load_value = #{maxLoadValue},</if>
+            <if test="isOverLoad != null  ">is_over_load = #{isOverLoad},</if>
+            <if test="operatorName != null  and operatorName != ''  ">operator_name = #{operatorName},</if>
+            <if test="isillegalOperation != null  ">isIllegal_operation = #{isillegalOperation},</if>
+            <if test="hxzid != null  and hxzid != ''  ">hxzid = #{hxzid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbElevatorOperatorById" parameterType="Integer">
+        delete from sb_elevator_operator where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbElevatorOperatorByIds" parameterType="String">
+        delete from sb_elevator_operator where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

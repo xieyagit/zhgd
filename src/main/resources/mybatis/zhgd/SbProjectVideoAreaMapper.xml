@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbProjectVideoArea.mapper.SbProjectVideoAreaMapper">
+
+    <resultMap type="SbProjectVideoArea" id="SbProjectVideoAreaResult">
+        <result property="id"    column="id"    />
+        <result property="projectid"    column="projectid"    />
+        <result property="areaName"    column="area_name"    />
+        <result property="address"    column="address"    />
+        <result property="affiliatedUnit"    column="affiliated_unit"    />
+    </resultMap>
+
+    <sql id="selectSbProjectVideoAreaVo">
+        select id, projectid, area_name, address, affiliated_unit from sb_project_video_area
+    </sql>
+
+    <select id="selectSbProjectVideoAreaList" parameterType="SbProjectVideoArea" resultMap="SbProjectVideoAreaResult">
+        <include refid="selectSbProjectVideoAreaVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="projectid != null "> and projectid = #{projectid}</if>
+            <if test="areaName != null  and areaName != '' "> and area_name = #{areaName}</if>
+            <if test="address != null  and address != '' "> and address = #{address}</if>
+            <if test="affiliatedUnit != null  and affiliatedUnit != '' "> and affiliated_unit = #{affiliatedUnit}</if>
+        </where>
+        order by id desc
+    </select>
+    
+    <select id="selectSbProjectVideoAreaById" parameterType="Integer" resultMap="SbProjectVideoAreaResult">
+        <include refid="selectSbProjectVideoAreaVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSbProjectVideoArea" parameterType="SbProjectVideoArea">
+        insert into sb_project_video_area
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="projectid != null  ">projectid,</if>
+            <if test="areaName != null  and areaName != ''  ">area_name,</if>
+            <if test="address != null  and address != ''  ">address,</if>
+            <if test="affiliatedUnit != null  and affiliatedUnit != ''  ">affiliated_unit,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">#{id},</if>
+            <if test="projectid != null  ">#{projectid},</if>
+            <if test="areaName != null  and areaName != ''  ">#{areaName},</if>
+            <if test="address != null  and address != ''  ">#{address},</if>
+            <if test="affiliatedUnit != null  and affiliatedUnit != ''  ">#{affiliatedUnit},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSbProjectVideoArea" parameterType="SbProjectVideoArea">
+        update sb_project_video_area
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectid != null  ">projectid = #{projectid},</if>
+            <if test="areaName != null  and areaName != ''  ">area_name = #{areaName},</if>
+            <if test="address != null  and address != ''  ">address = #{address},</if>
+            <if test="affiliatedUnit != null  and affiliatedUnit != ''  ">affiliated_unit = #{affiliatedUnit},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbProjectVideoAreaById" parameterType="Integer">
+        delete from sb_project_video_area where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbProjectVideoAreaByIds" parameterType="String">
+        delete from sb_project_video_area where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

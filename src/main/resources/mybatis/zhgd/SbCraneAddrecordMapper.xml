@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbCraneAddrecord.mapper.SbCraneAddrecordMapper">
+    
+    <resultMap type="SbCraneAddrecord" id="SbCraneAddrecordResult">
+        <result property="id"    column="id"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="runtime"    column="runtime"    />
+        <result property="load"    column="load"    />
+        <result property="loadRatio"    column="load_ratio"    />
+        <result property="moment"    column="moment"    />
+        <result property="momentRatio"    column="moment_ratio"    />
+        <result property="slewingSpeed"    column="slewing_speed"    />
+        <result property="isLeftWarning"    column="is_left_warning"    />
+        <result property="isRightWarning"    column="is_right_warning"    />
+        <result property="range"    column="range"    />
+        <result property="isForwardWarning"    column="is_forward_warning"    />
+        <result property="isBackwardWarning"    column="is_backward_warning"    />
+        <result property="height"    column="height"    />
+        <result property="isUpWarning"    column="is_up_warning"    />
+        <result property="workEnvironment"    column="work_environment"    />
+        <result property="realTimeFlag"    column="real_time_flag"    />
+        <result property="installationMethod"    column="installation_method"    />
+        <result property="windSpeed"    column="wind_speed"    />
+        <result property="cardNum"    column="card_num"    />
+        <result property="operatorName"    column="operator_name"    />
+        <result property="hxzid"    column="hxzid"    />
+        <result property="magnification"    column="magnification"    />
+        <result property="ratedWeight"    column="ratedWeight"    />
+        <result property="obliguity"    column="obliguity"    />
+    </resultMap>
+    <resultMap id="CraneAddRecordResult" type="CraneAddRecord">
+        <result property="emp_name" column="emp_name"/>
+        <result property="runtime" column="runtime"/>
+        <result property="face_url" column="face_url"/>
+    </resultMap>
+	
+	<sql id="selectSbCraneAddrecordVo">
+        select id, device_no, runtime, `load`, load_ratio, moment, moment_ratio, slewing_speed, is_left_warning, is_right_warning, `range`, is_forward_warning, is_backward_warning, height, is_up_warning, work_environment, real_time_flag, installation_method, wind_speed, card_num, operator_name, hxzid, magnification,ratedWeight,obliguity from sb_crane_addrecord
+    </sql>
+
+    <select id="kanban" parameterType="SbCraneAddrecord" resultMap="SbCraneAddrecordResult">
+       select  runtime,ratedWeight, magnification , wind_speed ,height,`range`,slewing_speed  ,moment,`load` ,d.obliguity
+        from sb_crane_addrecord d
+           where hxzid = #{hxzid}
+      ORDER BY runtime DESC
+      LIMIT 1
+    </select>
+    <select id="lists" parameterType="SbCraneAddrecord" resultMap="SbCraneAddrecordResult">
+      select  runtime,ratedWeight, magnification , wind_speed as windSpeed,height,`range`,slewing_speed  ,moment,`load` ,d.obliguity
+      from sb_crane_addrecord d
+      where hxzid = #{hxzid}
+      LIMIT 1
+    </select>
+
+    <select id="list" parameterType="SbCraneAddrecord" resultMap="SbCraneAddrecordResult">
+        select hxzid,userid from sb_crane_binding
+        where pid = #{pid}
+    </select>
+    <select id="kanbans"  parameterType="SbCraneAddrecord" resultMap="SbCraneAddrecordResult">
+        select d.hxzid from sb_crane_addrecord d INNER JOIN sb_crane_binding b ON d.hxzid = b.hxzid
+        WHERE pid = #{pid}
+        GROUP BY d.hxzid
+    </select>
+
+    <select id="selectSbCraneAddRecord" parameterType="SbCraneAddrecord" resultMap="SbCraneAddrecordResult">
+        SELECT a.id as id,a.device_no as device_no,runtime,`load`,ratedWeight,moment,`range`,height,magnification,wind_speed,slewing_speed,obliguity
+        FROM sb_crane_addrecord a
+        LEFT JOIN sb_crane_binding b on (b.hxzid=a.hxzid)
+        WHERE 1=1
+        <if test="hxzId != null and hxzId != ''">AND a.hxzid  = #{hxzId}</if>
+        AND runtime like "${runtime}%"
+        AND runtime > DATE_SUB(NOW(), INTERVAL 60 MINUTE)
+        ORDER BY runtime desc LIMIT 0,1
+    </select>
+
+    <select id="selectCraneAddRecordName" parameterType="CraneAddRecord" resultMap="CraneAddRecordResult">
+        SELECT w.emp_name,a.runtime,w.face_url FROM sb_crane_binding b
+        LEFT JOIN hj_project_workers w ON (w.id=b.userid)
+        LEFT JOIN sb_crane_addrecord a ON (b.hxzid=a.hxzid)
+        WHERE 1=1
+        <if test="hxzId != null and hxzId != ''">AND a.hxzid  = #{hxzId}</if>
+        <if test="projectId != null and projectId != ''">AND b.pid = #{projectId}</if>
+        AND runtime like "${runtime}%"
+        ORDER BY runtime LIMIT 0,1
+    </select>
+
+    <select id="selectSbCraneAddRecordHistory" parameterType="SbCraneAddrecord" resultMap="SbCraneAddrecordResult">
+        SELECT a.id as id,a.device_no as device_no,runtime,`load`,moment,`range`,height,magnification,wind_speed,slewing_speed
+        FROM sb_crane_addrecord a
+        LEFT JOIN sb_crane_binding b ON(b.hxzid=a.hxzid)
+        WHERE 1=1
+        <if test="hxzId != null and hxzId != ''">AND a.hxzid = #{hxzId}</if>
+        <if test="dateTime != null and dateTime != ''">AND `runtime` like "${dateTime}%"</if>
+        ORDER BY runtime desc
+    </select>
+
+    <select id="selectSbCraneAddrecordList" parameterType="SbCraneAddrecord" resultMap="SbCraneAddrecordResult">
+        <include refid="selectSbCraneAddrecordVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
+             <if test="runtime != null  and runtime != '' "> and runtime = #{runtime}</if>
+             <if test="load != null "> and `load` = #{load}</if>
+             <if test="loadRatio != null "> and load_ratio = #{loadRatio}</if>
+             <if test="moment != null "> and moment = #{moment}</if>
+             <if test="momentRatio != null "> and moment_ratio = #{momentRatio}</if>
+             <if test="slewingSpeed != null "> and slewing_speed = #{slewingSpeed}</if>
+             <if test="isLeftWarning != null "> and is_left_warning = #{isLeftWarning}</if>
+             <if test="isRightWarning != null "> and is_right_warning = #{isRightWarning}</if>
+             <if test="range != null "> and `range` = #{range}</if>
+             <if test="isForwardWarning != null "> and is_forward_warning = #{isForwardWarning}</if>
+             <if test="isBackwardWarning != null "> and is_backward_warning = #{isBackwardWarning}</if>
+             <if test="height != null "> and height = #{height}</if>
+             <if test="isUpWarning != null "> and is_up_warning = #{isUpWarning}</if>
+             <if test="workEnvironment != null "> and work_environment = #{workEnvironment}</if>
+             <if test="realTimeFlag != null "> and real_time_flag = #{realTimeFlag}</if>
+             <if test="installationMethod != null "> and installation_method = #{installationMethod}</if>
+             <if test="windSpeed != null "> and wind_speed = #{windSpeed}</if>
+             <if test="cardNum != null  and cardNum != '' "> and card_num = #{cardNum}</if>
+             <if test="operatorName != null  and operatorName != '' "> and operator_name = #{operatorName}</if>
+             <if test="hxzid != null  and hxzid != '' "> and hxzid = #{hxzid}</if>
+             <if test="magnification != null "> and magnification = #{magnification}</if>
+             <if test="ratedWeight != null "> and ratedWeight = #{ratedWeight}</if>
+         </where>
+        order by runtime desc
+    </select>
+    
+    <select id="selectSbCraneAddrecordById" parameterType="Long" resultMap="SbCraneAddrecordResult">
+        <include refid="selectSbCraneAddrecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbCraneAddrecord" parameterType="SbCraneAddrecord">
+        insert into sb_crane_addrecord
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">device_no,</if>
+			<if test="runtime != null  and runtime != ''  ">runtime,</if>
+			<if test="load != null  ">`load`,</if>
+			<if test="loadRatio != null  ">load_ratio,</if>
+			<if test="moment != null  ">moment,</if>
+			<if test="momentRatio != null  ">moment_ratio,</if>
+			<if test="slewingSpeed != null  ">slewing_speed,</if>
+			<if test="isLeftWarning != null  ">is_left_warning,</if>
+			<if test="isRightWarning != null  ">is_right_warning,</if>
+			<if test="range != null  ">`range`,</if>
+			<if test="isForwardWarning != null  ">is_forward_warning,</if>
+			<if test="isBackwardWarning != null  ">is_backward_warning,</if>
+			<if test="height != null  ">height,</if>
+			<if test="isUpWarning != null  ">is_up_warning,</if>
+			<if test="workEnvironment != null  ">work_environment,</if>
+			<if test="realTimeFlag != null  ">real_time_flag,</if>
+			<if test="installationMethod != null  ">installation_method,</if>
+			<if test="windSpeed != null  ">wind_speed,</if>
+			<if test="cardNum != null  and cardNum != ''  ">card_num,</if>
+			<if test="operatorName != null  and operatorName != ''  ">operator_name,</if>
+			<if test="hxzid != null  and hxzid != ''  ">hxzid,</if>
+			<if test="magnification != null  ">magnification,</if>
+			<if test="ratedWeight != null  ">ratedWeight,</if>
+			<if test="obliguity != null  ">obliguity,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+			<if test="runtime != null  and runtime != ''  ">#{runtime},</if>
+			<if test="load != null  ">#{load},</if>
+			<if test="loadRatio != null  ">#{loadRatio},</if>
+			<if test="moment != null  ">#{moment},</if>
+			<if test="momentRatio != null  ">#{momentRatio},</if>
+			<if test="slewingSpeed != null  ">#{slewingSpeed},</if>
+			<if test="isLeftWarning != null  ">#{isLeftWarning},</if>
+			<if test="isRightWarning != null  ">#{isRightWarning},</if>
+			<if test="range != null  ">#{range},</if>
+			<if test="isForwardWarning != null  ">#{isForwardWarning},</if>
+			<if test="isBackwardWarning != null  ">#{isBackwardWarning},</if>
+			<if test="height != null  ">#{height},</if>
+			<if test="isUpWarning != null  ">#{isUpWarning},</if>
+			<if test="workEnvironment != null  ">#{workEnvironment},</if>
+			<if test="realTimeFlag != null  ">#{realTimeFlag},</if>
+			<if test="installationMethod != null  ">#{installationMethod},</if>
+			<if test="windSpeed != null  ">#{windSpeed},</if>
+			<if test="cardNum != null  and cardNum != ''  ">#{cardNum},</if>
+			<if test="operatorName != null  and operatorName != ''  ">#{operatorName},</if>
+			<if test="hxzid != null  and hxzid != ''  ">#{hxzid},</if>
+			<if test="magnification != null  ">#{magnification},</if>
+			<if test="ratedWeight != null  ">#{ratedWeight},</if>
+			<if test="obliguity != null  ">#{obliguity},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbCraneAddrecord" parameterType="SbCraneAddrecord">
+        update sb_crane_addrecord
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceNo != null  and deviceNo != ''  ">device_no = #{deviceNo},</if>
+            <if test="runtime != null  and runtime != ''  ">runtime = #{runtime},</if>
+            <if test="load != null  ">`load` = #{load},</if>
+            <if test="loadRatio != null  ">load_ratio = #{loadRatio},</if>
+            <if test="moment != null  ">moment = #{moment},</if>
+            <if test="momentRatio != null  ">moment_ratio = #{momentRatio},</if>
+            <if test="slewingSpeed != null  ">slewing_speed = #{slewingSpeed},</if>
+            <if test="isLeftWarning != null  ">is_left_warning = #{isLeftWarning},</if>
+            <if test="isRightWarning != null  ">is_right_warning = #{isRightWarning},</if>
+            <if test="range != null  ">`range` = #{range},</if>
+            <if test="isForwardWarning != null  ">is_forward_warning = #{isForwardWarning},</if>
+            <if test="isBackwardWarning != null  ">is_backward_warning = #{isBackwardWarning},</if>
+            <if test="height != null  ">height = #{height},</if>
+            <if test="isUpWarning != null  ">is_up_warning = #{isUpWarning},</if>
+            <if test="workEnvironment != null  ">work_environment = #{workEnvironment},</if>
+            <if test="realTimeFlag != null  ">real_time_flag = #{realTimeFlag},</if>
+            <if test="installationMethod != null  ">installation_method = #{installationMethod},</if>
+            <if test="windSpeed != null  ">wind_speed = #{windSpeed},</if>
+            <if test="cardNum != null  and cardNum != ''  ">card_num = #{cardNum},</if>
+            <if test="operatorName != null  and operatorName != ''  ">operator_name = #{operatorName},</if>
+            <if test="hxzid != null  and hxzid != ''  ">hxzid = #{hxzid},</if>
+            <if test="magnification != null  ">magnification = #{magnification},</if>
+            <if test="ratedWeight != null  ">ratedWeight = #{ratedWeight},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbCraneAddrecordById" parameterType="Long">
+        delete from sb_crane_addrecord where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbCraneAddrecordByIds" parameterType="String">
+        delete from sb_crane_addrecord where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="selectCraneCount" parameterType="Map" resultMap="SbCraneAddrecordResult">
+        <include refid="selectSbCraneAddrecordVo"/>
+        where STR_TO_DATE(runtime,'%Y-%m-%d %H:%i:%s') > STR_TO_DATE(#{time},'%Y-%m-%d %H:%i:%s') and hxzid in (select hxzid from sb_crane_binding where pid=${pid}) GROUP BY hxzid
+    </select>
+    <!--限位报警次数-->
+    <select id="selectCraneCountTwo" parameterType="Map" resultType="Integer">
+        select count(*) from sb_crane_addrecord where TO_DAYS(runtime) =TO_DAYS(#{time})  and (is_left_warning=1 or is_right_warning=1 or is_forward_warning =1 or is_backward_warning=1 or is_up_warning=1)
+        <if test="pid != null  and pid != '' "> and hxzid in (select hxzid from sb_crane_binding where pid=${pid})</if>
+        <if test="hxzid != null  and hxzid != '' "> and hxzid =#{hxzid}</if>
+    </select>
+    <!--载重报警次数-->
+    <select id="selectCraneCountThree" parameterType="Map" resultType="Integer">
+        select count(*) from sb_crane_addrecord where TO_DAYS(runtime) =TO_DAYS(#{time})  and load_ratio>1
+        <if test="pid != null  and pid != '' "> and hxzid in (select hxzid from sb_crane_binding where pid=${pid})</if>
+        <if test="hxzid != null  and hxzid != '' "> and hxzid =#{hxzid}</if>
+    </select>
+    <select id="selectSbCraneAddrecordListTwo" parameterType="SbCraneAddrecord" resultMap="SbCraneAddrecordResult">
+    <include refid="selectSbCraneAddrecordVo"/>
+        where hxzid=#{hxzid} and STR_TO_DATE(runtime,'%Y-%m-%d %H:%i:%s') > STR_TO_DATE(#{runtime},'%Y-%m-%d %H:%i:%s')    order by runtime desc limit 0,1
+    </select>
+    <select id="selectSbCraneAddrecordListThree" parameterType="Map" resultMap="SbCraneAddrecordResult">
+        <include refid="selectSbCraneAddrecordVo"/>
+        where hxzid=#{hxzid}
+        <if test="time != null  and time != '' ">
+        and to_days(runtime)=to_days(#{time})
+        </if>
+        <if test="status != null  and status != '' ">
+        and load_ratio ${status}
+        </if>
+        order by runtime desc
+    </select>
+</mapper>

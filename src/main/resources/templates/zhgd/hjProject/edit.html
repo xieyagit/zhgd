@@ -1,0 +1,338 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-hjProject-edit" th:object="${hjProject}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">单位类型：</label>
+				<div class="col-sm-8">
+					<select id="companyType" name="companyType" class="form-control"  disabled>
+						<option value="">请选择集团（公司）</option>
+						<option th:each="p:${company}" th:value="${p.id}" th:selected="${cid==p.id}" th:text="${p.companyName}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">项目名：</label>
+				<div class="col-sm-8">
+					<input id="projectName" name="projectName" th:field="*{projectName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">简称：</label>
+				<div class="col-sm-8">
+					<input id="shortName" name="shortName" th:field="*{shortName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">项目负责人：</label>
+				<div class="col-sm-8">
+					<input id="projectPrincipal" name="projectPrincipal" th:field="*{projectPrincipal}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">联系方式：</label>
+				<div class="col-sm-8">
+					<input id="phone" name="phone" th:field="*{phone}" class="form-control" type="text">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">项目类型：</label>
+				<div class="col-sm-8">
+					<select id="projectType" name="projectType" th:field="*{projectType}" class="form-control" >
+						<option value="">请选择项目类型</option>
+						<option th:each="p:${type}" th:value="${p.tag}" th:text="${p.title}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">项目状态：</label>
+				<div class="col-sm-8">
+					<select id="projectState" name="projectState"  th:field="*{projectState}" class="form-control" >
+						<option value="">请选择项目状态</option>
+						<option th:each="p:${state}" th:value="${p.tag}" th:text="${p.title}"></option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">项目管理人数：</label>
+				<div class="col-sm-8">
+					<input id="projectNumber" name="projectNumber" th:field="*{projectNumber}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">所属地区（三级联动）：</label>
+				<div class="col-sm-8">
+					<input id="projectRegion" name="projectRegion" th:field="*{projectRegion}" class="form-control" type="text">
+				</div>
+			</div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">所属地区：</label>
+                <div class="col-sm-8">
+                    <select id="projectRegion_sf" name="projectRegion" th:onchange="gradeChange(this,1)">
+                        <option value="">请选择省</option>
+                        <option th:each="p:${area}" th:value="${p.id}" th:selected="${areaid==p.id}"  th:text="${p.title}"></option>
+                    </select>
+                    <select id="projectRegion_sq" name="projectRegion" th:onchange="gradeChange(this,2)"  >
+                        <option value="">请选择市</option>
+                        <option th:each="p:${city}" th:value="${p.id}"  th:selected="${cityid==p.id}" th:text="${p.title}"></option>
+                    </select>
+                    <select id="projectRegion_x" name="projectRegion" >
+                        <option value="">请选择县</option>
+                        <option th:each="p:${county}" th:value="${p.id}"  th:selected="${countyid==p.id}" th:text="${p.title}"></option>
+                    </select>
+                </div>
+            </div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">施工许可证：</label>
+				<div class="col-sm-8">
+					<input id="builderLicense" name="builderLicense" th:field="*{builderLicense}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">项目地址：</label>
+				<div class="col-sm-8">
+					<input id="projectAddress" name="projectAddress" th:field="*{projectAddress}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">起始时间：</label>
+				<div class="col-sm-8">
+					<input id="startingTime" name="startingTime" th:field="*{startingTime}" class="time-input" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">结束时间：</label>
+				<div class="col-sm-8">
+					<input id="finishTime" name="finishTime" th:field="*{finishTime}" class="time-input" type="text">
+				</div>
+			</div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">总包单位：</label>
+                <div class="col-sm-8">
+                    <select id="constructionId" name="constructionId" class="form-control" th:field="*{constructionId}">
+                        <option value="">请选择总包单位</option>
+                        <option th:each="p:${main}" th:value="${p.id}" th:text="${p.companyName}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">监理企业：</label>
+                <div class="col-sm-8">
+                    <select id="supervisorId" name="supervisorId" class="form-control"  th:field="*{supervisorId}">
+                        <option value="">请选择监理企业</option>
+                        <option th:each="p:${supervisor}" th:value="${p.id}" th:text="${p.companyName}"></option>
+                    </select>
+                </div>
+            </div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">建筑面积(平米)：</label>
+				<div class="col-sm-8">
+					<input id="acreage" name="acreage" th:field="*{acreage}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">工程造价(万元)：</label>
+				<div class="col-sm-8">
+					<input id="projectCost" name="projectCost" th:field="*{projectCost}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">经度：</label>
+				<div class="col-sm-8">
+					<input id="longitude" name="longitude" th:field="*{longitude}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">纬度：</label>
+				<div class="col-sm-8">
+					<input id="latitude" name="latitude" th:field="*{latitude}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">安全报监编号：</label>
+				<div class="col-sm-8">
+					<input id="securityCode" name="securityCode" th:field="*{securityCode}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">质量报监编号：</label>
+				<div class="col-sm-8">
+					<input id="qualityNumber" name="qualityNumber" th:field="*{qualityNumber}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设计单位：</label>
+				<div class="col-sm-8">
+					<input id="designOrganization" name="designOrganization" th:field="*{designOrganization}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">勘察单位：</label>
+				<div class="col-sm-8">
+					<input id="explorationUnit" name="explorationUnit" th:field="*{explorationUnit}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<input id="remark" name="remark" th:field="*{remark}" class="form-control" type="text">
+				</div>
+			</div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">图片：</label>
+                <div class="col-sm-8">
+                    <input  style="width:100px;height:100px" th:src="*{projectImage}" th:value="*{projectImage}" class="form-control" type="projectImage">
+                </div>
+            </div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">修改项目效果图：</label>
+				<div class="col-sm-8">
+					<input id="file" name="file"  class="file-control" type="file" accept = "image/*">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">状态（0.显示 1.隐藏）：</label>
+				<div class="col-sm-8">
+					<!--<input id="showState" name="showState" th:field="*{showState}" class="form-control" type="text">-->
+                    <input type="radio" name="showState"  th:value="0" th:checked="*{showState==0}"/>显示
+                    <input type="radio" name="showState" th:value="1" th:checked="*{showState==1}"/>隐藏
+				</div>
+			</div>
+
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+        //省市区
+        function gradeChange(obj,s){
+            if(obj.value==null || obj.value==""){
+                $("#projectRegion_sq").html("<option value=\"\">请选择市</option>");
+                $("#projectRegion_x").html("<option value=\"\">请选择县</option>");
+            }
+            if(obj.value!=null && obj.value!=""){
+                $.ajax({
+                    url:"/provider/area/getArea",
+                    type:"post",
+                    dataType:"json",
+                    data:{"id":obj.value},
+                    success:function(data){
+
+                        var str="<option value=\"\">请选择市</option>";
+                        $.each(data,function(idxex,obj){
+                            str=str+"<option value=\""+obj.id+"\">"+obj.title+"</option>"
+                        });
+                        if(s==1){
+                            $("#projectRegion_sq").html(str);
+
+                            $("#projectRegion_x").html("<option value=\"\">请选择县</option>");
+                        }else{
+                            $("#projectRegion_x").html(str);
+                        }
+
+                    }
+                })
+            }
+        }
+
+		var prefix = ctx + "zhgd/hjProject";
+		$("#form-hjProject-edit").validate({
+			rules:{
+                cid:{
+                    required:true,
+                },
+                projectName:{
+                    required:true,
+
+                },
+                shortName:{
+                    required:true,
+                },
+                projectPrincipal:{
+                    required:true,
+                },
+                phone:{
+                    required:true,
+                    digits:true
+                },
+                projectType:{
+                    required:true,
+                },
+                projectState:{
+                    required:true,
+                },
+                projectNumber:{
+                    required:true,
+                    digits:true
+                },
+                projectRegion:{
+                    required:true,
+                },
+                builderLicense:{
+                    required:true,
+                },
+                projectAddress:{
+                    required:true,
+                },
+                startingTime:{
+                    required:true,
+                },
+                finishTime:{
+                    required:true,
+                },
+                constructionId:{
+                    required:true,
+                },
+                supervisorId:{
+                    required:true,
+                },
+                acreage:{
+                    required:true,
+                    number:true
+                },
+                projectCost:{
+                    required:true,
+                    number:true
+                },
+                longitude:{
+                    required:true,
+                    number:true
+                },
+                latitude:{
+                    required:true,
+                    number:true
+                },
+			}
+		});
+		
+		// function submitHandler() {
+	    //     if ($.validate.form()) {
+	    //         $.operate.save(prefix + "/edit", $('#form-hjProject-edit').serialize());
+	    //     }
+	    // }
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.modal.loading("正在处理中，请稍后...");
+                $.ajax({
+                    url: prefix + "/edit",
+                    type: "post",
+                    dataType: "json",
+                    contentType: false, //不设置内容类型
+                    processData: false, //不处理数据
+                    data: new FormData($('#form-hjProject-edit')[0]),
+                    success: function(result) {
+                        $.operate.successCallback(result);
+                    }
+                })
+
+            }
+        }
+	</script>
+</body>
+</html>

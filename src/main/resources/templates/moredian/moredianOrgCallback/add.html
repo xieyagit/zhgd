@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-moredianOrgCallback-add">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">机构：</label>
+				<div class="col-sm-8">
+					<select id="orgId" name="orgId" class="form-control" >
+						<option value="">请选择机构</option>
+						<option th:each="p:${org}" th:value="${p.id}" th:text="${p.orgName}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">机构url：</label>
+				<div class="col-sm-8">
+					<input id="callbackUrl" name="callbackUrl" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">回调标志：</label>
+				<div class="col-sm-8">
+					<input id="callbackTag" name="callbackTag" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "moredian/moredianOrgCallback"
+		$("#form-moredianOrgCallback-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/add", $('#form-moredianOrgCallback-add').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

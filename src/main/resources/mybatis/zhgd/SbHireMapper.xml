@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbHire.mapper.SbHireMapper">
+
+    <resultMap type="SbHire" id="SbHireResult">
+        <result property="id"    column="id"    />
+        <result property="imei"    column="imei"    />
+        <result property="peopleId"    column="peopleId"    />
+        <result property="areaId"    column="areaId"    />
+    </resultMap>
+    <resultMap id="HireResult" type="Hire">
+        <result property="id" column="id"/>
+        <result property="userName" column="userName"/>
+        <result property="userPhone" column="userPhone"/>
+        <result property="constructionName" column="constructionName"/>
+        <result property="imei" column="imei"/>
+        <result property="bat" column="bat"/>
+        <result property="watchDate" column="watchDate"/>
+        <result property="xloc" column="xloc"/>
+        <result property="yloc" column="yloc"/>
+        <result property="address" column="address"/>
+        <result property="areaName" column="areaName"/>
+        <result property="areaXloc" column="areaXloc"/>
+        <result property="areaYloc" column="areaYloc"/>
+        <result property="areaRadius" column="areaRadius"/>
+    </resultMap>
+    <resultMap id="HirePeopleResult" type="HirePeople">
+        <result property="pId" column="pId"/>
+        <result property="projectName" column="projectName"/>
+        <result property="areaId" column="areaId"/>
+        <result property="areaName" column="areaName"/>
+        <result property="peopleId" column="peopleId"/>
+        <result property="peopleName" column="peopleName"/>
+        <result property="imei" column="imei"/>
+        <result property="watchDate" column="watchDate"/>
+        <result property="constructionName" column="constructionName"/>
+        <result property="xloc" column="xloc"/>
+        <result property="yloc" column="yloc"/>
+        <result property="radius" column="radius"/>
+        <result property="address" column="address"/>
+        <result property="bat" column="bat"/>
+    </resultMap>
+
+    <resultMap type="SbEquipmentRecord" id="SbEquipmentRecordResult">
+        <result property="id"    column="id"    />
+        <result property="imei"    column="imei"    />
+        <result property="xloc"    column="xloc"    />
+        <result property="yloc"    column="yloc"    />
+        <result property="bat"    column="bat"    />
+        <result property="rssi"    column="rssi"    />
+        <result property="watchDate"    column="watchDate"    />
+        <result property="createDate"    column="createDate"    />
+        <result property="isPosition"    column="isPosition"    />
+        <result property="address"    column="address"    />
+    </resultMap>
+
+
+    <sql id="selectSbHireVo">
+        select id, imei, peopleId, areaId from sb_hire
+    </sql>
+
+    <!--SELECT p.id as pId,p.project_name as projectName from sb_area a
+    LEFT JOIN hj_project p ON (a.pid = p.id) GROUP BY project_name-->
+    <!-- SELECT p.id as pId,p.project_name as projectName from sb_area a
+     LEFT JOIN hj_project p ON (a.pid = p.id) where p.id=#{projectId}
+     GROUP BY project_name-->
+    <select id="selectProject" parameterType="HirePeople" resultMap="HirePeopleResult">
+        SELECT p.id as pId,p.project_name as projectName from hj_project p
+      where p.id=#{projectId}
+    </select>
+    <select id="selectArea" parameterType="HirePeople" resultMap="HirePeopleResult">
+        SELECT id as areaId,`name` as areaName,xloc,yloc,radius,pid as pId from sb_area where 1=1
+        <if test="pId != null">and pid=#{pId}</if>
+
+    </select>
+    <select id="selectPeople" parameterType="HirePeople" resultMap="HirePeopleResult">
+        SELECT w.id as peopleId,emp_name as  peopleName,h.imei,areaId from sb_hire h
+        LEFT JOIN hj_project_workers w ON(h.peopleId=w.id)
+        where 1=1
+         <if test="areaId != null">and  h.areaId=#{areaId}</if>
+
+    </select>
+
+    <select id="selectTimeTwo" parameterType="HirePeople" resultMap="HirePeopleResult">
+        SELECT imei,bat,watchDate,xloc,yloc,address
+        from sb_equipment_record
+        WHERE imei = #{imei} and  watchDate like "${watchDate}%"
+        ORDER BY watchDate desc LIMIT 0,1
+    </select>
+
+    <select id="selectTime" parameterType="HirePeople" resultMap="HirePeopleResult">
+        SELECT imei,bat,watchDate,xloc,yloc,address
+        from sb_equipment_record
+        WHERE imei = #{imei}
+        ORDER BY watchDate desc LIMIT 0,1
+    </select>
+
+    <select id="selectTimeList" parameterType="HirePeople" resultMap="HirePeopleResult">
+        SELECT imei,bat,watchDate,xloc,yloc,address
+        from sb_equipment_record
+        WHERE 1=1
+        <if test="imei != null and imei != ''">and imei = #{imei}</if>
+        ORDER BY watchDate desc LIMIT 0,1
+    </select>
+
+    <select id="selectPeopleList" parameterType="HirePeople" resultMap="HirePeopleResult">
+        SELECT imei,w.emp_name as peopleName,w.id as peopleId,
+        (SELECT construction_name from hj_construction_company c WHERE a.bid=c.id) as constructionName,
+        a.`name` as areaName,a.id as areaId
+        from sb_hire h
+        LEFT JOIN sb_area a ON(h.areaId=a.id)
+        LEFT JOIN hj_project_workers w ON(h.peopleId = w.id)
+        WHERE 1=1
+        <if test="userName != null and userName != ''">
+            AND emp_name like "%${userName}%"
+        </if>
+        <if test="projectId != null and projectId != ''">
+            AND a.pid=#{projectId}
+        </if>
+    </select>
+    <select id="selectHireByName" parameterType="Hire" resultMap="HireResult">
+        select u.id as id,u.emp_name as userName,u.emp_phon as userPhone,
+        (select construction_name from hj_construction_company c where a.bid=c.id) as constructionName,
+        r.imei as imei,a.`name` as areaName
+        from sb_hire h
+        LEFT JOIN hj_project_workers u ON(h.peopleId=u.id)
+        LEFT JOIN sb_area a ON (h.areaId=a.id)
+        LEFT JOIN sb_equipment_record r ON(h.imei=r.imei)
+        where 1=1
+        <if test="userName != null and userName != ''">
+            AND emp_name = #{userName}
+        </if>
+        <if test="projectId != null and projectId != ''">
+            AND a.pid=#{projectId}
+        </if>
+        GROUP BY h.peopleId
+    </select>
+
+    <select id="selectHireByTimeOne" parameterType="Hire" resultMap="HireResult">
+        select r.bat as bat,r.watchDate as watchDate,r.address as address
+        from sb_equipment_record r
+        where 1=1
+        <if test="imei != null and imei != ''">
+            AND r.imei = #{imei}
+        </if>
+        AND watchDate like "${watchDate}%"  ORDER  BY watchDate  LIMIT 0,1
+    </select>
+
+    <select id="selectHireByTimeTwo" parameterType="Hire" resultMap="HireResult">
+        select r.bat as bat,r.watchDate as watchDate,r.address as address
+        from sb_equipment_record r
+        where 1=1
+        <if test="imei != null and imei != ''">
+            AND r.imei = #{imei}
+        </if>
+        AND watchDate like "${watchDate}%"  ORDER  BY watchDate desc LIMIT 0,1
+    </select>
+
+    <select id="selectHireByTimeHistory" parameterType="Hire" resultMap="HireResult">
+        select r.xloc as xloc,r.yloc as yloc,r.watchDate as watchDate
+        from sb_equipment_record r
+        where 1=1
+        <if test="imei != null and imei != ''">
+            AND r.imei = #{imei}
+        </if>
+        AND watchDate like "${watchDate}%"  ORDER  BY watchDate
+    </select>
+
+
+    <select id="selectHireSearch" parameterType="Hire" resultMap="HireResult">
+        SELECT
+        u.id AS id,
+        u.emp_name AS userName,
+        u.emp_phon AS userPhone,
+        (
+        SELECT
+        construction_name
+        FROM
+        hj_construction_company c
+        WHERE
+        a.bid = c.id
+        ) AS constructionName,
+        r.imei AS imei,
+        a.`name` as areaName,a.xloc as areaXloc,a.yloc as areaYloc,a.radius as areaRadius
+        FROM
+        sb_hire h
+        LEFT JOIN hj_project_workers u ON(h.peopleId=u.id)
+        LEFT JOIN sb_area a ON (h.areaId=a.id)
+        LEFT JOIN sb_equipment_record r ON(h.imei=r.imei)
+        where 1=1
+        <if test="filed != null and filed != ''">
+            AND `emp_name`=#{filed} or r.imei=#{filed} or `emp_phon` = #{filed}
+        </if>
+        <if test="projectId != null and projectId != ''">
+            AND a.pid=#{projectId}
+        </if>
+        GROUP BY
+        h.peopleId
+    </select>
+    <!--select u.id as id,u.emp_name as userName,u.emp_phon as userPhone,
+    (select construction_name from hj_construction_company c where a.bid=c.id) as constructionName,
+    r.imei as imei,r.bat as bat,r.watchDate as watchDate,r.xloc as xloc,r.yloc as yloc,r.address as address,
+    a.xloc as areaXloc,a.yloc as areaYloc,a.radius as areaRadius,a.name as areaName
+    from sb_hire h
+    LEFT JOIN hj_project_workers u ON(h.peopleId=u.id)
+    LEFT JOIN sb_area a ON (h.areaId=a.id)
+    LEFT JOIN sb_equipment_record r ON(h.imei=r.imei)
+    where 1=1
+    <if test="filed != null and filed != ''">
+        AND `emp_name`=#{filed}
+        <if test="startTime != null "> and `watchDate` &gt;=	#{startTime}</if>
+        <if test="endTime != null "> and `watchDate` &lt;= #{endTime}</if>
+        or r.imei=#{filed}
+        <if test="startTime != null "> and `watchDate` &gt;=	#{startTime}</if>
+        <if test="endTime != null "> and `watchDate` &lt;= #{endTime}</if>
+        or `emp_phon` = #{filed}
+        <if test="startTime != null "> and `watchDate`  &gt;=	#{startTime}</if>
+        <if test="endTime != null "> and `watchDate` &lt;= #{endTime}</if>
+    </if>
+    <if test="projectId != null and projectId != ''">
+        AND a.pid=#{projectId}
+    </if>
+    <if test="startTime != null "> and `watchDate` &gt;=	#{startTime}</if>
+    <if test="endTime != null "> and `watchDate` &lt;= #{endTime}</if>
+    ORDER BY watchDate desc-->
+    <select id="selectHireHistory" parameterType="Hire" resultMap="HireResult">
+        select h.imei,u.id as id,u.emp_name as userName,u.emp_phon as userPhone,
+        (select construction_name from hj_construction_company c where a.bid=c.id) as constructionName,
+        a.xloc as areaXloc,a.yloc as areaYloc,a.radius as areaRadius,a.name as areaName
+        from sb_hire h
+        LEFT JOIN hj_project_workers u ON(h.peopleId=u.id)
+        LEFT JOIN sb_area a ON (h.areaId=a.id)
+        LEFT JOIN sb_equipment_record r ON(h.imei=r.imei)
+        where 1=1
+        <if test="filed != null and filed != ''">
+            AND `emp_name`=#{filed}
+            <if test="projectId != null and projectId != ''">
+                AND a.pid=#{projectId}
+            </if>
+            or r.imei=#{filed}
+            <if test="projectId != null and projectId != ''">
+                AND a.pid=#{projectId}
+            </if>
+            or `emp_phon` = #{filed}
+            <if test="projectId != null and projectId != ''">
+                AND a.pid=#{projectId}
+            </if>
+        </if>
+        <if test="projectId != null and projectId != ''">
+            AND a.pid=#{projectId}
+        </if>
+			GROUP BY h.peopleId
+    </select>
+    <select id="selectHireHistoryTime" parameterType="Hire" resultMap="HireResult">
+        SELECT
+        r.imei AS imei,
+        r.bat AS bat,
+        r.watchDate AS watchDate,
+        r.xloc AS xloc,
+        r.yloc AS yloc,
+        r.address AS address
+        FROM
+        sb_equipment_record r
+        WHERE
+        1 = 1
+        <if test="imei != null and imei != ''">
+            AND r.imei = #{imei}
+        </if>
+        <if test="startTime != null "> and `watchDate` like "${startTime}%"	</if>
+        ORDER BY
+        watchDate DESC
+    </select>
+    <select id="selectHireHistoryTimeTwo" parameterType="Hire" resultMap="HireResult">
+        SELECT
+        r.imei AS imei,
+        r.bat AS bat,
+        r.watchDate AS watchDate,
+        r.xloc AS xloc,
+        r.yloc AS yloc,
+        r.address AS address
+        FROM
+        sb_equipment_record r
+        WHERE
+        1 = 1
+        <if test="imei != null and imei != ''">
+            AND r.imei = #{imei}
+        </if>
+        ORDER BY
+        watchDate DESC
+    </select>
+
+
+
+    <select id="selectSbHireList" parameterType="SbHire" resultMap="SbHireResult">
+        <include refid="selectSbHireVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="imei != null  and imei != '' "> and imei = #{imei}</if>
+            <if test="peopleId != null "> and peopleId = #{peopleId}</if>
+            <if test="areaId != null "> and areaId = #{areaId}</if>
+        </where>
+    </select>
+
+    <select id="selectSbHireById" parameterType="Integer" resultMap="SbHireResult">
+        <include refid="selectSbHireVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSbHire" parameterType="SbHire">
+        insert into sb_hire
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="imei != null  and imei != ''  ">imei,</if>
+            <if test="peopleId != null  ">peopleId,</if>
+            <if test="areaId != null  ">areaId,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">#{id},</if>
+            <if test="imei != null  and imei != ''  ">#{imei},</if>
+            <if test="peopleId != null  ">#{peopleId},</if>
+            <if test="areaId != null  ">#{areaId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSbHire" parameterType="SbHire">
+        update sb_hire
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="imei != null  and imei != ''  ">imei = #{imei},</if>
+            <if test="peopleId != null  ">peopleId = #{peopleId},</if>
+            <if test="areaId != null  ">areaId = #{areaId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSbHireById" parameterType="Integer">
+        delete from sb_hire where id = #{id}
+    </delete>
+
+    <delete id="deleteSbHireByIds" parameterType="String">
+        delete from sb_hire where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

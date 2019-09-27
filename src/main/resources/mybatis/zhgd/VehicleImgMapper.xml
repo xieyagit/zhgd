@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.vehicleImg.mapper.VehicleImgMapper">
+    
+    <resultMap type="VehicleImg" id="VehicleImgResult">
+        <result property="id"    column="id"    />
+        <result property="parkid"    column="parkid"    />
+        <result property="recordid"    column="recordid"    />
+        <result property="imgUrl"    column="img_url"    />
+        <result property="picSource"    column="pic_source"    />
+    </resultMap>
+	
+	<sql id="selectVehicleImgVo">
+        select id, parkid, recordid, img_url,pic_source from hj_zhgd_vehicle_img
+    </sql>
+
+
+    <select id="selectVehicleImgUrl" resultMap="VehicleImgResult" parameterType="VehicleImg">
+        <include refid="selectVehicleImgVo"/>
+        where parkid = #{parkid} and recordid = #{order_id} and pic_source = #{picSource}
+    </select>
+	
+    <select id="selectVehicleImgList" parameterType="VehicleImg" resultMap="VehicleImgResult">
+        <include refid="selectVehicleImgVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="parkid != null  and parkid != '' "> and parkid = #{parkid}</if>
+             <if test="recordid != null  and recordid != '' "> and recordid = #{recordid}</if>
+             <if test="imgUrl != null  and imgUrl != '' "> and img_url = #{imgUrl}</if>
+             <if test="picSource != 0 "> and pic_source = #{picSource}</if>
+         </where>
+    </select>
+    
+    <select id="selectVehicleImgById" parameterType="Integer" resultMap="VehicleImgResult">
+        <include refid="selectVehicleImgVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertVehicleImg" parameterType="VehicleImg">
+        insert into hj_zhgd_vehicle_img
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="parkid != null  and parkid != ''  ">parkid,</if>
+			<if test="recordid != null  and recordid != ''  ">recordid,</if>
+			<if test="imgUrl != null  and imgUrl != ''  ">img_url,</if>
+			<if test="picSource != 0 ">pic_source,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="parkid != null  and parkid != ''  ">#{parkid},</if>
+			<if test="recordid != null  and recordid != ''  ">#{recordid},</if>
+			<if test="imgUrl != null  and imgUrl != ''  ">#{imgUrl},</if>
+			<if test="picSource != 0 ">#{picSource},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateVehicleImg" parameterType="VehicleImg">
+        update hj_zhgd_vehicle_img
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parkid != null  and parkid != ''  ">parkid = #{parkid},</if>
+            <if test="recordid != null  and recordid != ''  ">recordid = #{recordid},</if>
+            <if test="imgUrl != null  and imgUrl != ''  ">img_url = #{imgUrl},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteVehicleImgById" parameterType="Integer">
+        delete from hj_zhgd_vehicle_img where id = #{id}
+    </delete>
+	
+    <delete id="deleteVehicleImgByIds" parameterType="String">
+        delete from hj_zhgd_vehicle_img where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

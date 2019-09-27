@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbElevatorBinding.mapper.SbElevatorBindingMapper">
+    
+    <resultMap type="SbElevatorBinding" id="SbElevatorBindingResult">
+        <result property="id"    column="id"    />
+        <result property="hxzid"    column="hxzid"    />
+        <result property="pid"    column="pid"    />
+        <result property="userid"    column="userid"    />
+        <result property="dname"    column="dname"    />
+        <result property="isSynchronization"    column="isSynchronization"    />
+        <result property="deviceNo"    column="device_no"    />
+    </resultMap>
+	
+	<sql id="selectSbElevatorBindingVo">
+        select id, hxzid, pid, userid, dname, isSynchronization, device_no from sb_elevator_binding
+    </sql>
+    <select id="selectHxzId" parameterType="SbElevatorBinding" resultMap="SbElevatorBindingResult">
+      SELECT * FROM `sb_elevator_binding` where pid=#{pid};
+    </select>
+
+    <select id="list" parameterType="SbElevatorBinding" resultMap="SbElevatorBindingResult">
+        <include refid="selectSbElevatorBindingVo"/>
+        <where>
+             <if test="projectId != null "> and pid = #{projectId}</if>
+            <if test="hxzid != null"> and hxzid = #{hxzid}</if>
+        </where>
+    </select>
+
+
+    <select id="selectSbElevatorBindingList" parameterType="SbElevatorBinding" resultMap="SbElevatorBindingResult">
+        <include refid="selectSbElevatorBindingVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="hxzid != null  and hxzid != '' "> and hxzid = #{hxzid}</if>
+             <if test="pid != null "> and pid = #{pid}</if>
+             <if test="userid != null "> and userid = #{userid}</if>
+             <if test="dname != null  and dname != '' "> and dname = #{dname}</if>
+             <if test="isSynchronization != null  and isSynchronization != '' "> and isSynchronization = #{isSynchronization}</if>
+             <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbElevatorBindingById" parameterType="Integer" resultMap="SbElevatorBindingResult">
+        <include refid="selectSbElevatorBindingVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbElevatorBinding" parameterType="SbElevatorBinding">
+        insert into sb_elevator_binding
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="hxzid != null  and hxzid != ''  ">hxzid,</if>
+			<if test="pid != null  ">pid,</if>
+			<if test="userid != null  ">userid,</if>
+			<if test="dname != null  and dname != ''  ">dname,</if>
+			<if test="isSynchronization != null  and isSynchronization != ''  ">isSynchronization,</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">device_no,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="hxzid != null  and hxzid != ''  ">#{hxzid},</if>
+			<if test="pid != null  ">#{pid},</if>
+			<if test="userid != null  ">#{userid},</if>
+			<if test="dname != null  and dname != ''  ">#{dname},</if>
+			<if test="isSynchronization != null  and isSynchronization != ''  ">#{isSynchronization},</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbElevatorBinding" parameterType="SbElevatorBinding">
+        update sb_elevator_binding
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="hxzid != null  and hxzid != ''  ">hxzid = #{hxzid},</if>
+            <if test="pid != null  ">pid = #{pid},</if>
+            <if test="userid != null  ">userid = #{userid},</if>
+            <if test="dname != null  and dname != ''  ">dname = #{dname},</if>
+            <if test="isSynchronization != null  and isSynchronization != ''  ">isSynchronization = #{isSynchronization},</if>
+            <if test="deviceNo != null  and deviceNo != ''  ">device_no = #{deviceNo},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbElevatorBindingById" parameterType="Integer">
+        delete from sb_elevator_binding where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbElevatorBindingByIds" parameterType="String">
+        delete from sb_elevator_binding where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbDustEmission.mapper.SbDustEmissionMapper">
+
+    <resultMap type="SbDustEmission" id="SbDustEmissionResult">
+        <result property="id"    column="id"    />
+        <result property="sn"    column="sn"    />
+        <result property="date"    column="date"    />
+        <result property="pm25"    column="pm25"    />
+        <result property="pm10"    column="pm10"    />
+        <result property="tsp"    column="tsp"    />
+        <result property="noise"    column="noise"    />
+        <result property="temperature"    column="temperature"    />
+        <result property="humidity"    column="humidity"    />
+        <result property="windSpeed"    column="wind_speed"    />
+        <result property="winddirection"    column="winddirection"    />
+        <result property="windPower"    column="wind_power"    />
+        <result property="airPressure"    column="air_pressure"    />
+    </resultMap>
+    <sql id="selectSbDustEmissionVo">
+        select id, sn, `date`, pm25, pm10, tsp, noise, temperature, humidity, wind_speed, winddirection, wind_power, air_pressure
+        from sb_dust_emission
+    </sql>
+    <!--查询tsp-->
+    <select id="selectTsp" parameterType="SbDustEmission" resultMap="SbDustEmissionResult">
+        select * from (
+            select AVG(tsp) as tsp, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(curdate(),INTERVAL 0 DAY) AND DATE_SUB(curdate(),INTERVAL -1 DAY) and sn = #{sn}
+            UNION
+            select AVG(tsp) as tsp, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(curdate(),INTERVAL 1 DAY) AND DATE_SUB(curdate(),INTERVAL 0 DAY) and sn = #{sn}
+            UNION
+            select AVG(tsp) as tsp, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(curdate(),INTERVAL 2 DAY) AND DATE_SUB(curdate(),INTERVAL 1 DAY) and sn = #{sn}
+            UNION
+            select AVG(tsp) as tsp, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(curdate(),INTERVAL 3 DAY) AND DATE_SUB(curdate(),INTERVAL 2 DAY) and sn = #{sn}
+            UNION
+            select AVG(tsp) as tsp, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(curdate(),INTERVAL 4 DAY) AND DATE_SUB(curdate(),INTERVAL 3 DAY) and sn = #{sn}
+            UNION
+            select AVG(tsp) as tsp, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(curdate(),INTERVAL 5 DAY) AND DATE_SUB(curdate(),INTERVAL 4 DAY) and sn = #{sn}
+            UNION
+            select AVG(tsp) as tsp, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(curdate(),INTERVAL 6 DAY) AND DATE_SUB(curdate(),INTERVAL 5 DAY) and sn = #{sn}
+            UNION
+            select AVG(tsp) as tsp, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(curdate(),INTERVAL 7 DAY) AND DATE_SUB(curdate(),INTERVAL 6 DAY) and sn = #{sn}
+        ) as avetsp where sn is not null;
+    </select>
+    <select id="selectTsp1" parameterType="SbDustEmission" resultMap="SbDustEmissionResult">
+        select * from (
+            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 0 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL -1 HOUR)
+            UNION
+            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 1 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 0 HOUR)
+            UNION
+            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 2 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 1 HOUR)
+            UNION
+            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 3 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 2 HOUR)
+            UNION
+            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 4 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 3 HOUR)
+            UNION
+            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 5 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 4 HOUR)
+            UNION
+            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 6 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 5 HOUR)
+            UNION
+            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 7 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 6 HOUR)
+            UNION
+            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 8 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 7 HOUR)
+            UNION
+            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 9 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 8 HOUR)
+            UNION
+            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 10 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 9 HOUR)
+            UNION
+            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 11 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 10 HOUR)
+        ) as avetsp where sn is not null;
+
+    </select>
+    <!--查询扬尘数据列表-->
+    <select id="selectDustEmissionListBySn" parameterType="String" resultMap="SbDustEmissionResult">
+        <include refid="selectSbDustEmissionVo"/> where sn = #{sn} order by `date` desc
+    </select>
+    <!--根据项目id和时间获取PM数据平均值-->
+    <select id="getPMAVG"  resultType="Map">
+         SELECT AVG(PM25) pm25,AVG(PM10) pm10 FROM sb_dust_emission e,sb_project_dust_emission p where e.sn=p.sn and e.date like"${time}%" and p.project_id=#{pid}
+    </select>
+    <!--根据设备id和记录时间查询-->
+    <select id="getDustEmissionByDateAndID"  resultMap="SbDustEmissionResult">
+        select  d.* from sb_dust_emission d,sb_project_dust_emission p where d.sn=p.sn and p.id=#{id} and `date` like"${time}%" order by `date` desc LIMIT 1
+    </select>
+    <select id="selectSbDustEmissionList" parameterType="SbDustEmission" resultMap="SbDustEmissionResult">
+        <include refid="selectSbDustEmissionVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="sn != null  and sn != '' "> and sn = #{sn}</if>
+            <if test="date != null "> and `date` = #{date}</if>
+            <if test="pm25 != null "> and pm25 = #{pm25}</if>
+            <if test="pm10 != null "> and pm10 = #{pm10}</if>
+            <if test="tsp != null "> and tsp = #{tsp}</if>
+            <if test="noise != null "> and noise = #{noise}</if>
+            <if test="temperature != null "> and temperature = #{temperature}</if>
+            <if test="humidity != null "> and humidity = #{humidity}</if>
+            <if test="windSpeed != null "> and wind_speed = #{windSpeed}</if>
+            <if test="winddirection != null "> and winddirection = #{winddirection}</if>
+            <if test="windPower != null "> and wind_power = #{windPower}</if>
+            <if test="airPressure != null "> and air_pressure = #{airPressure}</if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectSbDustEmissionByTime" parameterType="Map" resultMap="SbDustEmissionResult">
+        <include refid="selectSbDustEmissionVo"/>
+        <where>
+            <if test="startTime != null "> and `date` &gt;=	#{startTime}</if>
+            <if test="endTime != null "> and `date` &lt;= #{endTime}</if>
+            <if test="sn != null "> and sn=#{sn}</if>
+            <if test="tag != null and tag ==0   "> and id not in(SELECT  id FROM sb_dust_emission WHERE sn = #{sn} AND pm25  &lt; 100 AND pm10  &lt;150 AND tsp  &lt;120 AND noise  &lt;65 AND temperature  &lt;30 AND wind_speed  &lt;13)</if>
+            <if test="tag != null and tag ==1   "> and pm25 &lt; 100 and pm10 &lt; 150 and tsp &lt; 120 and noise &lt;65 and temperature &lt; 30 and wind_speed &lt; 13</if>
+        </where>
+        order by id desc
+    </select>
+    <select id="selectSbDustEmissionByTimes" parameterType="Map" resultMap="SbDustEmissionResult">
+        <include refid="selectSbDustEmissionVo"/>
+        <where>
+            <if test="dateTime != null "> and `date` like "${dateTime}%"</if>
+            <if test="sn != null "> and sn=#{sn}</if>
+        </where>
+        order by id desc
+    </select>
+
+
+    <select id="selectSbDustEmissionToOne" parameterType="String" resultMap="SbDustEmissionResult">
+        <include refid="selectSbDustEmissionVo"/>
+        where  sn=#{sn}
+        order by `date` desc limit 1
+    </select>
+
+    <!--  select humidity,wind_speed,temperature from sb_dust_emission WHERE `date` like"${time}%" AND sn=#{sn}-->
+    <select id="selectToday" parameterType="String" resultMap="SbDustEmissionResult">
+        select * from sb_dust_emission WHERE `date` like"${time}%" AND sn=#{sn}
+        ORDER BY `date` desc LIMIT 0,1
+    </select>
+
+
+    <select id="getPm25_Pm10BySnAndTime" resultType="com.hujiang.project.zhgd.sbDustEmission.domain.Pm25_Pm10">
+        SELECT AVG(pm25) as  pm25 ,AVG(pm10) as pm10,AVG(noise) as noise,AVG(tsp) as pm100 FROM sb_dust_emission WHERE `date` like"${time}%" AND sn=#{sn}
+    </select>
+
+    <select id="selectSbDustEmissionById" parameterType="Long" resultMap="SbDustEmissionResult">
+        <include refid="selectSbDustEmissionVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSbDustEmission" parameterType="SbDustEmission">
+        insert into sb_dust_emission
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="sn != null  and sn != ''  ">sn,</if>
+            <if test="date != null  ">`date`,</if>
+            <if test="pm25 != null  ">pm25,</if>
+            <if test="pm10 != null  ">pm10,</if>
+            <if test="tsp != null  ">tsp,</if>
+            <if test="noise != null  ">noise,</if>
+            <if test="temperature != null  ">temperature,</if>
+            <if test="humidity != null  ">humidity,</if>
+            <if test="windSpeed != null  ">wind_speed,</if>
+            <if test="winddirection != null  ">winddirection,</if>
+            <if test="windPower != null  ">wind_power,</if>
+            <if test="airPressure != null  ">air_pressure,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">#{id},</if>
+            <if test="sn != null  and sn != ''  ">#{sn},</if>
+            <if test="date != null  ">#{date},</if>
+            <if test="pm25 != null  ">#{pm25},</if>
+            <if test="pm10 != null  ">#{pm10},</if>
+            <if test="tsp != null  ">#{tsp},</if>
+            <if test="noise != null  ">#{noise},</if>
+            <if test="temperature != null  ">#{temperature},</if>
+            <if test="humidity != null  ">#{humidity},</if>
+            <if test="windSpeed != null  ">#{windSpeed},</if>
+            <if test="winddirection != null  ">#{winddirection},</if>
+            <if test="windPower != null  ">#{windPower},</if>
+            <if test="airPressure != null  ">#{airPressure},</if>
+        </trim>
+    </insert>
+    <update id="updateSbDustEmission" parameterType="SbDustEmission">
+        update sb_dust_emission
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sn != null  and sn != ''  ">sn = #{sn},</if>
+            <if test="date != null  ">`date` = #{date},</if>
+            <if test="pm25 != null  ">pm25 = #{pm25},</if>
+            <if test="pm10 != null  ">pm10 = #{pm10},</if>
+            <if test="tsp != null  ">tsp = #{tsp},</if>
+            <if test="noise != null  ">noise = #{noise},</if>
+            <if test="temperature != null  ">temperature = #{temperature},</if>
+            <if test="humidity != null  ">humidity = #{humidity},</if>
+            <if test="windSpeed != null  ">wind_speed = #{windSpeed},</if>
+            <if test="winddirection != null  ">winddirection = #{winddirection},</if>
+            <if test="windPower != null  ">wind_power = #{windPower},</if>
+            <if test="airPressure != null  ">air_pressure = #{airPressure},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSbDustEmissionById" parameterType="Long">
+        delete from sb_dust_emission where id = #{id}
+    </delete>
+
+    <delete id="deleteSbDustEmissionByIds" parameterType="String">
+        delete from sb_dust_emission where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

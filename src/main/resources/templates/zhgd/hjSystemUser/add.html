@@ -1,0 +1,186 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-hjSystemUser-add">
+			<div class="form-group">
+
+				<label class="col-sm-3 control-label">账户类型：</label>
+				<div class="col-sm-8">
+					<!--<input id="userType" name="userType" class="form-control" type="text">-->
+					<input type="radio" name="userType"  th:value="0" checked/>集团
+					<input type="radio" name="userType" th:value="1"/>公司
+					<input type="radio" name="userType" th:value="2"/>项目
+				</div>
+			</div>
+
+			<div class="form-group">
+
+				<label class="col-sm-3 control-label">集团（公司）：</label>
+				<div class="col-sm-8">
+					<select id="cid" name="cid" class="form-control" >
+						<option value="">请选择集团（公司）</option>
+						<option th:each="p:${company}" th:value="${p.id}" th:text="${p.companyName}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">名称：</label>
+				<div class="col-sm-8">
+					<input id="userName" name="userName" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">联系电话：</label>
+				<div class="col-sm-8">
+					<input id="userPhone" name="userPhone" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">账户：</label>
+				<div class="col-sm-8">
+					<input id="userAccount" name="userAccount" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">密码：</label>
+				<div class="col-sm-8">
+					<input id="userPassword" name="userPassword" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">账户状态：</label>
+				<div class="col-sm-8">
+					<!--<input id="userState" name="userState" class="form-control" type="text">-->
+					<input type="radio" name="userState"  th:value="0" checked/>禁用
+					<input type="radio" name="userState" th:value="1"/>启用
+				</div>
+			</div>
+
+			<input id="userType" name="userType" th:value="0" class="form-control" type="hidden">
+			<!--<div class="form-group">-->
+				<!--<label class="col-sm-3 control-label">账户类型：</label>-->
+				<!--<div class="col-sm-8">-->
+					<!--&lt;!&ndash;<input id="userTypr" name="userTypr" class="form-control" type="text">&ndash;&gt;-->
+					<!--<input type="radio" name="userTypr"  th:value="0" checked/>集团-->
+					<!--<input type="radio" name="userTypr" th:value="1"/>公司-->
+					<!--<input type="radio" name="userTypr" th:value="2"/>项目-->
+				<!--</div>-->
+			<!--</div>-->
+			<input id="entry" name="entry" class="form-control" th:value="2" type="hidden">
+			<!--<div class="form-group">-->
+				<!--<label class="col-sm-3 control-label">登录项：</label>-->
+				<!--<div class="col-sm-8">-->
+					<!--&lt;!&ndash;<input id="entry" name="entry" class="form-control" type="text">&ndash;&gt;-->
+					<!--<input type="radio" name="entry" th:value="0" checked/>app-->
+					<!--<input type="radio" name="entry" th:value="1"/>pc端-->
+					<!--<input type="radio" name="entry" th:value="2"/>pc端+app-->
+				<!--</div>-->
+			<!--</div>-->
+
+			<!--<input id="entry" name="entry" class="form-control" th:value="2" type="hidden">-->
+			<div class="form-group">
+				<label class="col-sm-3 control-label">登录项：</label>
+				<div class="col-sm-8">
+					<!--<input id="entry" name="entry" class="form-control" type="text">-->
+					<input type="radio" name="entry" th:value="0" checked/>app
+					<input type="radio" name="entry" th:value="1"/>pc端
+					<input type="radio" name="entry" th:value="2"/>pc端+app
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">角色：</label>
+				<div class="col-sm-8">
+					<select id="rid" name="rid" class="form-control">
+						<option value="">请选择对应角色</option>
+					</select>
+				</div>
+			</div>
+
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "zhgd/hjSystemUser"
+		$("#form-hjSystemUser-add").validate({
+			rules:{
+                userName:{
+					required:true,
+				},
+                userPhone:{
+                    required:true,
+                    number:true
+                },
+                userAccount:{
+                    required:true,
+                },
+                userPassword:{
+                    required:true,
+                },
+                userState:{
+                    required:true,
+                },
+                userType:{
+                    required:true,
+                },
+                entry:{
+                    required:true,
+                },
+			}
+		});
+
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/add", $('#form-hjSystemUser-add').serialize());
+	        }
+	    }
+
+		$(function(){
+			var type = 0;
+			// 根据选择的账户类型拿下拉框的内容
+			$(":radio").click(function(){
+				type = $(this).val()
+				$.ajax({
+					url:prefix+"/selectCompany",
+					type: "get",
+					data:{type:type},
+					success: function(data)
+					{
+						// console.log(data)
+						let html = `<option value="">请选择集团（公司）</option>`
+						for (let i = 0; i < data.length; i++) {
+							html +=
+								`<option value='${data[i].id}'>${data[i].companyName}</option>`
+						}
+						$("#cid").html(html)
+					}
+				});
+			});
+
+			// 获取下拉框当前选中的值
+			$('#cid').on('change',function () {
+				let cid = $("option:selected",this).val()
+				$.ajax({
+					url:prefix+"/selectRoleName",
+					type: "get",
+					data:{type:type,cid:cid},
+					success: function(data)
+					{
+						let html = `<option value="">请选择对应角色</option>`
+						for (let i = 0; i < data.length; i++) {
+							html +=
+									`<option value='${data[i].id}'>${data[i].roleName}</option>`
+						}
+						$("#rid").html(html)
+					}
+				});
+			})
+		});
+
+	</script>
+</body>
+</html>
