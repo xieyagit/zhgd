@@ -409,8 +409,8 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
 		return hjAttendanceRecordMapper.turnovers(projectId);
 	}
 	/** 项目出勤统计*/
-	public List<HjAttendanceRecord> item(Integer projectId,String passedTime){
-		return hjAttendanceRecordMapper.item(projectId,passedTime);
+	public List<HjAttendanceRecord> item(Integer projectId){
+		return hjAttendanceRecordMapper.item(projectId);
 	}
 	public HjAttendanceRecord its(Integer id){
 		return hjAttendanceRecordMapper.its(id);
@@ -421,8 +421,8 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
 	return hjAttendanceRecordMapper.itemout(id,passedTime);
 }
 
-	public List<HjAttendanceRecord> labour(Integer projectId,String passedTime,String passedTimes){
-		return hjAttendanceRecordMapper.labour(projectId,passedTime,passedTimes);
+	public List<HjAttendanceRecord> labour(Integer projectId,String passedTimes){
+		return hjAttendanceRecordMapper.labour(projectId,passedTimes);
 	}
 	public List<HjAttendanceRecord> attendance(Integer projectId){
 		return hjAttendanceRecordMapper.attendance(projectId);

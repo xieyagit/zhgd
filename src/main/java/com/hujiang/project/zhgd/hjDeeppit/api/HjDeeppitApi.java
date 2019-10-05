@@ -185,9 +185,9 @@ public class HjDeeppitApi extends BaseController {
                 maxS = maxR.substring(0,maxR.indexOf(".")+3);
                 minR = hjDeeppitDataService.selectParmeterMin(avg);
                 minS = minR.substring(0,minR.indexOf(".")+3);
-                map.put("avg",avgS);
-                map.put("min",minS);
-                map.put("max",maxS);
+                map.put("avg",avgR);
+                map.put("min",minR);
+                map.put("max",maxR);
                 break;
             case 33:
                 avg.setSubside(displayId.toString());

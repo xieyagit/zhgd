@@ -77,7 +77,7 @@ public class APIClient {
         Integer z = null;
         Integer s = null;
         Integer g = null;
-
+        Integer d = null;
         for(int i=0;i<list.size();i++){
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("Project_ID",list.get(i).getProjectNumber());// 同步编号
@@ -96,7 +96,7 @@ public class APIClient {
                     String result =  httpPostWithJSON(url,jsonObject);
                     org.json.JSONObject jsonResult = new org.json.JSONObject(result);
                     logger.info("住建局"+jsonResult);
-                    Integer num = this.insertLog("HOUS",hjProjectWorkers,jsonResult,2,"");
+
                     if(jsonResult.getString("result").equals("true")) {
                       Integer number = hjProjectPersonnelSynchronizationMapper.deleteHjProjectPersonnelSynchronizationById(hjProjectPersonnelSynchronizations.get(0).getId());
                       if(number == 1){
@@ -105,6 +105,7 @@ public class APIClient {
                           z = 1;
                       }
                     }else {
+                        Integer num = this.insertLog("HOUS",hjProjectWorkers,jsonResult,2,"");
                         z = 1;
                     }
                 }
@@ -115,7 +116,7 @@ public class APIClient {
                     String resultOnt = httpPostWithJSON(url, jsonObject);
                     org.json.JSONObject jsonResult = new org.json.JSONObject(resultOnt);
                     logger.info("市政总"+jsonResult);
-                    Integer num = this.insertLog("MUNICIPAL",hjProjectWorkers,jsonResult,2,"");
+
                     if(jsonResult.getString("result").equals("true")) {
                         Integer number = hjProjectPersonnelSynchronizationMapper.deleteHjProjectPersonnelSynchronizationById(hjProjectPersonnelSynchronizations.get(0).getId());
                         if(number == 1){
@@ -124,6 +125,7 @@ public class APIClient {
                             s = 1;
                         }
                     }else {
+                        Integer num = this.insertLog("MUNICIPAL",hjProjectWorkers,jsonResult,2,"");
                         s = 1;
                     }
                 }
@@ -134,7 +136,7 @@ public class APIClient {
                     String resultTwo = httpPostWithJSON(url, jsonObject);
                     org.json.JSONObject jsonResult = new org.json.JSONObject(resultTwo);
                     logger.info("工务署"+jsonResult);
-                    Integer num = this.insertLog("WORKSBUREAU",hjProjectWorkers,jsonResult,2,"");
+
                     if(jsonResult.getString("result").equals("true")) {
                         Integer number = hjProjectPersonnelSynchronizationMapper.deleteHjProjectPersonnelSynchronizationById(hjProjectPersonnelSynchronizations.get(0).getId());
                         if(number == 1){
@@ -143,12 +145,45 @@ public class APIClient {
                             g = 1;
                         }
                     }else {
+                        Integer num = this.insertLog("WORKSBUREAU",hjProjectWorkers,jsonResult,2,"");
                         g = 1;
+                    }
+                }
+            }else if(list.get(i).getPlatformName().equals("DGHOUS")){ // 东莞住建局
+
+                if(hjProjectPersonnelSynchronizations != null && hjProjectPersonnelSynchronizations.size() > 0){
+
+                    JSONObject body=new JSONObject();
+                    JSONObject body2=new JSONObject();
+                    JSONArray body3 =new JSONArray();
+                    HjProject hjProject=hjProjectMapper.selectHjProjectById(hjProjectWorkers.getProjectId());
+                    body2.put("ItemId",hjProject.getItemId());
+                    body2.put("RosterWokerId",hjProjectWorkers.getRosterWokerId());
+                    body2.put("OutDate",new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+                    body2.put("IsSettle","1");
+                    body2.put("IsIn","1");
+                    body3.add(body2);
+                    body.put("Data",body3);
+                    String url = getUrlDG(list.get(i).getApiKey(),body.toString(),Constants.DG_HOUS+"/UploadLeaveOffice");
+                    String resultTwo = httpPostWithJSONDG(url, body);
+                    org.json.JSONObject jsonResult = new org.json.JSONObject(resultTwo);
+                    logger.info("东莞住建局："+hjProjectWorkers.getId()+"人员退场"+jsonResult);
+
+                    if("1".equals(jsonResult.getString("StateCode"))) {
+                        Integer number = hjProjectPersonnelSynchronizationMapper.deleteHjProjectPersonnelSynchronizationById(hjProjectPersonnelSynchronizations.get(0).getId());
+                        if(number == 1){
+                            d = null;
+                        }else {
+                            d = 1;
+                        }
+                    }else {
+                        Integer num = this.insertLogDG("DGHOUS",hjProjectWorkers,jsonResult,2,"");
+                        d = 1;
                     }
                 }
             }
         }
-        if(z == null && s == null && g == null){
+        if(z == null && s == null && g == null && d == null){
 
             // 修改项目人员状态
             HjProjectWorkers hjProjectWorkersOnt = new HjProjectWorkers();
@@ -189,6 +224,7 @@ public class APIClient {
         String faceUrlBase64 = AliOcrUtil.getStrImgBase64(new URL(hjProjectWorkers.getFaceUrl()));                         // 工地采集人脸照片
         String idPhotoScanBase64 = AliOcrUtil.getStrImgBase64(new URL(hjProjectWorkers.getIdphotoScan()));                 // 身份证正面
         String idPhotoScan2Base64 = AliOcrUtil.getStrImgBase64(new URL(hjProjectWorkers.getIdphotoScan2()));               // 身份证反面
+        HjProject hjProject = hjProjectMapper.selectHjProjectById(hjProjectWorkers.getProjectId());
         // 参建单位
         HjConstructionCompany hjConstructionCompany = hjConstructionCompanyMapper.selectHjConstructionCompanyById(hjProjectWorkers.getConstructionId());
         // 班组
@@ -226,6 +262,7 @@ public class APIClient {
               Integer z = null;
               Integer s = null;
               Integer g = null;
+              Integer d = null;
 
                 for(int i=0;i<list.size();i++){
                     List<HjProjectPersonnelSynchronization> hjProjectPersonnelSynchronizations = this.selectHjProjectPersonnelSynchronizations(hjProjectWorkers.getId(),hjProjectWorkers.getProjectId(),list.get(i).getId());
@@ -238,7 +275,7 @@ public class APIClient {
                             String result =  httpPostWithJSON(url,jsonObject);
                             org.json.JSONObject jsonResult = new org.json.JSONObject(result);
                             logger.info("住建局"+jsonResult);
-                            Integer num = this.insertLog("HOUS",hjProjectWorkers,jsonResult,1,"");
+
                             if(jsonResult.getString("result").equals("true")) {
                                 Integer number = this.insertHjProjectPersonnelSynchronizations(hjProjectWorkers.getId(),hjProjectWorkers.getProjectId(),list.get(i).getId());
                                 if(number == 1){
@@ -247,6 +284,7 @@ public class APIClient {
                                     z = 1;
                                 }
                             }else {
+                                Integer num = this.insertLog("HOUS",hjProjectWorkers,jsonResult,1,"");
                                 z = 1;
                             }
                         }
@@ -258,7 +296,7 @@ public class APIClient {
                             String resultOnt = httpPostWithJSON(url, jsonObject);
                             org.json.JSONObject jsonResult = new org.json.JSONObject(resultOnt);
                             logger.info("市政总"+jsonResult);
-                            Integer num = this.insertLog("MUNICIPAL",hjProjectWorkers,jsonResult,1,"");
+
                             if(jsonResult.getString("result").equals("true")) {
                                 Integer number = this.insertHjProjectPersonnelSynchronizations(hjProjectWorkers.getId(),hjProjectWorkers.getProjectId(),list.get(i).getId());
                                 if(number == 1){
@@ -267,6 +305,7 @@ public class APIClient {
                                     s = 1;
                                 }
                             }else {
+                                Integer num = this.insertLog("MUNICIPAL",hjProjectWorkers,jsonResult,1,"");
                                 s = 1;
                             }
                         }
@@ -277,7 +316,7 @@ public class APIClient {
                             String resultTwo = httpPostWithJSON(url, jsonObject);
                             org.json.JSONObject jsonResult = new org.json.JSONObject(resultTwo);
                             logger.info("工务署"+jsonResult);
-                            Integer num = this.insertLog("WORKSBUREAU",hjProjectWorkers,jsonResult,1,"");
+
                             if(jsonResult.getString("result").equals("true")) {
                                 Integer number = this.insertHjProjectPersonnelSynchronizations(hjProjectWorkers.getId(),hjProjectWorkers.getProjectId(),list.get(i).getId());
                                 if(number == 1){
@@ -286,15 +325,54 @@ public class APIClient {
                                     g = 1;
                                 }
                             }else {
+                                Integer num = this.insertLog("WORKSBUREAU",hjProjectWorkers,jsonResult,1,"");
                                 g = 1;
+                            }
+                        }
+                    }else if(list.get(i).getPlatformName().equals("DGHOUS")){ // 东莞住建局
+
+                        if(null == hjProjectPersonnelSynchronizations || hjProjectPersonnelSynchronizations.size() ==0){
+                            JSONObject body=new JSONObject();
+                            JSONObject body2=new JSONObject();
+                            body2.put("Name",hjProjectWorkers.getEmpName());
+                            body2.put("Sex","男".equals(hjProjectWorkers.getEmpSex())?"0":"1");
+                            body2.put("CerfNum",hjProjectWorkers.getIdCode());
+                            body2.put("TeamName", hjTeam.getTeamName());
+                            body2.put("WorkerTypeId",hjProjectWorkers.getJobName());
+                            body2.put("ItemId",hjProject.getItemId());
+                            body2.put("InDate",hjProjectWorkers.getStartTime()+" 00:00:00");
+                            body2.put("ComId",hjConstructionCompany.getComId());
+                            body2.put("Photo",idPhotoScanBase64);
+                            body.put("Data",body2);
+                            System.out.println(body2.toString());
+                            System.out.println(body.toString());
+                            String url = getUrlDG(list.get(i).getApiKey(),body.toString(),Constants.DG_HOUS+"/UploadWorker");
+                            String resultTwo = httpPostWithJSONDG(url, body);
+                            org.json.JSONObject jsonResult = new org.json.JSONObject(resultTwo);
+                            logger.info("东莞住建局"+jsonResult);
+
+                            if("1".equals(jsonResult.getString("StateCode"))) {
+                                HjProjectWorkers hp=new HjProjectWorkers();
+                                hp.setId(hjProjectWorkers.getId());
+                                hp.setRosterWokerId(JSONObject.parseObject(resultTwo).getJSONObject("ResultData").getInteger("RosterWokerId"));
+                                hjProjectWorkersMapper.updateHjProjectWorkers(hp);
+                                Integer number = this.insertHjProjectPersonnelSynchronizations(hjProjectWorkers.getId(),hjProjectWorkers.getProjectId(),list.get(i).getId());
+                                if(number == 1){
+                                    d = null;
+                                }else {
+                                    d = 1;
+                                }
+                            }else {
+                                Integer num = this.insertLogDG("DGHOUS",hjProjectWorkers,jsonResult,1,"");
+                                d = 1;
                             }
                         }
                     }
                 }
-                if(z == null && s == null && g == null){
+                if(z == null && s == null && g == null&& d == null){
                     AipFace aipFace = new AipFace(Constants.BD_APP_ID, Constants.BD_API_KEY, Constants.BD_SECRET_KEY);
                     // 找到人脸库组名
-                    HjProject hjProject = hjProjectMapper.selectHjProjectById(hjProjectWorkers.getProjectId());
+
                     //保存到参建单位人脸库
                     org.json.JSONObject resultObject = aipFace.addUser(hjProjectWorkers.getFaceUrl(), "URL", hjProject.getFaceGroup(), hjProjectWorkers.getId() + "", new HashMap<>());
                     logger.info("人脸库"+resultObject);
@@ -405,6 +483,7 @@ public class APIClient {
         Integer z = null;
         Integer s = null;
         Integer g = null;
+        Integer d = null;
 
         for(int i=0;i<list.size();i++){
 
@@ -435,20 +514,22 @@ public class APIClient {
                     String url = getUrl(list.get(i).getApiSecret(),list.get(i).getApiKey(),"1.1",list.get(i).getClientSerial(),jsonObject.toString(),Constants.HJ_FORMALHOST + "UploadPassedLog");
                     String result =  httpPostWithJSON(url,jsonObject);
                     org.json.JSONObject jsonResult = new org.json.JSONObject(result);
-                    Integer num = this.insertLog("HOUS",hjProjectWorkers,jsonResult,0,direction);
+
                     if(jsonResult.getString("result").equals("true")) {
                         z = null;
                     }else {
+                        Integer num = this.insertLog("HOUS",hjProjectWorkers,jsonResult,0,direction);
                         z = 1;
                     }
             }else if(list.get(i).getPlatformName().equals("MUNICIPAL")){ // 市政总
                  String url = getUrl(list.get(i).getApiSecret(),list.get(i).getApiKey(),"1.1",list.get(i).getClientSerial(),jsonObject.toString(),Constants.ZHGD_FORMALHOST+ "UploadPassedLog");
                     String resultOnt = httpPostWithJSON(url, jsonObject);
                     org.json.JSONObject jsonResult = new org.json.JSONObject(resultOnt);
-                    Integer num = this.insertLog("MUNICIPAL",hjProjectWorkers,jsonResult,0,direction);
+
                     if(jsonResult.getString("result").equals("true")) {
                         s = null;
                     }else {
+                        Integer num = this.insertLog("MUNICIPAL",hjProjectWorkers,jsonResult,0,direction);
                         s = 1;
                     }
             }else if(list.get(i).getPlatformName().equals("WORKSBUREAU")){ // 工务署
@@ -456,15 +537,41 @@ public class APIClient {
                 String url = getUrl(list.get(i).getApiSecret(),list.get(i).getApiKey(),"1.1",list.get(i).getClientSerial(),jsonObject.toString(),Constants.ZC_FORMALHOST+ "UploadPassedLog");
                     String resultTwo = httpPostWithJSON(url, jsonObject);
                     org.json.JSONObject jsonResult = new org.json.JSONObject(resultTwo);
-                    Integer num = this.insertLog("WORKSBUREAU",hjProjectWorkers,jsonResult,0,direction);
+
                     if(jsonResult.getString("result").equals("true")) {
                         g = null;
                     }else {
+                        Integer num = this.insertLog("WORKSBUREAU",hjProjectWorkers,jsonResult,0,direction);
                         g = 1;
                     }
+                }else if(list.get(i).getPlatformName().equals("DGHOUS")){  // 东莞住建局
+                JSONObject body=new JSONObject();
+                JSONObject body2=new JSONObject();
+                JSONArray body3 =new JSONArray();
+                body2.put("RosterWokerId",hjProjectWorkers.getRosterWokerId());
+                body2.put("CheckDate", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+                HjProject project=hjProjectMapper.selectHjProjectById(list.get(i).getProjectId());
+                body2.put("DeviceNo",project.getId()+project.getItemId());
+                body2.put("Type",6);
+                body2.put("ItemId",project.getItemId());
+                body3.add(body2);
+                body.put("Data",body3);
+                String url = getUrlDG(list.get(i).getApiKey(),body.toString(),Constants.DG_HOUS + "/UploadAttendance");
+                String result =  httpPostWithJSONDG(url,body);
+
+                org.json.JSONObject jsonResult = new org.json.JSONObject(result);
+                logger.info("东莞住建局"+jsonResult);
+
+
+                if("1".equals(jsonResult.getString("StateCode"))) {
+                    d = null;
+                }else {
+                    Integer num = this.insertLogDG("DGHOUS",hjProjectWorkers,jsonResult,1,"");
+                    d = 1;
                 }
             }
-        if(z == null && s == null && g == null){
+            }
+        if(z == null && s == null && g == null && d == null){
             return true;
         }
         return false;
@@ -530,7 +637,7 @@ public class APIClient {
      */
     public Integer insertLog(String tag , HjProjectWorkers hjProjectWorkers , org.json.JSONObject object, Integer loggingType,String inOut){
 
-        if("false".equals(object.getString("result"))) {
+        if(!"1".equals(object.getString("result"))) {
             HjLogging hjLogging = new HjLogging();
             hjLogging.setProjectId(hjProjectWorkers.getProjectId());
             hjLogging.setLoggingMessage(object.getString("detail_message"));
@@ -568,7 +675,27 @@ public class APIClient {
         }
         return 1;
     }
+    public Integer insertLogDG(String tag , HjProjectWorkers hjProjectWorkers , org.json.JSONObject object, Integer loggingType,String inOut){
 
+        if("false".equals(object.getString("StateCode"))) {
+            HjLogging hjLogging = new HjLogging();
+            hjLogging.setProjectId(hjProjectWorkers.getProjectId());
+            hjLogging.setLoggingMessage(object.getString("ErrMsg"));
+            hjLogging.setLoggingData(object.toString());
+            if(loggingType==0){
+                hjLogging.setInOut("考勤失败！");
+            }else if(loggingType==1){
+                hjLogging.setInOut("人员进场失败！");
+            }else if(loggingType==2){
+                hjLogging.setInOut("人员退场失败！");
+            }
+            hjLogging.setUserName(hjProjectWorkers.getEmpName());
+            hjLogging.setLoggingTag(tag);
+            hjLogging.setLoggingTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            hjLoggingMapper.insertHjLogging(hjLogging);
+        }
+        return 1;
+    }
 
 
 

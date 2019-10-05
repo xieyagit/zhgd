@@ -19,7 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<sql id="selectHjAttendanceDeviceVo">
         select id, device_no, device_name, device_factory, direction, create_time, status, project_id, device_ip from hj_attendance_device
     </sql>
-	
+
     <select id="selectHjAttendanceDeviceList" parameterType="HjAttendanceDevice" resultMap="HjAttendanceDeviceResult">
         <include refid="selectHjAttendanceDeviceVo"/>
         <where>  

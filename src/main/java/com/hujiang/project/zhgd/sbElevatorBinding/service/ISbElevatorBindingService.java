@@ -55,11 +55,8 @@ public interface ISbElevatorBindingService
 
 	/**
 	 * 查询某项目下升降机数量
-	 *
-	 * @param projectId
-	 * @param hxzid
 	 * @return 结果
 	 * */
-	public List<SbElevatorBinding> list(Integer projectId,String hxzid);
+	public List<SbElevatorBinding> list(SbElevatorBinding info);
 	
 }

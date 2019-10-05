@@ -84,19 +84,43 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="labour" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
-        SELECT a.employee_id as `count` FROM hj_attendance_record a INNER JOIN hj_project_workers p
-        ON a.employee_id = p.id
-        WHERE a.passed_time <![CDATA[ >= ]]> CONCAT(#{passedTimes}) and a.passed_time <![CDATA[ <= ]]> CONCAT(#{passedTime},'%') and a.project_id = #{projectId} AND a.direction='in'
-        GROUP BY a.employee_id
+        select * from (
+            SELECT count(a.employee_id) as `count` ,DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 0 HOUR) as passed_time FROM (select employee_id, project_id, MAX(passed_time) passed_time from hj_attendance_record where direction='in' and project_id = #{projectId} group by employee_id,project_id) a INNER JOIN hj_project_workers p ON a.employee_id = p.id WHERE a.passed_time BETWEEN #{passedTimes} AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 0 HOUR)
+            UNION
+            SELECT count(a.employee_id) as `count` ,DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 1 HOUR) as passed_time FROM (select employee_id, project_id, MAX(passed_time) passed_time from hj_attendance_record where direction='in' and project_id = #{projectId} group by employee_id,project_id) a INNER JOIN hj_project_workers p ON a.employee_id = p.id WHERE a.passed_time BETWEEN #{passedTimes} AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 1 HOUR)
+            UNION
+            SELECT count(a.employee_id) as `count` ,DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 2 HOUR) as passed_time FROM (select employee_id, project_id, MAX(passed_time) passed_time from hj_attendance_record where direction='in' and project_id = #{projectId} group by employee_id,project_id) a INNER JOIN hj_project_workers p ON a.employee_id = p.id WHERE a.passed_time BETWEEN #{passedTimes} AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 2 HOUR)
+            UNION
+            SELECT count(a.employee_id) as `count` ,DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 3 HOUR) as passed_time FROM (select employee_id, project_id, MAX(passed_time) passed_time from hj_attendance_record where direction='in' and project_id = #{projectId} group by employee_id,project_id) a INNER JOIN hj_project_workers p ON a.employee_id = p.id WHERE a.passed_time BETWEEN #{passedTimes} AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 3 HOUR)
+            UNION
+            SELECT count(a.employee_id) as `count` ,DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 4 HOUR) as passed_time FROM (select employee_id, project_id, MAX(passed_time) passed_time from hj_attendance_record where direction='in' and project_id = #{projectId} group by employee_id,project_id) a INNER JOIN hj_project_workers p ON a.employee_id = p.id WHERE a.passed_time BETWEEN #{passedTimes} AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 4 HOUR)
+            UNION
+            SELECT count(a.employee_id) as `count` ,DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 5 HOUR) as passed_time FROM (select employee_id, project_id, MAX(passed_time) passed_time from hj_attendance_record where direction='in' and project_id = #{projectId} group by employee_id,project_id) a INNER JOIN hj_project_workers p ON a.employee_id = p.id WHERE a.passed_time BETWEEN #{passedTimes} AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 5 HOUR)
+            UNION
+            SELECT count(a.employee_id) as `count` ,DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 6 HOUR) as passed_time FROM (select employee_id, project_id, MAX(passed_time) passed_time from hj_attendance_record where direction='in' and project_id = #{projectId} group by employee_id,project_id) a INNER JOIN hj_project_workers p ON a.employee_id = p.id WHERE a.passed_time BETWEEN #{passedTimes} AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 6 HOUR)
+            UNION
+            SELECT count(a.employee_id) as `count` ,DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 7 HOUR) as passed_time FROM (select employee_id, project_id, MAX(passed_time) passed_time from hj_attendance_record where direction='in' and project_id = #{projectId} group by employee_id,project_id) a INNER JOIN hj_project_workers p ON a.employee_id = p.id WHERE a.passed_time BETWEEN #{passedTimes} AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 7 HOUR)
+            UNION
+            SELECT count(a.employee_id) as `count` ,DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 8 HOUR) as passed_time FROM (select employee_id, project_id, MAX(passed_time) passed_time from hj_attendance_record where direction='in' and project_id = #{projectId} group by employee_id,project_id) a INNER JOIN hj_project_workers p ON a.employee_id = p.id WHERE a.passed_time BETWEEN #{passedTimes} AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 8 HOUR)
+            UNION
+            SELECT count(a.employee_id) as `count` ,DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 9 HOUR) as passed_time FROM (select employee_id, project_id, MAX(passed_time) passed_time from hj_attendance_record where direction='in' and project_id = #{projectId} group by employee_id,project_id) a INNER JOIN hj_project_workers p ON a.employee_id = p.id WHERE a.passed_time BETWEEN #{passedTimes} AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 9 HOUR)
+            UNION
+            SELECT count(a.employee_id) as `count` ,DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 10 HOUR) as passed_time FROM (select employee_id, project_id, MAX(passed_time) passed_time from hj_attendance_record where direction='in' and project_id = #{projectId} group by employee_id,project_id) a INNER JOIN hj_project_workers p ON a.employee_id = p.id WHERE a.passed_time BETWEEN #{passedTimes} AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 10 HOUR)
+            UNION
+            SELECT count(a.employee_id) as `count` ,DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 11 HOUR) as passed_time FROM (select employee_id, project_id, MAX(passed_time) passed_time from hj_attendance_record where direction='in' and project_id = #{projectId} group by employee_id,project_id) a INNER JOIN hj_project_workers p ON a.employee_id = p.id WHERE a.passed_time BETWEEN #{passedTimes} AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 11 HOUR)
+        ) as avetsp;
     </select>
 
 
     <select id="item"  parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
-        SELECT c.id as id, c.construction_name as `name`
-        FROM hj_construction_company c
-        INNER JOIN hj_construction_project p
-        ON c.id = p.construction_id
-        WHERE project_id = #{projectId}
+        SELECT construction_name as title,(SELECT COUNT(c.construction_id) FROM hj_project_workers c WHERE c.construction_id=b.id AND c.project_id =  #{projectId}  GROUP BY c.construction_id) count1 ,
+        (SELECT COUNT(d.construction_id) FROM (SELECT DISTINCT employee_id FROM hj_attendance_record WHERE project_id =  #{projectId}  and TO_DAYS(passed_time)=TO_DAYS(curdate()) ) a
+        INNER JOIN hj_project_workers d ON a.employee_id = d.id
+        WHERE d.construction_id = b.id
+        GROUP BY d.construction_id) count2
+        FROM hj_construction_project a INNER JOIN hj_construction_company b
+        ON a.construction_id = b.id
+        WHERE a.project_id = #{projectId}
     </select>
 
     <select id="its"  parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult" >

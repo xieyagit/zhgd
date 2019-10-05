@@ -207,7 +207,7 @@ public class PcElevatorApi extends BaseController {
     @ResponseBody
     public AjaxResult switchDevice( SbElevatorBinding seb){
 
-        return AjaxResult.success(sbElevatorBindingService.selectSbElevatorBindingList(seb));
+        return AjaxResult.success(sbElevatorBindingService.selectHxzId(seb.getPid()));
     }
 
 }

@@ -112,10 +112,10 @@ eureka:
   client:
     healthcheck:
       # 开启健康检查 （需要spring-boot-starter-actuator依赖）
-      enabled: true
+      enabled: false
     serviceUrl:
       #     defaultZone: http://47.112.23.241:9001/eureka/,http://47.112.23.241:9002/eureka/  # 注册中心访问地址
-     defaultZone: http://127.0.0.1:9005/eureka/  # 注册中心访问地址
+     defaultZone: http://localhost:9006/eureka/  # 注册中心访问地址
 
 
 

@@ -4,6 +4,7 @@ import com.hujiang.framework.web.domain.AjaxResult;
 import com.hujiang.project.zhgd.sbProjectElectricityBox.domain.SbPowerBoxAdd;
 import com.hujiang.project.zhgd.sbProjectElectricityBox.domain.SbProjectElectricityBox;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -20,11 +21,10 @@ public interface ISbProjectElectricityBoxService
 
 	/**
 	 * 查询项目电箱信息
-	 * @param projectId 项目ID
-	 * @param hxzid 设备号
+	 * @param sbProjectElectricityBox
 	 * @return 项目电箱信息
 	 */
-	public List<SbProjectElectricityBox> selectByProjectIdAndHxzId(Integer projectId,String hxzid);
+	public List<SbProjectElectricityBox> selectByProjectIdAndHxzId(SbProjectElectricityBox sbProjectElectricityBox);
 
 	/**
      * 查询项目电箱信息
@@ -77,9 +77,18 @@ public interface ISbProjectElectricityBoxService
 	/**
      * 删除项目电箱信息
      * 
-     * @param ids 需要删除的数据ID
+     * @param id 需要删除的数据ID
      * @return 结果
      */
-	public int deleteSbProjectElectricityBoxByIds(String ids);
+	public int deleteSbProjectElectricityBoxByIds(Integer id);
+
+
+	/**
+	 * 查询出设备数量
+	 *
+	 * @param projectId 项目ID
+	 * @return 结果
+	 */
+	public List<SbProjectElectricityBox> seleleSize(Integer projectId);
 	
 }

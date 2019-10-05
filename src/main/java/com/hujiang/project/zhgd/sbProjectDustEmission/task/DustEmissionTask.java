@@ -1,5 +1,6 @@
 package com.hujiang.project.zhgd.sbProjectDustEmission.task;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.utils.JsonUtils;
 import com.hujiang.common.utils.ThreadUtils;
@@ -15,6 +16,8 @@ import com.hujiang.project.zhgd.sbProjectDustEmission.service.ISbProjectDustEmis
 import com.hujiang.project.zhgd.utils.Constants;
 import com.hujiang.project.zhgd.utils.Util;
 import com.hujiang.project.zhgd.utils.ZCAPIClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +39,7 @@ import java.util.*;
 @RequestMapping(value = "/provider/tasks",method = RequestMethod.POST)
 public class DustEmissionTask {
 
+    private final Logger logger = LoggerFactory.getLogger(ZCAPIClient.class);
     @Autowired
     private ISbProjectDustEmissionService projectDustEmissionService;
     @Autowired
@@ -107,6 +111,19 @@ public class DustEmissionTask {
             JSONObject originalData = JSONObject.parseObject(s);
             JSONObject digest = JSONObject.parseObject(originalData.getString("Data"));
             if (digest.size()>0){
+                ThreadUtils.async(new Runnable(){
+                    @Override
+                    public void run() {
+                        try {
+                            cayTsp(sbDustEmission);
+                        } catch (IOException e) {
+                            logger.error("城安院错误(insert): " + e.getMessage() + ", 参数错误："+sbDustEmission);
+                        } catch (URISyntaxException e) {
+                            logger.error("城安院错误(insert): " + e.getMessage() + ", 参数错误："+sbDustEmission);
+                        }
+                    }
+                });
+
                 //保存新的扬尘记录
                 SbDustEmission dustEmission = JSONObject.parseObject(digest.toJSONString(), SbDustEmission.class);
                 dustEmission.setJdbh(p.getJdbh());
@@ -114,7 +131,7 @@ public class DustEmissionTask {
 
                 List<SbDustEmission> dustEmissions = dustEmissionService.selectSbDustEmissionList(dustEmission);
                 this.tspsb(dustEmission);
-
+//                cayTsp(dustEmission);
                 ThreadUtils.async(new Runnable() {
                     @Override
                     public void run() {
@@ -158,6 +175,61 @@ public class DustEmissionTask {
             }
         }
     }
+
+
+    /** 上报城安院环境监测记录*/
+    public String cayTsp(SbDustEmission sbDustEmission) throws IOException, URISyntaxException {
+        String f = null;
+        JSONObject js1 = new JSONObject();
+        JSONArray body = new JSONArray();
+        SbProjectDustEmission sbProjectDustEmission = new SbProjectDustEmission();
+        sbProjectDustEmission.setSn(sbDustEmission.getSn());
+        List<SbProjectDustEmission> sbProjectDustEmissions = projectDustEmissionService.selectProjectDustEmissionListData(sbProjectDustEmission);
+        /** 市管项目*/
+        if (sbProjectDustEmissions.get(0).getSubId() != null) {
+            js1.put("HJ_PGUID", sbProjectDustEmissions.get(0).getXmid());//所属项目编号
+            js1.put("Jdbh", sbProjectDustEmissions.get(0).getJdbh());//项目监督编号
+            js1.put("HJ_DGUID",sbDustEmission.getSn());
+            js1.put("HJ_ZS",sbDustEmission.getNoise());
+            js1.put("HJ_PM10",sbDustEmission.getPm10());
+            js1.put("HJ_PM25",sbDustEmission.getPm25());
+            js1.put("HJ_FS",sbDustEmission.getWindSpeed());
+            js1.put("HJ_FX",sbDustEmission.getWinddirection());
+            js1.put("HJ_WD",sbDustEmission.getTemperature());
+            js1.put("HJ_SD",sbDustEmission.getHumidity());
+            js1.put("tsp",sbDustEmission.getTsp());
+            js1.put("sub_id",sbProjectDustEmissions.get(0).getSubId());
+            body.add(js1);
+            JSONObject object = new JSONObject();
+            object.put("PList",body);
+            f = ZCAPIClient.QGXMCAY("hj/sync_hj_data",object);
+        }else{
+            /** 区管项目*/
+            JSONObject object1 = new JSONObject();
+            JSONArray array = new JSONArray();
+            JSONObject j = new JSONObject();
+            j.put("pguid", sbProjectDustEmissions.get(0).getXmid());
+            JSONObject object = ZCAPIClient.reportedCay("authorize/getGcbyProj", j);
+            JSONArray data = object.getJSONArray("res");
+            JSONObject datas = data.getJSONObject(0);
+            object1.put("HJ_PGUID", sbProjectDustEmissions.get(0).getXmid());//所属项目编号
+            object1.put("Jdbh", sbProjectDustEmissions.get(0).getJdbh());//项目监督编号
+            object1.put("HJ_DGUID",sbDustEmission.getSn());
+            object1.put("HJ_ZS",sbDustEmission.getNoise());
+            object1.put("HJ_PM10",sbDustEmission.getPm10());
+            object1.put("HJ_PM25",sbDustEmission.getPm25());
+            object1.put("HJ_FS",sbDustEmission.getWindSpeed());
+            object1.put("HJ_FX",sbDustEmission.getWinddirection());
+            object1.put("HJ_WD",sbDustEmission.getTemperature());
+            object1.put("HJ_SD",sbDustEmission.getHumidity());
+            array.add(object1);
+            JSONObject object2 = new JSONObject();
+            object2.put("PList",array);
+            f = ZCAPIClient.SGXMCAY("hj/sync_hj_data",object2);
+        }
+        return f;
+    }
+
 
     public AjaxResult tspsb(SbDustEmission sbDustEmission) throws IOException, URISyntaxException {
         AjaxResult a = new AjaxResult();

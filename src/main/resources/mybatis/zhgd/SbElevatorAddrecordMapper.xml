@@ -52,7 +52,7 @@
     </sql>
 
     <select id="cranes"  parameterType="SbElevatorAddrecord" resultMap="SbElevatorAddrecordResult">
-        SELECT runtime,laod,operator_name,height,is_up_warning,is_down_warning,SpeedAlarm,userid
+        SELECT runtime,laod,operator_name,a.height,is_up_warning,is_down_warning,SpeedAlarm,userid
         FROM sb_elevator_addrecord a
         INNER JOIN sb_elevator_binding b
         ON a.device_no=b.device_no
@@ -75,7 +75,7 @@
 
 	<select id="selectSbElevatorAddRecord" parameterType="SbElevatorAddrecord" resultMap="SbElevatorAddrecordResult">
         SELECT a.id, a.device_no, runtime, laod, load_ratio, sign, loading_capacity, operator_name, ic_num,
-        direction, height, real_time_flag, status, braking_distance, is_up_warning, is_down_warning, is_safety_device_warn, is_over_warning, is_forward_warning, is_backward_warning,a.hxzid
+        direction, a.height, real_time_flag, status, braking_distance, is_up_warning, is_down_warning, is_safety_device_warn, is_over_warning, is_forward_warning, is_backward_warning,a.hxzid
         ,PeopleCntAlarm,WeightAlarm,SpeedAlarm,ObliguityXAlarm,ObliguityYAlarm,Speed,WindSpeed,WindLevel,Floor,ObliguityX,ObliguityY
         FROM sb_elevator_addrecord a
         LEFT JOIN sb_elevator_binding b ON (a.hxzid=b.hxzid)

@@ -178,15 +178,14 @@ List<DongTai> selectGRKQDongTai(Integer pid);
 	public List<HjAttendanceRecord> turnovers(@Param("projectId") Integer projectId);
 
 	/** 项目出勤统计*/
-	public List<HjAttendanceRecord> item(@Param("projectId") Integer projectId,
-										 @Param("passedTime") String passedTime);
+	public List<HjAttendanceRecord> item(@Param("projectId") Integer projectId);
 	public HjAttendanceRecord its(@Param("id") Integer id);
 	public List<HjAttendanceRecord> itemin(@Param("id") Integer id,
 									 @Param("passedTime") String passedTime);
 	public List<HjAttendanceRecord> itemout(@Param("id") Integer id,
 									 @Param("passedTime") String passedTime);
 
-	public List<HjAttendanceRecord> labour(@Param("projectId") Integer projectId,@Param("passedTime") String passedTime,@Param("passedTimes") String passedTimes);
+	public List<HjAttendanceRecord> labour(@Param("projectId") Integer projectId,@Param("passedTimes") String passedTimes);
 
 	public List<HjAttendanceRecord> attendance(@Param("projectId") Integer projectId);
 	public List<HjAttendanceRecord> attendances(@Param("projectId") Integer projectId);

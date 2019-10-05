@@ -512,17 +512,14 @@ public class DustEmissionApi extends BaseController {
             SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
             String finalCurrentDate = DateUtils.getDateTime(currentDate);
             List<SbDustEmission> list = emissions.stream().filter(a->DateUtils.getDateTime(DateUtils.parseDate(a.getDate())).equals(finalCurrentDate)).collect(Collectors.toList());
-            if(list.size() > 0) {
-                item = list.get(0);
-            }
-            else {
-                item = new SbDustEmission();
-                item.setDate(String.valueOf(sdf.format(currentDate)));
-            }
+
             JSONObject jsonObject = new JSONObject();
             if (list.size()>0) {
                 if (dustEmission.get(0).getSn().equals(list.get(0).getSn())) {
                     jsonObject.put(sdf.format(currentDate), list.get(0).getTsp());
+                    array.add(jsonObject);
+                } else {
+                    jsonObject.put(sdf.format(currentDate), "");
                     array.add(jsonObject);
                 }
             }else {
@@ -547,21 +544,15 @@ public class DustEmissionApi extends BaseController {
             SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH");
             String finalCurrentDate = DateUtils.getDateTimes(currentDate1);
             List<SbDustEmission> list = emissions1.stream().filter(a->DateUtils.getDateTimes(DateUtils.parseDate(a.getDate())).equals(finalCurrentDate)).collect(Collectors.toList());
-
-            if(list.size() > 0) {
-                item = list.get(0);
-            }
-            else {
-                item = new SbDustEmission();
-                item.setDate(String.valueOf(currentDate1));
-            }
-
             JSONObject object = new JSONObject();
             if (list.size()>0) {
                 if (dustEmission.get(0).getSn().equals(list.get(0).getSn())) {
                     object.put(sdf.format(currentDate1),list.get(0).getTemperature());
                     jsonArray.add(object);
 
+                } else {
+                    object.put(sdf.format(currentDate1), "");
+                    jsonArray.add(object);
                 }
             }else {
                 object.put(sdf.format(currentDate1), "");

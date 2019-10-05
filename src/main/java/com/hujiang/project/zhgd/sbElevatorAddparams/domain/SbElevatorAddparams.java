@@ -50,7 +50,7 @@ public class SbElevatorAddparams
 	/** 设备编号 */
 	private String hxzid;
 
-	public void setId(Integer id) 
+	public void setId(Integer id)
 	{
 		this.id = id;
 	}

@@ -36,17 +36,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="craneName" column="craneName"/>
         <result property="deviceNo" column="deviceNo"/>
         <result property="hxzId" column="hxzId"/>
+        <result property="serialNum" column="serial_num"/>
+        <result property="tcMaxScope" column="tc_max_scope"/>
+        <result property="tcMaxHeight" column="tc_max_height"/>
+        <result property="tcLoadCapacity" column="tc_load_capacity"/>
+        <result property="tcLoadMoment" column="tc_load_moment"/>
+        <result property="jdbh" column="jdbh"/>
+        <result property="xmid" column="xmid"/>
+        <result property="subId" column="sub_id"/>
+        <result property="scznl" column="scznl"/>
+        <result property="manufacturerId" column="manufacturer_id"/>
+        <result property="installCompany" column="install_company"/>
     </resultMap>
 	
 	<sql id="selectSbCraneAddparamsVo">
         select id, device_no, model, name, TC_MaxScope, TC_SB_SpeedCut, TC_SA_SpeedCut, TC_MaxHeight, TC_MAX_XB_HEIGHT, TC_MinHeight, TC_HU_SpeedCut, TC_MinScope, TC_HB_SpeedCut, TC_LoadCapacity, TC_MS_LoadCapacity, TC_ML_MaxScope, TC_Multiple, Tower_type, hxzid from sb_crane_addparams
     </sql>
 	<select id="getOptionsCraneList" parameterType="OptionsCrane" resultMap="OptionsCraneResult">
-        SELECT b.id,b.hxzid AS hxzId,b.pid as projectId,a.FrontArmLength as frontArmLength,
-        a.BackArmLength as backArmLength,b.dname AS craneName,b.device_no as deviceNo FROM sb_crane_binding AS b
-        LEFT JOIN sb_crane_addparams AS a ON (b.hxzid=a.hxzid)
-        where 1= 1
-        <if test="projectId != null and projectId != '' ">and  b.pid = #{projectId}</if>
+        select id, hxzid as hxzId, pid, userid, dname as craneName, isSynchronization, device_no as deviceNo, serial_num, tc_max_scope, tc_max_height, tc_load_capacity, tc_load_moment, jdbh, xmid, sub_id, scznl, manufacturer_id, install_company
+        from sb_crane_binding
+        <where>
+            <if test="projectId != null and projectId != '' "> and pid = #{projectId}</if>
+        </where>
     </select>
     <delete id="deleteCrane" parameterType="Integer">
         delete from sb_crane_binding where id = #{id}
@@ -54,16 +65,38 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertCrane" parameterType="OptionsCrane">
         insert into sb_crane_binding
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="deviceNo != null  and deviceNo != ''  ">device_no,</if>
-            <if test="craneName != null  and craneName != ''  ">dname,</if>
             <if test="hxzId != null  and hxzId != ''  ">hxzid,</if>
-            <if test="projectId != null">pid,</if>
+            <if test="projectId != null  ">pid,</if>
+            <if test="craneName != null  and craneName != ''  ">dname,</if>
+            <if test="deviceNo != null  and deviceNo != ''  ">device_no,</if>
+            <if test="serialNum != null  and serialNum != ''  ">serial_num,</if>
+            <if test="tcMaxScope != null  ">tc_max_scope,</if>
+            <if test="tcMaxHeight != null  ">tc_max_height,</if>
+            <if test="tcLoadCapacity != null  ">tc_load_capacity,</if>
+            <if test="tcLoadMoment != null  ">tc_load_moment,</if>
+            <if test="jdbh != null  and jdbh != ''  ">jdbh,</if>
+            <if test="xmid != null  and xmid != ''  ">xmid,</if>
+            <if test="subId != null  and subId != ''  ">sub_id,</if>
+            <if test="scznl != null  and scznl != ''  ">scznl,</if>
+            <if test="manufacturerId != null  ">manufacturer_id,</if>
+            <if test="installCompany != null  and installCompany != ''  ">install_company,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
-            <if test="craneName != null  and craneName != ''  ">#{craneName},</if>
             <if test="hxzId != null  and hxzId != ''  ">#{hxzId},</if>
-            <if test="projectId != null">#{projectId},</if>
+            <if test="projectId != null  ">#{projectId},</if>
+            <if test="craneName != null  and craneName != ''  ">#{dname},</if>
+            <if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+            <if test="serialNum != null  and serialNum != ''  ">#{serialNum},</if>
+            <if test="tcMaxScope != null  ">#{tcMaxScope},</if>
+            <if test="tcMaxHeight != null  ">#{tcMaxHeight},</if>
+            <if test="tcLoadCapacity != null  ">#{tcLoadCapacity},</if>
+            <if test="tcLoadMoment != null  ">#{tcLoadMoment},</if>
+            <if test="jdbh != null  and jdbh != ''  ">#{jdbh},</if>
+            <if test="xmid != null  and xmid != ''  ">#{xmid},</if>
+            <if test="subId != null  and subId != ''  ">#{subId},</if>
+            <if test="scznl != null  and scznl != ''  ">#{scznl},</if>
+            <if test="manufacturerId != null  ">#{manufacturerId},</if>
+            <if test="installCompany != null  and installCompany != ''  ">#{installCompany},</if>
         </trim>
     </insert>
     <update id="updateCrane" parameterType="OptionsCrane">

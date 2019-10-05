@@ -21,7 +21,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<sql id="selectSbCraneWorkloopVo">
         select id, device_no, start_time, end_time, max_moment_ratio, exceeding_num, max_wind_speed, is_over_wind_speed, max_range, max_height, hxzid from sb_crane_workloop
     </sql>
-	
+
+    <select id="selectTD" parameterType="SbCraneWorkloop" resultMap="SbCraneWorkloopResult">
+        <include refid="selectSbCraneWorkloopVo"/>
+        <where>
+            <if test="hxzid!=null and hxzid != '' "> and hxzid = #{hxzid}</if>
+        </where>
+        order id desc
+        limit 1
+    </select>
     <select id="selectSbCraneWorkloopList" parameterType="SbCraneWorkloop" resultMap="SbCraneWorkloopResult">
         <include refid="selectSbCraneWorkloopVo"/>
         <where>  

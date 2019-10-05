@@ -6,6 +6,8 @@ import com.hujiang.project.zhgd.hjAttendanceDevice.domain.HjAttendanceDevice;
 import com.hujiang.project.zhgd.hjAttendanceDevice.service.IHjAttendanceDeviceService;
 import com.hujiang.project.zhgd.hjAttendanceRecord.domain.HjAttendanceRecord;
 import com.hujiang.project.zhgd.hjAttendanceRecord.service.IHjAttendanceRecordService;
+import com.hujiang.project.zhgd.hjProject.domain.HjProject;
+import com.hujiang.project.zhgd.hjProject.service.IHjProjectService;
 import com.hujiang.project.zhgd.hjProjectWorkers.domain.HjProjectWorkers;
 import com.hujiang.project.zhgd.hjProjectWorkers.service.IHjProjectWorkersService;
 import com.hujiang.project.zhgd.hjSynchronizationInformation.domain.HjSynchronizationInformation;
@@ -49,6 +51,8 @@ public class HqController {
     private IHjAttendanceRecordService hjAttendanceRecordService;
     @Autowired
     private IHjProjectWorkersService hjProjectWorkersService;
+    @Autowired
+    private IHjProjectService hjProjectService;
     @RequestMapping("/Verify")
     public void zp(@RequestBody String json)throws Exception{
 
@@ -63,7 +67,7 @@ public class HqController {
 
         HjAttendanceDevice had=new HjAttendanceDevice();
         had.setDeviceNo(deviceId);
-        had.setStatus("1");
+
         List<HjAttendanceDevice> hadList=hjAttendanceDeviceService.selectHjAttendanceDeviceList(had);
         //有此设备才进行操作
         if(hadList.size()>0){
@@ -78,55 +82,73 @@ public class HqController {
             //考勤时间是30分钟之内的才上传
             Boolean flag=comparisonDate(passedTime);
             Boolean flag2=false;
-            if(flag) {
+            if("1".equals(had2.getStatus())) {
+                if (flag) {
 
-                for (int i = 0; i < list.size(); i++) {
-                    flag2=true;
-                    JSONObject jsonObject = new JSONObject();
-                    JSONArray jsonArray = new JSONArray();
-                    JSONObject jsonData = new JSONObject();
+                    for (int i = 0; i < list.size(); i++) {
+                        flag2 = true;
+                        JSONObject jsonObject = new JSONObject();
+                        JSONArray jsonArray = new JSONArray();
+                        JSONObject jsonData = new JSONObject();
 
-                    jsonObject.put("Device_ID", Tools.encodeToMD5s(deviceId));
-                    jsonData.put("person_type", "1");
-                    jsonData.put("person_id", hpw.getIdCode());
-                    jsonData.put("person_name", hpw.getEmpName());
-                    jsonData.put("passed_time",passedTime);
-                    jsonData.put("direction",had2.getDirection());
-                    jsonData.put("way","1");
+                        jsonObject.put("Device_ID", Tools.encodeToMD5s(deviceId));
+                        jsonData.put("person_type", "1");
+                        jsonData.put("person_id", hpw.getIdCode());
+                        jsonData.put("person_name", hpw.getEmpName());
+                        jsonData.put("passed_time", passedTime);
+                        jsonData.put("direction", had2.getDirection());
+                        jsonData.put("way", "1");
 
-                    HjSynchronizationInformation h=list.get(i);
-                    if(h.getPlatformName().equals("HOUS")){//住建
-                        jsonObject.put("Project_ID",h.getProjectNumber());
-                        jsonData.put("site_photo",log.getString("photoes"));
-                        jsonArray.add(jsonData);
-                        jsonObject.put("passedlog_list",jsonArray);
+                        HjSynchronizationInformation h = list.get(i);
+                        if (h.getPlatformName().equals("HOUS")) {//住建
+                            jsonObject.put("Project_ID", h.getProjectNumber());
+                            jsonData.put("site_photo", log.getString("photoes"));
+                            jsonArray.add(jsonData);
+                            jsonObject.put("passedlog_list", jsonArray);
 
-                        String url = ZCAPIClientTwo.getUrl(h.getApiSecret(),h.getApiKey(),"1.1",h.getClientSerial(),jsonObject.toString(), Constants.HJ_FORMALHOST + "UploadPassedLog");
-                        String result = ZCAPIClientTwo.httpPostWithJSON(url,jsonObject);
+                            String url = ZCAPIClientTwo.getUrl(h.getApiSecret(), h.getApiKey(), "1.1", h.getClientSerial(), jsonObject.toString(), Constants.HJ_FORMALHOST + "UploadPassedLog");
+                            String result = ZCAPIClientTwo.httpPostWithJSON(url, jsonObject);
 
 
-                    }else if(h.getPlatformName().equals("MUNICIPAL")){//市政
-                        jsonObject.put("Project_ID",h.getProjectNumber());
-                        jsonData.put("site_photo",log.getString("photoes"));
-                        jsonArray.add(jsonData);
-                        jsonObject.put("passedlog_list",jsonArray);
+                        } else if (h.getPlatformName().equals("MUNICIPAL")) {//市政
+                            jsonObject.put("Project_ID", h.getProjectNumber());
+                            jsonData.put("site_photo", log.getString("photoes"));
+                            jsonArray.add(jsonData);
+                            jsonObject.put("passedlog_list", jsonArray);
 
-                        String url = ZCAPIClientTwo.getUrl(h.getApiSecret(),h.getApiKey(),"1.1",h.getClientSerial(),jsonObject.toString(), Constants.ZHGD_FORMALHOST + "UploadPassedLog");
-                        String result = ZCAPIClientTwo.httpPostWithJSON(url,jsonObject);
+                            String url = ZCAPIClientTwo.getUrl(h.getApiSecret(), h.getApiKey(), "1.1", h.getClientSerial(), jsonObject.toString(), Constants.ZHGD_FORMALHOST + "UploadPassedLog");
+                            String result = ZCAPIClientTwo.httpPostWithJSON(url, jsonObject);
 
-                    }else if(h.getPlatformName().equals("WORKSBUREAU")){//工务署
+                        } else if (h.getPlatformName().equals("WORKSBUREAU")) {//工务署
 //                        System.out.println("000000000000");
-                        jsonObject.put("Project_ID",h.getEngineeringCode());
-                        jsonData.put("data_id",h.getApiKey()+Tools.encodeToMD5s(hpw.getIdCode()+passedTime));
-                        jsonData.put("site_photo", ZCgetImageId.base64ToimgId(h.getApiKey(),log.getString("photoes")));
-                        jsonArray.add(jsonData);
-                        jsonObject.put("passedlog_list",jsonArray);
-                        String url = ZCAPIClientTwo.getUrl(h.getApiSecret(),h.getApiKey(),"1.0",h.getApiKey(),jsonObject.toString(), Constants.ZC_FORMALHOST + "UploadPassedLog");
-                        String result = ZCAPIClientTwo.httpPostWithJSON(url,jsonObject);
+                            jsonObject.put("Project_ID", h.getEngineeringCode());
+                            jsonData.put("data_id", h.getApiKey() + Tools.encodeToMD5s(hpw.getIdCode() + passedTime));
+                            jsonData.put("site_photo", ZCgetImageId.base64ToimgId(h.getApiKey(), log.getString("photoes")));
+                            jsonArray.add(jsonData);
+                            jsonObject.put("passedlog_list", jsonArray);
+                            String url = ZCAPIClientTwo.getUrl(h.getApiSecret(), h.getApiKey(), "1.0", h.getApiKey(), jsonObject.toString(), Constants.ZC_FORMALHOST + "UploadPassedLog");
+                            String result = ZCAPIClientTwo.httpPostWithJSON(url, jsonObject);
 
+
+                        }else if (h.getPlatformName().equals("DGHOUS")) {//东莞住建
+                            jsonData.clear();
+                            jsonData.put("RosterWokerId",hpw.getRosterWokerId());
+                            jsonData.put("CheckDate",passedTime);
+                            jsonData.put("DeviceNo",deviceId);
+                            jsonData.put("Type",6);
+                            HjProject hjProject=hjProjectService.selectHjProjectById(hpw.getProjectId());
+                            jsonData.put("ItemId",hjProject.getItemId());
+
+                            jsonArray.add(jsonData);
+                            jsonObject.put("Data", jsonArray);
+
+                            String url = APIClient.getUrlDG( h.getApiKey(),  jsonObject.toString(), Constants.DG_HOUS + "/UploadAttendance");
+                            String result = APIClient.httpPostWithJSONDG(url, jsonObject);
+
+
+                        }
 
                     }
-
                 }
             }
 //            System.out.println(s.getString("SanpPic").substring(s.getString("SanpPic").indexOf(",")+));

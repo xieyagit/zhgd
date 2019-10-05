@@ -6,7 +6,6 @@ import com.hujiang.project.zhgd.sbCurrentTemperature.domain.SbCurrentTemperature
 import com.hujiang.project.zhgd.sbCurrentTemperature.service.ISbCurrentTemperatureService;
 import com.hujiang.project.zhgd.sbDoorLock.domain.SbDoorLock;
 import com.hujiang.project.zhgd.sbDoorLock.service.ISbDoorLockService;
-import com.hujiang.project.zhgd.sbElevatorBinding.service.ISbElevatorBindingService;
 import com.hujiang.project.zhgd.sbProjectElectricityBox.domain.SbProjectElectricityBox;
 import com.hujiang.project.zhgd.sbProjectElectricityBox.service.ISbProjectElectricityBoxService;
 import com.hujiang.project.zhgd.utils.*;
@@ -16,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class ApiElectricityBoxController {
     @Autowired
     private ISbCurrentTemperatureService iCurrentTemperatureService;
     private Logger logger = Logger.getLogger(ApiElectricityBoxController.class.getName());
+
     /**
      * 根据项目id获取项目电箱列表
      *
@@ -236,233 +238,210 @@ public class ApiElectricityBoxController {
     }
 
     /**
-     * 上报配电箱参数接口
+     * 上报配电箱参数接口(深圳市城安院)
      *
-     * @param projectId 项目ID
-     * @param hxzid     设备编号
+     * @param sbP
      * @return JSONObject
      */
-    @RequestMapping("electricBoxParamete")
-    public JSONObject reportElectricBoxParamete(Integer projectId, String hxzid) {
-        //判断项目ID的，设备ID是否存在d
-        List<SbProjectElectricityBox> list = iSbProjectElectricityBoxService.selectByProjectIdAndHxzId(projectId, hxzid);
+    public JSONObject reportElectricBoxParamete(SbProjectElectricityBox sbP) throws IOException, URISyntaxException {
+        //        // 判断项目ID的，设备ID是否存在d
+        List<SbProjectElectricityBox> iSbProjectElectricityBoxs = iSbProjectElectricityBoxService.selectByProjectIdAndHxzId(sbP);
 
-        JSONObject jsonObject = new JSONObject();
-        List<JSONObject> listJson = new ArrayList<>();
+        JSONObject resultJson = new JSONObject();
 
-        String dictionaries = "生活区";
-        if (Integer.valueOf(jsonObject.getString("Type")) == 1) {
-            dictionaries = "施工现场";
-        } else if (Integer.valueOf(jsonObject.getString("Type")) == 2) {
-            dictionaries = "配电房";
-        }
-        String equipmentType = "复合型漏电流探测器";
-
-        /** 区管项目*/
-        if (null != list && list.size() > 0) {
-            for (SbProjectElectricityBox box : list) {
-                JSONObject object = new JSONObject();
-                object.put("PROJECT_ID", box.getProjectId());//项目编号
-                object.put("Jdbh", box.getJdbh());//项目监督编号
-                object.put("DEV_GUID", Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备编码
-                object.put("DEV_TYPE", equipmentType);//设备类型
-                object.put("DEV_TYPE_NAME", "");//设备类型名称
-                object.put("COMPANY_NAME", box.getCompanyName());//设备安装单位
-                object.put("COMPANY_ADDRESS", CommonChars.CompanyName);//公司地址
-                object.put("INSTALL_ADDRESS", box.getInstallAddress());//安装地址
-                object.put("INSTALL_ADDRTYPE", dictionaries);//字典：生活区、施工现场、配电房
-                object.put("DTU_ID", box.getDtuId());//DTU 标识
-                object.put("LONGTITUDE", "");//经度
-                object.put("LATITUDE", "");//纬度
-                object.put("CREATE_DATE", "");//创建时间
-                object.put("PHOTO_PATH", "");//设备照片路径（多张照片以“,”分隔)
-                object.put("TEMP_LIMIT", box.getTempLimit());//电缆温度限值
-                object.put("ELEC_LIMIT", box.getElecLimit());//漏电流限值
-                object.put("AROUND_TEMP_LIMIT", box.getAroundTemp());//周围环境温度限值
-                listJson.add(object);
+        // 区管项目
+        JSONObject regionJsonObject = new JSONObject();
+        List<JSONObject> regionJsons = new ArrayList<>();
+        if (sbP.getSubId()==null && sbP.getSubId().equals("")) {
+            JSONObject object = new JSONObject();
+            object.put("PROJECT_ID", sbP.getXmid());// 项目编号
+            object.put("Jdbh", sbP.getJdbh());// 项目监督编号
+            object.put("DEV_GUID", Tools.encodeToMD5s(sbP.getElectricityBoxId()));// 设备编码
+            object.put("DEV_TYPE", sbP.getDevType());// 设备类型
+            object.put("DEV_TYPE_NAME", "");// 设备类型名称
+            object.put("COMPANY_NAME", sbP.getCompanyName());// 设备安装单位
+            object.put("COMPANY_ADDRESS", "");// 公司地址
+            object.put("INSTALL_ADDRESS", sbP.getInstallAddress());// 安装地址
+            object.put("INSTALL_ADDRTYPE", sbP.getInstallAddrtype());// 字典：生活区、施工现场、配电房
+            object.put("DTU_ID", Tools.encodeToMD5s(sbP.getElectricityBoxId()));// DTU 标识
+            object.put("LONGTITUDE", "");// 经度
+            object.put("LATITUDE", "");// 纬度
+            object.put("CREATE_DATE", "");// 创建时间
+            object.put("PHOTO_PATH", "");// 设备照片路径（多张照片以“,”分隔)
+            object.put("TEMP_LIMIT", sbP.getTempLimit());// 电缆温度限值
+            object.put("ELEC_LIMIT", sbP.getElecLimit());// 漏电流限值
+            object.put("AROUND_TEMP_LIMIT", sbP.getAroundTemp());// 周围环境温度限值
+            regionJsons.add(object);
+            regionJsonObject.put("PList", regionJsons);
+            try {
+                // 上报配电箱参数
+                String xmid = ZCAPIClient.QGXMCAY("/pdx/pdxParams", regionJsonObject);
+                System.out.println("上报配电箱参数：" + xmid);
+            } catch (Exception e) {
+                e.printStackTrace();
+                resultJson.put("res", "ERROR");
+                resultJson.put("errcode", 40002);
+                resultJson.put("msg", "出现异常");
+                return resultJson;
             }
-            jsonObject.put("PList", listJson);
         } else {
-            JSONObject resultJson = new JSONObject();
-            resultJson.put("msg", "项目ID或设备号不存在");
-            return resultJson;
-        }
-        try {
-            //上报配电箱参数
-            String xmid = ZCAPIClient.reportedCay2019("/pdx/pdxParams", jsonObject);
-            System.out.println("上报配电箱参数：" + xmid);
-        } catch (Exception e) {
-            e.printStackTrace();
-            JSONObject resultJson = new JSONObject();
-            resultJson.put("msg", "出现异常，请稍后再试");
-            return resultJson;
-        }
+            // 市管项目
+            JSONObject cityJsonObject = new JSONObject();
+            List<JSONObject> cityJsons = new ArrayList<>();
+            JSONObject object = new JSONObject();
+            object.put("PROJECT_ID", sbP.getXmid());// 项目编号
+            object.put("Jdbh", sbP.getJdbh());// 项目监督编号
+            object.put("DEV_GUID", Tools.encodeToMD5s(sbP.getElectricityBoxId()));// 设备编码
+            object.put("DEV_TYPE", sbP.getDevType());// 设备类型
+            object.put("DEV_TYPE_NAME", "");// 设备类型名称
+            object.put("COMPANY_NAME", sbP.getCompanyName());// 设备安装单位
+            object.put("COMPANY_ADDRESS", "");// 公司地址
+            object.put("INSTALL_ADDRESS", sbP.getInstallAddress());// 安装地址
+            object.put("INSTALL_ADDRTYPE", sbP.getInstallAddrtype());// 字典：生活区、施工现场、配电房
+            object.put("DTU_ID", Tools.encodeToMD5s(sbP.getElectricityBoxId()));// DTU 标识
+            object.put("LONGTITUDE", "");// 经度
+            object.put("LATITUDE", "");// 纬度
+            object.put("CREATE_DATE", "");// 创建时间
+            object.put("PHOTO_PATH", "");// 设备照片路径（多张照片以“,”分隔)
+            object.put("TEMP_LIMIT", sbP.getTempLimit());// 电缆温度限值
+            object.put("ELEC_LIMIT", sbP.getElecLimit());// 漏电流限值
+            object.put("AROUND_TEMP_LIMIT", sbP.getAroundTemp());// 周围环境温度限值
+            object.put("sub_id", sbP.getSubId());
+            cityJsons.add(object);
 
-        /** 市管项目*/
-        JSONObject jsonObject2 = new JSONObject();
-        List<JSONObject> listJson2 = new ArrayList<>();
-        if (null != list && list.size() > 0) {
-            for (SbProjectElectricityBox box : list) {
-                JSONObject object = new JSONObject();
-                object.put("PROJECT_ID", box.getProjectId());//项目编号
-                object.put("Jdbh", box.getJdbh());//项目监督编号
-                object.put("DEV_GUID", Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备编码
-                object.put("DEV_TYPE", equipmentType);//设备类型
-                object.put("DEV_TYPE_NAME", "");//设备类型名称
-                object.put("COMPANY_NAME", box.getCompanyName());//设备安装单位
-                object.put("COMPANY_ADDRESS", CommonChars.CompanyName);//公司地址
-                object.put("INSTALL_ADDRESS", box.getInstallAddress());//安装地址
-                object.put("INSTALL_ADDRTYPE", dictionaries);//字典：生活区、施工现场、配电房
-                object.put("DTU_ID", box.getDtuId());//DTU 标识
-                object.put("LONGTITUDE", "");//经度
-                object.put("LATITUDE", "");//纬度
-                object.put("CREATE_DATE", "");//创建时间
-                object.put("PHOTO_PATH", "");//设备照片路径（多张照片以“,”分隔)
-                object.put("TEMP_LIMIT", box.getTempLimit());//电缆温度限值
-                object.put("ELEC_LIMIT", box.getElecLimit());//漏电流限值
-                object.put("AROUND_TEMP_LIMIT", box.getAroundTemp());//周围环境温度限值
-                object.put("sub_id", box.getSubId());
-                listJson.add(object);
+            cityJsonObject.put("PList", cityJsons);
+            try {
+                // 上报配电箱参数
+                String xmid = ZCAPIClient.SGXMCAY("/pdx/pdxParams", cityJsonObject);
+                System.out.println("上报配电箱参数：" + xmid);
+            } catch (Exception e) {
+                e.printStackTrace();
+                resultJson.put("res", "ERROR");
+                resultJson.put("errcode", 40002);
+                resultJson.put("msg", "出现异常");
+                return resultJson;
             }
-            jsonObject2.put("PList", listJson2);
-        } else {
-            JSONObject resultJson = new JSONObject();
-            resultJson.put("msg", "项目ID或设备号不存在");
+            resultJson.put("res", "OK");
+            resultJson.put("errcode", 0);
+            resultJson.put("msg", "保存成功");
             return resultJson;
         }
-        try {
-            //上报配电箱参数
-            String xmid = ZCAPIClient.reportedCay2019("/pdx/pdxParams", jsonObject2);
-            System.out.println("上报配电箱参数：" + xmid);
-        } catch (Exception e) {
-            e.printStackTrace();
-            JSONObject resultJson = new JSONObject();
-            resultJson.put("msg", "出现异常，请稍后再试");
-            return resultJson;
-        }
-        return jsonObject;
+        return resultJson;
     }
 
     /**
      * 上报配电箱状态接口
      *
-     * @param projectId 项目ID
-     * @param hxzid     设备编号
+     * @param sc
      * @return JSONObject
      */
-    @RequestMapping("electricBoxState")
-    public JSONObject reportElectricBoxState(Integer projectId, String hxzid, String electricityBoxId) {
-        //判断项目ID的，设备ID是否存在d
-        List<SbProjectElectricityBox> list = iSbProjectElectricityBoxService.selectByProjectIdAndHxzId(projectId, hxzid);
-
-        JSONObject jsonObject = new JSONObject();
-        List<JSONObject> listJson = new ArrayList<>();
-
-        String status = "正常";
-        if (Integer.valueOf(jsonObject.getString("Type")) == 1) {
-            status = "报警";
-        } else if (Integer.valueOf(jsonObject.getString("Type")) == 2) {
-            status = "未连接";
-        } else if (Integer.valueOf(jsonObject.getString("Type")) == 4) {
-            status = "故障";
-        } else if (Integer.valueOf(jsonObject.getString("Type")) == 8) {
-            status = "屏蔽";
-        }
-        String alert = "表示无报警";
-        if (Integer.valueOf(jsonObject.getString("Type")) == 1) {
-            alert = "表示漏电报警";
-        } else if (Integer.valueOf(jsonObject.getString("Type")) == 2) {
-            alert = "表示温度报警";
-        } else if (Integer.valueOf(jsonObject.getString("Type")) == 3) {
-            alert = "表示两者都报警";
-        }
-        List list1 = new ArrayList();
-        //设置设备id
-        SbCurrentTemperature c = new SbCurrentTemperature();
-        c.setElectricityBoxId(electricityBoxId);
-        SbCurrentTemperature currentTemperature = iCurrentTemperatureService.selectCurrentTemperature(c);
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        /** 区管项目*/
-        if (null != list && list.size() > 0) {
-            for (SbProjectElectricityBox box : list) {
-                JSONObject object = new JSONObject();
-                object.put("PROJECT_ID", box.getProjectId());//项目ID;
-                object.put("Jdbh", box.getJdbh());//监督号
-                object.put("DEV_GUID", Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备ID
-                object.put("DEV_OPERATE_TIME", df);//上传日期精确到时分秒
-                object.put("DEV_STATUS", status);   //0：正常1：报警 2：未连接 4：故障 8：屏蔽
-                object.put("WRAN_TYPE", alert);   //0 表示无报警，1 表示漏电报警，2 表示温度报警，3 表示两者都报警
-                if (Integer.valueOf(jsonObject.getString("Type")) != 0) {
-                    object.put("WARN_ID", alert);//WARN_TYPE 不等于 0 时此字段必填，唯一标识，同一次报警 ID 相同
-                }
-                object.put("TEMP_XL_a", currentTemperature.getAwarm());  //线缆 a 温度
-                object.put("TEMP_XL_b", currentTemperature.getBwarm());  //线缆 b 温度
-                object.put("TEMP_XL_c", currentTemperature.getCwarm());  //线缆 c 温度
-                object.put("TEMP_XL_n", currentTemperature.getNwarm()); //线缆 n 温度
-                object.put("ELEC_LIMIT", box.getElecLimit());    //漏电流
-                object.put("TEMP_HJ", box.getAroundTemp());     //环境温度
-                object.put("ChannelDatas", list1);
-                listJson.add(object);
+    public JSONObject reportElectricBoxState(SbCurrentTemperature sc,int wran_type) {
+        JSONObject resultJson = new JSONObject();
+        // 判断项目ID的，设备ID是否存在d
+        SbProjectElectricityBox sbProjectElectricityBox = new SbProjectElectricityBox();
+        sbProjectElectricityBox.setElectricityBoxId(sc.getElectricityBoxId());
+        List<SbProjectElectricityBox> iSbProjectElectricityBoxs = iSbProjectElectricityBoxService.selectByProjectIdAndHxzId(sbProjectElectricityBox);
+        if (iSbProjectElectricityBoxs != null) {
+            String status = "正常";
+            if (wran_type == 1) {
+                status = "报警";
             }
-            jsonObject.put("PList", listJson);
-        } else {
-            JSONObject resultJson = new JSONObject();
-            resultJson.put("msg", "项目ID或设备号不存在");
-            return resultJson;
-        }
-        try {
-            //上报配电箱参数
-            String xmid = ZCAPIClient.reportedCay2019("/pdx/pdxState", jsonObject);
-            System.out.println("上报配电箱状态：" + xmid);
-        } catch (Exception e) {
-            e.printStackTrace();
-            JSONObject resultJson = new JSONObject();
-            resultJson.put("msg", "出现异常，请稍后再试");
-            return resultJson;
-        }
-        //市管项目
-        List<JSONObject> listJson2 = new ArrayList<>();
+            String alert = "表示无报警";
+            if (wran_type == 1) {
+                alert = "表示漏电报警";
+            }
+            List channelDatas = new ArrayList();
+            // 设置设备id
+            SbCurrentTemperature c = new SbCurrentTemperature();
+            c.setElectricityBoxId(sc.getElectricityBoxId());
+            SbCurrentTemperature currentTemperature = iCurrentTemperatureService.selectCurrentTemperature(c);
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        if (null != list && list.size() > 0) {
-            for (SbProjectElectricityBox box : list) {
+            // 区管项目
+            JSONObject regionJsonObject = new JSONObject();
+            List<JSONObject> regionJsons = new ArrayList<>();
+            if (iSbProjectElectricityBoxs.get(0).getSubId() != null && !iSbProjectElectricityBoxs.get(0).getSubId().equals("")) {
+
                 JSONObject object = new JSONObject();
-                object.put("PROJECT_ID", box.getProjectId());//项目ID;
-                object.put("Jdbh", box.getJdbh());//监督号
-                object.put("DEV_GUID", Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备ID
-                object.put("DEV_OPERATE_TIME", df);//上传日期精确到时分秒
-                object.put("DEV_STATUS", status);   //0：正常1：报警 2：未连接 4：故障 8：屏蔽
-                object.put("WRAN_TYPE", alert);   //0 表示无报警，1 表示漏电报警，2 表示温度报警，3 表示两者都报警
-                if (Integer.valueOf(jsonObject.getString("Type")) != 0) {
-                    object.put("WARN_ID", alert);//WARN_TYPE 不等于 0 时此字段必填，唯一标识，同一次报警 ID 相同
+                object.put("PROJECT_ID", sc.getElectricityBoxId());// 项目ID;
+
+
+                object.put("Jdbh", iSbProjectElectricityBoxs.get(0).getJdbh());// 监督号
+                object.put("DEV_GUID", Tools.encodeToMD5s(sc.getElectricityBoxId()));//设备ID
+                object.put("DEV_OPERATE_TIME", df.format(new Date()));// 上传日期精确到时分秒
+                object.put("DEV_STATUS", status);   // 0：正常1：报警 2：未连接 4：故障 8：屏蔽
+                object.put("WRAN_TYPE", alert);   // 0 表示无报警，1 表示漏电报警，2 表示温度报警，3 表示两者都报警
+                if (wran_type != 0) {
+                    object.put("WARN_ID", alert);// WARN_TYPE 不等于 0 时此字段必填，唯一标识，同一次报警 ID 相同
                 }
-                object.put("TEMP_XL_a", currentTemperature.getAwarm());  //线缆 a 温度
-                object.put("TEMP_XL_b", currentTemperature.getBwarm());  //线缆 b 温度
-                object.put("TEMP_XL_c", currentTemperature.getCwarm());  //线缆 c 温度
-                object.put("TEMP_XL_n", currentTemperature.getNwarm()); //线缆 n 温度
-                object.put("ELEC_LIMIT", box.getElecLimit());    //漏电流
-                object.put("TEMP_HJ", box.getAroundTemp());     //环境温度
-                object.put("ChannelDatas", list1);
+                object.put("TEMP_XL_a", sc.getAwarm());  // 线缆 a 温度
+                object.put("TEMP_XL_b", sc.getBwarm());  // 线缆 b 温度
+                object.put("TEMP_XL_c", sc.getCwarm());  // 线缆 c 温度
+                object.put("TEMP_XL_n", sc.getNwarm()); // 线缆 n 温度
+                object.put("ELEC_LIMIT", sc.getCurrent());    // 漏电流
+                object.put("TEMP_HJ", sc.getEnvirwarm());     // 环境温度
+                object.put("ChannelDatas", channelDatas);   // 渠道数据
+                regionJsons.add(object);
+
+                regionJsonObject.put("PList", regionJsons);
+            } else {
+                resultJson.put("res", "FAIL");
+                resultJson.put("errcode", -2);
+                resultJson.put("msg", "请求列表数据中的项目 ID 为空值");
+                return resultJson;
+            }
+            try {
+                // 上报配电箱状态
+                String xmid = ZCAPIClient.QGXMCAY("/pdx/pdxState", regionJsonObject);
+                System.out.println("上报配电箱状态：" + xmid);
+            } catch (Exception e) {
+                e.printStackTrace();
+                resultJson.put("res", "FAIL");
+                resultJson.put("errcode", 4002);
+                resultJson.put("msg", "系统异常");
+                return resultJson;
+            }
+            // 市管项目
+            JSONObject cityJsonObject = new JSONObject();
+            List<JSONObject> cityJsons = new ArrayList<>();
+            for (SbProjectElectricityBox box : iSbProjectElectricityBoxs) {
+                JSONObject object = new JSONObject();
+                object.put("PROJECT_ID", box.getProjectId());// 项目ID;
+                object.put("Jdbh", box.getJdbh());// 监督号
+                object.put("DEV_GUID", Tools.encodeToMD5s(sc.getElectricityBoxId()));// 设备ID
+                object.put("DEV_OPERATE_TIME", df.format(new Date()));// 上传日期精确到时分秒
+                object.put("DEV_STATUS", status);   // 0：正常1：报警 2：未连接 4：故障 8：屏蔽
+                object.put("WRAN_TYPE", alert);   // 0 表示无报警，1 表示漏电报警，2 表示温度报警，3 表示两者都报警
+                if (wran_type != 0) {
+                    object.put("WARN_ID", alert);// WARN_TYPE 不等于 0 时此字段必填，唯一标识，同一次报警 ID 相同
+                }
+                object.put("TEMP_XL_a", sc.getAwarm());  // 线缆 a 温度
+                object.put("TEMP_XL_b", sc.getBwarm());  // 线缆 b 温度
+                object.put("TEMP_XL_c", sc.getCwarm());  // 线缆 c 温度
+                object.put("TEMP_XL_n", sc.getNwarm()); // 线缆 n 温度
+                object.put("ELEC_LIMIT", sc.getCurrent());    // 漏电流
+                object.put("TEMP_HJ", sc.getEnvirwarm());     // 环境温度
+                object.put("ChannelDatas", channelDatas);
                 object.put("sub_id", box.getSubId());
-                listJson2.add(object);
+                cityJsons.add(object);
             }
-            jsonObject.put("PList", listJson2);
-        } else {
-            JSONObject resultJson = new JSONObject();
-            resultJson.put("msg", "项目ID或设备号不存在");
-            return resultJson;
+            cityJsonObject.put("PList", cityJsons);
+            try {
+                // 上报配电箱参数
+                String xmid = ZCAPIClient.SGXMCAY("/pdx/pdxState", cityJsonObject);
+                System.out.println("上报配电箱状态：" + xmid);
+            } catch (Exception e) {
+                e.printStackTrace();
+                resultJson.put("res", "FAIL");
+                resultJson.put("errcode", 4002);
+                resultJson.put("msg", "系统异常");
+                return resultJson;
+            }
+            resultJson.put("res", "OK");
+            resultJson.put("errcode", 0);
+            resultJson.put("msg", "保存成功");
         }
-        try {
-            //上报配电箱参数
-            String xmid = ZCAPIClient.reportedCay2019("/pdx/pdxState", jsonObject);
-            System.out.println("上报配电箱状态：" + xmid);
-        } catch (Exception e) {
-            e.printStackTrace();
-            JSONObject resultJson = new JSONObject();
-            resultJson.put("msg", "出现异常，请稍后再试");
-            return resultJson;
-        }
-        return jsonObject;
+        return resultJson;
     }
 
 

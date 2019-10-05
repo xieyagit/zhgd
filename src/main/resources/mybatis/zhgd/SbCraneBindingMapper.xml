@@ -12,14 +12,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="dname"    column="dname"    />
         <result property="isSynchronization"    column="isSynchronization"    />
         <result property="deviceNo"    column="device_no"    />
+        <result property="serialNum"    column="serial_num"    />
+        <result property="tcMaxScope"    column="tc_max_scope"    />
+        <result property="tcMaxHeight"    column="tc_max_height"    />
+        <result property="tcLoadCapacity"    column="tc_load_capacity"    />
+        <result property="tcLoadMoment"    column="tc_load_moment"    />
+        <result property="jdbh"    column="jdbh"    />
+        <result property="xmid"    column="xmid"    />
+        <result property="subId"    column="sub_id"    />
+        <result property="scznl"    column="scznl"    />
+        <result property="manufacturerId"    column="manufacturer_id"    />
+        <result property="installCompany"    column="install_company"    />
+
     </resultMap>
 	
 	<sql id="selectSbCraneBindingVo">
-        select id, hxzid, pid, userid, dname, isSynchronization, device_no from sb_crane_binding
+        select id, hxzid, pid, userid, dname, isSynchronization, device_no, serial_num, tc_max_scope, tc_max_height, tc_load_capacity, tc_load_moment, jdbh, xmid, sub_id, scznl, manufacturer_id, install_company from sb_crane_binding
     </sql>
 
     <select id="selectByHxzId" parameterType="SbCraneBinding" resultMap="SbCraneBindingResult">
-        SELECT * FROM `sb_crane_binding` where pid=#{pid}
+        SELECT *,count(distinct hxzid) FROM `sb_crane_binding` where pid=#{pid}
     </select>
     <select id="selectSbCraneBindingList" parameterType="SbCraneBinding" resultMap="SbCraneBindingResult">
         <include refid="selectSbCraneBindingVo"/>
@@ -31,6 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="dname != null  and dname != '' "> and dname = #{dname}</if>
              <if test="isSynchronization != null  and isSynchronization != '' "> and isSynchronization = #{isSynchronization}</if>
              <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
+             <if test="scznl != null  and scznl != '' "> and scznl = #{scznl}</if>
          </where>
     </select>
     
@@ -41,24 +54,45 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         
     <insert id="insertSbCraneBinding" parameterType="SbCraneBinding">
         insert into sb_crane_binding
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">id,</if>
-			<if test="hxzid != null  and hxzid != ''  ">hxzid,</if>
-			<if test="pid != null  ">pid,</if>
-			<if test="userid != null  ">userid,</if>
-			<if test="dname != null  and dname != ''  ">dname,</if>
-			<if test="isSynchronization != null  and isSynchronization != ''  ">isSynchronization,</if>
-			<if test="deviceNo != null  and deviceNo != ''  ">device_no,</if>
-         </trim>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="hxzid != null  and hxzid != ''  ">hxzid,</if>
+            <if test="pid != null  ">pid,</if>
+            <if test="dname != null  and dname != ''  ">dname,</if>
+            <if test="isSynchronization != null  and isSynchronization != ''  ">isSynchronization,</if>
+            <if test="deviceNo != null  and deviceNo != ''  ">device_no,</if>
+            <if test="serialNum != null  and serialNum != ''  ">serial_num,</if>
+            <if test="tcMaxScope != null  ">tc_max_scope,</if>
+            <if test="tcMaxHeight != null  ">tc_max_height,</if>
+            <if test="tcLoadCapacity != null  ">tc_load_capacity,</if>
+            <if test="tcLoadMoment != null  ">tc_load_moment,</if>
+            <if test="jdbh != null  and jdbh != ''  ">jdbh,</if>
+            <if test="xmid != null  and xmid != ''  ">xmid,</if>
+            <if test="subId != null  and subId != ''  ">sub_id,</if>
+            <if test="scznl != null  and scznl != ''  ">scznl,</if>
+            <if test="manufacturerId != null  ">manufacturer_id,</if>
+            <if test="installCompany != null  and installCompany != ''  ">install_company,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">#{id},</if>
-			<if test="hxzid != null  and hxzid != ''  ">#{hxzid},</if>
-			<if test="pid != null  ">#{pid},</if>
-			<if test="userid != null  ">#{userid},</if>
-			<if test="dname != null  and dname != ''  ">#{dname},</if>
-			<if test="isSynchronization != null  and isSynchronization != ''  ">#{isSynchronization},</if>
-			<if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
-         </trim>
+            <if test="id != null  ">#{id},</if>
+            <if test="hxzid != null  and hxzid != ''  ">#{hxzid},</if>
+            <if test="pid != null  ">#{pid},</if>
+            <if test="dname != null  and dname != ''  ">#{dname},</if>
+            <if test="isSynchronization != null  and isSynchronization != ''  ">#{isSynchronization},</if>
+            <if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+            <if test="serialNum != null  and serialNum != ''  ">#{serialNum},</if>
+            <if test="tcMaxScope != null  ">#{tcMaxScope},</if>
+            <if test="tcMaxHeight != null  ">#{tcMaxHeight},</if>
+            <if test="tcLoadCapacity != null  ">#{tcLoadCapacity},</if>
+            <if test="tcLoadMoment != null  ">#{tcLoadMoment},</if>
+            <if test="jdbh != null  and jdbh != ''  ">#{jdbh},</if>
+            <if test="xmid != null  and xmid != ''  ">#{xmid},</if>
+            <if test="subId != null  and subId != ''  ">#{subId},</if>
+            <if test="scznl != null  and scznl != ''  ">#{scznl},</if>
+            <if test="manufacturerId != null  ">#{manufacturerId},</if>
+            <if test="installCompany != null  and installCompany != ''  ">#{installCompany},</if>
+        </trim>
+
     </insert>
 	 
     <update id="updateSbCraneBinding" parameterType="SbCraneBinding">
@@ -66,10 +100,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="hxzid != null  and hxzid != ''  ">hxzid = #{hxzid},</if>
             <if test="pid != null  ">pid = #{pid},</if>
-            <if test="userid != null  ">userid = #{userid},</if>
             <if test="dname != null  and dname != ''  ">dname = #{dname},</if>
             <if test="isSynchronization != null  and isSynchronization != ''  ">isSynchronization = #{isSynchronization},</if>
             <if test="deviceNo != null  and deviceNo != ''  ">device_no = #{deviceNo},</if>
+            <if test="serialNum != null  and serialNum != ''  ">serial_num = #{serialNum},</if>
+            <if test="tcMaxScope != null  ">tc_max_scope = #{tcMaxScope},</if>
+            <if test="tcMaxHeight != null  ">tc_max_height = #{tcMaxHeight},</if>
+            <if test="tcLoadCapacity != null  ">tc_load_capacity = #{tcLoadCapacity},</if>
+            <if test="tcLoadMoment != null  ">tc_load_moment = #{tcLoadMoment},</if>
+            <if test="jdbh != null  and jdbh != ''  ">jdbh = #{jdbh},</if>
+            <if test="xmid != null  and xmid != ''  ">xmid = #{xmid},</if>
+            <if test="subId != null  and subId != ''  ">sub_id = #{subId},</if>
+            <if test="scznl != null  and scznl != ''  ">scznl = #{scznl},</if>
+            <if test="manufacturerId != null  ">manufacturer_id = #{manufacturerId},</if>
+            <if test="installCompany != null  and installCompany != ''  ">install_company = #{installCompany},</if>
         </trim>
         where id = #{id}
     </update>

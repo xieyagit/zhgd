@@ -111,6 +111,19 @@ public class HjProjectWorkers
 
 	private Integer count;
 
+	/**
+	 * 东莞劳务工花名册id
+	 */
+	private Integer rosterWokerId;
+
+	public Integer getRosterWokerId() {
+		return rosterWokerId;
+	}
+
+	public void setRosterWokerId(Integer rosterWokerId) {
+		this.rosterWokerId = rosterWokerId;
+	}
+
 	public String getWorkTypenameName() {
 		return workTypenameName;
 	}

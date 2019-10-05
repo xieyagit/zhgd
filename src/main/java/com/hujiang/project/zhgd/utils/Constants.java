@@ -57,16 +57,14 @@ public class Constants {
     public static final String LOCALTION = "http://101.37.34.43:8080/datainterface/data/getinfos.ll";
     public static final String LOCALTIONDATA = "http://58.246.211.154:23333/Location/data/getinfos.do";
 
-    //对接城安院地址（测试使用）市管项目
+    //对接城安院地址 市管项目
     public static final String CAY_CS = "http://139.159.251.33/misInter/";
-    //对接城安院生产环境
-    public static final String CAY_SCHJ = "http://139.159.186.240/misInter/";
-    //对接城安院使用的token(测试环境)（两者皆可用）
+
+    //对接城安院使用的token+市管
     public static final String TOKEN_CS = "?token=EBDECFCC5DE096892050A8E6913168A7A0A41963";
-    //对接城安院使用的token(生产环境)
-    public static final String TOKEN_SCHJ = "?token=";
+    //对接城安院使用的token+区管
+    public static final String TOKEN_SCHJ = "?token=EBDECFCC5DE096892050A8E6913168A7A0A41963";
 
-    //城安院查询出项目监督编号以及工程id(区管项目)测试用
+    //城安院查询出项目监督编号以及工程id(区管项目)
     public static final String CAY_QGXM = "http://183.233.90.234:6868/misInter/";
-
 }

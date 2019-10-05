@@ -79,5 +79,15 @@ public class SbCraneWorkloopServiceImpl implements ISbCraneWorkloopService
 	{
 		return sbCraneWorkloopMapper.deleteSbCraneWorkloopByIds(Convert.toStrArray(ids));
 	}
-	
+
+	/**
+	 * 查询塔吊预警数据
+	 *
+	 * @param hxzid
+	 * @return 结果
+	 * */
+	public SbCraneWorkloop selectTD(String hxzid)
+	{
+		return sbCraneWorkloopMapper.selectTD(hxzid);
+	}
 }

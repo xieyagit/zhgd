@@ -50,5 +50,12 @@ public interface ISbCraneWorkloopService
      * @return 结果
      */
 	public int deleteSbCraneWorkloopByIds(String ids);
-	
+
+	/**
+	 * 查询塔吊预警数据
+	 *
+	 * @param hxzid
+	 * @return 结果
+	 * */
+	public SbCraneWorkloop selectTD(String hxzid);
 }

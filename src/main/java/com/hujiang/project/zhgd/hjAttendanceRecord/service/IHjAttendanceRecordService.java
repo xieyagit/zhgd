@@ -168,12 +168,12 @@ public interface IHjAttendanceRecordService
 	public List<HjAttendanceRecord> turnover(Integer projectId,String passedTime);
 	public List<HjAttendanceRecord> turnovers(Integer projectId);
 	/** 项目出勤统计*/
-	public List<HjAttendanceRecord> item(Integer projectId,String passedTime);
+	public List<HjAttendanceRecord> item(Integer projectId);
 	public HjAttendanceRecord its(Integer id);
 	public List<HjAttendanceRecord> itemin(Integer id,String passedTime);
 	public List<HjAttendanceRecord> itemout(Integer id,String passedTime);
 
-	public List<HjAttendanceRecord> labour(Integer projectId,String passedTime,String passedTimes);
+	public List<HjAttendanceRecord> labour(Integer projectId,String passedTimes);
 
 	/** 智慧工地1.0 今日出勤总人数*/
 	public List<HjAttendanceRecord> attendance(Integer projectId);

@@ -1,6 +1,8 @@
 package com.hujiang.project.zhgd.sbProjectElectricityBox.mapper;
 
 import com.hujiang.project.zhgd.sbProjectElectricityBox.domain.SbProjectElectricityBox;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.List;
 import java.util.Map;
 
@@ -15,10 +17,10 @@ public interface SbProjectElectricityBoxMapper
 	/**
 	 * 根据项目ID，设备号查询电箱信息
 	 *
-	 * @param map 参数
+	 * @param sbProjectElectricityBox 参数
 	 * @return 项目电箱信息
 	 */
-	public List<SbProjectElectricityBox> selectByProjectIdAndHxzId(Map<String,Object> map);
+	public List<SbProjectElectricityBox> selectByProjectIdAndHxzId(SbProjectElectricityBox sbProjectElectricityBox);
 
 	/**
      * 查询项目电箱信息gu
@@ -63,9 +65,18 @@ public interface SbProjectElectricityBoxMapper
 	/**
      * 批量删除项目电箱
      * 
-     * @param ids 需要删除的数据ID
+     * @param id 需要删除的数据ID
      * @return 结果
      */
-	public int deleteSbProjectElectricityBoxByIds(String[] ids);
+	public int deleteSbProjectElectricityBoxByIds(Integer id);
+
+
+	/**
+	 * 查询出设备数量
+	 *
+	 * @param projectId 项目ID
+	 * @return 结果
+	 */
+	public List<SbProjectElectricityBox> seleleSize(Integer projectId);
 	
 }

@@ -3,6 +3,7 @@ package com.hujiang.project.zhgd.hjAttendanceRecord.api;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hujiang.common.utils.DateUtils;
 import com.hujiang.project.zhgd.hjAttendanceRecord.domain.DongTai;
 import com.hujiang.project.zhgd.hjAttendanceRecord.domain.HjAttendanceRecord;
 import com.hujiang.project.zhgd.hjAttendanceRecord.service.IHjAttendanceRecordService;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -33,7 +35,8 @@ public class AttendanceRecordApi {
     private IHjAttendanceRecordService hjAttendanceRecordService;
     @Autowired
     private IHjProjectWorkersService hjProjectWorkersService;
-
+//    @Autowired
+//    private DateUtils dateUtils;
 
 
     /**
@@ -192,18 +195,12 @@ public class AttendanceRecordApi {
     public JSONObject item(Integer projectId){
         JSONObject object = new JSONObject();
         JSONArray jsonArray = new JSONArray();
-        Date d = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String dateNowStr = sdf.format(d);
-        String passedTime = dateNowStr;
-        List<HjAttendanceRecord> itme = hjAttendanceRecordService.item(projectId,passedTime);
+        List<HjAttendanceRecord> itme = hjAttendanceRecordService.item(projectId);
         for (HjAttendanceRecord hjAttendanceRecord : itme){
-            HjAttendanceRecord itm = hjAttendanceRecordService.its(hjAttendanceRecord.getId());
-            List<HjAttendanceRecord> itmein = hjAttendanceRecordService.itemin(hjAttendanceRecord.getId(),passedTime);
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("name",hjAttendanceRecord.getName());
-            jsonObject.put("kq",itmein.size());
-            jsonObject.put("zc",itm.getCount());
+            jsonObject.put("name",hjAttendanceRecord.getTitle());
+            jsonObject.put("kq",hjAttendanceRecord.getCount2());
+            jsonObject.put("zc",hjAttendanceRecord.getCount1());
             jsonArray.add(jsonObject);
         }
        if (itme.size()==0){
@@ -217,52 +214,15 @@ public class AttendanceRecordApi {
     }
     /**今日劳动曲线*/
     @PostMapping(value = "/getXS")
-    public JSONObject jrld(Integer projectId){
+    public JSONObject jrld(Integer projectId) throws ParseException {
         JSONArray jsonArray = new JSONArray();
-        int tatol = 0;
-        for (int i = 11;i>=0;i--) {
+        SimpleDateFormat sdfs = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH");
+        String passedTimes = sdfs.format(new Date());
+        List<HjAttendanceRecord> hjAttendanceRecord = hjAttendanceRecordService.labour(projectId,passedTimes);
+        for (HjAttendanceRecord attendanceRecord:hjAttendanceRecord) {
             JSONObject jsonObject = new JSONObject();
-            String returnstr = ""; //返回值
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) - i);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH");
-            String format = "yyyy-MM-dd HH";//日期格式
-            returnstr = sdf.format(calendar.getTime());
-            SimpleDateFormat sdfs = new SimpleDateFormat("yyyy-MM-dd");
-            String returnstrs = sdfs.format(new Date());
-            List<HjAttendanceRecord> hjAttendanceRecord = hjAttendanceRecordService.labour(projectId,returnstr,returnstrs);
-
-
-            SimpleDateFormat df = new SimpleDateFormat("HH:mm");// 设置日期格式
-            Date now = null;
-            Date beginTime = null;
-            Date endTime = null;
-            try {
-                now = df.parse(df.format(new Date()));
-                beginTime = df.parse("00:00");
-                endTime = df.parse("00:30");
-
-                Calendar date = Calendar.getInstance();
-                date.setTime(now);
-
-                Calendar begin = Calendar.getInstance();
-                begin.setTime(beginTime);
-
-                Calendar end = Calendar.getInstance();
-                end.setTime(endTime);
-
-
-                if (date.after(begin) && date.before(end) ) {
-                    tatol=0;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (hjAttendanceRecord.size() ==0){
-                jsonObject.put(returnstr, "0");
-            }else {
-                jsonObject.put(returnstr, hjAttendanceRecord.size());
-            }
+            jsonObject.put(String.valueOf(sdf.format(sdf.parse(attendanceRecord.getPassedTime()))),attendanceRecord.getCount());
             jsonArray.add(jsonObject);
         }
         JSONObject object = new JSONObject();

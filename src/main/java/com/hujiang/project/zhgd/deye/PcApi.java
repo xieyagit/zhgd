@@ -197,6 +197,6 @@ public class PcApi  extends BaseController {
     @ResponseBody
     public AjaxResult switchDevice(@RequestBody SbCraneBinding scb){
 
-     return AjaxResult.success(sbCraneBindingService.selectSbCraneBindingList(scb));
+     return AjaxResult.success(sbCraneBindingService.selectByHxzId(scb.getPid()));
     }
 }

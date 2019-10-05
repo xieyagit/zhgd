@@ -14,11 +14,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="elecLimit"    column="elec_limit"    />
         <result property="aroundTemp"    column="around_temp"    />
         <result property="type"    column="type"    />
+        <result property="project"    column="project"    />
+        <result property="jdbh"    column="jdbh"    />
+        <result property="companyName"    column="company_name"    />
+        <result property="installAddress"    column="install_address"    />
+        <result property="installAddrtype"    column="install_addrtype"    />
+        <result property="dtuId"    column="dtu_id"    />
+        <result property="subId"    column="sub_id"    />
+        <result property="xmid"    column="xmid"    />
+        <result property="devType"    column="dev_type"    />
+        <result property="scznl"    column="scznl"    />
+        <result property="manufacturerId"    column="manufacturer_id"    />
     </resultMap>
 	
 	<sql id="selectSbProjectElectricityBoxVo">
-        select id, project_id, comments, electricity_box_id, electricity_box_name, temp_limit, elec_limit, around_temp, type from sb_project_electricity_box
+        select id, project_id, comments, electricity_box_id, electricity_box_name, temp_limit, elec_limit, around_temp, `type`, project, jdbh, company_name, install_address, install_addrtype, dtu_id, sub_id,xmid,dev_type,scznl,manufacturer_id
+        from sb_project_electricity_box
     </sql>
+
+    <select id="seleleSize"  parameterType="SbProjectElectricityBox" resultMap="SbProjectElectricityBoxResult">
+        <include refid="selectSbProjectElectricityBoxVo"/>
+        where project_id = #{projectId}
+        group BY electricity_box_id
+    </select>
 	
     <select id="selectSbProjectElectricityBoxList" parameterType="SbProjectElectricityBox" resultMap="SbProjectElectricityBoxResult">
         <include refid="selectSbProjectElectricityBoxVo"/>
@@ -42,28 +60,50 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         
     <insert id="insertSbProjectElectricityBox" parameterType="SbProjectElectricityBox">
         insert into sb_project_electricity_box
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">id,</if>
-			<if test="projectId != null  ">project_id,</if>
-			<if test="comments != null  and comments != ''  ">comments,</if>
-			<if test="electricityBoxId != null  and electricityBoxId != ''  ">electricity_box_id,</if>
-			<if test="electricityBoxName != null  and electricityBoxName != ''  ">electricity_box_name,</if>
-			<if test="tempLimit != null  ">temp_limit,</if>
-			<if test="elecLimit != null  ">elec_limit,</if>
-			<if test="aroundTemp != null  ">around_temp,</if>
-			<if test="type != null  ">type,</if>
-         </trim>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="projectId != null  ">project_id,</if>
+            <if test="comments != null  and comments != ''  ">comments,</if>
+            <if test="electricityBoxId != null  and electricityBoxId != ''  ">electricity_box_id,</if>
+            <if test="electricityBoxName != null  and electricityBoxName != ''  ">electricity_box_name,</if>
+            <if test="tempLimit != null  ">temp_limit,</if>
+            <if test="elecLimit != null  ">elec_limit,</if>
+            <if test="aroundTemp != null  ">around_temp,</if>
+            <if test="type != null  ">`type`,</if>
+            <if test="project != null  and project != ''  ">project,</if>
+            <if test="jdbh != null  and jdbh != ''  ">jdbh,</if>
+            <if test="companyName != null  and companyName != ''  ">company_name,</if>
+            <if test="installAddress != null  and installAddress != ''  ">install_address,</if>
+            <if test="installAddrtype != null  and installAddrtype != ''  ">install_addrtype,</if>
+            <if test="dtuId != null  and dtuId != ''  ">dtu_id,</if>
+            <if test="subId != null  and subId != ''  ">sub_id,</if>
+            <if test="xmid != null  and xmid != ''  ">xmid,</if>
+            <if test="devType != null  and devType != ''  ">dev_type,</if>
+            <if test="scznl != null  and scznl != ''  ">scznl,</if>
+            <if test="manufacturerId != null  and manufacturerId != ''  ">manufacturer_id,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">#{id},</if>
-			<if test="projectId != null  ">#{projectId},</if>
-			<if test="comments != null  and comments != ''  ">#{comments},</if>
-			<if test="electricityBoxId != null  and electricityBoxId != ''  ">#{electricityBoxId},</if>
-			<if test="electricityBoxName != null  and electricityBoxName != ''  ">#{electricityBoxName},</if>
-			<if test="tempLimit != null  ">#{tempLimit},</if>
-			<if test="elecLimit != null  ">#{elecLimit},</if>
-			<if test="aroundTemp != null  ">#{aroundTemp},</if>
-			<if test="type != null  ">#{type},</if>
-         </trim>
+            <if test="id != null  ">#{id},</if>
+            <if test="projectId != null  ">#{projectId},</if>
+            <if test="comments != null  and comments != ''  ">#{comments},</if>
+            <if test="electricityBoxId != null  and electricityBoxId != ''  ">#{electricityBoxId},</if>
+            <if test="electricityBoxName != null  and electricityBoxName != ''  ">#{electricityBoxName},</if>
+            <if test="tempLimit != null  ">#{tempLimit},</if>
+            <if test="elecLimit != null  ">#{elecLimit},</if>
+            <if test="aroundTemp != null  ">#{aroundTemp},</if>
+            <if test="type != null  ">#{type},</if>
+            <if test="project != null  and project != ''  ">#{project},</if>
+            <if test="jdbh != null  and jdbh != ''  ">#{jdbh},</if>
+            <if test="companyName != null  and companyName != ''  ">#{companyName},</if>
+            <if test="installAddress != null  and installAddress != ''  ">#{installAddress},</if>
+            <if test="installAddrtype != null  and installAddrtype != ''  ">#{installAddrtype},</if>
+            <if test="dtuId != null  and dtuId != ''  ">#{dtuId},</if>
+            <if test="subId != null  and subId != ''  ">#{subId},</if>
+            <if test="xmid != null  and xmid != ''  ">#{xmid},</if>
+            <if test="devType != null  and devType != ''  ">#{devType},</if>
+            <if test="scznl != null  and scznl != ''  ">#{scznl},</if>
+            <if test="manufacturerId != null  and manufacturerId != ''  ">#{manufacturerId},</if>
+        </trim>
     </insert>
 	 
     <update id="updateSbProjectElectricityBox" parameterType="SbProjectElectricityBox">
@@ -77,6 +117,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="elecLimit != null  ">elec_limit = #{elecLimit},</if>
             <if test="aroundTemp != null  ">around_temp = #{aroundTemp},</if>
             <if test="type != null  ">type = #{type},</if>
+            <if test="project != null  and project != ''  ">project = #{project},</if>
+            <if test="jdbh != null  and jdbh != ''  ">jdbh = #{jdbh},</if>
+            <if test="companyName != null  and companyName != ''  ">company_name = #{companyName},</if>
+            <if test="installAddress != null  and installAddress != ''  ">install_address = #{installAddress},</if>
+            <if test="installAddrtype != null  and installAddrtype != ''  ">install_addrtype = #{installAddrtype},</if>
+            <if test="dtuId != null  and dtuId != ''  ">dtu_id = #{dtuId},</if>
+            <if test="subId != null  and subId != ''  ">sub_id = #{subId},</if>
+            <if test="xmid != null  and xmid != ''  ">xmid = #{xmid},</if>
+            <if test="devType != null  and devType != ''  ">dev_type = #{devType},</if>
+            <if test="scznl != null  and scznl != ''  ">scznl = #{scznl},</if>
+            <if test="manufacturerId != null  and manufacturerId != ''  ">manufacturer_id = #{manufacturerId},</if>
         </trim>
         where id = #{id}
     </update>
@@ -85,11 +136,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         delete from sb_project_electricity_box where id = #{id}
     </delete>
 	
-    <delete id="deleteSbProjectElectricityBoxByIds" parameterType="String">
-        delete from sb_project_electricity_box where id in 
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
+    <delete id="deleteSbProjectElectricityBoxByIds" parameterType="Integer">
+        delete from sb_project_electricity_box where id =#{id}
     </delete>
     
 </mapper>

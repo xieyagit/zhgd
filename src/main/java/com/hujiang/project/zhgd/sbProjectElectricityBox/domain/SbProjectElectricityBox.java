@@ -45,6 +45,57 @@ public class SbProjectElectricityBox
 	private String dtuId;
 	/** 工程 id*/
 	private String subId;
+	/** 项目ID（城安院） */
+	private String xmid;
+	/**
+	 * 设备类型（必填）
+	 * 0x00:复合型漏电流探测器(漏电流+温感）
+	 * 0x02:三相电流表
+	 * 0x03:空气开关
+	 * 0x04:烟感探测器
+	 * 0x05:防火门探测器
+	 * */
+	private Integer devType;
+	/** 对接平台 */
+	private String scznl;
+	/** 设备厂商ID */
+	private Integer manufacturerId;
+
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+
+	public String getXmid() {
+		return xmid;
+	}
+
+	public void setXmid(String xmid) {
+		this.xmid = xmid;
+	}
+
+	public Integer getDevType() {
+		return devType;
+	}
+
+	public void setDevType(Integer devType) {
+		this.devType = devType;
+	}
+
+	public String getScznl() {
+		return scznl;
+	}
+
+	public void setScznl(String scznl) {
+		this.scznl = scznl;
+	}
+
+	public Integer getManufacturerId() {
+		return manufacturerId;
+	}
+
+	public void setManufacturerId(Integer manufacturerId) {
+		this.manufacturerId = manufacturerId;
+	}
 
 	public String getProject() {
 		return project;

@@ -32,7 +32,7 @@ public class StatisticsTask {
         String time=dateFormat.format(date.getTime());
         HjProject hp=new HjProject();
         //在建项目
-        hp.setProjectState("ABUILDING");
+        hp.setProjectState("0");
         List<HjProject> hpList=projectService.selectHjProjectList(hp);
         HjStatistics hs;
         Map<String,String> map=new HashMap<String,String>();

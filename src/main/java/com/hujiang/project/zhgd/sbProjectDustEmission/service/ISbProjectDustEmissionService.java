@@ -66,10 +66,10 @@ public interface ISbProjectDustEmissionService
 	/**
      * 删除项目对应的扬尘设备SN信息
      * 
-     * @param ids 需要删除的数据ID
+     * @param id 需要删除的数据ID
      * @return 结果
      */
-	public int deleteSbProjectDustEmissionByIds(String ids);
+	public int deleteSbProjectDustEmissionByIds(Integer id);
 
 	/** 查询某项目下的设备sn*/
 	List<SbProjectDustEmission> selectSn(Long projectId);

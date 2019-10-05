@@ -3,6 +3,8 @@ package com.hujiang.project.zhgd.sbProjectElectricityBox.task;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hujiang.common.utils.ThreadUtils;
+import com.hujiang.project.api.controller.ApiElectricityBoxController;
 import com.hujiang.project.zhgd.sbCurrentTemperature.domain.SbCurrentTemperature;
 import com.hujiang.project.zhgd.sbCurrentTemperature.service.ISbCurrentTemperatureService;
 import com.hujiang.project.zhgd.sbDoorLock.domain.SbDoorLock;
@@ -11,6 +13,9 @@ import com.hujiang.project.zhgd.sbProjectElectricityBox.domain.SbProjectElectric
 import com.hujiang.project.zhgd.sbProjectElectricityBox.service.ISbProjectElectricityBoxService;
 import com.hujiang.project.zhgd.utils.Constants;
 import com.hujiang.project.zhgd.utils.Util;
+import com.hujiang.project.zhgd.utils.ZCAPIClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -18,6 +23,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,13 +38,15 @@ import java.util.List;
     @RestController
     @RequestMapping(value = "/provider/b")
 public class ElectricityBoxTask {
+    private final Logger logger = LoggerFactory.getLogger(ZCAPIClient.class);
     @Autowired
     private ISbProjectElectricityBoxService iProjectElectricityBoxService;
     @Autowired
     private ISbDoorLockService iDoorLockService;
     @Autowired
     private ISbCurrentTemperatureService iCurrentTemperatureService;
-
+    @Autowired
+    private ApiElectricityBoxController apiElectricityBoxController;
 
     /**
      * 60秒执行一次电箱获取
@@ -161,6 +170,7 @@ public class ElectricityBoxTask {
                 sc.setNwarm(j.getBigDecimal("temp_xl_n"));
                 sc.setTm(j.getString("create_time"));
                 iCurrentTemperatureService.insertSbCurrentTemperature(sc);
+                apiElectricityBoxController.reportElectricBoxState(sc,j.getInteger("wran_type"));
             }
 
         }

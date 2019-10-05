@@ -265,9 +265,7 @@
     </select>
 
 
-    <select id="selectConstructionProject"
-            parameterType="com.hujiang.project.zhgd.hjProjectWorkers.domain.ProjectWorkers"
-            resultMap="ProjectWorkersResult">
+    <select id="selectConstructionProject" parameterType="com.hujiang.project.zhgd.hjProjectWorkers.domain.ProjectWorkers" resultMap="ProjectWorkersResult">
         SELECT
         hw.id as workersId,
         hw.project_id as projectId,
@@ -295,6 +293,7 @@
         <if test="projectId != null">
             and hw.project_id = #{projectId}
         </if>
+        limit 1
     </select>
 
     <sql id="selectHjProjectWorkersVo">

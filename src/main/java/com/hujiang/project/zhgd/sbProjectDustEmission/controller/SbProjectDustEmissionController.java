@@ -119,9 +119,9 @@ public class SbProjectDustEmissionController extends BaseController
 	@Log(title = "项目对应的扬尘设备SN", businessType = BusinessType.DELETE)
 	@PostMapping( "/remove")
 	@ResponseBody
-	public AjaxResult remove(String ids)
-	{		
-		return toAjax(sbProjectDustEmissionService.deleteSbProjectDustEmissionByIds(ids));
+	public AjaxResult remove(Integer id)
+	{
+		return toAjax(sbProjectDustEmissionService.deleteSbProjectDustEmissionByIds(id));
 	}
 	
 }

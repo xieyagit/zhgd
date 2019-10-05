@@ -119,9 +119,9 @@ public class SbProjectElectricityBoxController extends BaseController
 	@Log(title = "项目电箱", businessType = BusinessType.DELETE)
 	@PostMapping( "/remove")
 	@ResponseBody
-	public AjaxResult remove(String ids)
+	public AjaxResult remove(Integer id)
 	{		
-		return toAjax(sbProjectElectricityBoxService.deleteSbProjectElectricityBoxByIds(ids));
+		return toAjax(sbProjectElectricityBoxService.deleteSbProjectElectricityBoxByIds(id));
 	}
 	
 }

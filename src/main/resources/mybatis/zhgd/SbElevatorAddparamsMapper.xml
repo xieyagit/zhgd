@@ -30,17 +30,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="deviceNo" column="deviceNo"/>
         <result property="projectId" column="projectId"/>
         <result property="elevatorName" column="elevatorName"/>
-        <result property="hxzId" column="hxzId"/>
+        <result property="hxzId" column="hxzid"/>
+        <result property="serialNum" column="serial_num"/>
+        <result property="jdbh" column="jdbh"/>
+        <result property="xmid" column="xmid"/>
+        <result property="subId" column="sub_id"/>
+        <result property="scznl" column="scznl"/>
+        <result property="manufacturerId" column="manufacturer_id"/>
+        <result property="height" column="height"/>
+        <result property="installCompany" column="install_company"/>
     </resultMap>
 	<sql id="selectSbElevatorAddparamsVo">
         select id, device_no, model, name, L_Load_Capacity, L_Height, L_Height2, L_UpCollect, L_DownCollection, L_GearModules, L_LowLimit, L_M_Contract, L_S_Contract, L_MonitorStyle, L_Sections, L_ControlStyle, L_Limit_Capacity, hxzid from sb_elevator_addparams
     </sql>
 	<select id="getElevatorList" parameterType="OptionsElevator" resultMap="OptionsElevatorResult">
-        SELECT b.id as id,b.pid as projectId,a.hxzid as hxzId,a.L_Load_Capacity as capacity,b.dname AS elevatorName,b.device_no as deviceNo
-        FROM `sb_elevator_binding` AS b
-        LEFT JOIN sb_elevator_addparams AS a ON(b.hxzid=a.hxzid)
-        where 1=1
-        <if test="projectId != null">and pid = #{projectId}</if>
+        select id, hxzid as hxzId, pid, userid, dname as elevatorName, isSynchronization, device_no as deviceNo, serial_num, jdbh, xmid, sub_id, scznl, manufacturer_id, install_company, capacity, height
+        from sb_elevator_binding
+        <where>
+            <if test="projectId != null">and pid = #{projectId}</if>
+        </where>
     </select>
     <insert id="insertElevator" parameterType="OptionsElevator">
         insert into sb_elevator_binding
@@ -49,12 +57,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="elevatorName != null  and elevatorName != ''  ">dname,</if>
             <if test="hxzId != null  and hxzId != ''  ">hxzid,</if>
             <if test="projectId != null">pid,</if>
+            <if test="jdbh != null and jdbh != '' ">jdbh,</if>
+            <if test="xmid != null and xmid != '' " >xmid,</if>
+            <if test="subId != null and subId != ''  ">sub_id,</if>
+            <if test="scznl != null and scznl!= ''  ">scznl,</if>
+            <if test="serialNum != null and serialNum != '' ">serial_num,</if>
+            <if test="capacity != null ">capacity,</if>
+            <if test="height != null ">height,</if>
+            <if test="manufacturerId != 0 ">manufacturer_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
             <if test="elevatorName != null  and elevatorName != ''  ">#{elevatorName},</if>
             <if test="hxzId != null  and hxzId != ''  ">#{hxzId},</if>
             <if test="projectId != null">#{projectId}</if>
+            <if test="jdbh != null and jdbh != '' ">#{jdbh}</if>
+            <if test="xmid != null and xmid != '' ">#{xmid}</if>
+            <if test="subId != null and subId != '' ">#{subId}</if>
+            <if test="scznl != null and scznl!= '' ">#{scznl}</if>
+            <if test="serialNum != null and serialNum != ''">#{serialNum}</if>
+            <if test="capacity != null">#{capacity}</if>
+            <if test="height != null ">#{height}</if>
+            <if test="manufacturerId != 0">#{manufacturerId}</if>
         </trim>
     </insert>
     <update id="updateElevator" parameterType="OptionsElevator">

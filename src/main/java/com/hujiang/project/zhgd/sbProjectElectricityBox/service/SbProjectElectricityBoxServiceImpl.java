@@ -37,11 +37,8 @@ public class SbProjectElectricityBoxServiceImpl implements ISbProjectElectricity
 	private SbProjectElectricityBoxMapper sbProjectElectricityBoxMapper;
 
 	@Override
-	public List<SbProjectElectricityBox> selectByProjectIdAndHxzId(Integer projectId, String hxzid) {
-		Map<String,Object> conditionMap = new HashMap<>();
-		conditionMap.put("projectId",projectId);
-		conditionMap.put("hxzid",hxzid);
-		return sbProjectElectricityBoxMapper.selectByProjectIdAndHxzId(conditionMap);
+	public List<SbProjectElectricityBox> selectByProjectIdAndHxzId(SbProjectElectricityBox sbProjectElectricityBox) {
+		return sbProjectElectricityBoxMapper.selectByProjectIdAndHxzId(sbProjectElectricityBox);
 	}
 
 	/**
@@ -205,13 +202,23 @@ public class SbProjectElectricityBoxServiceImpl implements ISbProjectElectricity
 	/**
      * 删除项目电箱对象
      * 
-     * @param ids 需要删除的数据ID
+     * @param id 需要删除的数据ID
      * @return 结果
      */
 	@Override
-	public int deleteSbProjectElectricityBoxByIds(String ids)
+	public int deleteSbProjectElectricityBoxByIds(Integer id)
 	{
-		return sbProjectElectricityBoxMapper.deleteSbProjectElectricityBoxByIds(Convert.toStrArray(ids));
+		return sbProjectElectricityBoxMapper.deleteSbProjectElectricityBoxByIds(id);
 	}
-	
+
+
+	/**
+	 * 查询出设备数量
+	 *
+	 * @param projectId 项目ID
+	 * @return 结果
+	 */
+	public List<SbProjectElectricityBox> seleleSize(Integer projectId){
+		return sbProjectElectricityBoxMapper.seleleSize(projectId);
+	}
 }

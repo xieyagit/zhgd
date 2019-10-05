@@ -6,6 +6,9 @@ import com.hujiang.framework.aspectj.lang.enums.BusinessType;
 import com.hujiang.framework.web.controller.BaseController;
 import com.hujiang.framework.web.domain.AjaxResult;
 import com.hujiang.framework.web.page.TableDataInfo;
+import com.hujiang.project.api.controller.ApiElectricityBoxController;
+import com.hujiang.project.cay.cay;
+import com.hujiang.project.zhgd.sbCraneBinding.domain.SbCraneBinding;
 import com.hujiang.project.zhgd.sbProjectElectricityBox.domain.SbPowerBoxAdd;
 import com.hujiang.project.zhgd.sbProjectElectricityBox.domain.SbProjectElectricityBox;
 import com.hujiang.project.zhgd.sbProjectElectricityBox.service.ISbProjectElectricityBoxService;
@@ -33,7 +36,10 @@ import java.util.List;
 public class ProjectElectricityBoxApi extends BaseController {
     @Autowired
     private ISbProjectElectricityBoxService boxService;
-
+    @Autowired
+    private com.hujiang.project.cay.cay cay;
+    @Autowired
+    private ApiElectricityBoxController apiElectricityBoxController;
     /**
      * 根据项目id获取电箱设备编号
      * @param projectId
@@ -70,15 +76,15 @@ public class ProjectElectricityBoxApi extends BaseController {
      * @return
      * @author yant
      */
-    @PostMapping("addSave")
+    @RequestMapping("/addSave")
     public AjaxResult addSave(@RequestBody SbProjectElectricityBox sbP)
     {
 
         if (sbP.getProjectId() == null || sbP.getElectricityBoxId() == null ||
-                sbP.getElectricityBoxName() == null || sbP.getTempLimit() ==null ||
+                sbP.getTempLimit() ==null ||
                 sbP.getElecLimit() == null ||sbP.getAroundTemp() == null){
-        return AjaxResult.error(500,"参数错误");
-    }
+            return AjaxResult.error(500,"参数错误");
+        }
         SbPowerBoxAdd sbPowerBoxAdd = new SbPowerBoxAdd();
         BeanUtils.copyProperties(sbP,sbPowerBoxAdd);
         //将设备编号转换成MD5格式32位
@@ -87,25 +93,29 @@ public class ProjectElectricityBoxApi extends BaseController {
         sbPowerBoxAdd.setType(1);
         sbPowerBoxAdd.setInstallCompany(CommonChars.CompanyName);
         sbPowerBoxAdd.setInstalladdType(2);
+        sbP.setElectricityBoxName(sbP.getComments());
         try {
             //设备参数上报
             AjaxResult result = boxService.reportedEBox(sbPowerBoxAdd);
-            if ("true".equals(result.get("result"))){
-                //添加到数据库
-                int i = boxService.insertSbProjectElectricityBox(sbP);
-                if(i>0){
-                    return AjaxResult.success();
-                }else {
-                    AjaxResult ajaxResult = new AjaxResult();
-                    ajaxResult.put("code",result.get("code"));
-                    ajaxResult.put("message",result.get("message"));
-                    return ajaxResult;
-                }
+//            if ("true".equals(result.get("result"))){
+//                return result;
+//            }
+            if (sbP.getScznl().equals("CAY")) {
+
+                apiElectricityBoxController.reportElectricBoxParamete(sbP);
             }
-            return result;
         } catch (Exception e) {
             e.printStackTrace();
-            return AjaxResult.error(-1,"添加电箱失败");
+//            return AjaxResult.error(-1,"添加电箱失败");
+        }
+        int i = boxService.insertSbProjectElectricityBox(sbP);
+        if(i>0){
+            return AjaxResult.success();
+        }else {
+            AjaxResult ajaxResult = new AjaxResult();
+    //                ajaxResult.put("code",result.get("code"));
+    //                ajaxResult.put("message",result.get("message"));
+            return ajaxResult;
         }
     }
     @PostMapping("/addElectricityBox")
@@ -154,9 +164,14 @@ public class ProjectElectricityBoxApi extends BaseController {
      * 删除项目电箱
      */
     @PostMapping( "/remove")
-    public AjaxResult remove(String ids)
-    {
-        int i = boxService.deleteSbProjectElectricityBoxByIds(ids);
+    public AjaxResult remove(Integer id,@RequestParam(value = "devCcrq",required =false)String devCcrq) throws IOException, URISyntaxException {
+        if (devCcrq != null) {
+            SbProjectElectricityBox sbProjectElectricityBox = boxService.selectSbProjectElectricityBoxById(id);
+            if (sbProjectElectricityBox != null) {
+                cay.delete(sbProjectElectricityBox.getElectricityBoxId(), sbProjectElectricityBox.getXmid(), "电箱", devCcrq, sbProjectElectricityBox.getSubId());
+            }
+        }
+        int i = boxService.deleteSbProjectElectricityBoxByIds(id);
         if(i>0){
             return AjaxResult.success();
         }

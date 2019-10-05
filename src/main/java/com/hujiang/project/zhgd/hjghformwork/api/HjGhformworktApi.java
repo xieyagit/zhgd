@@ -89,6 +89,11 @@ public class HjGhformworktApi extends BaseController {
      */
     @PostMapping(value = "getFactorList" )
     public AjaxResult getFactorList(@RequestParam(value = "structureId")Integer structureId,@RequestParam(value = "displayId") Integer displayId){
+        AjaxResult ajaxResult = new AjaxResult();
+        if (displayId == null){
+            return  AjaxResult.error(0,"参数错误！");
+        }
+
         if (displayId == null){
             return  AjaxResult.error(0,"参数错误！");
         }
@@ -96,7 +101,31 @@ public class HjGhformworktApi extends BaseController {
         HighformworkFactor df;
         dp.setReserved(displayId.toString());
         List<HighformworkGroup> ldp = highformworkGroupService.selectHighformworkGroupList(dp);
-        return AjaxResult.success(ldp);
+        if (ldp == null){
+            ajaxResult.put("msg","参数错误！");
+            ajaxResult.put("code",1);
+            return ajaxResult;
+        }
+        JSONArray jdf =new JSONArray();
+        for (int i = 0;i < ldp.size();i++){
+            df = new HighformworkFactor();
+            df.setReserved(ldp.get(i).getId().toString());
+            List<HighformworkFactor> ldf = highformworkFactorService.selectHighformworkFactorList(df);
+            if (ldf == null){
+                ajaxResult.put("msg","参数错误！");
+                ajaxResult.put("code",1);
+                return ajaxResult;
+            }
+            for (HighformworkFactor sf:ldf){
+                sf.setCreateTime(new Date());
+                sf.setUpdateTime(new Date());
+                jdf.add(sf);
+            }
+            ajaxResult.put("code",0);
+            ajaxResult.put("data",jdf);
+        }
+
+        return ajaxResult;
     }
 
     /**
@@ -119,11 +148,11 @@ public class HjGhformworktApi extends BaseController {
         TableDataInfo dataTable = getDataTable(hjDeeppitDataList);
 
         int count = Integer.parseInt(String.valueOf(dataTable.getTotal()));
-        if ((pageDomain.getPageNum()) <= Math.ceil(count / (double) pageDomain.getPageSize())) {
+       if ((pageDomain.getPageNum()) <= Math.ceil(count / (double) pageDomain.getPageSize())) {
             jb.put("msg", "查询成功");
             jb.put("code", 0);
             jb.put("data", hjDeeppitDataList);
-        }else {
+       }else {
             jb.put("msg", "查询成功");
             jb.put("code", 0);
             jb.put("data", Collections.emptyList());
@@ -161,7 +190,7 @@ public class HjGhformworktApi extends BaseController {
             jsonObject.put("data", lf);
         }else {
             jsonObject.put("msg", "查询成功");
-            jsonObject.put("code", 0);
+            jsonObject.put("code", 1);
             jsonObject.put("data", Collections.emptyList());
         }
         return jsonObject;
@@ -188,6 +217,7 @@ public class HjGhformworktApi extends BaseController {
             jsonObject.put("msg", "查询成功");
             jsonObject.put("code", 0);
             jsonObject.put("data", highformworkData);
+            jsonObject.put("sum",highformworkData.size());
         }else {
             jsonObject.put("msg", "查询成功");
             jsonObject.put("code", 0);
@@ -215,33 +245,48 @@ public class HjGhformworktApi extends BaseController {
         String minS=null;
 
         switch (displayId){
-            case 12:
+            case 14:
                 avg.setSubside(displayId.toString());
                 avg.setSubside("subside");
                 avg.setFactorId(factorId);
                 avgR = highformworkDataService.selectParmeterAvg(avg);
-                avgS = avgR.substring(0,avgR.indexOf(".")+3);
+                //avgS = avgR.substring(0,avgR.indexOf(".")+3);
                 maxR = highformworkDataService.selectParmeterMax(avg);
-                maxS = maxR.substring(0,maxR.indexOf(".")+3);
+                //maxS = maxR.substring(0,maxR.indexOf(".")+3);
                 minR = highformworkDataService.selectParmeterMin(avg);
-                minS = minR.substring(0,minR.indexOf(".")+3);
-                map.put("avg",avgS);
-                map.put("min",minS);
-                map.put("max",maxS);
+                //minS = minR.substring(0,minR.indexOf(".")+3);
+                map.put("avg",avgR);
+                map.put("min",minR);
+                map.put("max",maxR);
                 break;
             case 13:
                 avg.setSubside(displayId.toString());
-                avg.setSubside("subside");
+                avg.setSubside("displacement");
                 avg.setFactorId(factorId);
                 avgR = highformworkDataService.selectParmeterAvg(avg);
-                avgS = avgR.substring(0,avgR.indexOf(".")+3);
+                //avgS = avgR.substring(0,avgR.indexOf(".")+3);
                 maxR = highformworkDataService.selectParmeterMax(avg);
-                maxS = maxR.substring(0,maxR.indexOf(".")+3);
+                //maxS = maxR.substring(0,maxR.indexOf(".")+3);
                 minR = highformworkDataService.selectParmeterMin(avg);
-                minS = minR.substring(0,minR.indexOf(".")+3);
-                map.put("avg",avgS);
-                map.put("min",minS);
-                map.put("max",maxS);
+                //minS = minR.substring(0,minR.indexOf(".")+3);
+                map.put("avg",avgR);
+                map.put("min",minR);
+                map.put("max",maxR);
+                break;
+            case 12:
+                avg.setSubside(displayId.toString());
+                avg.setSubside("force_r");
+                avg.setFactorId(factorId);
+                avgR = highformworkDataService.selectParmeterAvg(avg);
+                //avgS = avgR.substring(0,avgR.indexOf(".")+3);
+                maxR = highformworkDataService.selectParmeterMax(avg);
+                //maxS = maxR.substring(0,maxR.indexOf(".")+3);
+                minR = highformworkDataService.selectParmeterMin(avg);
+                //minS = minR.substring(0,minR.indexOf(".")+3);
+                map.put("avg",avgR);
+                map.put("min",minR);
+                map.put("max",maxR);
+                break;
             default:
         }
         return AjaxResult.success(map);
@@ -279,17 +324,39 @@ public class HjGhformworktApi extends BaseController {
      * @return
      */
     @PostMapping(value = "selectSpecialS" )
-    public JSONArray getFactorDataT(@RequestParam(value = "factorId") Integer factorId,@RequestParam(value = "startTime") String startTime, @RequestParam(value = "endTime")String endTime) {
+    public JSONArray getFactorDataT(@RequestParam(value = "displayId") Integer displayId,@RequestParam(value = "factorId") Integer factorId,@RequestParam(value = "startTime") String startTime, @RequestParam(value = "endTime")String endTime) {
 
         List<HighformworkData> highformworkData = highformworkDataService.selectHighformworkDataListT(factorId,startTime,endTime);
         JSONArray array = new JSONArray();
         JSONArray array1;
         for (HighformworkData data : highformworkData){
             array1 = new JSONArray();
-            array1.add(data.getCreation());
-            array1.add(data.getSubside());
-            array.add(array1);
+            switch (displayId){
+                case 14:
+                    array1.add(data.getCreation());
+                    array1.add(data.getSubside());
+                    array.add(array1);
+                    break;
+                case 13:
+                    array1.add(data.getCreation());
+                    array1.add(data.getDisplacement());
+                    array.add(array1);
+                    break;
+                case 12:
+                    array1.add(data.getCreation());
+                    array1.add(data.getForce());
+                    array.add(array1);
+                    break;
+                case 15:
+                    array1.add(data.getCreation());
+                    array1.add(data.getTiltX());
+                    array1.add(data.getTiltY());
+                    array.add(array1);
+                    break;
+                default:
+            }
         }
+
         return array;
     }
 

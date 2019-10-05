@@ -142,7 +142,7 @@ public class DeeppitExternalApi {
             sbDeeppitGroup.setSupplier(jsonResult.getInteger("supplier"));   //供应商ID
             sbDeeppitGroup.setGroupKey(
                     EncryptionUtil.encryptByAES(jsonResult.getInteger("supplier").toString()+
-                    jsonResult.getInteger("id").toString(), Md5Utils.hash(jsonResult.getInteger("supplier").toString())));
+                            jsonResult.getInteger("id").toString(), Md5Utils.hash(jsonResult.getInteger("supplier").toString())));
             int result = groupService.insertSbDeeppitGroup(sbDeeppitGroup);
             if(result > 0){
                 map.put("msg","成功");

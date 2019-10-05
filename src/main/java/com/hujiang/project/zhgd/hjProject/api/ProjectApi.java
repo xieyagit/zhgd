@@ -191,28 +191,28 @@ public class ProjectApi extends BaseController {
         out.println(cid);
 
 
-            //保存項目-------------------------
-            if (file != null&&!file.isEmpty()) {
-                //上传图片到oss服务器
-                String url = AliyunOSSClientUtil.uploadFileImg(file, "hujiang", hjProject.getShortName() + System.currentTimeMillis() + ".jpg");
-                hjProject.setProjectImage(url.substring(0,url.indexOf("?")));
-            }
-            //创建人脸库
-            AipFace aipFace = new AipFace(Constants.BD_APP_ID, Constants.BD_API_KEY,Constants. BD_SECRET_KEY);
-            //随机生成人脸库编号
-            String randomNum = Long.toHexString(System.currentTimeMillis());
-            JSONObject jsonObject = aipFace.groupAdd(randomNum, new HashMap<>());
+        //保存項目-------------------------
+        if (file != null&&!file.isEmpty()) {
+            //上传图片到oss服务器
+            String url = AliyunOSSClientUtil.uploadFileImg(file, "hujiang", hjProject.getShortName() + System.currentTimeMillis() + ".jpg");
+            hjProject.setProjectImage(url.substring(0,url.indexOf("?")));
+        }
+        //创建人脸库
+        AipFace aipFace = new AipFace(Constants.BD_APP_ID, Constants.BD_API_KEY,Constants. BD_SECRET_KEY);
+        //随机生成人脸库编号
+        String randomNum = Long.toHexString(System.currentTimeMillis());
+        JSONObject jsonObject = aipFace.groupAdd(randomNum, new HashMap<>());
 
-            if(!jsonObject.getString("error_msg").equals("SUCCESS")){
-                throw new BusinessException("人脸库创建不成功");
-            }else{
-                //添加人脸库
-                hjProject.setFaceGroup(randomNum);
-            }
-            //添加项目
+        if(!jsonObject.getString("error_msg").equals("SUCCESS")){
+            throw new BusinessException("人脸库创建不成功");
+        }else{
+            //添加人脸库
+            hjProject.setFaceGroup(randomNum);
+        }
+        //添加项目
 //            hjProject.setConstructionId(cid);//总包单位
 //            hjProject.setSupervisorId(hjConstructionCompany.getId());//监理企业
-            int s = hjProjectService.insertHjProject(hjProject);
+        int s = hjProjectService.insertHjProject(hjProject);
 
         HjCompanyProject hjCompanyProject = new HjCompanyProject();
         hjCompanyProject.setCompanyId(cid);

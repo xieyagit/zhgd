@@ -91,17 +91,17 @@ public class SbProjectDustEmissionServiceImpl implements ISbProjectDustEmissionS
 	/**
      * 删除项目对应的扬尘设备SN对象
      * 
-     * @param ids 需要删除的数据ID
+     * @param id 需要删除的数据ID
      * @return 结果
      */
 	@Override
-	public int deleteSbProjectDustEmissionByIds(String ids)
+	public int deleteSbProjectDustEmissionByIds(Integer id)
 	{
-		return sbProjectDustEmissionMapper.deleteSbProjectDustEmissionByIds(Convert.toStrArray(ids));
+		return sbProjectDustEmissionMapper.deleteSbProjectDustEmissionByIds(id);
 	}
 
 	/** 查询某项目下的设备sn*/
-//	@Override
+	@Override
 	public List<SbProjectDustEmission> selectSn(Long projectId){
 		return sbProjectDustEmissionMapper.selectSn(projectId);
 	}

@@ -26,7 +26,7 @@ public class HjAttendanceDevice
 	private String direction;
 	/** 创建时间 */
 	private String createTime;
-	/** 状态，1正常，0不正常 */
+	/** 是否上传住建局 1正常，0不正常 */
 	private String status;
 	/** 项目ID */
 	private Integer projectId;

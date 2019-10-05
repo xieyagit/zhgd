@@ -12,7 +12,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class SbCraneBinding
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** id */
 	private Integer id;
 	/** 设备编号 */
@@ -27,80 +27,213 @@ public class SbCraneBinding
 	private String isSynchronization;
 	/** 设备编号32位 */
 	private String deviceNo;
+	/** 广东省统一安装告 知编号（产权备案 编号） */
+	private String serialNum;
+	/** 最大幅度（M） */
+	private Double tcMaxScope;
+	/** 最大高度（M) */
+	private Double tcMaxHeight;
+	/** 最大载重（kg） */
+	private Double tcLoadCapacity;
+	/** 额定起重力矩（N·m） */
+	private Double tcLoadMoment;
+	/** 项目监督编号 */
+	private String jdbh;
+	/** 项目ID（城安院） */
+	private String xmid;
+	/** 工程id */
+	private String subId;
+	/** 对接平台 */
+	private String scznl;
+	/** 设备厂商ID */
+	private Integer manufacturerId;
+	/** 设备安装单位 */
+	private String installCompany;
 
-	public void setId(Integer id) 
+	public void setId(Integer id)
 	{
 		this.id = id;
 	}
 
-	public Integer getId() 
+	public Integer getId()
 	{
 		return id;
 	}
-	public void setHxzid(String hxzid) 
+	public void setHxzid(String hxzid)
 	{
 		this.hxzid = hxzid;
 	}
 
-	public String getHxzid() 
+	public String getHxzid()
 	{
 		return hxzid;
 	}
-	public void setPid(Integer pid) 
+	public void setPid(Integer pid)
 	{
 		this.pid = pid;
 	}
 
-	public Integer getPid() 
+	public Integer getPid()
 	{
 		return pid;
 	}
-	public void setUserid(Integer userid) 
+	public void setUserid(Integer userid)
 	{
 		this.userid = userid;
 	}
 
-	public Integer getUserid() 
+	public Integer getUserid()
 	{
 		return userid;
 	}
-	public void setDname(String dname) 
+	public void setDname(String dname)
 	{
 		this.dname = dname;
 	}
 
-	public String getDname() 
+	public String getDname()
 	{
 		return dname;
 	}
-	public void setIsSynchronization(String isSynchronization) 
+	public void setIsSynchronization(String isSynchronization)
 	{
 		this.isSynchronization = isSynchronization;
 	}
 
-	public String getIsSynchronization() 
+	public String getIsSynchronization()
 	{
 		return isSynchronization;
 	}
-	public void setDeviceNo(String deviceNo) 
+	public void setDeviceNo(String deviceNo)
 	{
 		this.deviceNo = deviceNo;
 	}
 
-	public String getDeviceNo() 
+	public String getDeviceNo()
 	{
 		return deviceNo;
 	}
-	@Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("hxzid", getHxzid())
-            .append("pid", getPid())
-            .append("userid", getUserid())
-            .append("dname", getDname())
-            .append("isSynchronization", getIsSynchronization())
-            .append("deviceNo", getDeviceNo())
-            .toString();
-    }
+	public void setSerialNum(String serialNum)
+	{
+		this.serialNum = serialNum;
+	}
+
+	public String getSerialNum()
+	{
+		return serialNum;
+	}
+	public void setTcMaxScope(Double tcMaxScope)
+	{
+		this.tcMaxScope = tcMaxScope;
+	}
+
+	public Double getTcMaxScope()
+	{
+		return tcMaxScope;
+	}
+	public void setTcMaxHeight(Double tcMaxHeight)
+	{
+		this.tcMaxHeight = tcMaxHeight;
+	}
+
+	public Double getTcMaxHeight()
+	{
+		return tcMaxHeight;
+	}
+	public void setTcLoadCapacity(Double tcLoadCapacity)
+	{
+		this.tcLoadCapacity = tcLoadCapacity;
+	}
+
+	public Double getTcLoadCapacity()
+	{
+		return tcLoadCapacity;
+	}
+	public void setTcLoadMoment(Double tcLoadMoment)
+	{
+		this.tcLoadMoment = tcLoadMoment;
+	}
+
+	public Double getTcLoadMoment()
+	{
+		return tcLoadMoment;
+	}
+	public void setJdbh(String jdbh)
+	{
+		this.jdbh = jdbh;
+	}
+
+	public String getJdbh()
+	{
+		return jdbh;
+	}
+	public void setXmid(String xmid)
+	{
+		this.xmid = xmid;
+	}
+
+	public String getXmid()
+	{
+		return xmid;
+	}
+	public void setSubId(String subId)
+	{
+		this.subId = subId;
+	}
+
+	public String getSubId()
+	{
+		return subId;
+	}
+	public void setScznl(String scznl)
+	{
+		this.scznl = scznl;
+	}
+
+	public String getScznl()
+	{
+		return scznl;
+	}
+	public void setManufacturerId(Integer manufacturerId)
+	{
+		this.manufacturerId = manufacturerId;
+	}
+
+	public Integer getManufacturerId()
+	{
+		return manufacturerId;
+	}
+	public void setInstallCompany(String installCompany)
+	{
+		this.installCompany = installCompany;
+	}
+
+	public String getInstallCompany()
+	{
+		return installCompany;
+	}
+
+	public String toString() {
+		return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+				.append("id", getId())
+				.append("hxzid", getHxzid())
+				.append("pid", getPid())
+				.append("userid", getUserid())
+				.append("dname", getDname())
+				.append("isSynchronization", getIsSynchronization())
+				.append("deviceNo", getDeviceNo())
+				.append("serialNum", getSerialNum())
+				.append("tcMaxScope", getTcMaxScope())
+				.append("tcMaxHeight", getTcMaxHeight())
+				.append("tcLoadCapacity", getTcLoadCapacity())
+				.append("tcLoadMoment", getTcLoadMoment())
+				.append("jdbh", getJdbh())
+				.append("xmid", getXmid())
+				.append("subId", getSubId())
+				.append("scznl", getScznl())
+				.append("manufacturerId", getManufacturerId())
+				.append("installCompany", getInstallCompany())
+				.toString();
+	}
+
 }

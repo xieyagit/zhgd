@@ -12,13 +12,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="dname"    column="dname"    />
         <result property="isSynchronization"    column="isSynchronization"    />
         <result property="deviceNo"    column="device_no"    />
+        <result property="serialNum"    column="serial_num"    />
+        <result property="jdbh"    column="jdbh"    />
+        <result property="xmid"    column="xmid"    />
+        <result property="subId"    column="sub_id"    />
+        <result property="scznl"    column="scznl"    />
+        <result property="manufacturerId"    column="manufacturer_id"    />
+        <result property="installCompany"    column="install_company"    />
+        <result property="capacity"    column="capacity"    />
+        <result property="height"    column="height"    />
+        <result property="projectId"    column="pid"    />
     </resultMap>
 	
 	<sql id="selectSbElevatorBindingVo">
         select id, hxzid, pid, userid, dname, isSynchronization, device_no from sb_elevator_binding
     </sql>
     <select id="selectHxzId" parameterType="SbElevatorBinding" resultMap="SbElevatorBindingResult">
-      SELECT * FROM `sb_elevator_binding` where pid=#{pid};
+      SELECT *,count(distinct hxzid) FROM `sb_elevator_binding` where pid=#{pid}
     </select>
 
     <select id="list" parameterType="SbElevatorBinding" resultMap="SbElevatorBindingResult">
@@ -40,6 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="dname != null  and dname != '' "> and dname = #{dname}</if>
              <if test="isSynchronization != null  and isSynchronization != '' "> and isSynchronization = #{isSynchronization}</if>
              <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
+             <if test="scznl != null  and scznl != '' "> and scznl = #{scznl}</if>
          </where>
     </select>
     
@@ -50,35 +61,60 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         
     <insert id="insertSbElevatorBinding" parameterType="SbElevatorBinding">
         insert into sb_elevator_binding
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">id,</if>
-			<if test="hxzid != null  and hxzid != ''  ">hxzid,</if>
-			<if test="pid != null  ">pid,</if>
-			<if test="userid != null  ">userid,</if>
-			<if test="dname != null  and dname != ''  ">dname,</if>
-			<if test="isSynchronization != null  and isSynchronization != ''  ">isSynchronization,</if>
-			<if test="deviceNo != null  and deviceNo != ''  ">device_no,</if>
-         </trim>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="hxzId != null  and hxzId != ''  ">hxzid,</if>
+            <if test="pid != null ">pid,</if>
+            <if test="userid != null  ">userid,</if>
+            <if test="dname != null  and dname != ''  ">dname,</if>
+            <if test="isSynchronization != null  and isSynchronization != ''  ">isSynchronization,</if>
+            <if test="deviceNo != null  and deviceNo != ''  ">device_no,</if>
+            <if test="serialNum != null  and serialNum != ''  ">serial_num,</if>
+            <if test="jdbh != null  and jdbh != ''  ">jdbh,</if>
+            <if test="xmid != null  and xmid != ''  ">xmid,</if>
+            <if test="subId != null  and subId != ''  ">sub_id,</if>
+            <if test="scznl != null  and scznl != ''  ">scznl,</if>
+            <if test="manufacturerId != null  ">manufacturer_id,</if>
+            <if test="installCompany != null  and installCompany != ''  ">install_company,</if>
+            <if test="capacity != null  ">capacity,</if>
+            <if test="height != null  ">height,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">#{id},</if>
-			<if test="hxzid != null  and hxzid != ''  ">#{hxzid},</if>
-			<if test="pid != null  ">#{pid},</if>
-			<if test="userid != null  ">#{userid},</if>
-			<if test="dname != null  and dname != ''  ">#{dname},</if>
-			<if test="isSynchronization != null  and isSynchronization != ''  ">#{isSynchronization},</if>
-			<if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
-         </trim>
+            <if test="hxzId != null  and hxzId != ''  ">#{hxzId},</if>
+            <if test="pid != null  ">#{pid},</if>
+            <if test="userid != null  ">#{userid},</if>
+            <if test="dname != null  and dname != ''  ">#{dname},</if>
+            <if test="isSynchronization != null  and isSynchronization != ''  ">#{isSynchronization},</if>
+            <if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+            <if test="serialNum != null  and serialNum != ''  ">#{serialNum},</if>
+            <if test="jdbh != null  and jdbh != ''  ">#{jdbh},</if>
+            <if test="xmid != null  and xmid != ''  ">#{xmid},</if>
+            <if test="subId != null  and subId != ''  ">#{subId},</if>
+            <if test="scznl != null  and scznl != ''  ">#{scznl},</if>
+            <if test="manufacturerId != null  ">#{manufacturerId},</if>
+            <if test="installCompany != null  and installCompany != ''  ">#{installCompany},</if>
+            <if test="capacity != null  ">#{capacity},</if>
+            <if test="height != null  ">#{height},</if>
+        </trim>
     </insert>
 	 
     <update id="updateSbElevatorBinding" parameterType="SbElevatorBinding">
         update sb_elevator_binding
         <trim prefix="SET" suffixOverrides=",">
-            <if test="hxzid != null  and hxzid != ''  ">hxzid = #{hxzid},</if>
+            <if test="hxzId != null  and hxzId != ''  ">hxzid = #{hxzId},</if>
             <if test="pid != null  ">pid = #{pid},</if>
             <if test="userid != null  ">userid = #{userid},</if>
             <if test="dname != null  and dname != ''  ">dname = #{dname},</if>
             <if test="isSynchronization != null  and isSynchronization != ''  ">isSynchronization = #{isSynchronization},</if>
             <if test="deviceNo != null  and deviceNo != ''  ">device_no = #{deviceNo},</if>
+            <if test="serialNum != null  and serialNum != ''  ">serial_num = #{serialNum},</if>
+            <if test="jdbh != null  and jdbh != ''  ">jdbh = #{jdbh},</if>
+            <if test="xmid != null  and xmid != ''  ">xmid = #{xmid},</if>
+            <if test="subId != null  and subId != ''  ">sub_id = #{subId},</if>
+            <if test="scznl != null  and scznl != ''  ">scznl = #{scznl},</if>
+            <if test="manufacturerId != null  ">manufacturer_id = #{manufacturerId},</if>
+            <if test="installCompany != null  and installCompany != ''  ">install_company = #{installCompany},</if>
+            <if test="capacity != null  ">capacity = #{capacity},</if>
+            <if test="height != null  ">height = #{height},</if>
         </trim>
         where id = #{id}
     </update>
