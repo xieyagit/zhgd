@@ -44,8 +44,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, device_no, model, name, L_Load_Capacity, L_Height, L_Height2, L_UpCollect, L_DownCollection, L_GearModules, L_LowLimit, L_M_Contract, L_S_Contract, L_MonitorStyle, L_Sections, L_ControlStyle, L_Limit_Capacity, hxzid from sb_elevator_addparams
     </sql>
 	<select id="getElevatorList" parameterType="OptionsElevator" resultMap="OptionsElevatorResult">
-        select id, hxzid as hxzId, pid, userid, dname as elevatorName, isSynchronization, device_no as deviceNo, serial_num, jdbh, xmid, sub_id, scznl, manufacturer_id, install_company, capacity, height
-        from sb_elevator_binding
+        select id, hxzid as hxzId, pid, userid, dname as elevatorName, isSynchronization, device_no as deviceNo,
+        serial_num, jdbh, xmid, sub_id, scznl, manufacturer_id, install_company, capacity, height from sb_elevator_binding
         <where>
             <if test="projectId != null">and pid = #{projectId}</if>
         </where>

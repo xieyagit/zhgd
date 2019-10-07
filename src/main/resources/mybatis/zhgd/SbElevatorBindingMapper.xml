@@ -25,10 +25,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectSbElevatorBindingVo">
-        select id, hxzid, pid, userid, dname, isSynchronization, device_no from sb_elevator_binding
+    select * from (
+	    select id, hxzid, pid, userid, dname, isSynchronization, device_no from sb_elevator_binding group by hxzid, pid
+    ) a
     </sql>
     <select id="selectHxzId" parameterType="SbElevatorBinding" resultMap="SbElevatorBindingResult">
-      SELECT *,count(distinct hxzid) FROM `sb_elevator_binding` where pid=#{pid}
+      SELECT * FROM `sb_elevator_binding` where pid=#{pid} GROUP BY hxzid
     </select>
 
     <select id="list" parameterType="SbElevatorBinding" resultMap="SbElevatorBindingResult">
@@ -37,6 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="projectId != null "> and pid = #{projectId}</if>
             <if test="hxzid != null"> and hxzid = #{hxzid}</if>
         </where>
+        GROUP BY hxzid
     </select>
 
 
@@ -52,11 +55,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
              <if test="scznl != null  and scznl != '' "> and scznl = #{scznl}</if>
          </where>
+        GROUP BY hxzid
     </select>
     
     <select id="selectSbElevatorBindingById" parameterType="Integer" resultMap="SbElevatorBindingResult">
         <include refid="selectSbElevatorBindingVo"/>
         where id = #{id}
+        GROUP BY hxzid
     </select>
         
     <insert id="insertSbElevatorBinding" parameterType="SbElevatorBinding">

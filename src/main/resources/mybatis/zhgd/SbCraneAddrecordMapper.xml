@@ -57,7 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="list" parameterType="SbCraneAddrecord" resultMap="SbCraneAddrecordResult">
         select hxzid,userid from sb_crane_binding
-        where pid = #{pid}
+        where pid = #{pid} group by hxzid
     </select>
     <select id="kanbans"  parameterType="SbCraneAddrecord" resultMap="SbCraneAddrecordResult">
         select d.hxzid from sb_crane_addrecord d INNER JOIN sb_crane_binding b ON d.hxzid = b.hxzid

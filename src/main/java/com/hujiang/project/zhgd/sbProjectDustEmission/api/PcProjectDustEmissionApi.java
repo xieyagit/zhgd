@@ -97,7 +97,7 @@ public class PcProjectDustEmissionApi extends BaseController {
     public AjaxResult projectDustEmissionList(@RequestBody SbProjectDustEmission sbProjectDustEmission)
     {
         startPage();
-        List<SbProjectDustEmission> list = projectDustEmissionService.selectSbProjectDustEmissionList(sbProjectDustEmission);
+        List<SbProjectDustEmission> list = projectDustEmissionService.getSbProjectDustEmissionList(sbProjectDustEmission);
         return AjaxResult.success(getDataTable(list));
     }
     /**

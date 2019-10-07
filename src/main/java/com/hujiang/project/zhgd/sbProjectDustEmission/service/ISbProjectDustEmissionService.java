@@ -46,7 +46,8 @@ public interface ISbProjectDustEmissionService
      * @return 项目对应的扬尘设备SN集合
      */
 	public List<SbProjectDustEmission> selectSbProjectDustEmissionList(SbProjectDustEmission sbProjectDustEmission);
-	
+	public List<SbProjectDustEmission> getSbProjectDustEmissionList(SbProjectDustEmission sbProjectDustEmission);
+
 	/**
      * 新增项目对应的扬尘设备SN
      * 
