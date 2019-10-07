@@ -14,7 +14,7 @@ hujiang:
 # 开发环境配置
 server:
   # 服务端口
-  port: 5555
+  port: 8081
   servlet:
     # 项目contextPath
     context-path: /
@@ -99,7 +99,7 @@ spring:
 
 eureka:
   instance:
-    instance-id: user-api-8483
+    instance-id: user-api-8081
     prefer-ip-address: true # 访问路径可以显示 IP
       # 续约更新时间间隔（默认30秒）
     lease-renewal-interval-in-seconds: 1
