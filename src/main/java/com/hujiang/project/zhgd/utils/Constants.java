@@ -58,7 +58,7 @@ public class Constants {
     public static final String LOCALTIONDATA = "http://58.246.211.154:23333/Location/data/getinfos.do";
 
     //对接城安院地址 市管项目
-    public static final String CAY_CS = "http://139.159.251.33/misInter/";
+    public static final String CAY_CS = "http://139.159.186.240/misInter/";
 
     //对接城安院使用的token+市管
     public static final String TOKEN_CS = "?token=EBDECFCC5DE096892050A8E6913168A7A0A41963";
