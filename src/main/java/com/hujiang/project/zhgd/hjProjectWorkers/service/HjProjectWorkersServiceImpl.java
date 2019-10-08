@@ -287,12 +287,12 @@ public class HjProjectWorkersServiceImpl implements IHjProjectWorkersService {
                         }
 
                         if(re == true){
-                        success++;//获取可执行人员数量
-                        successIds += hjProjectWorkers.getId() + ",";//获取可执行人员id
-                    }
-                  }else {
-                     boolean re = apiClient.deleteUserLeaveProject(hjProjectWorkers);
-                     logger.info("执行相应退场信息---"+re);
+                            success++;//获取可执行人员数量
+                            successIds += hjProjectWorkers.getId() + ",";//获取可执行人员id
+                        }
+                    }else {
+                        boolean re = apiClient.deleteUserLeaveProject(hjProjectWorkers);
+                        logger.info("执行相应退场信息---"+re);
                         if(re){
                             boolean b = moredianClient.enteringMoredianPerson( hjProjectWorkers, 2);
                             logger.info("执行相应魔点 人员退场操作---"+b);
@@ -300,10 +300,10 @@ public class HjProjectWorkersServiceImpl implements IHjProjectWorkersService {
                             hqRemove(hjProjectWorkers);
                         }
 
-                     if(re == true){
-                         success++;//获取可执行人员数量
-                         successIds += hjProjectWorkers.getId() + ",";//获取可执行人员id
-                      }
+                        if(re == true){
+                            success++;//获取可执行人员数量
+                            successIds += hjProjectWorkers.getId() + ",";//获取可执行人员id
+                        }
                     }
 
                 }
@@ -322,15 +322,15 @@ public class HjProjectWorkersServiceImpl implements IHjProjectWorkersService {
         }
         return result;
     }
-public void hqAdd(HjProjectWorkers hw){
-    HjAttendanceDevice had=new HjAttendanceDevice();
-    had.setProjectId(hw.getProjectId());
-    List<HjAttendanceDevice> hadList=hjAttendanceDeviceService.selectHjAttendanceDeviceList(had);
-    HjDeviceProjectworkers hdpw=new HjDeviceProjectworkers();
-    hdpw.setProjectWorkersId(hw.getId());
-    List<HjDeviceProjectworkers> list;
-    for(HjAttendanceDevice h: hadList){
-        hdpw.setStatus("2");
+    public void hqAdd(HjProjectWorkers hw){
+        HjAttendanceDevice had=new HjAttendanceDevice();
+        had.setProjectId(hw.getProjectId());
+        List<HjAttendanceDevice> hadList=hjAttendanceDeviceService.selectHjAttendanceDeviceList(had);
+        HjDeviceProjectworkers hdpw=new HjDeviceProjectworkers();
+        hdpw.setProjectWorkersId(hw.getId());
+        List<HjDeviceProjectworkers> list;
+        for(HjAttendanceDevice h: hadList){
+            hdpw.setStatus("2");
             hdpw.setDeviceNo(h.getDeviceNo());
             list=hjDeviceProjectworkersService.selectHjDeviceProjectworkersList(hdpw);
             if(list.size()>0){
@@ -341,9 +341,9 @@ public void hqAdd(HjProjectWorkers hw){
                 hjDeviceProjectworkersService.insertHjDeviceProjectworkers(hdpw);
             }
 
-    }
+        }
 
-}
+    }
     public void hqRemove(HjProjectWorkers hw){
 //        HjAttendanceDevice had=new HjAttendanceDevice();
 //        had.setProjectId(hw.getProjectId());
@@ -395,109 +395,109 @@ public void hqAdd(HjProjectWorkers hw){
 
 
 
-           HjProject hjProject = hjProjectMapper.selectHjProjectById(hjProjectWorkers.getProjectId());
+        HjProject hjProject = hjProjectMapper.selectHjProjectById(hjProjectWorkers.getProjectId());
 
-          List<HjProjectWorkers> list = hjProjectWorkersMapper.selectEmpCategory(hjProjectWorkers.getProjectId());
+        List<HjProjectWorkers> list = hjProjectWorkersMapper.selectEmpCategory(hjProjectWorkers.getProjectId());
 
-                  if(hjProject.getProjectNumber() > list.size()){
-                      HjProjectWorkers hjProjectWorkers1 = new HjProjectWorkers();
-                      hjProjectWorkers1.setProjectId(hjProjectWorkers.getProjectId()); // 项目id
-                      hjProjectWorkers1.setIdCode(hjProjectWorkers.getIdCode()); // 身份号
-                      // 实名制录入时判断项目中是否有该人员
-                      List<HjProjectWorkers> hjProjectWorkersList = hjProjectWorkersMapper.selectHjProjectWorkersList(hjProjectWorkers1);
+        if(hjProject.getProjectNumber() > list.size()){
+            HjProjectWorkers hjProjectWorkers1 = new HjProjectWorkers();
+            hjProjectWorkers1.setProjectId(hjProjectWorkers.getProjectId()); // 项目id
+            hjProjectWorkers1.setIdCode(hjProjectWorkers.getIdCode()); // 身份号
+            // 实名制录入时判断项目中是否有该人员
+            List<HjProjectWorkers> hjProjectWorkersList = hjProjectWorkersMapper.selectHjProjectWorkersList(hjProjectWorkers1);
 
-                      if (hjProjectWorkersList.size() > 0) {
+            if (hjProjectWorkersList.size() > 0) {
 
-                          if (hjProjectWorkersList.get(0).getEnterAndRetreatCondition() == 0) {
-                              return AjaxResult.error(-1, hjProjectWorkers.getEmpName() + "已在项目中");
-                          } else if (hjProjectWorkersList.get(0).getEnterAndRetreatCondition() == 1) {
-                              return AjaxResult.error(-1, hjProjectWorkers.getEmpName() + "已在项目中退场,请返场");
-                          } else {
-                              return AjaxResult.error(-1, hjProjectWorkers.getEmpName() + "已在项目中,暂未同步");
-                          }
-                      } else {
-                          hjProjectWorkers.setEnterAndRetreatCondition(2);
-                          hjProjectWorkersMapper.insertHjProjectWorkers(hjProjectWorkers); // 加入项目工人表
+                if (hjProjectWorkersList.get(0).getEnterAndRetreatCondition() == 0) {
+                    return AjaxResult.error(-1, hjProjectWorkers.getEmpName() + "已在项目中");
+                } else if (hjProjectWorkersList.get(0).getEnterAndRetreatCondition() == 1) {
+                    return AjaxResult.error(-1, hjProjectWorkers.getEmpName() + "已在项目中退场,请返场");
+                } else {
+                    return AjaxResult.error(-1, hjProjectWorkers.getEmpName() + "已在项目中,暂未同步");
+                }
+            } else {
+                hjProjectWorkers.setEnterAndRetreatCondition(2);
+                hjProjectWorkersMapper.insertHjProjectWorkers(hjProjectWorkers); // 加入项目工人表
 
 
-                        //  HjProjectWorkers hjProjectWorkers2 = this.saveFaceOnBaidu(hjProjectWorkers.getId()); // 保存到百度人脸库
+                //  HjProjectWorkers hjProjectWorkers2 = this.saveFaceOnBaidu(hjProjectWorkers.getId()); // 保存到百度人脸库
 
-                          //判断是否加入工人库
-                          HjWorkers hjWorkers = new HjWorkers();
-                          hjWorkers.setIdCode(hjProjectWorkers.getIdCode());
-                          List<HjWorkers> hjWorkersList = hjWorkersMapper.selectHjWorkersList(hjWorkers);
-                          if (hjWorkersList.size() > 0) { // 工人库已存在
+                //判断是否加入工人库
+                HjWorkers hjWorkers = new HjWorkers();
+                hjWorkers.setIdCode(hjProjectWorkers.getIdCode());
+                List<HjWorkers> hjWorkersList = hjWorkersMapper.selectHjWorkersList(hjWorkers);
+                if (hjWorkersList.size() > 0) { // 工人库已存在
 
-                              // 更新产业工人
-                              HjWorkers hjWorkers1 = new HjWorkers();
-                              hjWorkers1.setEmpName(hjWorkersList.get(0).getEmpName()); // 姓名
-                              hjWorkers1.setIdCode(hjWorkersList.get(0).getIdCode());// 身份证号码
-                              hjWorkers1.setEmpPhon(hjWorkersList.get(0).getEmpPhon()); // 手机号码
-                              hjWorkers1.setEmpSex(hjWorkersList.get(0).getEmpSex()); // 性别
-                              hjWorkers1.setEmpNation(hjWorkersList.get(0).getEmpNation());// 民族
-                              hjWorkers1.setIdAddress(hjWorkersList.get(0).getIdAddress()); // 身份证地址
-                              hjWorkers1.setIdAgency(hjWorkersList.get(0).getIdAgency()); // 签发机关
-                              hjWorkers1.setIdValiddate(hjWorkersList.get(0).getIdValiddate()); // 有效期限
-                              hjWorkers1.setDateOfBirth(hjWorkersList.get(0).getDateOfBirth()); // 出生日期
-                              hjWorkers1.setNativePlace(hjWorkersList.get(0).getNativePlace()); // 籍贯
-                              hjWorkers1.setIsTeam(hjWorkersList.get(0).getIsTeam()); // 是否班组长(0否，1是)
-                              hjWorkers1.setJobName(hjWorkersList.get(0).getJobName()); // 工种名称
-                              hjWorkers1.setEmpBankname(hjWorkersList.get(0).getEmpBankname()); // 开户行
-                              hjWorkers1.setEmpCardnum(hjWorkersList.get(0).getEmpCardnum());// 银行账号
-                              hjWorkers1.setAccountType(hjWorkersList.get(0).getAccountType());// 账户类型
-                              hjWorkers1.setAccountAddress(hjWorkersList.get(0).getAccountAddress()); // 开户地址
-                              hjWorkers1.setCredential(hjWorkersList.get(0).getCredential()); // 获得证书
-                              hjWorkers1.setRemark(hjWorkersList.get(0).getRemark()); //  备注
-                              hjWorkers1.setFaceUrl(hjWorkersList.get(0).getFaceUrl()); // 人脸照片
-                              hjWorkers1.setEmpNaticeplace(hjWorkersList.get(0).getEmpNaticeplace()); // 身份证人脸照片
-                              hjWorkers1.setIdphotoScan(hjWorkersList.get(0).getIdphotoScan()); // 身份证正面照片
-                              hjWorkers1.setIdphotoScan2(hjWorkersList.get(0).getIdphotoScan2()); // 身份证反面照片
-                              hjWorkers1.setBankCardUrl(hjWorkersList.get(0).getBankCardUrl());// 银行卡照片
-                              hjWorkers1.setId(hjWorkersList.get(0).getId());
-                              hjWorkersMapper.updateHjWorkers(hjWorkers1);
+                    // 更新产业工人
+                    HjWorkers hjWorkers1 = new HjWorkers();
+                    hjWorkers1.setEmpName(hjWorkersList.get(0).getEmpName()); // 姓名
+                    hjWorkers1.setIdCode(hjWorkersList.get(0).getIdCode());// 身份证号码
+                    hjWorkers1.setEmpPhon(hjWorkersList.get(0).getEmpPhon()); // 手机号码
+                    hjWorkers1.setEmpSex(hjWorkersList.get(0).getEmpSex()); // 性别
+                    hjWorkers1.setEmpNation(hjWorkersList.get(0).getEmpNation());// 民族
+                    hjWorkers1.setIdAddress(hjWorkersList.get(0).getIdAddress()); // 身份证地址
+                    hjWorkers1.setIdAgency(hjWorkersList.get(0).getIdAgency()); // 签发机关
+                    hjWorkers1.setIdValiddate(hjWorkersList.get(0).getIdValiddate()); // 有效期限
+                    hjWorkers1.setDateOfBirth(hjWorkersList.get(0).getDateOfBirth()); // 出生日期
+                    hjWorkers1.setNativePlace(hjWorkersList.get(0).getNativePlace()); // 籍贯
+                    hjWorkers1.setIsTeam(hjWorkersList.get(0).getIsTeam()); // 是否班组长(0否，1是)
+                    hjWorkers1.setJobName(hjWorkersList.get(0).getJobName()); // 工种名称
+                    hjWorkers1.setEmpBankname(hjWorkersList.get(0).getEmpBankname()); // 开户行
+                    hjWorkers1.setEmpCardnum(hjWorkersList.get(0).getEmpCardnum());// 银行账号
+                    hjWorkers1.setAccountType(hjWorkersList.get(0).getAccountType());// 账户类型
+                    hjWorkers1.setAccountAddress(hjWorkersList.get(0).getAccountAddress()); // 开户地址
+                    hjWorkers1.setCredential(hjWorkersList.get(0).getCredential()); // 获得证书
+                    hjWorkers1.setRemark(hjWorkersList.get(0).getRemark()); //  备注
+                    hjWorkers1.setFaceUrl(hjWorkersList.get(0).getFaceUrl()); // 人脸照片
+                    hjWorkers1.setEmpNaticeplace(hjWorkersList.get(0).getEmpNaticeplace()); // 身份证人脸照片
+                    hjWorkers1.setIdphotoScan(hjWorkersList.get(0).getIdphotoScan()); // 身份证正面照片
+                    hjWorkers1.setIdphotoScan2(hjWorkersList.get(0).getIdphotoScan2()); // 身份证反面照片
+                    hjWorkers1.setBankCardUrl(hjWorkersList.get(0).getBankCardUrl());// 银行卡照片
+                    hjWorkers1.setId(hjWorkersList.get(0).getId());
+                    hjWorkersMapper.updateHjWorkers(hjWorkers1);
 
-                              // 加入从业记录
-                              HjWorkerRecord hjWorkerRecord = HjProjectWorkersServiceImpl.addHjWorkerRecord(hjProjectWorkers);
-                              hjWorkerRecordMapper.insertHjWorkerRecord(hjWorkerRecord);
-                          } else { // 不在工人库
-                              // 加入产业工人
-                              HjWorkers hjWorkers1 = new HjWorkers();
-                              hjWorkers1.setEmpName(hjProjectWorkers.getEmpName()); // 姓名
-                              hjWorkers1.setIdCode(hjProjectWorkers.getIdCode());// 身份证号码
-                              hjWorkers1.setEmpPhon(hjProjectWorkers.getEmpPhon()); // 手机号码
-                              hjWorkers1.setEmpSex(hjProjectWorkers.getEmpSex()); // 性别
-                              hjWorkers1.setEmpNation(hjProjectWorkers.getEmpNation());// 民族
-                              hjWorkers1.setIdAddress(hjProjectWorkers.getIdAddress()); // 身份证地址
-                              hjWorkers1.setIdAgency(hjProjectWorkers.getIdAgency()); // 签发机关
-                              hjWorkers1.setIdValiddate(hjProjectWorkers.getIdValiddate()); // 有效期限
-                              hjWorkers1.setDateOfBirth(hjProjectWorkers.getDateOfBirth()); // 出生日期
-                              hjWorkers1.setNativePlace(hjProjectWorkers.getNativePlace()); // 籍贯
-                              hjWorkers1.setIsTeam(hjProjectWorkers.getIsTeam()); // 是否班组长(0否，1是)
-                              hjWorkers1.setJobName(hjProjectWorkers.getJobName()); // 工种名称
-                              hjWorkers1.setEmpBankname(hjProjectWorkers.getEmpBankname()); // 开户行
-                              hjWorkers1.setEmpCardnum(hjProjectWorkers.getEmpCardnum());// 银行账号
-                              hjWorkers1.setAccountType(hjProjectWorkers.getAccountType());// 账户类型
-                              hjWorkers1.setAccountAddress(hjProjectWorkers.getAccountAddress()); // 开户地址
-                              hjWorkers1.setCredential(hjProjectWorkers.getCredential()); // 获得证书
-                              hjWorkers1.setRemark(hjProjectWorkers.getRemark()); //  备注
-                              hjWorkers1.setFaceUrl(hjProjectWorkers.getFaceUrl()); // 人脸照片
-                              hjWorkers1.setEmpNaticeplace(hjProjectWorkers.getEmpNaticeplace()); // 身份证人脸照片
-                              hjWorkers1.setIdphotoScan(hjProjectWorkers.getIdphotoScan()); // 身份证正面照片
-                              hjWorkers1.setIdphotoScan2(hjProjectWorkers.getIdphotoScan2()); // 身份证反面照片
-                              hjWorkers1.setBankCardUrl(hjProjectWorkers.getBankCardUrl());// 银行卡照片
-                              hjWorkers1.setCreateDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())); // 创建时间
+                    // 加入从业记录
+                    HjWorkerRecord hjWorkerRecord = HjProjectWorkersServiceImpl.addHjWorkerRecord(hjProjectWorkers);
+                    hjWorkerRecordMapper.insertHjWorkerRecord(hjWorkerRecord);
+                } else { // 不在工人库
+                    // 加入产业工人
+                    HjWorkers hjWorkers1 = new HjWorkers();
+                    hjWorkers1.setEmpName(hjProjectWorkers.getEmpName()); // 姓名
+                    hjWorkers1.setIdCode(hjProjectWorkers.getIdCode());// 身份证号码
+                    hjWorkers1.setEmpPhon(hjProjectWorkers.getEmpPhon()); // 手机号码
+                    hjWorkers1.setEmpSex(hjProjectWorkers.getEmpSex()); // 性别
+                    hjWorkers1.setEmpNation(hjProjectWorkers.getEmpNation());// 民族
+                    hjWorkers1.setIdAddress(hjProjectWorkers.getIdAddress()); // 身份证地址
+                    hjWorkers1.setIdAgency(hjProjectWorkers.getIdAgency()); // 签发机关
+                    hjWorkers1.setIdValiddate(hjProjectWorkers.getIdValiddate()); // 有效期限
+                    hjWorkers1.setDateOfBirth(hjProjectWorkers.getDateOfBirth()); // 出生日期
+                    hjWorkers1.setNativePlace(hjProjectWorkers.getNativePlace()); // 籍贯
+                    hjWorkers1.setIsTeam(hjProjectWorkers.getIsTeam()); // 是否班组长(0否，1是)
+                    hjWorkers1.setJobName(hjProjectWorkers.getJobName()); // 工种名称
+                    hjWorkers1.setEmpBankname(hjProjectWorkers.getEmpBankname()); // 开户行
+                    hjWorkers1.setEmpCardnum(hjProjectWorkers.getEmpCardnum());// 银行账号
+                    hjWorkers1.setAccountType(hjProjectWorkers.getAccountType());// 账户类型
+                    hjWorkers1.setAccountAddress(hjProjectWorkers.getAccountAddress()); // 开户地址
+                    hjWorkers1.setCredential(hjProjectWorkers.getCredential()); // 获得证书
+                    hjWorkers1.setRemark(hjProjectWorkers.getRemark()); //  备注
+                    hjWorkers1.setFaceUrl(hjProjectWorkers.getFaceUrl()); // 人脸照片
+                    hjWorkers1.setEmpNaticeplace(hjProjectWorkers.getEmpNaticeplace()); // 身份证人脸照片
+                    hjWorkers1.setIdphotoScan(hjProjectWorkers.getIdphotoScan()); // 身份证正面照片
+                    hjWorkers1.setIdphotoScan2(hjProjectWorkers.getIdphotoScan2()); // 身份证反面照片
+                    hjWorkers1.setBankCardUrl(hjProjectWorkers.getBankCardUrl());// 银行卡照片
+                    hjWorkers1.setCreateDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())); // 创建时间
 
-                              hjWorkersMapper.insertHjWorkers(hjWorkers1);
+                    hjWorkersMapper.insertHjWorkers(hjWorkers1);
 
-                              // 加入从业记录
-                              HjWorkerRecord hjWorkerRecord = HjProjectWorkersServiceImpl.addHjWorkerRecord(hjProjectWorkers);
-                              hjWorkerRecordMapper.insertHjWorkerRecord(hjWorkerRecord);
-                          }
-                      }
-                      return AjaxResult.success("录入成功");
-                  }else {
-                      return AjaxResult.error(-1,  "项目管理人员已达到上线");
-                  }
+                    // 加入从业记录
+                    HjWorkerRecord hjWorkerRecord = HjProjectWorkersServiceImpl.addHjWorkerRecord(hjProjectWorkers);
+                    hjWorkerRecordMapper.insertHjWorkerRecord(hjWorkerRecord);
+                }
+            }
+            return AjaxResult.success("录入成功");
+        }else {
+            return AjaxResult.error(-1,  "项目管理人员已达到上线");
+        }
 
 
     }
