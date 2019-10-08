@@ -20,6 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsMessagingTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,7 +36,7 @@ import java.util.*;
 /**
  * 扬尘检测定时任务
  */
-//@Component("dustEmissionTask")
+@Component("dustEmissionTask")
 @RestController
 @RequestMapping(value = "/provider/tasks",method = RequestMethod.POST)
 public class DustEmissionTask {
@@ -78,7 +80,7 @@ public class DustEmissionTask {
      * 5分钟执行一次扬尘数据获取
      * @throws Exception
      */
-//    @Scheduled(cron="0 0/5 * * * ? ")
+    @Scheduled(cron="0 0/5 * * * ? ")
     @PostMapping(value = "insert")
     public void add()throws Exception {
 
@@ -165,7 +167,7 @@ public class DustEmissionTask {
                 }
             }
 
-            if(list.size() == 50 || count == projectDustEmissions.size()) { //最多每50条发送一次消息
+            if(list.size() > 0 && (list.size() == 50 || count == projectDustEmissions.size())) { //最多每50条发送一次消息
                 JmsMessageInfo<List<SbDustEmission>> messageInfo = new JmsMessageInfo<List<SbDustEmission>>();
                 messageInfo.setBody(list);
                 messageInfo.setType(JmsMessageType.Data);

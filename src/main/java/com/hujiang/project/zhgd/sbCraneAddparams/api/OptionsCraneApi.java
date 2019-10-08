@@ -125,10 +125,11 @@ public class OptionsCraneApi {
         object.put("scznl",scznl);
         object.put("manufacturerId",manufacturerId);
         object.put("installCompany",installCompany);
+  	int result = iSb.insertSbCraneBinding(sbCraneBinding);
         if(scznl.equals("CAY")) {
             TDCAY(object);
         }
-        int result = iSb.insertSbCraneBinding(sbCraneBinding);
+      
         if (result > 0) {
             jsonObject.put("msg", "成功");
             jsonObject.put("code", 0);
@@ -303,7 +304,7 @@ public class OptionsCraneApi {
             json.put("Dev_GUID", Tools.encodeToMD5s(jsonObject.getString("hxzId")));//设备编号
             json.put("Dev_UID", jsonObject.getString("craneName"));//设备用户编号
             List<SbCraneBinding> list = iSb.selectByHxzId(jsonObject.getInteger("projectId"));
-            int k = list.size()+1;
+            int k = list.size();
             json.put("Dev_Name", k+"#塔吊");//设备名称（命名规 则：阿拉伯数字# 塔吊；示例：1#塔 吊 2#塔吊，同个 项目下数字不能 重复）
             json.put("Jc_dev_company", jsonObject.getString("installCompany"));//监测设备厂商
             json.put("Serial_Num", jsonObject.getString("SerialNum"));//广东省统一安装告 知编号（产权备案 编号）
