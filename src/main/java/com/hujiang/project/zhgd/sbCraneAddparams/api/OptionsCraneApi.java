@@ -1,4 +1,4 @@
-﻿package com.hujiang.project.zhgd.sbCraneAddparams.api;
+package com.hujiang.project.zhgd.sbCraneAddparams.api;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

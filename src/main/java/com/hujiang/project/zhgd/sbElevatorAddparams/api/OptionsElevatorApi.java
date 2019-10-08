@@ -1,4 +1,4 @@
-﻿package com.hujiang.project.zhgd.sbElevatorAddparams.api;
+package com.hujiang.project.zhgd.sbElevatorAddparams.api;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
