@@ -102,7 +102,7 @@ private TokenApi tokenApi;
             hjProject.setShortName(a.getString("ShortName"));
             hjProject.setProjectPrincipal(a.getString("0"));
             hjProject.setPhone(a.getString("0"));
-            hjProject.setProjectType("HOUSE");
+            hjProject.setProjectType("1");
             hjProject.setProjectState("0");
             hjProject.setProjectNumber(1000);
             hjProject.setProjectRegion(a.getString("DeptFullName"));

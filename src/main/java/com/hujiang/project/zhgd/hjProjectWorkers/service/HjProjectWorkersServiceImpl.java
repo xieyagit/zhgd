@@ -328,10 +328,19 @@ public void hqAdd(HjProjectWorkers hw){
     List<HjAttendanceDevice> hadList=hjAttendanceDeviceService.selectHjAttendanceDeviceList(had);
     HjDeviceProjectworkers hdpw=new HjDeviceProjectworkers();
     hdpw.setProjectWorkersId(hw.getId());
-    hdpw.setStatus("0");
+    List<HjDeviceProjectworkers> list;
     for(HjAttendanceDevice h: hadList){
+        hdpw.setStatus("2");
             hdpw.setDeviceNo(h.getDeviceNo());
-            hjDeviceProjectworkersService.insertHjDeviceProjectworkers(hdpw);
+            list=hjDeviceProjectworkersService.selectHjDeviceProjectworkersList(hdpw);
+            if(list.size()>0){
+                hdpw.setStatus("1");
+                hjDeviceProjectworkersService.updateHjDeviceProjectworkersTwo(hdpw);
+            }else{
+                hdpw.setStatus("0");
+                hjDeviceProjectworkersService.insertHjDeviceProjectworkers(hdpw);
+            }
+
     }
 
 }
