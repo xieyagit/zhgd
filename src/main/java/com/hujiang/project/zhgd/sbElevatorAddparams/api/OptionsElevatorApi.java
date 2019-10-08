@@ -1,4 +1,4 @@
-package com.hujiang.project.zhgd.sbElevatorAddparams.api;
+﻿package com.hujiang.project.zhgd.sbElevatorAddparams.api;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -81,7 +81,13 @@ public class OptionsElevatorApi {
         JSONArray jsonArray1 = new JSONArray();
         JSONArray array = new JSONArray();
         JSONArray array1 = new JSONArray();
-        /** 获取城安院项目id&项目监管编号(市管项目)*/
+       
+        elevator.setDeviceNo(Tools.encodeToMD5s(elevator.getHxzId()));
+        elevator.setDname(elevator.getElevatorName());
+        elevator.setHxzid(elevator.getHxzId());
+        elevator.setPid(elevator.getProjectId());
+        int result = iSbElevatorBindingService.insertSbElevatorBinding(elevator);
+ /** 获取城安院项目id&项目监管编号(市管项目)*/
         if (elevator.getScznl().equals("CAY")) {
             if (elevator.getSubId() != null) {
                 //上报城安院升降机基本信息（开始）
@@ -92,8 +98,10 @@ public class OptionsElevatorApi {
                 json.put("Dev_UID", elevator.getElevatorName());//设备用户编号
                 json.put("Jc_dev_company", elevator.getInstallCompany());//设备安装单位（监测设备厂商）
                 json.put("Serial_Num", elevator.getSerialNum());//广东省统一安装告知编号（使用登记号）
-                List<SbElevatorBinding> list = iSbElevatorBindingService.list(elevator);
-                int i = list.size() + 1;
+	SbElevatorBinding sbElevatorBinsing = new SbElevatorBinding();
+	sbElevatorBinsing.setProjectId(elevator.getProjectId());
+                List<SbElevatorBinding> list = iSbElevatorBindingService.list(sbElevatorBinsing);
+                int i = list.size() ;
                 json.put("Dev_Name", i + "#升降机");//设备名称
                 json.put("sub_id", elevator.getSubId());//工程ID
                 array.add(json);
@@ -146,11 +154,6 @@ public class OptionsElevatorApi {
                 System.out.println("上报城安院升降机基本信息状态：" + k);
             }
         }
-        elevator.setDeviceNo(Tools.encodeToMD5s(elevator.getHxzId()));
-        elevator.setDname(elevator.getElevatorName());
-        elevator.setHxzid(elevator.getHxzId());
-        elevator.setPid(elevator.getProjectId());
-        int result = iSbElevatorBindingService.insertSbElevatorBinding(elevator);
         if (result > 0) {
             jsonObject.put("msg", "成功");
             jsonObject.put("code", 0);
