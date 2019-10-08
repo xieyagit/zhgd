@@ -28,8 +28,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectSbProjectElectricityBoxVo">
+        SELECT * from (
         select id, project_id, comments, electricity_box_id, electricity_box_name, temp_limit, elec_limit, around_temp, `type`, project, jdbh, company_name, install_address, install_addrtype, dtu_id, sub_id,xmid,dev_type,scznl,manufacturer_id
-        from sb_project_electricity_box
+        from sb_project_electricity_box group by electricity_box_id,project_id
+        )a
     </sql>
 
     <select id="seleleSize"  parameterType="SbProjectElectricityBox" resultMap="SbProjectElectricityBoxResult">

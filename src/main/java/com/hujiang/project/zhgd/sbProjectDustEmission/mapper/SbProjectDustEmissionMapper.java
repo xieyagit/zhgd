@@ -36,7 +36,15 @@ public interface SbProjectDustEmissionMapper
      * @return 项目对应的扬尘设备SN集合
      */
 	public List<SbProjectDustEmission> selectSbProjectDustEmissionList(SbProjectDustEmission sbProjectDustEmission);
-	
+
+	/**
+	 * 查询项目对应的扬尘设备SN列表
+	 *
+	 * @param sbProjectDustEmission 项目对应的扬尘设备SN信息
+	 * @return 项目对应的扬尘设备SN集合
+	 */
+	public List<SbProjectDustEmission> getSbProjectDustEmissionList(SbProjectDustEmission sbProjectDustEmission);
+
 	/**
      * 新增项目对应的扬尘设备SN
      * 

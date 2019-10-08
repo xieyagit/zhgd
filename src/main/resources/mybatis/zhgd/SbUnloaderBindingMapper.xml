@@ -14,7 +14,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectSbUnloaderBindingVo">
-        select id, DeviceNo, HxzId, Pid, DName, IsSynchronization from sb_unloader_binding
+       SELECT * FROM(
+        select * from sb_unloader_binding group by hxzid, pid
+      ) a
     </sql>
 	
     <select id="selectSbUnloaderBindingList" parameterType="SbUnloaderBinding" resultMap="SbUnloaderBindingResult">
