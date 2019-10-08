@@ -58,7 +58,7 @@ public class AppCraneAddRecordApi extends BaseController {
         }else {
             jsonObject.put("msg","暂无设备");
             jsonObject.put("code",-1);
-            jsonObject.put("data",null);
+            jsonObject.put("data",array);
         }
         return jsonObject;
     }
@@ -119,7 +119,7 @@ public class AppCraneAddRecordApi extends BaseController {
                 }
                 jsonObject.put("data",object);
             }else{
-                jsonObject.put("msg","查询失败");
+                jsonObject.put("msg","暂无数据");
                 jsonObject.put("code",0);
                 jsonObject.put("data",object);
             }
@@ -159,11 +159,11 @@ public class AppCraneAddRecordApi extends BaseController {
                 temp.put("slewing_speed",craneAddrecord.getSlewingSpeed());
                 array.add(temp);
             }
-            jsonObject.put("msg","塔吊记录查询成功");
+            jsonObject.put("msg","查询成功");
             jsonObject.put("code",0);
             jsonObject.put("data",array);
         }else{
-            jsonObject.put("msg","塔吊记录查询失败");
+            jsonObject.put("msg","暂无数据");
             jsonObject.put("code",-1);
             jsonObject.put("data",null);
         }

@@ -57,11 +57,11 @@ public class AppElevatorAddRecordApi {
                 temp.put("deviceName",elevatorBinding.getDname());
                 array.add(temp);
             }
-            jsonObject.put("msg","切换设备查询成功");
+            jsonObject.put("msg","查询成功");
             jsonObject.put("code",0);
             jsonObject.put("data",array);
         }else {
-            jsonObject.put("msg","切换设备查询失败");
+            jsonObject.put("msg","暂无设备");
             jsonObject.put("code",-1);
             jsonObject.put("data",null);
         }
@@ -125,7 +125,7 @@ public class AppElevatorAddRecordApi {
                 }
                 jsonObject.put("data",object);
             }else{
-                jsonObject.put("msg","查询失败");//升降机异常
+                jsonObject.put("msg","暂无数据");//升降机异常
                 jsonObject.put("code",0);
                 jsonObject.put("data",object);
             }

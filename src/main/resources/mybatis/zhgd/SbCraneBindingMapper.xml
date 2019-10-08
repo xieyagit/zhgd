@@ -28,8 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<sql id="selectSbCraneBindingVo">
     select * from (
-	    select id, hxzid, pid, userid, dname, isSynchronization, device_no, serial_num, tc_max_scope, tc_max_height,
-        tc_load_capacity, tc_load_moment, jdbh, xmid, sub_id, scznl, manufacturer_id, install_company from sb_crane_binding group by hxzid, pid
+	    select * from sb_crane_binding group by hxzid, pid
     ) a
 </sql>
 

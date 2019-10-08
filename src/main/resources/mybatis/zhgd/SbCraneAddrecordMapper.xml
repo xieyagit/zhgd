@@ -38,7 +38,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectSbCraneAddrecordVo">
-        select id, device_no, runtime, `load`, load_ratio, moment, moment_ratio, slewing_speed, is_left_warning, is_right_warning, `range`, is_forward_warning, is_backward_warning, height, is_up_warning, work_environment, real_time_flag, installation_method, wind_speed, card_num, operator_name, hxzid, magnification,ratedWeight,obliguity from sb_crane_addrecord
+        select id, device_no, runtime, `load`, load_ratio, moment, moment_ratio, slewing_speed,
+        is_left_warning, is_right_warning, `range`, is_forward_warning, is_backward_warning, height,
+        is_up_warning, work_environment, real_time_flag, installation_method, wind_speed, card_num,
+        operator_name, hxzid, magnification,ratedWeight,obliguity from sb_crane_addrecord
     </sql>
 
     <select id="kanban" parameterType="SbCraneAddrecord" resultMap="SbCraneAddrecordResult">
@@ -66,7 +69,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectSbCraneAddRecord" parameterType="SbCraneAddrecord" resultMap="SbCraneAddrecordResult">
-        SELECT a.id as id,a.device_no as device_no,runtime,`load`,ratedWeight,moment,`range`,height,magnification,wind_speed,slewing_speed,obliguity
+        SELECT a.id as id,a.device_no as device_no,runtime,`load`,ratedWeight,moment,`range`,
+        height,magnification,wind_speed,slewing_speed,obliguity
         FROM sb_crane_addrecord a
         LEFT JOIN sb_crane_binding b on (b.hxzid=a.hxzid)
         WHERE 1=1
