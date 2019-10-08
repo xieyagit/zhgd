@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbManufacturer.mapper.SbManufacturerMapper">
+    
+    <resultMap type="SbManufacturer" id="SbManufacturerResult">
+        <result property="id"    column="id"    />
+        <result property="manufacturerName"    column="manufacturer_name"    />
+    </resultMap>
+	
+	<sql id="selectSbManufacturerVo">
+        select id, manufacturer_name from sb_manufacturer
+    </sql>
+	
+    <select id="selectSbManufacturerList" parameterType="SbManufacturer" resultMap="SbManufacturerResult">
+        <include refid="selectSbManufacturerVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="manufacturerName != null  and manufacturerName != '' "> and manufacturer_name = #{manufacturerName}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbManufacturerById" parameterType="Integer" resultMap="SbManufacturerResult">
+        <include refid="selectSbManufacturerVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbManufacturer" parameterType="SbManufacturer">
+        insert into sb_manufacturer
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="manufacturerName != null  and manufacturerName != ''  ">manufacturer_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="manufacturerName != null  and manufacturerName != ''  ">#{manufacturerName},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbManufacturer" parameterType="SbManufacturer">
+        update sb_manufacturer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="manufacturerName != null  and manufacturerName != ''  ">manufacturer_name = #{manufacturerName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbManufacturerById" parameterType="Integer">
+        delete from sb_manufacturer where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbManufacturerByIds" parameterType="String">
+        delete from sb_manufacturer where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

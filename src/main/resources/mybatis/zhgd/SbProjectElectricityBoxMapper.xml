@@ -125,7 +125,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="dtuId != null  and dtuId != ''  ">dtu_id = #{dtuId},</if>
             <if test="subId != null  and subId != ''  ">sub_id = #{subId},</if>
             <if test="xmid != null  and xmid != ''  ">xmid = #{xmid},</if>
-            <if test="devType != null  and devType != ''  ">dev_type = #{devType},</if>
+            <if test="devType != null">dev_type = #{devType},</if>
             <if test="scznl != null  and scznl != ''  ">scznl = #{scznl},</if>
             <if test="manufacturerId != null  and manufacturerId != ''  ">manufacturer_id = #{manufacturerId},</if>
         </trim>
