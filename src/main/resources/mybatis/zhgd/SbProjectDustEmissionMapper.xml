@@ -27,7 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          select id, project_id, sn, comments, `type`, me_option, install_address, install_company, device_installation_date, video_address, jdbh, xmid, sub_id, scznl, manufacturer_id from sb_project_dust_emission
     </sql>
 
-    <select id="selectSn" parameterType="SbProjectDustEmission" resultMap="ProjectDustEmissionDustEmission">
+    <select id="selectSn" parameterType="SbProjectDustEmission" resultMap="SbProjectDustEmissionResult">
         SELECT sn,jdbh FROM sb_project_dust_emission
         WHERE project_id = #{projectId}
 		limit 1
@@ -55,6 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="installAddress != null  and installAddress != '' "> and install_address = #{installAddress}</if>
              <if test="installCompany != null  and installCompany != '' "> and install_company = #{installCompany}</if>
              <if test="deviceInstallationDate != null "> and device_installation_date = #{deviceInstallationDate}</if>
+             <if test="scznl != null and scznl != '' "> and scznl = #{scznl}</if>
          </where>
     </select>
 
