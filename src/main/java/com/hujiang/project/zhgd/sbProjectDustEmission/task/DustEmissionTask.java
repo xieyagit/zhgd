@@ -36,7 +36,7 @@ import java.util.*;
 /**
  * 扬尘检测定时任务
  */
-@Component("dustEmissionTask")
+//@Component("dustEmissionTask")
 //@RestController
 //@RequestMapping(value = "/provider/tasks",method = RequestMethod.POST)
 public class DustEmissionTask {
@@ -80,7 +80,7 @@ public class DustEmissionTask {
      * 5分钟执行一次扬尘数据获取
      * @throws Exception
      */
-    @Scheduled(cron="0 0/5 * * * ? ")
+//    @Scheduled(cron="0 0/5 * * * ? ")
     //@PostMapping(value = "insert")
     public void add()throws Exception {
 
