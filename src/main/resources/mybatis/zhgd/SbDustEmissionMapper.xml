@@ -45,29 +45,29 @@
     </select>
     <select id="selectTsp1" parameterType="SbDustEmission" resultMap="SbDustEmissionResult">
         select * from (
-            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 0 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL -1 HOUR)
+            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 0 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL -1 HOUR) and sn = #{sn}
             UNION
-            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 1 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 0 HOUR)
+            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 1 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 0 HOUR) and sn = #{sn}
             UNION
-            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 2 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 1 HOUR)
+            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 2 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 1 HOUR) and sn = #{sn}
             UNION
-            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 3 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 2 HOUR)
+            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 3 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 2 HOUR) and sn = #{sn}
             UNION
-            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 4 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 3 HOUR)
+            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 4 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 3 HOUR) and sn = #{sn}
             UNION
-            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 5 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 4 HOUR)
+            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 5 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 4 HOUR) and sn = #{sn}
             UNION
-            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 6 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 5 HOUR)
+            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 6 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 5 HOUR) and sn = #{sn}
             UNION
-            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 7 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 6 HOUR)
+            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 7 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 6 HOUR) and sn = #{sn}
             UNION
-            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 8 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 7 HOUR)
+            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 8 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 7 HOUR) and sn = #{sn}
             UNION
-            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 9 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 8 HOUR)
+            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 9 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 8 HOUR) and sn = #{sn}
             UNION
-            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 10 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 9 HOUR)
+            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 10 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 9 HOUR) and sn = #{sn}
             UNION
-            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 11 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 10 HOUR)
+            select AVG(temperature) as temperature, `date`, sn from sb_dust_emission where date BETWEEN DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 11 HOUR) AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 10 HOUR) and sn = #{sn}
         ) as avetsp where sn is not null;
 
     </select>

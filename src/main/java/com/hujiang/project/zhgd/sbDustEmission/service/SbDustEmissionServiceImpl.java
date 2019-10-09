@@ -165,8 +165,8 @@ public class SbDustEmissionServiceImpl implements ISbDustEmissionService
 	public List<SbDustEmission> selectTsp(String sn){
 		return sbDustEmissionMapper.selectTsp(sn);
 	}
-	public List<SbDustEmission> selectTsp1(){
-		return sbDustEmissionMapper.selectTsp1();
+	public List<SbDustEmission> selectTsp1(String sn){
+		return sbDustEmissionMapper.selectTsp1(sn);
 	}
 
 }

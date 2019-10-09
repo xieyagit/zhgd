@@ -80,7 +80,6 @@ public class DustEmissionTask {
      * 5分钟执行一次扬尘数据获取
      * @throws Exception
      */
-//    @Scheduled(cron="0 0/5 * * * ? ")
     //@PostMapping(value = "insert")
     public void add()throws Exception {
 
@@ -117,13 +116,16 @@ public class DustEmissionTask {
                 emission.setSn(p.getSn());
                 emission.setScznl("CAY");
                 List<SbProjectDustEmission> list1 = projectDustEmissionService.selectSbProjectDustEmissionList(emission);
+
                 if(list1.size()>0){
                     ThreadUtils.async(new Runnable(){
+
                         @Override
                         public void run() {
                             try {
                                 cayTsp(sbDustEmission);
                             } catch (IOException e) {
+
                                 logger.error("城安院错误(insert): " + e.getMessage() + ", 参数错误："+sbDustEmission);
                             } catch (URISyntaxException e) {
                                 logger.error("城安院错误(insert): " + e.getMessage() + ", 参数错误："+sbDustEmission);
@@ -131,7 +133,6 @@ public class DustEmissionTask {
                         }
                     });
                 }
-
 
                 //保存新的扬尘记录
                 SbDustEmission dustEmission = JSONObject.parseObject(digest.toJSONString(), SbDustEmission.class);
@@ -184,7 +185,6 @@ public class DustEmissionTask {
             }
         }
     }
-
 
     /** 上报城安院环境监测记录*/
     public String cayTsp(SbDustEmission sbDustEmission) throws IOException, URISyntaxException {
