@@ -36,7 +36,7 @@ import java.util.*;
 /**
  * 扬尘检测定时任务
  */
-//@Component("dustEmissionTask")
+//@Component("dustEmissionTask") 
 //@RestController
 //@RequestMapping(value = "/provider/tasks",method = RequestMethod.POST)
 public class DustEmissionTask {
