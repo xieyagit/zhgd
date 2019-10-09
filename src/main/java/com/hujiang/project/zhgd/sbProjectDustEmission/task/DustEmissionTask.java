@@ -36,9 +36,9 @@ import java.util.*;
 /**
  * 扬尘检测定时任务
  */
-//@Component("dustEmissionTask")
-@RestController
-@RequestMapping(value = "/provider/tasks",method = RequestMethod.POST)
+//@Component("dustEmissionTask") 
+//@RestController
+//@RequestMapping(value = "/provider/tasks",method = RequestMethod.POST)
 public class DustEmissionTask {
 
     private final Logger logger = LoggerFactory.getLogger(ZCAPIClient.class);
@@ -80,8 +80,7 @@ public class DustEmissionTask {
      * 5分钟执行一次扬尘数据获取
      * @throws Exception
      */
-//    @Scheduled(cron="0 0/5 * * * ? ")
-    @PostMapping(value = "insert")
+    //@PostMapping(value = "insert")
     public void add()throws Exception {
 
         System.out.println("定时任务dustEmissionTask  add");
@@ -117,20 +116,24 @@ public class DustEmissionTask {
                 emission.setSn(p.getSn());
                 emission.setScznl("CAY");
                 List<SbProjectDustEmission> list1 = projectDustEmissionService.selectSbProjectDustEmissionList(emission);
-                if (list1.size()>0) {
-                    ThreadUtils.async(new Runnable() {
+
+                if(list1.size()>0){
+                    ThreadUtils.async(new Runnable(){
+
                         @Override
                         public void run() {
                             try {
                                 cayTsp(sbDustEmission);
                             } catch (IOException e) {
-                                logger.error("城安院错误(insert): " + e.getMessage() + ", 参数错误：" + sbDustEmission);
+
+                                logger.error("城安院错误(insert): " + e.getMessage() + ", 参数错误："+sbDustEmission);
                             } catch (URISyntaxException e) {
-                                logger.error("城安院错误(insert): " + e.getMessage() + ", 参数错误：" + sbDustEmission);
+                                logger.error("城安院错误(insert): " + e.getMessage() + ", 参数错误："+sbDustEmission);
                             }
                         }
                     });
                 }
+
                 //保存新的扬尘记录
                 SbDustEmission dustEmission = JSONObject.parseObject(digest.toJSONString(), SbDustEmission.class);
                 dustEmission.setJdbh(p.getJdbh());
@@ -182,7 +185,6 @@ public class DustEmissionTask {
             }
         }
     }
-
 
     /** 上报城安院环境监测记录*/
     public String cayTsp(SbDustEmission sbDustEmission) throws IOException, URISyntaxException {

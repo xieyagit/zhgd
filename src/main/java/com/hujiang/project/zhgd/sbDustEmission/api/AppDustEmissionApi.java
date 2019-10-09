@@ -49,11 +49,11 @@ public class AppDustEmissionApi extends BaseController {
         int count = Integer.parseInt(String.valueOf(dataTable.getTotal()));
         if ((pageDomain.getPageNum()) <= Math.ceil(count / (double) pageDomain.getPageSize())) {
             if (sbDustEmissions != null && sbDustEmissions.size() > 0) {
-                result.put("msg", "扬尘记录查询成功");
+                result.put("msg", "查询成功");
                 result.put("code", 0);
                 result.put("data", sbDustEmissions);
             } else {
-                result.put("msg", "扬尘记录查询失败");
+                result.put("msg", "暂无数据");
                 result.put("code", -1);
                 result.put("data", Collections.emptyList());
             }

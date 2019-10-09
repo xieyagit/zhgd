@@ -16,7 +16,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectHjZhgdPkcountVo">
-        select `id`, `pkcount`, `deptID` ,`projectid`,carName,sn,snName from hj_zhgd_pkcount
+       SELECT * from(
+        select * from hj_zhgd_pkcount GROUP BY sn,projectid
+        )a
     </sql>
 
     <select id="selectProjectId" parameterType="HjZhgdPkcount" resultMap="HjZhgdPkcountResult">
@@ -26,7 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     <select id="selectAll" parameterType="HjZhgdPkcount" resultMap="HjZhgdPkcountResult">
         select sn from hj_zhgd_pkcount
-        where deptID = #{deptId} and snName = #{snName}
+        where deptID = #{deptId} and snName = #{snName} GROUP BY sn,projectid
     </select>
     <select id="carpkcount" parameterType="HjZhgdPkcount" resultMap="HjZhgdPkcountResult">
         select `pkcount` from hj_zhgd_pkcount

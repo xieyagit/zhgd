@@ -24,7 +24,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
 	<sql id="selectSbProjectDustEmissionVo">
-         select id, project_id, sn, comments, `type`, me_option, install_address, install_company, device_installation_date, video_address, jdbh, xmid, sub_id, scznl, manufacturer_id from sb_project_dust_emission
+         SELECT * from (
+        select id, project_id, sn, comments, `type`, me_option, install_address, install_company,
+         device_installation_date, video_address, jdbh, xmid, sub_id, scznl, manufacturer_id from sb_project_dust_emission GROUP BY sn,project_id
+          )a
     </sql>
 
     <select id="selectSn" parameterType="SbProjectDustEmission" resultMap="SbProjectDustEmissionResult">
@@ -57,6 +60,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="deviceInstallationDate != null "> and device_installation_date = #{deviceInstallationDate}</if>
              <if test="scznl != null and scznl != '' "> and scznl = #{scznl}</if>
          </where>
+    </select>
+    <select id="getSbProjectDustEmissionList" parameterType="SbProjectDustEmission" resultMap="SbProjectDustEmissionResult">
+        select id, project_id, sn, comments, `type`, me_option, install_address, install_company,
+        device_installation_date, video_address, jdbh, xmid, sub_id, scznl, manufacturer_id from sb_project_dust_emission
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+            <if test="sn != null  and sn != '' "> and sn = #{sn}</if>
+            <if test="comments != null  and comments != '' "> and comments = #{comments}</if>
+            <if test="type != null "> and `type` = #{type}</if>
+            <if test="meOption != null  and meOption != '' "> and me_option = #{meOption}</if>
+            <if test="installAddress != null  and installAddress != '' "> and install_address = #{installAddress}</if>
+            <if test="installCompany != null  and installCompany != '' "> and install_company = #{installCompany}</if>
+            <if test="deviceInstallationDate != null "> and device_installation_date = #{deviceInstallationDate}</if>
+        </where>
     </select>
 
     <select id="selectSbProjectDustEmissionById" parameterType="Long" resultMap="SbProjectDustEmissionResult">

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hujiang.project.zhgd.hjAttendanceRecord.mapper.HjAttendanceRecordMapper">
-    
     <resultMap type="HjAttendanceRecord" id="HjAttendanceRecordResult">
         <result property="id"    column="id"    />
         <result property="projectId"    column="project_id"    />
@@ -15,8 +14,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createDate"    column="create_date"    />
         <result property="uploadTime"    column="upload_time"    />
     </resultMap>
-	
-	<sql id="selectHjAttendanceRecordVo">
+
+    <sql id="selectHjAttendanceRecordVo">
         select id, project_id, employee_id, passed_time, direction, way, site_photo, create_date,upload_time from hj_attendance_record
     </sql>
 
@@ -175,30 +174,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <!--<select id="list" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">-->
-        <!--SELECT title,COUNT(job_name) as count-->
-        <!--FROM hj_attendance_record a-->
-        <!--INNER JOIN hj_project_workers p-->
-        <!--INNER JOIN hj_dictionaries d-->
-        <!--ON a.employee_id=p.id-->
-        <!--AND d.tag = p.job_name-->
-        <!--WHERE a.project_id = #{projectId}-->
-        <!--and a.passed_time LIKE CONCAT(#{passedTime},'%')-->
-        <!--GROUP BY p.job_name-->
+    <!--SELECT title,COUNT(job_name) as count-->
+    <!--FROM hj_attendance_record a-->
+    <!--INNER JOIN hj_project_workers p-->
+    <!--INNER JOIN hj_dictionaries d-->
+    <!--ON a.employee_id=p.id-->
+    <!--AND d.tag = p.job_name-->
+    <!--WHERE a.project_id = #{projectId}-->
+    <!--and a.passed_time LIKE CONCAT(#{passedTime},'%')-->
+    <!--GROUP BY p.job_name-->
     <!--</select>-->
-	
+
     <select id="selectHjAttendanceRecordList" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
         <include refid="selectHjAttendanceRecordVo"/>
-        <where>  
+        <where>
             <if test="id != null "> and id = #{id}</if>
-             <if test="projectId != null "> and project_id = #{projectId}</if>
-             <if test="employeeId != null "> and employee_id = #{employeeId}</if>
-             <if test="passedTime != null  and passedTime != '' "> and to_days(passed_time) = to_days(#{passedTime})</if>
-             <if test="direction != null  and direction != '' "> and direction = #{direction}</if>
-             <if test="way != null "> and way = #{way}</if>
-             <if test="sitePhoto != null  and sitePhoto != '' "> and site_photo = #{sitePhoto}</if>
-             <if test="createDate != null "> and create_date = #{createDate}</if>
-             <if test="uploadTime != null  and uploadTime != '' "> and upload_time = #{uploadTime}</if>
-         </where>
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+            <if test="employeeId != null "> and employee_id = #{employeeId}</if>
+            <if test="passedTime != null  and passedTime != '' "> and to_days(passed_time) = to_days(#{passedTime})</if>
+            <if test="direction != null  and direction != '' "> and direction = #{direction}</if>
+            <if test="way != null "> and way = #{way}</if>
+            <if test="sitePhoto != null  and sitePhoto != '' "> and site_photo = #{sitePhoto}</if>
+            <if test="createDate != null "> and create_date = #{createDate}</if>
+            <if test="uploadTime != null  and uploadTime != '' "> and upload_time = #{uploadTime}</if>
+        </where>
         order by passed_time desc
     </select>
     <select id="selectHjAttendanceRecordInAndOut"  resultMap="HjAttendanceRecordResult">
@@ -245,38 +244,38 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
         order by passed_time desc limit 1
     </select>
-    
+
     <select id="selectHjAttendanceRecordById" parameterType="Integer" resultMap="HjAttendanceRecordResult">
         <include refid="selectHjAttendanceRecordVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertHjAttendanceRecord" parameterType="HjAttendanceRecord">
         insert into hj_attendance_record
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">id,</if>
-			<if test="projectId != null  ">project_id,</if>
-			<if test="employeeId != null  ">employee_id,</if>
-			<if test="passedTime != null  and passedTime != ''  ">passed_time,</if>
-			<if test="direction != null  and direction != ''  ">direction,</if>
-			<if test="way != null  ">way,</if>
-			<if test="sitePhoto != null  and sitePhoto != ''  ">site_photo,</if>
-			<if test="createDate != null  ">create_date,</if>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="projectId != null  ">project_id,</if>
+            <if test="employeeId != null  ">employee_id,</if>
+            <if test="passedTime != null  and passedTime != ''  ">passed_time,</if>
+            <if test="direction != null  and direction != ''  ">direction,</if>
+            <if test="way != null  ">way,</if>
+            <if test="sitePhoto != null  and sitePhoto != ''  ">site_photo,</if>
+            <if test="createDate != null  ">create_date,</if>
             <if test="uploadTime != null  and uploadTime != '' ">upload_time,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">#{id},</if>
-			<if test="projectId != null  ">#{projectId},</if>
-			<if test="employeeId != null  ">#{employeeId},</if>
-			<if test="passedTime != null  and passedTime != ''  ">#{passedTime},</if>
-			<if test="direction != null  and direction != ''  ">#{direction},</if>
-			<if test="way != null  ">#{way},</if>
-			<if test="sitePhoto != null  and sitePhoto != ''  ">#{sitePhoto},</if>
-			<if test="createDate != null  ">#{createDate},</if>
+            <if test="id != null  ">#{id},</if>
+            <if test="projectId != null  ">#{projectId},</if>
+            <if test="employeeId != null  ">#{employeeId},</if>
+            <if test="passedTime != null  and passedTime != ''  ">#{passedTime},</if>
+            <if test="direction != null  and direction != ''  ">#{direction},</if>
+            <if test="way != null  ">#{way},</if>
+            <if test="sitePhoto != null  and sitePhoto != ''  ">#{sitePhoto},</if>
+            <if test="createDate != null  ">#{createDate},</if>
             <if test="uploadTime != null  and uploadTime != '' ">#{uploadTime},</if>
-         </trim>
+        </trim>
     </insert>
-	 
+
     <update id="updateHjAttendanceRecord" parameterType="HjAttendanceRecord">
         update hj_attendance_record
         <trim prefix="SET" suffixOverrides=",">
@@ -292,19 +291,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-	<delete id="deleteHjAttendanceRecordById" parameterType="Integer">
+    <delete id="deleteHjAttendanceRecordById" parameterType="Integer">
         delete from hj_attendance_record where id = #{id}
     </delete>
-	
+
     <delete id="deleteHjAttendanceRecordByIds" parameterType="String">
-        delete from hj_attendance_record where id in 
+        delete from hj_attendance_record where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
 
     <select id="selectWorkerAttendance" resultType="java.lang.Integer">
-      SELECT COUNT(*) FROM (
+        SELECT COUNT(*) FROM (
         SELECT
         COUNT(*)
         FROM
@@ -336,7 +335,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         AND hw.emp_category != 00
         GROUP BY
         ar.employee_id
-         ) t
+        ) t
     </select>
 
     <resultMap type="Param" id="ParamResult">
@@ -353,7 +352,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <select id="selectAttendanceRecordListTwo" parameterType="Param" resultMap="ParamResult">
-       select  id,
+        select  id,
         employee_id employeeId,
         (select w.emp_name from hj_project_workers w where w.id=employee_id) name,
         (select p.project_name from hj_project p where p.id=project_id) projectName,
@@ -383,7 +382,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
         <include refid="selectHjAttendanceRecordVo"/>
         where
-date_format(passed_time ,'%Y%m') = DATE_FORMAT(CURDATE(),'%Y%m') and employee_id=#{userId} and direction='in' GROUP BY TO_DAYS(passed_time)
+        date_format(passed_time ,'%Y%m') = DATE_FORMAT(CURDATE(),'%Y%m') and employee_id=#{userId} and direction='in' GROUP BY TO_DAYS(passed_time)
 
 
 
@@ -429,7 +428,7 @@ and TO_DAYS(curdate())=TO_DAYS(passed_time) ORDER BY passedTime desc  limit 50
         <result property="count" column="count"/>
 
     </resultMap>
-<!--该项目各个参建单位考勤人数-->
+    <!--该项目各个参建单位考勤人数-->
     <select id="getKQCount" resultType="TCount">
 
 select c.construction_name title,count(distinct employee_id) count from hj_attendance_record r join hj_project_workers w on r.employee_id=w.id
@@ -452,5 +451,4 @@ from hj_attendance_record where employee_id in (select id from hj_project_worker
 
 and TO_DAYS(curdate())=TO_DAYS(passed_time)  GROUP BY employee_id ORDER BY passedTime desc
     </select>
-
 </mapper>

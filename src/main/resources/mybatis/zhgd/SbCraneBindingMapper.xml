@@ -27,11 +27,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectSbCraneBindingVo">
-        select id, hxzid, pid, userid, dname, isSynchronization, device_no, serial_num, tc_max_scope, tc_max_height, tc_load_capacity, tc_load_moment, jdbh, xmid, sub_id, scznl, manufacturer_id, install_company from sb_crane_binding
-    </sql>
+    select * from (
+	    select * from sb_crane_binding group by hxzid, pid
+    ) a
+</sql>
 
     <select id="selectByHxzId" parameterType="SbCraneBinding" resultMap="SbCraneBindingResult">
-        SELECT *,count(distinct hxzid) FROM `sb_crane_binding` where pid=#{pid}
+        SELECT * FROM `sb_crane_binding` where pid=#{pid} group by hxzid
     </select>
     <select id="selectSbCraneBindingList" parameterType="SbCraneBinding" resultMap="SbCraneBindingResult">
         <include refid="selectSbCraneBindingVo"/>

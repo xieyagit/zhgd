@@ -63,8 +63,13 @@ public class SbProjectDustEmissionServiceImpl implements ISbProjectDustEmissionS
 	{
 	    return sbProjectDustEmissionMapper.selectSbProjectDustEmissionList(sbProjectDustEmission);
 	}
-	
-    /**
+
+	@Override
+	public List<SbProjectDustEmission> getSbProjectDustEmissionList(SbProjectDustEmission sbProjectDustEmission) {
+		return sbProjectDustEmissionMapper.getSbProjectDustEmissionList(sbProjectDustEmission);
+	}
+
+	/**
      * 新增项目对应的扬尘设备SN
      * 
      * @param sbProjectDustEmission 项目对应的扬尘设备SN信息

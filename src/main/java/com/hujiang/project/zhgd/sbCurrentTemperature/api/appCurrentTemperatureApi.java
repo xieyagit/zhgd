@@ -102,7 +102,7 @@ public class appCurrentTemperatureApi extends BaseController {
         if(list!=null && list.size()>0){
             JSONArray array = new JSONArray();
                 for (SbCurrentTemperature sbCurrentTemperature:list){
-                    result.put("msg","电箱记录查询成功");
+                    result.put("msg","查询成功");
                     result.put("code",0);
                     JSONObject maps = new JSONObject();
                     maps.put("time",sbCurrentTemperature.getTm());
@@ -123,7 +123,7 @@ public class appCurrentTemperatureApi extends BaseController {
                 }
            result.put("data",array);
         }else{
-            result.put("msg","电箱记录查询失败");
+            result.put("msg","暂无数据");
             result.put("code",-1);
             result.put("data",null);
         }

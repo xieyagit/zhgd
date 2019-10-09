@@ -34,6 +34,16 @@ public class HjAttendanceDevice
 	private String deviceIp;
 	/** 上次连接时间 */
 	private String connectTime;
+	/** 备注	 */
+	private String remark;
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
 
 	public String getConnectTime() {
 		return connectTime;
@@ -137,6 +147,7 @@ public class HjAttendanceDevice
             .append("projectId", getProjectId())
             .append("deviceIp", getDeviceIp())
             .append("connectTime", getConnectTime())
+            .append("remark", getRemark())
             .toString();
     }
 }

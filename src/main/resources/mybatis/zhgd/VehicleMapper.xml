@@ -84,7 +84,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectAll"  parameterType="Vehicle" resultMap="VehicleResult">
-        select v.id , RecordId , VehicleNo, PlateColor, v.DeptID, Camera_Mac, LiftType, LiftTime, `InOut`, img, CardType,color,orderId,`name`,gateinname,operatorin
+        select v.id , RecordId , VehicleNo, PlateColor, v.DeptID, Camera_Mac, LiftType, LiftTime,
+        `InOut`, img, CardType,color,orderId,`name`,gateinname,operatorin
         from hj_zhgd_vehicle v INNER JOIN hj_zhgd_pkcount p ON v.gateinname = p.snName
         <where>
                 and v.DeptID = #{deptID}
