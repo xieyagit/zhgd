@@ -36,7 +36,7 @@ import java.util.*;
 /**
  * 扬尘检测定时任务
  */
-@Component("dustEmissionTask")
+//@Component("dustEmissionTask")
 @RestController
 @RequestMapping(value = "/provider/tasks",method = RequestMethod.POST)
 public class DustEmissionTask {
@@ -80,7 +80,7 @@ public class DustEmissionTask {
      * 5分钟执行一次扬尘数据获取
      * @throws Exception
      */
-    @Scheduled(cron="0 0/5 * * * ? ")
+//    @Scheduled(cron="0 0/5 * * * ? ")
     @PostMapping(value = "insert")
     public void add()throws Exception {
 
@@ -113,19 +113,24 @@ public class DustEmissionTask {
             JSONObject originalData = JSONObject.parseObject(s);
             JSONObject digest = JSONObject.parseObject(originalData.getString("Data"));
             if (digest.size()>0){
-                ThreadUtils.async(new Runnable(){
-                    @Override
-                    public void run() {
-                        try {
-                            cayTsp(sbDustEmission);
-                        } catch (IOException e) {
-                            logger.error("城安院错误(insert): " + e.getMessage() + ", 参数错误："+sbDustEmission);
-                        } catch (URISyntaxException e) {
-                            logger.error("城安院错误(insert): " + e.getMessage() + ", 参数错误："+sbDustEmission);
+                SbProjectDustEmission emission = new SbProjectDustEmission();
+                emission.setSn(p.getSn());
+                emission.setScznl("CAY");
+                List<SbProjectDustEmission> list1 = projectDustEmissionService.selectSbProjectDustEmissionList(emission);
+                if (list1.size()>0) {
+                    ThreadUtils.async(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                cayTsp(sbDustEmission);
+                            } catch (IOException e) {
+                                logger.error("城安院错误(insert): " + e.getMessage() + ", 参数错误：" + sbDustEmission);
+                            } catch (URISyntaxException e) {
+                                logger.error("城安院错误(insert): " + e.getMessage() + ", 参数错误：" + sbDustEmission);
+                            }
                         }
-                    }
-                });
-
+                    });
+                }
                 //保存新的扬尘记录
                 SbDustEmission dustEmission = JSONObject.parseObject(digest.toJSONString(), SbDustEmission.class);
                 dustEmission.setJdbh(p.getJdbh());

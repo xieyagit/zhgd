@@ -121,6 +121,6 @@ public interface SbDustEmissionMapper
 
 	/** 看板1.0扬尘tsp数据*/
 	public List<SbDustEmission> selectTsp(@Param("sn") String sn);
-	public List<SbDustEmission> selectTsp1();
+	public List<SbDustEmission> selectTsp1(@Param("sn") String sn);
 
 }
