@@ -67,4 +67,7 @@ public class Constants {
 
     //城安院查询出项目监督编号以及工程id(区管项目)
     public static final String CAY_QGXM = "http://183.233.90.234:6868/misInter/";
+
+    //人才安居
+    public static final String RCAJ="http://218.17.11.171:7010";
 }

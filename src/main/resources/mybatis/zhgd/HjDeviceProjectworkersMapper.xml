@@ -92,7 +92,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectHjProjectworkersListTwo" parameterType="Map" resultMap="HjProjectWorkersResult">
          select p.id,p.emp_name,p.id_code,p.emp_sex,p.face_url from hj_project_workers p where
-         p.id  in (select d.project_workers_id from hj_device_projectworkers d where device_no=#{deviceNo} and status=#{status}) limit 5
+         p.id  in (select d.project_workers_id from hj_device_projectworkers d where device_no=#{deviceNo} and status=#{status}) limit 3
     </select>
     <resultMap type="HjDeviceProjectworkersParam" id="HjDeviceProjectworkersParamResult">
         <result property="did" column="did"/>
