@@ -534,7 +534,7 @@ public class DustEmissionApi extends BaseController {
         }
 
         /** 温度*/
-        List<SbDustEmission> emissions1 = dustEmissionService.selectTsp1();
+        List<SbDustEmission> emissions1 = dustEmissionService.selectTsp1(dustEmission.get(0).getSn());
         List<SbDustEmission> result1 = new ArrayList<SbDustEmission>();
         Calendar calendar2 = Calendar.getInstance();
         calendar2.setTime(currentDate1);
@@ -546,15 +546,9 @@ public class DustEmissionApi extends BaseController {
             List<SbDustEmission> list = emissions1.stream().filter(a->DateUtils.getDateTimes(DateUtils.parseDate(a.getDate())).equals(finalCurrentDate)).collect(Collectors.toList());
             JSONObject object = new JSONObject();
             if (list.size()>0) {
-                if (dustEmission.get(0).getSn().equals(list.get(0).getSn())) {
-                    object.put(sdf.format(currentDate1),list.get(0).getTemperature());
-                    jsonArray.add(object);
-
-                } else {
-                    object.put(sdf.format(currentDate1), "");
-                    jsonArray.add(object);
-                }
-            }else {
+                object.put(sdf.format(currentDate1),list.get(0).getTemperature());
+                jsonArray.add(object);
+            } else {
                 object.put(sdf.format(currentDate1), "");
                 jsonArray.add(object);
             }
