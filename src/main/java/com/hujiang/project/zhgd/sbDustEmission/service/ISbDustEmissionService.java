@@ -113,6 +113,6 @@ public  List<SbDustEmission> selectSbDustEmissionByTimes(Map<String,Object> map)
 
 	/** 看板1.0扬尘tsp数据*/
 	public List<SbDustEmission> selectTsp(String sn);
-	public List<SbDustEmission> selectTsp1();
+	public List<SbDustEmission> selectTsp1(String sn);
 
 }

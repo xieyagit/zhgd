@@ -239,7 +239,7 @@ public class APIClient {
         jsonObject.put("emp_phone" , hjProjectWorkers.getEmpPhon());                  // 员工手机号码
         jsonObject.put("emp_nativeplace" , hjProjectWorkers.getIdAddress());          //身份证地址
         jsonObject.put("emp_nation" , hjProjectWorkers.getEmpNation());               //民族
-        jsonObject.put("pass_period" , hjProjectWorkers.getStartTime()+":"+endTime);         // 通行时间段
+        jsonObject.put("pass_period" , hjProjectWorkers.getStartTime()+":");         // 通行时间段
         jsonObject.put("match_flag" , "Y");                                           //匹配标识。’ Y’—人证匹配，’
         jsonObject.put("facephoto" , faceUrlBase64);                                  //人脸图片
         jsonObject.put("emp_company" , hjConstructionCompany.getConstructionName());  //所属单位

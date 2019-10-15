@@ -106,9 +106,8 @@ public class ConstructionCompanyApi extends BaseController{
 
                 }
 
-            }
-            //东莞住建局上传企业
-            if("DGHOUS".equals(h.getPlatformName())){
+            }else if("DGHOUS".equals(h.getPlatformName())){
+                //东莞住建局上传企业
                 JSONObject body=new JSONObject();
                 JSONObject body2=new JSONObject();
                 body2.put("Name",hjConstructionCompany.getConstructionName());
@@ -191,7 +190,7 @@ public class ConstructionCompanyApi extends BaseController{
             body2.put("ItemName",hjProject.getProjectName());
             body2.put("Circs",hjProject.getProjectState());
             body2.put("ItemType",hjProject.getProjectType());
-            body2.put("SupLevel",1);
+            body2.put("SupLevel",2);
             body2.put("Manager",hjProject.getProjectPrincipal());
             body2.put("ManagerPhone",hjProject.getPhone());
             body2.put("StartDate",hjProject.getStartingTime().substring(0,hjProject.getStartingTime().indexOf(" ")));
@@ -201,7 +200,7 @@ public class ConstructionCompanyApi extends BaseController{
             body2.put("BuilderUnit",hcc.getComId());
             body2.put("SupervisorUnit",hcc2.getComId());
             body.put("Data",body2);
-//            System.out.println(body2);
+            System.out.println(body);
             String url= APIClient.getUrlDG(token,body.toString(),Constants.DG_HOUS+"/UploadItem");
             String result=APIClient.httpPostWithJSONDG(url,body);
             JSONObject s = JSONObject.parseObject(result);

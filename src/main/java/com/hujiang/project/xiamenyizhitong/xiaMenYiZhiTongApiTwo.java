@@ -160,7 +160,7 @@ private TokenApi tokenApi;
             a  = JSONObject.parseObject(o.toString());
             hc.setRemark(a.getString("FBDataID"));
             List<HjConstructionCompany> hcList=hjConstructionCompanyService.selectHjConstructionCompanyList(hc);
-            if(hcList.size()<=0) {
+            if(hcList.size()>0) {
                 hc.setConstructionName(a.getString("Name"));
                 hc.setShortName(a.getString("ShortName"));
                 hc.setLegalPerson(a.getString("OrgOwner"));
@@ -171,6 +171,8 @@ private TokenApi tokenApi;
                     hc.setCompanyType(2);
                 } else if ("管理单位".equals(a.getString("FenBaoType"))) {
                     hc.setCompanyType(3);
+                }else if ("总承包单位".equals(a.getString("FenBaoType"))) {
+                    hc.setCompanyType(4);
                 } else {
                     hd.setTitle(a.getString("FenBaoType"));
                     hd.setCategory("UNIT_TYPE");
@@ -181,7 +183,7 @@ private TokenApi tokenApi;
                         hc.setCompanyType(1);
                     }
                 }
-                hc.setCompanyType(1);
+
                 hc.setContacts(a.getString("FuZeRen"));
                 hc.setMobilePhone(a.getString("FuZeRenPhone"));
                 hjConstructionCompanyService.insertHjConstructionCompany(hc);
