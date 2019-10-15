@@ -29,7 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<sql id="selectSbProjectElectricityBoxVo">
         SELECT * from (
-        select id, project_id, comments, electricity_box_id, electricity_box_name, temp_limit, elec_limit, around_temp, `type`, project, jdbh, company_name, install_address, install_addrtype, dtu_id, sub_id,xmid,dev_type,scznl,manufacturer_id
+        SELECT *
         from sb_project_electricity_box group by electricity_box_id,project_id
         )a
     </sql>
@@ -37,9 +37,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="seleleSize"  parameterType="SbProjectElectricityBox" resultMap="SbProjectElectricityBoxResult">
         <include refid="selectSbProjectElectricityBoxVo"/>
         where project_id = #{projectId}
-        group BY electricity_box_id
     </select>
-	
+    <select id="selectByProjectIdAndHxzId" parameterType="SbProjectElectricityBox" resultMap="SbProjectElectricityBoxResult">
+        select * from  sb_project_electricity_box
+        <where>
+            <if test="electricity_box_id != null and electricity_box_id != '' "> and electricity_box_id=#{electricityBoxId} </if>
+            <if test="scznl != null and scznl != '' "> and scznl = #{scznl} </if>
+            <if test="projectId != null"> and projectId = #{project_id} </if>
+        </where>
+        group by electricity_box_id,project_id
+    </select>
     <select id="selectSbProjectElectricityBoxList" parameterType="SbProjectElectricityBox" resultMap="SbProjectElectricityBoxResult">
         <include refid="selectSbProjectElectricityBoxVo"/>
         <where>  
