@@ -24,6 +24,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -34,8 +36,8 @@ import java.util.*;
  * 基坑、高支模定时任务
  */
 //@Component("ElectricityDeeppitTask")
-    @RestController
-    @RequestMapping(value = "/provider/ElectricityDeeppitTask")
+//    @RestController
+//    @RequestMapping(value = "/provider/ElectricityDeeppitTask")
 public class ElectricityDeeppitTask {
 
     String url = "https://api.zhiwucloud.com/api/v1";
@@ -74,7 +76,7 @@ public class ElectricityDeeppitTask {
      * 更新所有token
      * @return
      */
-    //@Scheduled(cron="0 0 12 ? * WED")
+//    @Scheduled(cron="0 0 12 ? * WED")
     @PostMapping("tokens")
     public AjaxResult tokens(){
         List<SbProjectDeeppitStructures> pdsl = sbProjectDeeppitStructuresService.selectSbProjectDeeppitStructuresList(null);
@@ -89,7 +91,7 @@ public class ElectricityDeeppitTask {
     /**
      * 获取所有用户的报警信息
      */
-    //@Scheduled(cron="0 */2 * * * ?")
+//    @Scheduled(cron="0 */2 * * * ?")
     @PostMapping("/insert")
     public void getStationAlarmDataAll(){
 

@@ -2,9 +2,6 @@ package com.hujiang.project.zhgd.sbElevatorAddparams.api;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.hujiang.project.cay.cay;
-import com.hujiang.project.zhgd.hjProject.domain.HjProject;
-import com.hujiang.project.zhgd.hjProject.service.IHjProjectService;
 import com.hujiang.project.zhgd.hjProjectUser.domain.HjProjectUser;
 import com.hujiang.project.zhgd.hjProjectUser.service.IHjProjectUserService;
 import com.hujiang.project.zhgd.hjRolePrivileges.domain.HjRolePrivileges;
@@ -16,20 +13,17 @@ import com.hujiang.project.zhgd.hjUserRole.service.IHjUserRoleService;
 import com.hujiang.project.zhgd.moduleToPush.domain.ModuleToPush;
 import com.hujiang.project.zhgd.moduleToPush.service.IModuleToPushService;
 import com.hujiang.project.zhgd.sbElevatorAddparams.domain.OptionsElevator;
-import com.hujiang.project.zhgd.sbElevatorAddparams.domain.SbElevatorAddparams;
 import com.hujiang.project.zhgd.sbElevatorAddparams.service.ISbElevatorAddparamsService;
-import com.hujiang.project.zhgd.sbElevatorAddrecord.domain.SbElevatorAddrecord;
 import com.hujiang.project.zhgd.sbElevatorBinding.domain.SbElevatorBinding;
 import com.hujiang.project.zhgd.sbElevatorBinding.service.ISbElevatorBindingService;
-import com.hujiang.project.zhgd.sbProjectDustEmission.domain.SbProjectDustEmission;
 import com.hujiang.project.zhgd.utils.Tools;
 import com.hujiang.project.zhgd.utils.ZCAPIClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,11 +43,12 @@ public class OptionsElevatorApi {
     @Autowired
     private IModuleToPushService moduleToPushService;
     @Autowired
-    private IHjProjectService iHjProjectService;
-    @Autowired
     private ISbElevatorBindingService iSbElevatorBindingService;
     @Autowired
     private com.hujiang.project.cay.cay cay;
+    @Resource
+    private SendElevatorToPERSONNEL sendElevatorToPERSONNEL;
+
     //升降机模块权限
     private static final  int PRIVILEGESID=8;
 
@@ -86,8 +81,10 @@ public class OptionsElevatorApi {
         elevator.setDname(elevator.getElevatorName());
         elevator.setHxzid(elevator.getHxzId());
         elevator.setPid(elevator.getProjectId());
+        elevator.setUserid(4018);
         int result = iSbElevatorBindingService.insertSbElevatorBinding(elevator);
- /** 获取城安院项目id&项目监管编号(市管项目)*/
+
+        /** 获取城安院项目id&项目监管编号(市管项目)*/
         if (elevator.getScznl().equals("CAY")) {
             if (elevator.getSubId() != null) {
                 //上报城安院升降机基本信息（开始）
@@ -98,8 +95,8 @@ public class OptionsElevatorApi {
                 json.put("Dev_UID", elevator.getElevatorName());//设备用户编号
                 json.put("Jc_dev_company", elevator.getInstallCompany());//设备安装单位（监测设备厂商）
                 json.put("Serial_Num", elevator.getSerialNum());//广东省统一安装告知编号（使用登记号）
-	SbElevatorBinding sbElevatorBinsing = new SbElevatorBinding();
-	sbElevatorBinsing.setProjectId(elevator.getProjectId());
+	            SbElevatorBinding sbElevatorBinsing = new SbElevatorBinding();
+	            sbElevatorBinsing.setProjectId(elevator.getProjectId());
                 List<SbElevatorBinding> list = iSbElevatorBindingService.list(sbElevatorBinsing);
                 int i = list.size() ;
                 json.put("Dev_Name", i + "#升降机");//设备名称
@@ -153,6 +150,12 @@ public class OptionsElevatorApi {
                 String k = ZCAPIClient.QGXMCAY("lifter/ele_par", jsonObject4);
                 System.out.println("上报城安院升降机基本信息状态：" + k);
             }
+        }else if(elevator.getScznl().equals("RCAJ")){
+            SbElevatorBinding sbElevatorBinding = new SbElevatorBinding();
+            sbElevatorBinding.setHxzId(sbElevatorBinding.getHxzId());
+            List<SbElevatorBinding> sbElevatorBindingList = iSbElevatorBindingService.selectSbElevatorBindingList(sbElevatorBinding);
+            elevator.setDname((sbElevatorBindingList.size()+1)+"#"+elevator.getDname());
+            sendElevatorToPERSONNEL.rcajMachine(elevator);
         }
         if (result > 0) {
             jsonObject.put("msg", "成功");

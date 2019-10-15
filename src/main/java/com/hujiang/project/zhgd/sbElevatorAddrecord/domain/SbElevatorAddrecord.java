@@ -53,6 +53,8 @@ public class SbElevatorAddrecord
 	private Integer isForwardWarning;
 	/** 是否后限位报警(0.否1.是) */
 	private Integer isBackwardWarning;
+	/** 是否超限位报警*/
+	private Integer isLimitWarning;
 	/** 设备编号 */
 	private String hxzid;
 	/** 人数报警0:正常1:报警 */
@@ -81,6 +83,33 @@ public class SbElevatorAddrecord
 	private String maxRuntime;
 	private String minRuntime;
 	private Integer userid;
+	/** 项目监督编号 */
+	private String jdbh;
+	private String peopleCnt;	//人数
+	private Integer projectId;
+	public Integer getIsLimitWarning() {
+		return isLimitWarning;
+	}
+
+	public void setIsLimitWarning(Integer isLimitWarning) {
+		this.isLimitWarning = isLimitWarning;
+	}
+
+	public Integer getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(Integer projectId) {
+		this.projectId = projectId;
+	}
+
+	public String getPeopleCnt() {
+		return peopleCnt;
+	}
+
+	public void setPeopleCnt(String peopleCnt) {
+		this.peopleCnt = peopleCnt;
+	}
 
 	public Integer getUserid() {
 		return userid;
@@ -394,6 +423,15 @@ public class SbElevatorAddrecord
 	{
 		return obliguityY;
 	}
+
+	public String getJdbh() {
+		return jdbh;
+	}
+
+	public void setJdbh(String jdbh) {
+		this.jdbh = jdbh;
+	}
+
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)

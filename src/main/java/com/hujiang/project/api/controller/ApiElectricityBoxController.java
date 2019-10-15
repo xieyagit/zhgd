@@ -245,7 +245,7 @@ public class ApiElectricityBoxController {
      */
     public JSONObject reportElectricBoxParamete(SbProjectElectricityBox sbP) throws IOException, URISyntaxException {
         //        // 判断项目ID的，设备ID是否存在d
-        List<SbProjectElectricityBox> iSbProjectElectricityBoxs = iSbProjectElectricityBoxService.selectByProjectIdAndHxzId(sbP);
+       // List<SbProjectElectricityBox> iSbProjectElectricityBoxs = iSbProjectElectricityBoxService.selectByProjectIdAndHxzId(sbP);
 
         JSONObject resultJson = new JSONObject();
 

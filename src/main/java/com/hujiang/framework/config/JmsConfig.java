@@ -14,12 +14,36 @@ import javax.jms.Queue;
 @Configuration
 public class JmsConfig {
 
-    public final static String TSP_PERSONNEL_QUEUE = "TSP_PERSONNEL_QUEUE";
+    public final static String TSP_PERSONNEL_QUEUE = "TSP_PERSONNEL_QUEUE_555_yuan";
+
+    public final static String ELEVATOR_PERSONNEL_QUEUE = "ELEVATOR_PERSONNEL_QUEUE";
+
+    public final static String CRANE_PERSONNEL_QUEUE = "CRANE_PERSONNEL_QUEUE555";
+
+    public final static String TEMPERATURE_PERSONNEL_QUEUE = "TEMPERATURE_PERSONNEL_QUEUE";
 
     //定义人才安居的扬尘设备存放消息的队列
     @Bean(value="tspPersonnelQueue")
     public Queue tspPersonnelQueue() {
         return new ActiveMQQueue(JmsConfig.TSP_PERSONNEL_QUEUE);
+    }
+
+    //定义人才安居的升降机设备存放消息的队列
+    @Bean(value="elevatorPersonnelQueue")
+    public Queue elevatorPersonnelQueue() {
+        return new ActiveMQQueue(JmsConfig.ELEVATOR_PERSONNEL_QUEUE);
+    }
+
+    //定义人才安居的塔吊设备存放消息的队列
+    @Bean(value="cranePersonnelQueue")
+    public Queue cranePersonnelQueue() {
+        return new ActiveMQQueue(JmsConfig.CRANE_PERSONNEL_QUEUE);
+    }
+
+    //定义人才安居的电箱设备存放消息的队列
+    @Bean(value="temperaturePersonnelQueue")
+    public Queue temperaturePersonnelQueue() {
+        return new ActiveMQQueue(JmsConfig.TEMPERATURE_PERSONNEL_QUEUE);
     }
 
     @Value("${spring.activemq.user}")

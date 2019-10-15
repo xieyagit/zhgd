@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.utils.ThreadUtils;
 import com.hujiang.project.api.controller.ApiElectricityBoxController;
+import com.hujiang.project.zhgd.sbCurrentTemperature.api.SendTemperatureToPERSONNEL;
 import com.hujiang.project.zhgd.sbCurrentTemperature.domain.SbCurrentTemperature;
 import com.hujiang.project.zhgd.sbCurrentTemperature.service.ISbCurrentTemperatureService;
 import com.hujiang.project.zhgd.sbDoorLock.domain.SbDoorLock;
@@ -47,6 +48,8 @@ public class ElectricityBoxTask {
     private ISbCurrentTemperatureService iCurrentTemperatureService;
     @Autowired
     private ApiElectricityBoxController apiElectricityBoxController;
+    @Autowired
+    private SendTemperatureToPERSONNEL sendTemperatureToPERSONNEL;
 
     /**
      * 60秒执行一次电箱获取
@@ -72,7 +75,6 @@ public class ElectricityBoxTask {
             Date d1 = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 );
             String mr = sp1.format(d1);//获取考勤日期
             //请求url 获取电箱温度数据
-//            String s = Util.httpPostWithJSON(Constants.TempEelcHistory+"?id="+substring+"&startTime=2018-03-21 00:00:00&endTime=2019-03-24", new JSONObject());
             String s = Util.httpPostWithJSON(Constants.TempEelcHistory+"?id="+substring+"&startTime="+jr+" 00:00:00&endTime="+mr, new JSONObject());
             System.out.println("获取的电箱温度数据："+s);
             //获取的原始数据
@@ -92,10 +94,11 @@ public class ElectricityBoxTask {
                         iCurrentTemperatureService.insertSbCurrentTemperature(currentTemperature);
                         System.out.println("添加温度记录");
                     }
-
                 }else {
                         //添加新的记录
                         iCurrentTemperatureService.insertSbCurrentTemperature(currentTemperature);
+                       // sendTemperatureToPERSONNEL.rcajDate(currentTemperature);
+
                 }
             }
             //请求url 获取电箱门开关数据
@@ -139,7 +142,8 @@ public class ElectricityBoxTask {
         SbProjectElectricityBox sbox = new SbProjectElectricityBox();
         sbox.setType(1);
         //查询所有项目所有电箱
-        List<SbProjectElectricityBox> projectElectricityBoxes = iProjectElectricityBoxService.selectSbProjectElectricityBoxList(sbox);
+        List<SbProjectElectricityBox> projectElectricityBoxes =
+                iProjectElectricityBoxService.selectSbProjectElectricityBoxList(sbox);
         for(SbProjectElectricityBox peb:projectElectricityBoxes){
             //电箱编号
             String electricityBoxId = peb.getElectricityBoxId();
@@ -150,8 +154,7 @@ public class ElectricityBoxTask {
             Date d1 = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 );
             String mr = sp1.format(d1);//获取考勤日期
             //请求url 获取电箱温度数据
-//            String s = Util.httpPostWithJSON(Constants.TempEelcHistory+"?id="+substring+"&startTime=2018-03-21 00:00:00&endTime=2019-03-24", new JSONObject());
-            String s = Util.httpPostWithJSON(Constants.TempEelcHistoryRemould+"?dev_guid="+electricityBoxId+"&page=1", new JSONObject());
+            String s = Util.httpPostWithJSON(Constants.TempEelcHistoryRemould+"?dev_guid="+electricityBoxId+"&page=0", new JSONObject());
             System.out.println("获取的电箱温度数据："+s);
             //获取的原始数据
             JSONObject  originalData = JSONObject.parseObject(s);
@@ -170,43 +173,21 @@ public class ElectricityBoxTask {
                 sc.setNwarm(j.getBigDecimal("temp_xl_n"));
                 sc.setTm(j.getString("create_time"));
                 iCurrentTemperatureService.insertSbCurrentTemperature(sc);
+                sc.setWranType(j.getInteger("wran_type"));
+                //人才安居
+               sendTemperatureToPERSONNEL.rcajDate(sc);
+                //城安院
                 apiElectricityBoxController.reportElectricBoxState(sc,j.getInteger("wran_type"));
+
+
             }
 
         }
 
-        //上报配电箱状态
+
 
 
     }
 
 
-/*//    @Scheduled(cron="0 0/5 * * * ?")
-    @PostMapping(value = "/b")
-    public void dxTask()throws  Exception{
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Date date=new Date();
-        String endTime=dateFormat.format(date.getTime());
-        Calendar beforeTime = Calendar.getInstance();
-        beforeTime.add(Calendar.MINUTE, -5);//
-        String startTime=dateFormat.format(beforeTime.getTime());
-        String s1 = Util.httpPostWithJSON("http://58.246.211.154:23333/Tric_box_zt/app/getRecentInfo.do?page=0", new JSONObject());
-        JSONArray data=JSONObject.parseObject(s1).getJSONArray("data");
-        SbCurrentTemperature sc;
-        JSONObject j;
-        for(Object o:data){
-           j =JSONObject.parseObject(o.toString());
-            sc=new SbCurrentTemperature();
-            sc.setElectricityBoxId(j.getString("id_card"));
-            sc.setCurrent(j.getBigDecimal("current"));
-            sc.setEnvirwarm(j.getBigDecimal("envirwarm"));
-            sc.setAwarm(j.getBigDecimal("awarm"));
-            sc.setBwarm(j.getBigDecimal("bwarm"));
-            sc.setCwarm(j.getBigDecimal("cwarm"));
-            sc.setNwarm(j.getBigDecimal("nwarm"));
-            sc.setTm(j.getString("dateupload_time"));
-            sc.setDoorType(j.getString("door_type"));
-            iCurrentTemperatureService.insertSbCurrentTemperature(sc);
-        }
-    }*/
 }

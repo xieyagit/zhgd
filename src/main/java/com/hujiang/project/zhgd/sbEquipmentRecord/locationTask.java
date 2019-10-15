@@ -28,8 +28,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-@RestController
-@RequestMapping(value = "/provider/locationTask",method = RequestMethod.POST)
+//@RestController
+//@RequestMapping(value = "/provider/locationTask",method = RequestMethod.POST)
 //@Component()
 //@EnableScheduling
 public class locationTask {
@@ -39,7 +39,7 @@ public class locationTask {
     private ISbEquipmentRecordService equipmentRecordService;
 
 
-    @PostMapping(value = "/add")
+//    @PostMapping(value = "/add")
 //    @Scheduled(cron="0 0/10 * * * ?")
     public void add() throws Exception {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

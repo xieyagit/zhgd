@@ -30,8 +30,8 @@ import java.util.List;
 
 
 
-@RestController
-@RequestMapping(value = "/provider/task",method = RequestMethod.POST)
+//@RestController
+//@RequestMapping(value = "/provider/task",method = RequestMethod.POST)
 //@Component("task")
 //@EnableScheduling
 public class Task {

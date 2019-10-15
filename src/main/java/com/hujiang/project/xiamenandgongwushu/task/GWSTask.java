@@ -36,8 +36,8 @@ import java.util.logging.Logger;
  * 从一指通获取数据，需要上传至工务署
  */
 //
-    @RestController
-    @RequestMapping(value = "/provider/a",method = RequestMethod.POST)
+//    @RestController
+//    @RequestMapping(value = "/provider/a",method = RequestMethod.POST)
 //@Component
 public class GWSTask {
     private Logger logger = Logger.getLogger(GWSTask.class.getName());
@@ -62,7 +62,7 @@ public class GWSTask {
      * @throws IOException
      */
 
-    @RequestMapping("/b")
+//    @RequestMapping("/b")
 //    @Scheduled(cron="0 0 0 * * ? ")
     public void setCompany() throws  URISyntaxException, IOException{
         HjSynchronizationInformation hs=new HjSynchronizationInformation();
@@ -82,7 +82,7 @@ public class GWSTask {
      * @throws Exception
      */
 
-    @RequestMapping("/c")
+//    @RequestMapping("/c")
 //    @Scheduled(cron="0 0 1 * * ? ")
     public void setTeam()throws Exception{
         HjSynchronizationInformation hs=new HjSynchronizationInformation();
@@ -101,7 +101,7 @@ public class GWSTask {
      * @throws Exception
      */
 
-    @RequestMapping("/d")
+//    @RequestMapping("/d")
 //    @Scheduled(cron="0 0 2 * * ? ")
     public void setProjectWorkers()throws Exception{
         HjSynchronizationInformation hs=new HjSynchronizationInformation();
@@ -120,7 +120,7 @@ public class GWSTask {
      * @throws Exception
      */
 
-    @RequestMapping("/e")
+//    @RequestMapping("/e")
 //    @Scheduled(cron="0 0/15 * * * ? ")
     public void setJiLu()throws Exception{
         HjSynchronizationInformation hs=new HjSynchronizationInformation();

@@ -23,8 +23,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 //@Component("jSmsTask")
-@RestController
-@RequestMapping(value = "/provider/jSmsTask",method = RequestMethod.POST)
+//@RestController
+//@RequestMapping(value = "/provider/jSmsTask",method = RequestMethod.POST)
 public class JsmsTask {
     @Autowired
     private IShortCreedNumberService shortCreedNumberService;
@@ -39,7 +39,7 @@ public class JsmsTask {
 
 
 //        @Scheduled(cron="0 0/5 * * * ? ")
-    @PostMapping(value = "JSMS")
+//    @PostMapping(value = "JSMS")
     public void JSMS() {
         List<ShortCreedNumber> shortCreedNumberList = shortCreedNumberService.selectShortCreedNumberList(null);
         List<HjProjectUser> hjProjectUserList = projectUserService.selectHjProjectUserList(null);  //查询这个项目下的所有人

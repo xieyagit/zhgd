@@ -29,8 +29,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 //@Component
-@RestController
-@RequestMapping(value = "/provider/o")
+//@RestController
+//@RequestMapping(value = "/provider/o")
 public class yiZhitongTask {
     @Autowired
     private IHjProjectWorkersService hjProjectWorkersService;
@@ -46,7 +46,7 @@ public class yiZhitongTask {
      * 每个小时获取一指通考勤记录
      */
 //    @Scheduled(cron="0 0/30 * * * ?")
-    @PostMapping(value = "/oa")
+//    @PostMapping(value = "/oa")
     public void add() throws Exception{
 
         //获取一个小时内的考勤数据
