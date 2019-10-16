@@ -3,6 +3,7 @@ package com.hujiang.project.xiamenyizhitong;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hujiang.framework.AutoTaskBase;
 import com.hujiang.project.xh.Api.xhApi;
 import com.hujiang.project.xh.tokenApi.TokenApi;
 import com.hujiang.project.xh.utils.HttpUtilsXh;
@@ -28,10 +29,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-//@Component
+@Component
 //@RestController
 //@RequestMapping(value = "/provider/o")
-public class yiZhitongTask {
+public class yiZhitongTask extends AutoTaskBase {
     @Autowired
     private IHjProjectWorkersService hjProjectWorkersService;
     @Autowired
@@ -42,11 +43,24 @@ public class yiZhitongTask {
     private IHjAttendanceRecordService hjAttendanceRecordService;
     private Logger logger = Logger.getLogger(yiZhitongTask.class.getName());
 
+    @Scheduled(cron="0 0/30 * * * ?")
+    public void task1() {
+        super.exec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    add();
+                }
+                catch (Exception e) {
+                    // logger
+                }
+            }
+        });
+    }
     /**
      * 每个小时获取一指通考勤记录
      */
-//    @Scheduled(cron="0 0/30 * * * ?")
-//    @PostMapping(value = "/oa")
+    //    @PostMapping(value = "/oa")
     public void add() throws Exception{
 
         //获取一个小时内的考勤数据

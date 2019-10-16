@@ -34,6 +34,7 @@ public class SbCurrentTemperature
 	/** 数据上传时间 */
 	private String tm;
 	private String doorType;//门状态
+
 	private Integer wranType;
 	private String jdbh;
 	private Integer projectId;

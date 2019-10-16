@@ -2,6 +2,7 @@ package com.hujiang.project.zhgd.sbEquipmentRecord;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hujiang.framework.AutoTaskBase;
 import com.hujiang.project.zhgd.sbDeviceimei.service.ISbDeviceimeiService;
 import com.hujiang.project.zhgd.sbEquipmentRecord.domain.SbEquipmentRecord;
 import com.hujiang.project.zhgd.sbEquipmentRecord.service.ISbEquipmentRecordService;
@@ -32,16 +33,30 @@ import java.util.List;
 
 //@RestController
 //@RequestMapping(value = "/provider/task",method = RequestMethod.POST)
-//@Component("task")
+@Component("task")
 //@EnableScheduling
-public class Task {
+public class Task extends AutoTaskBase {
     @Autowired
     private ISbDeviceimeiService deviceimeiService;
     @Autowired
     private ISbEquipmentRecordService equipmentRecordService;
 
-    @PostMapping(value = "/insert")
-//    @Scheduled(cron="0 0/10 * * * ?")
+
+    @Scheduled(cron="0 0/10 * * * ?")
+    public void task1() {
+        super.exec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    insert();
+                }
+                catch (Exception e) {
+                    // logger
+                }
+            }
+        });
+    }
+//    @PostMapping(value = "/insert")
     public void insert() throws Exception{
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();

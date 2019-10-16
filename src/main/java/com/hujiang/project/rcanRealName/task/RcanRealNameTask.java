@@ -2,6 +2,7 @@ package com.hujiang.project.rcanRealName.task;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hujiang.framework.AutoTaskBase;
 import com.hujiang.project.xh.tokenApi.TokenApi;
 import com.hujiang.project.xh.utils.HttpUtilsXh;
 import com.hujiang.project.zhgd.hjAttendanceRecord.domain.HjAttendanceRecord;
@@ -46,10 +47,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-@RestController
-@RequestMapping(value = "/provider/zxc")
-//@Component
-public class RcanRealNameTask {
+//@RestController
+//@RequestMapping(value = "/provider/zxc")
+@Component
+public class RcanRealNameTask extends AutoTaskBase {
     @Autowired
     private IHjSynchronizationInformationService hjSynchronizationInformationService;
     @Autowired
@@ -67,9 +68,36 @@ public class RcanRealNameTask {
     @Autowired
     private IHjConstructionProjectService hjConstructionProjectService;
 
+    @Scheduled(cron="0 0 4 * * ? ")
+    public void task1() {
+        super.exec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    setProjectUser();
+                }
+                catch (Exception e) {
+                    // logger
+                }
+            }
+        });
+    }
 
-    @PostMapping(value = "/v")
-    //    @Scheduled(cron="0 0 4 * * ? ")
+    @Scheduled(cron="0 0/30 * * * ? ")
+    public void task2() {
+        super.exec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    setJiLu();
+                }
+                catch (Exception e) {
+                    // logger
+                }
+            }
+        });
+    }
+//    @PostMapping(value = "/v")
     public void  setProjectUser() throws Exception {
 
         HjSynchronizationInformation hs=new HjSynchronizationInformation();
@@ -88,8 +116,7 @@ public class RcanRealNameTask {
      * 同步考勤记录
      * @throws Exception
      */
-    @PostMapping(value = "/b")
-//    @Scheduled(cron="0 0/30 * * * ? ")
+//    @PostMapping(value = "/b")
     public void setJiLu()throws Exception{
         HjSynchronizationInformation hs=new HjSynchronizationInformation();
         hs.setState(1);

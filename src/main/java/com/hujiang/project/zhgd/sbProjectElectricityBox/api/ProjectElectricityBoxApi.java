@@ -83,7 +83,7 @@ public class ProjectElectricityBoxApi extends BaseController {
      * @author yant
      */
     @RequestMapping("/addSave")
-    public AjaxResult addSave(@RequestBody SbProjectElectricityBox sbP)
+    public AjaxResult addSave(SbProjectElectricityBox sbP)
     {
 
         if (sbP.getProjectId() == null || sbP.getElectricityBoxId() == null ||

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.utils.JsonUtils;
 import com.hujiang.common.utils.ThreadUtils;
+import com.hujiang.framework.AutoTaskBase;
 import com.hujiang.framework.jms.JmsMessageInfo;
 import com.hujiang.framework.jms.JmsMessageType;
 import com.hujiang.framework.web.domain.AjaxResult;
@@ -36,10 +37,10 @@ import java.util.*;
 /**
  * 扬尘检测定时任务
  */
-//@Component("dustEmissionTask")
-@RestController
-@RequestMapping(value = "/provider/tasks",method = RequestMethod.POST)
-public class DustEmissionTask {
+//@RestController
+//@RequestMapping(value = "/provider/tasks",method = RequestMethod.POST)
+@Component("dustEmissionTask")
+public class DustEmissionTask extends AutoTaskBase {
 
     private final Logger logger = LoggerFactory.getLogger(ZCAPIClient.class);
     @Autowired
@@ -62,15 +63,27 @@ public class DustEmissionTask {
     @Resource
     private JPushSMS jPushSMS;
 
-
+    @Scheduled(cron="0 0/5 * * * ? ")
+    public void task1() {
+        super.exec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    add();
+                }
+                catch (Exception e) {
+                    // logger
+                }
+            }
+        });
+    }
 
 
     /**
      * 5分钟执行一次扬尘数据获取
      * @throws Exception
      */
-//    @Scheduled(cron="0 0/5 * * * ? ")
-    @PostMapping(value = "insert")
+    //    @PostMapping(value = "insert")
     public void add()throws Exception {
 
         System.out.println("定时任务dustEmissionTask  add");

@@ -14,11 +14,11 @@ import javax.jms.Queue;
 @Configuration
 public class JmsConfig {
 
-    public final static String TSP_PERSONNEL_QUEUE = "TSP_PERSONNEL_QUEUE_555_yuan";
+    public final static String TSP_PERSONNEL_QUEUE = "TSP_PERSONNEL_QUEUE";
 
     public final static String ELEVATOR_PERSONNEL_QUEUE = "ELEVATOR_PERSONNEL_QUEUE";
 
-    public final static String CRANE_PERSONNEL_QUEUE = "CRANE_PERSONNEL_QUEUE555";
+    public final static String CRANE_PERSONNEL_QUEUE = "CRANE_PERSONNEL_QUEUE";
 
     public final static String TEMPERATURE_PERSONNEL_QUEUE = "TEMPERATURE_PERSONNEL_QUEUE";
 

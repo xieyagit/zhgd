@@ -2,6 +2,7 @@ package com.hujiang.project.xiamenandgongwushu.task;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hujiang.framework.AutoTaskBase;
 import com.hujiang.project.xh.Api.xhApi;
 import com.hujiang.project.xh.utils.HttpUtilsXh;
 import com.hujiang.project.zhgd.hjAttendanceRecord.domain.HjAttendanceRecord;
@@ -38,8 +39,8 @@ import java.util.logging.Logger;
 //
 //    @RestController
 //    @RequestMapping(value = "/provider/a",method = RequestMethod.POST)
-//@Component
-public class GWSTask {
+@Component
+public class GWSTask extends AutoTaskBase {
     private Logger logger = Logger.getLogger(GWSTask.class.getName());
   @Autowired
   private IHjSynchronizationInformationService hjSynchronizationInformationService;
@@ -56,6 +57,65 @@ public class GWSTask {
   @Autowired
   private IHjAttendanceRecordService hjAttendanceRecordService;
 
+    @Scheduled(cron="0 0 0 * * ? ")
+    public void task1() {
+        super.exec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    setCompany();
+                }
+                catch (Exception e) {
+                    // logger
+                }
+            }
+        });
+    }
+
+    @Scheduled(cron="0 0 1 * * ? ")
+    public void task2() {
+        super.exec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    setTeam();
+                }
+                catch (Exception e) {
+                    // logger
+                }
+            }
+        });
+    }
+
+    @Scheduled(cron="0 0/15 * * * ? ")
+    public void task3() {
+        super.exec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    setJiLu();
+                }
+                catch (Exception e) {
+                    // logger
+                }
+            }
+        });
+    }
+
+    @Scheduled(cron="0 0 2 * * ? ")
+    public void task4() {
+        super.exec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    setProjectWorkers();
+                }
+                catch (Exception e) {
+                    // logger
+                }
+            }
+        });
+    }
     /**
      * 同步参建单位定时器
      * @throws URISyntaxException
@@ -63,7 +123,6 @@ public class GWSTask {
      */
 
 //    @RequestMapping("/b")
-//    @Scheduled(cron="0 0 0 * * ? ")
     public void setCompany() throws  URISyntaxException, IOException{
         HjSynchronizationInformation hs=new HjSynchronizationInformation();
         hs.setState(1);
@@ -83,7 +142,6 @@ public class GWSTask {
      */
 
 //    @RequestMapping("/c")
-//    @Scheduled(cron="0 0 1 * * ? ")
     public void setTeam()throws Exception{
         HjSynchronizationInformation hs=new HjSynchronizationInformation();
         hs.setState(1);
@@ -102,7 +160,6 @@ public class GWSTask {
      */
 
 //    @RequestMapping("/d")
-//    @Scheduled(cron="0 0 2 * * ? ")
     public void setProjectWorkers()throws Exception{
         HjSynchronizationInformation hs=new HjSynchronizationInformation();
         hs.setState(1);
@@ -121,7 +178,6 @@ public class GWSTask {
      */
 
 //    @RequestMapping("/e")
-//    @Scheduled(cron="0 0/15 * * * ? ")
     public void setJiLu()throws Exception{
         HjSynchronizationInformation hs=new HjSynchronizationInformation();
         hs.setState(1);

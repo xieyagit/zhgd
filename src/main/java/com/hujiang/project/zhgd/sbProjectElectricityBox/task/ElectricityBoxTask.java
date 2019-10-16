@@ -4,6 +4,7 @@ package com.hujiang.project.zhgd.sbProjectElectricityBox.task;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.utils.ThreadUtils;
+import com.hujiang.framework.AutoTaskBase;
 import com.hujiang.project.api.controller.ApiElectricityBoxController;
 import com.hujiang.project.zhgd.sbCurrentTemperature.api.SendTemperatureToPERSONNEL;
 import com.hujiang.project.zhgd.sbCurrentTemperature.domain.SbCurrentTemperature;
@@ -35,10 +36,10 @@ import java.util.List;
 /**
  * 电箱定时任务
  */
-//@Component("electricityBoxTask")
-    @RestController
-    @RequestMapping(value = "/provider/b")
-public class ElectricityBoxTask {
+@RestController
+@RequestMapping(value = "/provider/b")
+@Component("electricityBoxTask")
+public class ElectricityBoxTask extends AutoTaskBase {
     private final Logger logger = LoggerFactory.getLogger(ZCAPIClient.class);
     @Autowired
     private ISbProjectElectricityBoxService iProjectElectricityBoxService;
@@ -51,13 +52,43 @@ public class ElectricityBoxTask {
     @Autowired
     private SendTemperatureToPERSONNEL sendTemperatureToPERSONNEL;
 
+
+    @Scheduled(cron="0/60 * * * * ?")
+    public void task1() {
+        super.exec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    add();
+                }
+                catch (Exception e) {
+                    // logger
+                }
+            }
+        });
+    }
+
+
+    @Scheduled(cron="0 0/10 * * * ?")
+    public void task2() {
+        super.exec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    addRemould();
+                }
+                catch (Exception e) {
+                    // logger
+                }
+            }
+        });
+    }
     /**
      * 60秒执行一次电箱获取
      * 获取智能电箱的数据
      * @throws Exception
      */
-//    @Scheduled(cron="0/60 * * * * ?")
-    @PostMapping(value = "/c")
+    //    @PostMapping(value = "/c")
     public void add()throws Exception{
         SbProjectElectricityBox sbox = new SbProjectElectricityBox();
         sbox.setType(0);
@@ -136,8 +167,7 @@ public class ElectricityBoxTask {
      * 获取改造电箱的数据
      * @throws Exception
      */
-//    @Scheduled(cron="0 0/10 * * * ?")
-    @PostMapping(value = "/cr")
+        @PostMapping(value = "/cr")
     public void addRemould()throws Exception{
         SbProjectElectricityBox sbox = new SbProjectElectricityBox();
         sbox.setType(1);

@@ -41,7 +41,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectByProjectIdAndHxzId" parameterType="SbProjectElectricityBox" resultMap="SbProjectElectricityBoxResult">
         select * from  sb_project_electricity_box
         <where>
-            <if test="electricity_box_id != null and electricity_box_id != '' "> and electricity_box_id=#{electricityBoxId} </if>
+            <if test="electricityBoxId != null and electricityBoxId != '' "> and electricity_box_id=#{electricityBoxId} </if>
             <if test="scznl != null and scznl != '' "> and scznl = #{scznl} </if>
             <if test="projectId != null"> and projectId = #{project_id} </if>
         </where>
