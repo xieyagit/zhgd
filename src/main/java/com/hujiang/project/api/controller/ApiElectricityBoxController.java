@@ -244,11 +244,19 @@ public class ApiElectricityBoxController {
      * @return JSONObject
      */
     public JSONObject reportElectricBoxParamete(SbProjectElectricityBox sbP) throws IOException, URISyntaxException {
-        //        // 判断项目ID的，设备ID是否存在d
+        SbProjectElectricityBox sbProjectElectricityBox = new SbProjectElectricityBox();
+        sbProjectElectricityBox.setProjectId(sbP.getProjectId());
+        sbProjectElectricityBox.setScznl(sbP.getScznl());
+        List<SbProjectElectricityBox> projectElectricityBoxes = iSbProjectElectricityBoxService.selectByProjectIdAndHxzId(sbProjectElectricityBox);
+        Integer i =1;
+        if (projectElectricityBoxes.size()==0){
+            i = 1;
+        }else {
+            i = projectElectricityBoxes.size();
+        }
+        // 判断项目ID的，设备ID是否存在d
         List<SbProjectElectricityBox> iSbProjectElectricityBoxs = iSbProjectElectricityBoxService.selectByProjectIdAndHxzId(sbP);
-
         JSONObject resultJson = new JSONObject();
-
         // 区管项目
         JSONObject regionJsonObject = new JSONObject();
         List<JSONObject> regionJsons = new ArrayList<>();
@@ -258,7 +266,7 @@ public class ApiElectricityBoxController {
             object.put("Jdbh", sbP.getJdbh());// 项目监督编号
             object.put("DEV_GUID", Tools.encodeToMD5s(sbP.getElectricityBoxId()));// 设备编码
             object.put("DEV_TYPE", sbP.getDevType());// 设备类型
-            object.put("DEV_TYPE_NAME", "");// 设备类型名称
+            object.put("DEV_TYPE_NAME", sbP.getInstallAddrtype()+i+"配电箱");// 设备类型名称
             object.put("COMPANY_NAME", sbP.getCompanyName());// 设备安装单位
             object.put("COMPANY_ADDRESS", "");// 公司地址
             object.put("INSTALL_ADDRESS", sbP.getInstallAddress());// 安装地址
@@ -293,7 +301,7 @@ public class ApiElectricityBoxController {
             object.put("Jdbh", sbP.getJdbh());// 项目监督编号
             object.put("DEV_GUID", Tools.encodeToMD5s(sbP.getElectricityBoxId()));// 设备编码
             object.put("DEV_TYPE", sbP.getDevType());// 设备类型
-            object.put("DEV_TYPE_NAME", "");// 设备类型名称
+            object.put("DEV_TYPE_NAME", sbP.getInstallAddrtype()+i+"配电箱");// 设备类型名称
             object.put("COMPANY_NAME", sbP.getCompanyName());// 设备安装单位
             object.put("COMPANY_ADDRESS", "");// 公司地址
             object.put("INSTALL_ADDRESS", sbP.getInstallAddress());// 安装地址
@@ -339,6 +347,7 @@ public class ApiElectricityBoxController {
         JSONObject resultJson = new JSONObject();
         // 判断项目ID的，设备ID是否存在d
         SbProjectElectricityBox sbProjectElectricityBox = new SbProjectElectricityBox();
+        sbProjectElectricityBox.setScznl("CAY");
         sbProjectElectricityBox.setElectricityBoxId(sc.getElectricityBoxId());
         List<SbProjectElectricityBox> iSbProjectElectricityBoxs = iSbProjectElectricityBoxService.selectByProjectIdAndHxzId(sbProjectElectricityBox);
         if (iSbProjectElectricityBoxs != null) {
@@ -346,9 +355,31 @@ public class ApiElectricityBoxController {
             if (wran_type == 1) {
                 status = "报警";
             }
+            Integer i = 0;
+            if (status.equals("正常")){
+                i = 0;
+            } else if (status.equals("报警")){
+                i = 1;
+            } else if (status.equals("未连接")){
+                i = 2;
+            } else if (status.equals("故障")) {
+                i = 4;
+            } else if (status.equals("屏蔽")) {
+                i = 8;
+            }
             String alert = "表示无报警";
             if (wran_type == 1) {
                 alert = "表示漏电报警";
+            }
+            Integer b = 0;
+            if (alert.equals("表示无报警")){
+                b  = 0 ;
+            } else if (alert.equals("表示漏电报警")){
+                b = 1;
+            } else if (alert.equals("表示温度报警")){
+                b = 2;
+            } else if (alert.equals("表示两者都报警")){
+                b = 3;
             }
             List channelDatas = new ArrayList();
             // 设置设备id
@@ -360,7 +391,7 @@ public class ApiElectricityBoxController {
             // 区管项目
             JSONObject regionJsonObject = new JSONObject();
             List<JSONObject> regionJsons = new ArrayList<>();
-            if (iSbProjectElectricityBoxs.get(0).getSubId() != null && !iSbProjectElectricityBoxs.get(0).getSubId().equals("")) {
+            if (iSbProjectElectricityBoxs.size()>0) {
 
                 JSONObject object = new JSONObject();
                 object.put("PROJECT_ID", sc.getElectricityBoxId());// 项目ID;
@@ -369,10 +400,12 @@ public class ApiElectricityBoxController {
                 object.put("Jdbh", iSbProjectElectricityBoxs.get(0).getJdbh());// 监督号
                 object.put("DEV_GUID", Tools.encodeToMD5s(sc.getElectricityBoxId()));//设备ID
                 object.put("DEV_OPERATE_TIME", df.format(new Date()));// 上传日期精确到时分秒
-                object.put("DEV_STATUS", status);   // 0：正常1：报警 2：未连接 4：故障 8：屏蔽
-                object.put("WRAN_TYPE", alert);   // 0 表示无报警，1 表示漏电报警，2 表示温度报警，3 表示两者都报警
+
+                object.put("DEV_STATUS", i);   // 0：正常1：报警 2：未连接 4：故障 8：屏蔽
+
+                object.put("WRAN_TYPE", wran_type);   // 0 表示无报警，1 表示漏电报警，2 表示温度报警，3 表示两者都报警
                 if (wran_type != 0) {
-                    object.put("WARN_ID", alert);// WARN_TYPE 不等于 0 时此字段必填，唯一标识，同一次报警 ID 相同
+                    object.put("WARN_ID", wran_type);// WARN_TYPE 不等于 0 时此字段必填，唯一标识，同一次报警 ID 相同
                 }
                 object.put("TEMP_XL_a", sc.getAwarm());  // 线缆 a 温度
                 object.put("TEMP_XL_b", sc.getBwarm());  // 线缆 b 温度
@@ -410,8 +443,8 @@ public class ApiElectricityBoxController {
                 object.put("Jdbh", box.getJdbh());// 监督号
                 object.put("DEV_GUID", Tools.encodeToMD5s(sc.getElectricityBoxId()));// 设备ID
                 object.put("DEV_OPERATE_TIME", df.format(new Date()));// 上传日期精确到时分秒
-                object.put("DEV_STATUS", status);   // 0：正常1：报警 2：未连接 4：故障 8：屏蔽
-                object.put("WRAN_TYPE", alert);   // 0 表示无报警，1 表示漏电报警，2 表示温度报警，3 表示两者都报警
+                object.put("DEV_STATUS", i);   // 0：正常1：报警 2：未连接 4：故障 8：屏蔽
+                object.put("WRAN_TYPE", b);   // 0 表示无报警，1 表示漏电报警，2 表示温度报警，3 表示两者都报警
                 if (wran_type != 0) {
                     object.put("WARN_ID", alert);// WARN_TYPE 不等于 0 时此字段必填，唯一标识，同一次报警 ID 相同
                 }

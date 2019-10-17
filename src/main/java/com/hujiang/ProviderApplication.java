@@ -1,6 +1,7 @@
 package com.hujiang;
 
 
+import com.hujiang.project.haiKang.HaiKangAI;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -43,6 +44,8 @@ public class ProviderApplication
                 "       \\  _  /--'         `启动成功\n" +
                 "     ___)( )(___\n" +
                 "    (((__) (__)))");
+
+        HaiKangAI.a();
 
     }
 }

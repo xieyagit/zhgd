@@ -1,7 +1,6 @@
 package com.hujiang.project.zhgd.utils;
 
 import com.alibaba.fastjson.JSONObject;
-import com.aliyun.oss.common.utils.HttpUtil;
 import com.baidu.aip.face.AipFace;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -12,6 +11,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.springframework.util.ResourceUtils;
 import sun.misc.BASE64Decoder;
+import com.hujiang.project.zhgd.sbCamera.api.sbCameraApi;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -22,7 +22,7 @@ import java.util.*;
 
 public class Util {
     public static  AipFace aipFace = new AipFace(Constants.BD_APP_ID, Constants.BD_API_KEY, Constants.BD_SECRET_KEY);
-
+    private static sbCameraApi cameraApi;
 
 
     public static void main(String[] args)throws Exception{
@@ -399,6 +399,4 @@ public class Util {
         DecimalFormat df=new DecimalFormat("0.0");
         return Float.parseFloat(df.format(c/(float)60));
     }
-
-
 }

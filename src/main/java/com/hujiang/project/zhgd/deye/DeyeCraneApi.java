@@ -447,14 +447,14 @@ public class DeyeCraneApi {
             JSONObject json = new JSONObject();
             json.put("PGUID",datas.getString("xmid"));//所属项目编号
             json.put("Jdbh",datas.getString("jdbh"));//项目监督编号
-            json.put("sub_id",datas.getString("gcid"));//工程ID
             json.put("GUID",Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备号
             json.put("zz",jsonObject.getString("Weight"));//载重
-            json.put("lj",df2.format(Double.valueOf(jsonObject.getString("Weight"))*Double.valueOf(jsonObject.getString("RRange"))));
+            json.put("lj",df2.format(Double.valueOf(jsonObject.getString("Weight"))*Double.valueOf(jsonObject.getString("RRange"))));//力矩
             json.put("jd",jsonObject.getString("Angle"));//回转角度
             json.put("fd",jsonObject.getString("RRange"));//幅度
             json.put("gd",jsonObject.getString("Height"));//高度
             json.put("fs",jsonObject.getString("WindSpeed"));//风速
+            json.put("sub_id",datas.getString("gcid"));//工程ID
             array.add(json);
             JSONObject jsonObject2 = new JSONObject();
             jsonObject2.put("PList",array);
@@ -596,10 +596,7 @@ public class DeyeCraneApi {
                         }
                     }
                 });
-
-
             }
-
             JSONArray body2 = electrifyCrane(s,"crane");
             setZCData(s.getString("HxzId"), body2, "/crane/electrify", "crane");
         }
@@ -626,14 +623,10 @@ public class DeyeCraneApi {
                         }
                     }
                 });
-
             }
-
             JSONArray body2 = electrifyCrane(s,"elevator");
             setZCData(s.getString("HxzId"), body2, "/elevator/electrify", "elevator");
         }
-
-
         //返回json字符串
         JSONObject results=new JSONObject();
         results.put("cmd","RuntimeData");
@@ -655,7 +648,6 @@ public class DeyeCraneApi {
         JSONObject jsonObject1 = new JSONObject();
         jsonObject1.put("curpage","1");
         jsonObject1.put("name",hjProject.getProjectName());
-
         JSONArray body =new JSONArray();
         JSONObject js1=new JSONObject();
         if(StringUtils.isBlank(jsonObject.getString("DownlineTime"))){
@@ -1501,7 +1493,7 @@ public class DeyeCraneApi {
             json.put("guid",Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备ID
             Integer i = Integer.valueOf(jsonObject.getString("Weight"))*1000;
             json.put("zz",i);//载重（kg）
-            json.put("load_ratio",df2.format(Double.valueOf(jsonObject.getString("Weight"))/a));//载重比
+            json.put("zzb",df2.format(Double.valueOf(jsonObject.getString("Weight"))/a));//载重比
             json.put("yxsk",jsonObject.getString("RTime"));//运行时刻
             json.put("gd",jsonObject.getString("Height"));//高度
             int k = 0;

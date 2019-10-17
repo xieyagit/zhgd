@@ -175,7 +175,7 @@ public class DustEmissionTask {
                 }
             }
 
-            if(list.size() > 0 && (list.size() == 50 || count == projectDustEmissions.size())) { //最多每50条发送一次消息
+            if(list.size() > 0 && count == projectDustEmissions.size()) { //最多每50条发送一次消息
                 JmsMessageInfo<List<SbDustEmission>> messageInfo = new JmsMessageInfo<List<SbDustEmission>>();
                 messageInfo.setBody(list);
                 messageInfo.setType(JmsMessageType.Data);

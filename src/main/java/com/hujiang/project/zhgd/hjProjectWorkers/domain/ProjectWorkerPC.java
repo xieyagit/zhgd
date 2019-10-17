@@ -39,6 +39,38 @@ public class ProjectWorkerPC
 	@Excel(name = "进退场状态",readConverterExp = "0=进场,1=退场,2=未同步")
 	private Integer enterAndRetreatCondition;
 
+	/** 身份证号码 */
+	@Excel(name = "身份证号码")
+	private String idCode;
+	/** 手机号码 */
+	@Excel(name = "手机号码")
+	private String emp_phon;
+	/** 居住地址 */
+	@Excel(name = "居住地址")
+	private String idAddress ;
+
+	public String getIdCode() {
+		return idCode;
+	}
+	public void setIdCode(String idCode) {
+		this.idCode = idCode;
+	}
+	public String getIdAddress() {
+		return idAddress;
+	}
+
+	public void setIdAddress(String idAddress) {
+		this.idAddress = idAddress;
+	}
+
+	public String getEmp_phon() {
+		return emp_phon;
+	}
+
+	public void setEmp_phon(String emp_phon) {
+		this.emp_phon = emp_phon;
+	}
+
 	public Integer getId() {
 		return id;
 	}

@@ -16,8 +16,6 @@ import java.util.List;
  */
 public interface ISbHireService 
 {
-
-
 	/**
 	 * pc和移动
 	 * 查询全部项目名称

@@ -151,7 +151,8 @@ public class ElectricityBoxTask {
             String mr = sp1.format(d1);//获取考勤日期
             //请求url 获取电箱温度数据
 //            String s = Util.httpPostWithJSON(Constants.TempEelcHistory+"?id="+substring+"&startTime=2018-03-21 00:00:00&endTime=2019-03-24", new JSONObject());
-            String s = Util.httpPostWithJSON(Constants.TempEelcHistoryRemould+"?dev_guid="+electricityBoxId+"&page=1", new JSONObject());
+//            String s = Util.httpPostWithJSON(Constants.TempEelcHistoryRemould+"?dev_guid="+electricityBoxId+"&page=1", new JSONObject());
+            String s = Util.httpPostWithJSON(Constants.TempEelcHistoryRemould+"?dev_guid=113&page=0", new JSONObject());
             System.out.println("获取的电箱温度数据："+s);
             //获取的原始数据
             JSONObject  originalData = JSONObject.parseObject(s);
@@ -172,12 +173,8 @@ public class ElectricityBoxTask {
                 iCurrentTemperatureService.insertSbCurrentTemperature(sc);
                 apiElectricityBoxController.reportElectricBoxState(sc,j.getInteger("wran_type"));
             }
-
         }
-
         //上报配电箱状态
-
-
     }
 
 

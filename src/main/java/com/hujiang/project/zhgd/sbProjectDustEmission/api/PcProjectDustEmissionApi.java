@@ -3,6 +3,7 @@ package com.hujiang.project.zhgd.sbProjectDustEmission.api;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.utils.JsonUtils;
+import com.hujiang.common.utils.ThreadUtils;
 import com.hujiang.framework.jms.JmsMessageInfo;
 import com.hujiang.framework.jms.JmsMessageType;
 import com.hujiang.framework.web.controller.BaseController;
@@ -13,6 +14,7 @@ import com.hujiang.project.consumer.TspPersonnelService;
 import com.hujiang.project.zhgd.sbProjectDustEmission.domain.SbProjectDustEmission;
 import com.hujiang.project.zhgd.sbProjectDustEmission.service.ISbProjectDustEmissionService;
 import com.hujiang.project.zhgd.utils.ZCAPIClient;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -33,8 +35,7 @@ import java.util.logging.Logger;
 @RestController
 @RequestMapping(value = "/provider/ProjectDustEmission",method = RequestMethod.POST)
 public class PcProjectDustEmissionApi extends BaseController {
-    private Logger logger = Logger.getLogger(PcProjectDustEmissionApi.class.getName());
-
+    private final org.slf4j.Logger logger = LoggerFactory.getLogger(ZCAPIClient.class);
     @Autowired
     private ISbProjectDustEmissionService projectDustEmissionService;
 
@@ -106,7 +107,7 @@ public class PcProjectDustEmissionApi extends BaseController {
     @PostMapping("/projectDustEmissionAddSave")
     public AjaxResult projectDustEmissionAddSave(@RequestBody SbProjectDustEmission sbProjectDustEmission) throws IOException, URISyntaxException {
 
-//        cayTsp(sbProjectDustEmission);
+
         int i = projectDustEmissionService.insertSbProjectDustEmission(sbProjectDustEmission);
         if(i>0){
 
@@ -118,9 +119,23 @@ public class PcProjectDustEmissionApi extends BaseController {
             message.setBody(sbProjectDustEmission);
             message.setType(JmsMessageType.Machine);
             message.setProjectId(sbProjectDustEmission.getProjectId());
-
             jmsMessagingTemplate.convertAndSend(tspPersonnelQueue, JsonUtils.toJson(message));
+            if (sbProjectDustEmission.getScznl().equals("CAY")) {
+                ThreadUtils.async(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            cayTsp(sbProjectDustEmission);
+                        } catch (IOException e) {
+                            logger.error("城安院错误(projectDustEmissionAddSave): " + e.getMessage() + ", 参数错误：" + sbProjectDustEmission);
+                        } catch (URISyntaxException e) {
+                            logger.error("城安院错误(projectDustEmissionAddSave): " + e.getMessage() + ", 参数错误：" + sbProjectDustEmission);
+                        }
+                    }
+                });
 
+
+            }
             return success();
         }
         return error(-1,"添加失败");
@@ -154,13 +169,13 @@ public class PcProjectDustEmissionApi extends BaseController {
         if (!sbProjectDustEmission.getSubId().equals("")) {
             object1.put("PROJECT_ID", sbProjectDustEmission.getXmid());//所属项目编号
             object1.put("Jdbh", sbProjectDustEmission.getJdbh());//项目监督编号
-            object1.put("sub_id", sbProjectDustEmission.getSubId());//工程ID
             object1.put("DEV_GUID",sbProjectDustEmission.getSn());//设备编号
             SbProjectDustEmission dustEmission = new SbProjectDustEmission();
             dustEmission.setProjectId(sbProjectDustEmission.getProjectId());
             List<SbProjectDustEmission> emissions = projectDustEmissionService.selectProjectDustEmissionListData(dustEmission);
             object1.put("MD_NAME",(emissions.size()+1)+"#检测点");//设备名称（命名规则：阿 拉伯数字#监测点；示例： 1#监测点，2#监测点，同 个项目下数字不能重复）
             object1.put("MD_TYPE",MD_TYPEMD_TYPE);//设备类型（“环境”固定死）
+            object1.put("sub_id", sbProjectDustEmission.getSubId());//工程ID
             array.add(object1);
             JSONObject object2 = new JSONObject();
             object2.put("PList",array);

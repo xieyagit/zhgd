@@ -125,11 +125,21 @@ public class OptionsCraneApi {
         object.put("scznl",scznl);
         object.put("manufacturerId",manufacturerId);
         object.put("installCompany",installCompany);
-  	int result = iSb.insertSbCraneBinding(sbCraneBinding);
+  	    int result = iSb.insertSbCraneBinding(sbCraneBinding);
         if(scznl.equals("CAY")) {
-            TDCAY(object);
+            ThreadUtils.async(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        TDCAY(object);
+                    } catch (IOException e) {
+                        logger.error("城安院错误(insertCrane): " + e.getMessage() + ", 参数错误：" + object);
+                    } catch (URISyntaxException e) {
+                        logger.error("城安院错误(insertCrane): " + e.getMessage() + ", 参数错误：" + object);
+                    }
+                }
+            });
         }
-      
         if (result > 0) {
             jsonObject.put("msg", "成功");
             jsonObject.put("code", 0);
