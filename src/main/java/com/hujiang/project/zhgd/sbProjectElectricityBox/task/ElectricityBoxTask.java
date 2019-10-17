@@ -184,6 +184,7 @@ public class ElectricityBoxTask extends AutoTaskBase {
             Date d1 = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 );
             String mr = sp1.format(d1);//获取考勤日期
             //请求url 获取电箱温度数据
+            String s = Util.httpPostWithJSON(Constants.TempEelcHistoryRemould+"?dev_guid="+electricityBoxId+"&page=0", new JSONObject());
             System.out.println("获取的电箱温度数据："+s);
             //获取的原始数据
             JSONObject  originalData = JSONObject.parseObject(s);

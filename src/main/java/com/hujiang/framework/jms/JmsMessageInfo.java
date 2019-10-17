@@ -20,4 +20,5 @@ public class JmsMessageInfo<T> {
     }
 
     private T body;
+
 }

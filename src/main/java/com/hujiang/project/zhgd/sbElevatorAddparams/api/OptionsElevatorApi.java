@@ -93,7 +93,10 @@ public class OptionsElevatorApi {
                 json.put("Dev_UID", elevator.getElevatorName());//设备用户编号
                 json.put("Jc_dev_company", elevator.getInstallCompany());//设备安装单位（监测设备厂商）
                 json.put("Serial_Num", elevator.getSerialNum());//广东省统一安装告知编号（使用登记号）
-	sbElevatorBinsing.setProjectId(elevator.getProjectId());                List<SbElevatorBinding> list = iSbElevatorBindingService.list(sbElevatorBinsing);
+                SbElevatorBinding sbElevatorBinsing = new SbElevatorBinding();
+                sbElevatorBinsing.setProjectId(elevator.getProjectId());
+                List<SbElevatorBinding> list = iSbElevatorBindingService.list(sbElevatorBinsing);
+
                 int i = list.size() ;
                 json.put("Dev_Name", i + "#升降机");//设备名称
                 json.put("sub_id", elevator.getSubId());//工程ID

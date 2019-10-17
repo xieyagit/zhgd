@@ -51,15 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectSbProjectElectricityBoxVo"/>
         where project_id = #{projectId}
     </select>
-    <select id="selectByProjectIdAndHxzId" parameterType="SbProjectElectricityBox" resultMap="SbProjectElectricityBoxResult">
-        select * from  sb_project_electricity_box
-        <where>
-            <if test="electricityBoxId != null and electricityBoxId != '' "> and electricity_box_id=#{electricityBoxId} </if>
-            <if test="scznl != null and scznl != '' "> and scznl = #{scznl} </if>
-            <if test="projectId != null"> and projectId = #{project_id} </if>
-        </where>
-        group by electricity_box_id,project_id
-    </select>
+
     <select id="selectSbProjectElectricityBoxList" parameterType="SbProjectElectricityBox" resultMap="SbProjectElectricityBoxResult">
         <include refid="selectSbProjectElectricityBoxVo"/>
         <where>  
