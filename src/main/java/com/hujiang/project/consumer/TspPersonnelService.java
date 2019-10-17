@@ -47,34 +47,38 @@ public class TspPersonnelService {
     @JmsListener(destination = JmsConfig.TSP_PERSONNEL_QUEUE)
     // SendTo 会将此方法返回的数据, 写入到 OutQueue 中去.
     @SendTo(JmsConfig.TSP_PERSONNEL_QUEUE + "_OUT") //双向队列
-    public String handleMessage(String message) throws IOException {
+    public String handleMessage(String message) {
 
-        JmsMessageInfo info = JsonUtils.parse(message, JmsMessageInfo.class);
-        if(JmsMessageType.Machine.equals(info.getType())) {
-            return uploadMachine(info);
+        try {
+            JmsMessageInfo info = JsonUtils.parse(message, JmsMessageInfo.class);
+            if (JmsMessageType.Machine.equals(info.getType())) {
+                uploadMachine(info);
+            }
+
+            if (JmsMessageType.Data.equals(info.getType())) {
+                uploadData(info);
+            }
         }
-
-        if(JmsMessageType.Data.equals(info.getType())) {
-            return uploadData(info);
+        catch(IOException e) {
+            return message;
         }
-
         return null;
     }
 
     /**批量上传扬尘数据**/
-    private String uploadData(JmsMessageInfo info) throws IOException {
+    private void uploadData(JmsMessageInfo info) throws IOException {
 
-        List<Map> postData = new ArrayList<Map>();
         ArrayList list = JsonUtils.convert(info.getBody(), ArrayList.class);
-        String apiKey = getApikey(info.getProjectId());
 
-        if(apiKey == null || apiKey.isEmpty()) {
-            return "密钥不存在！！！";
-        }
 
         for(Object item : list) {
 
             SbDustEmission emission = JsonUtils.convert(item, SbDustEmission.class);
+            String apiKey = getApikey(emission.getProjectId().longValue());
+            if(apiKey == null || "".equals(apiKey)) {
+                logger.error("密钥不存在！！！");
+                return;
+            }
             Map<String, Object> data = new HashMap<String, Object>();
             data.put("Jdbh", emission.getJdbh());
             emission.setSn( Md5Utils.hash(emission.getSn()) );
@@ -86,7 +90,7 @@ public class TspPersonnelService {
             data.put("HJ_FX", emission.getWinddirection()); //风向
             data.put("HJ_WD", emission.getTemperature()); //温度
             data.put("HJ_SD", emission.getHumidity()); //湿度
-            data.put("HJ_QY", emission.getAirPressure()); //气压
+            data.put("HJ_QY", emission.getAirPressure()==null ? 0:emission.getAirPressure().intValue()); //气压
             data.put("HJ_DY", 220); //电压
             data.put("HJ_BZJD", ""); //板载经度
             data.put("HJ_BZWD", ""); //板载纬度
@@ -94,26 +98,25 @@ public class TspPersonnelService {
             data.put("HJ_BZSD", ""); //板载湿度
             data.put("YXSK", emission.getDate()); //运行时刻
             data.put("tsp", emission.getTsp());
-            data.put("sub_id", Md5Utils.hash(info.getProjectId().toString())); //项目id
+            data.put("sub_id", Md5Utils.hash(emission.getProjectId().toString())); //项目id
 
+            List<Map> postData = new ArrayList<Map>();
             postData.add(data);
+            Map<String, String> headers = new HashMap<String, String>();
+            headers.put("AppKey", apiKey);
+            headers.put("Content-Type", "application/json; charset=utf-8");
+
+            HttpResponse response = HttpUtils.doPost(HOST,
+                    "/api/MisInter/PostReal",
+                    "POST", headers, null,
+                    JsonUtils.toJson(postData));
+
+            handleResponse(apiKey, postData, response);
         }
-
-
-        Map<String, String> headers = new HashMap<String, String>();
-        headers.put("AppKey", apiKey);
-        headers.put("Content-Type", "application/json; charset=utf-8");
-
-        HttpResponse response = HttpUtils.doPost(HOST,
-                "/api/MisInter/PostReal",
-                "POST", headers, null,
-                JsonUtils.toJson(postData));
-
-        return handleResponse(apiKey, postData, response);
     }
 
     /**上报设备**/
-    private String uploadMachine(JmsMessageInfo info) throws IOException {
+    private void uploadMachine(JmsMessageInfo info) throws IOException {
         SbProjectDustEmission body = JsonUtils.convert(info.getBody(), SbProjectDustEmission.class);
 
         body.setSn( Md5Utils.hash(body.getSn()) );
@@ -121,7 +124,8 @@ public class TspPersonnelService {
         String apiKey = getApikey(body.getProjectId());
 
         if(apiKey == null || apiKey.isEmpty()) {
-            return "密钥不存在！！！";
+            logger.error("密钥不存在！！！");
+            return;
         }
 
         Map<String, String> headers = new HashMap<String, String>();
@@ -149,11 +153,11 @@ public class TspPersonnelService {
                 "POST", headers, null,
                 JsonUtils.toJson(postData));
 
-        return handleResponse(apiKey, postData, response);
+        handleResponse(apiKey, postData, response);
     }
 
     /**响应接口请求**/
-    private String handleResponse(String apiKey, List<Map> postData, HttpResponse response) throws IOException {
+    private void handleResponse(String apiKey, List<Map> postData, HttpResponse response) throws IOException {
 
         String errorMessage = null;
         if(response.getStatusLine().getStatusCode() != 200) {
@@ -166,7 +170,7 @@ public class TspPersonnelService {
         Map<String, Object> resultMap = JsonUtils.parse(result, HashMap.class);
         if(resultMap != null && resultMap.size() > 0) {
             if(resultMap.containsKey("success") && resultMap.get("success").equals(true)) {
-                return result;
+                return;
             }
         }
 

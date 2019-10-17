@@ -76,6 +76,15 @@ public class SbDustEmission extends BaseSmsMessage<SbDustEmission>
 
 	private String site;
 
+	private Integer projectId;
+
+	public Integer getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(Integer projectId) {
+		this.projectId = projectId;
+	}
 
 	public BigDecimal getTsp() {
 		return tsp;
