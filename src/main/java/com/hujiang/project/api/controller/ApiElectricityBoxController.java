@@ -255,7 +255,7 @@ public class ApiElectricityBoxController {
             i = projectElectricityBoxes.size();
         }
         // 判断项目ID的，设备ID是否存在d
-        List<SbProjectElectricityBox> iSbProjectElectricityBoxs = iSbProjectElectricityBoxService.selectByProjectIdAndHxzId(sbP);
+       // List<SbProjectElectricityBox> iSbProjectElectricityBoxs = iSbProjectElectricityBoxService.selectByProjectIdAndHxzId(sbP);
         JSONObject resultJson = new JSONObject();
         // 区管项目
         JSONObject regionJsonObject = new JSONObject();

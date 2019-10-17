@@ -106,19 +106,19 @@ public class PcProjectDustEmissionApi extends BaseController {
      */
     @PostMapping("/projectDustEmissionAddSave")
     public AjaxResult projectDustEmissionAddSave(@RequestBody SbProjectDustEmission sbProjectDustEmission) throws IOException, URISyntaxException {
-
-
         int i = projectDustEmissionService.insertSbProjectDustEmission(sbProjectDustEmission);
         if(i>0){
-
             String apiKey = tspPersonnelService.getApikey(sbProjectDustEmission.getProjectId());
-            if(apiKey == null || !"".equals(apiKey)) {
+            if(apiKey == null || "".equals(apiKey)) {
                 return success();
             }
+            SbProjectDustEmission projectDustEmission = new SbProjectDustEmission();
+            projectDustEmission.setSn(sbProjectDustEmission.getSn());
+            List<SbProjectDustEmission> projectDustEmissionList = projectDustEmissionService.selectSbProjectDustEmissionList(projectDustEmission);
+            sbProjectDustEmission.setComments((projectDustEmissionList.size()+1)+"#"+sbProjectDustEmission.getComments());
             JmsMessageInfo<SbProjectDustEmission> message = new JmsMessageInfo<SbProjectDustEmission>();
             message.setBody(sbProjectDustEmission);
             message.setType(JmsMessageType.Machine);
-            message.setProjectId(sbProjectDustEmission.getProjectId());
             jmsMessagingTemplate.convertAndSend(tspPersonnelQueue, JsonUtils.toJson(message));
             if (sbProjectDustEmission.getScznl().equals("CAY")) {
                 ThreadUtils.async(new Runnable() {

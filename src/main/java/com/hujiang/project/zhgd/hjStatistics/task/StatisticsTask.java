@@ -1,6 +1,7 @@
 package com.hujiang.project.zhgd.hjStatistics.task;
 
 
+import com.hujiang.framework.AutoTaskBase;
 import com.hujiang.project.zhgd.hjProject.domain.HjProject;
 import com.hujiang.project.zhgd.hjProject.service.IHjProjectService;
 import com.hujiang.project.zhgd.hjStatistics.domain.HjStatistics;
@@ -15,18 +16,32 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//@Component
-public class StatisticsTask {
+@Component
+public class StatisticsTask extends AutoTaskBase {
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     @Autowired
     private IHjProjectService projectService;
     @Autowired
     private IHjStatisticsService statisticsService;
+
+    @Scheduled(cron="0 0 23 * * ?")
+    public void task1() {
+        super.exec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    add();
+                }
+                catch (Exception e) {
+                    // logger
+                }
+            }
+        });
+    }
     /**
      * 每天统计考勤
      */
-//    @Scheduled(cron="0 0 23 * * ?")
     public void add() {
         Date date=new Date();
         String time=dateFormat.format(date.getTime());

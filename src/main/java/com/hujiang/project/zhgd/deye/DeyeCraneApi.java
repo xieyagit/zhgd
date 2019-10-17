@@ -5,10 +5,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.utils.ThreadUtils;
 import com.hujiang.project.zhgd.hjProject.domain.HjProject;
 import com.hujiang.project.zhgd.hjProject.service.IHjProjectService;
-import com.hujiang.project.zhgd.hjProjectWorkers.domain.HjProjectWorkers;
-import com.hujiang.project.zhgd.hjProjectWorkers.service.IHjProjectWorkersService;
 import com.hujiang.project.zhgd.hjSynchronizationInformation.domain.HjSynchronizationInformation;
 import com.hujiang.project.zhgd.hjSynchronizationInformation.service.IHjSynchronizationInformationService;
+import com.hujiang.project.zhgd.sbCraneAddparams.api.SendCraneToPERSONNEL;
 import com.hujiang.project.zhgd.sbCraneAddparams.domain.SbCraneAddparams;
 import com.hujiang.project.zhgd.sbCraneAddparams.service.ISbCraneAddparamsService;
 import com.hujiang.project.zhgd.sbCraneAddrecord.domain.SbCraneAddrecord;
@@ -27,6 +26,7 @@ import com.hujiang.project.zhgd.sbCraneWorkloop.domain.SbCraneWorkloop;
 import com.hujiang.project.zhgd.sbCraneWorkloop.service.ISbCraneWorkloopService;
 import com.hujiang.project.zhgd.sbElevatorAddbasicinfo.domain.SbElevatorAddbasicinfo;
 import com.hujiang.project.zhgd.sbElevatorAddbasicinfo.service.ISbElevatorAddbasicinfoService;
+import com.hujiang.project.zhgd.sbElevatorAddparams.api.SendElevatorToPERSONNEL;
 import com.hujiang.project.zhgd.sbElevatorAddparams.domain.SbElevatorAddparams;
 import com.hujiang.project.zhgd.sbElevatorAddparams.service.ISbElevatorAddparamsService;
 import com.hujiang.project.zhgd.sbElevatorAddrecord.domain.SbElevatorAddrecord;
@@ -125,6 +125,12 @@ public class DeyeCraneApi {
     //卸料设备运行时长
     @Autowired
     private ISbUnloaderEquipmentService unloaderEquipmentService;
+    @Autowired
+    private SendElevatorToPERSONNEL sendElevatorToPERSONNEL;
+    @Autowired
+    private SendCraneToPERSONNEL sendCraneToPERSONNEL;
+
+
     /**
      * 塔吊注册帧
      */
@@ -288,16 +294,16 @@ public class DeyeCraneApi {
         body.put("collision_warn",data.getString("MultiAlarmAll"));//防碰撞报警（0不报警，1-报警）
         body.put("wind_warn",data.getString("WindSpeedAlarm"));//0/1 是否超风速作业报警（风速大于6级（大于13.8m/s） ，在连续两个工作循环工作,发生报警）。（0不报警，1-报警）
         body.put("rotation_warn",0);//是否回转限位报警（0不报警，1-报警）
-//        body.put("obliguity",data.getString("Obliguity"));//倾角
-//        body.put("magnification",data.getString("Multiple"));
 
         SbCraneAddrecord sbCraneAddrecord=	JSONObject.parseObject(body.toJSONString(), SbCraneAddrecord.class);
-//        System.out.println(sbCraneAddrecord);
         sbCraneAddrecord.setHxzid(data.getString("HxzId"));
         sbCraneAddrecord.setRatedWeight(data.getDouble("RatedWeight"));
+        sbCraneAddrecord.setMultiAlarmAll(Integer.parseInt(data.getString("MultiAlarmAll")));
         sbCraneAddrecordService.insertSbCraneAddrecord(sbCraneAddrecord);
         body.put("load",Double.valueOf(data.getString("Weight"))*1000);
         list.add(body);
+        sbCraneAddrecord.setLoad(Double.valueOf(data.getString("Weight"))*1000);
+        sendCraneToPERSONNEL.rcajDate(sbCraneAddrecord);
         return list;
     }
 
@@ -1140,7 +1146,7 @@ public class DeyeCraneApi {
         js.put("is_backward_warning",elevatordata.getString("ObliguityYAlarm"));//是否后限位报警
         js.put("is_limit_warning",elevatordata.getString("is_limit_warning"));//超限位报警(0.否1.是)
 
-        SbElevatorAddrecord sbElevatorAddrecord=	JSONObject.parseObject(js.toJSONString(), SbElevatorAddrecord.class);
+        SbElevatorAddrecord sbElevatorAddrecord = JSONObject.parseObject(js.toJSONString(), SbElevatorAddrecord.class);
         sbElevatorAddrecord.setHxzid(elevatordata.getString("HxzId"));
         sbElevatorAddrecord.setPeopleCntAlarm(elevatordata.getInteger("PeopleCntAlarm"));//人数报警
         sbElevatorAddrecord.setWeightAlarm(elevatordata.getInteger("PeopleCntAlarm"));//载重报警
@@ -1153,10 +1159,18 @@ public class DeyeCraneApi {
         sbElevatorAddrecord.setFloor(elevatordata.getDouble("Floor"));//楼层
         sbElevatorAddrecord.setObliguityX(elevatordata.getDouble("ObliguityX"));//倾角X
         sbElevatorAddrecord.setObliguityY(elevatordata.getDouble("ObliguityY"));//倾角Y
+        sbElevatorAddrecord.setIsDownWarning(Integer.parseInt(elevatordata.getString("BottomAlarm")));   //下限位报警
+        sbElevatorAddrecord.setIsUpWarning(Integer.parseInt(elevatordata.getString("TopAlarm")));    //上限位报警
+        sbElevatorAddrecord.setWeightAlarm(Integer.parseInt(elevatordata.getString("WeightAlarm"))); //超重报警
+        sbElevatorAddrecord.setObliguityXAlarm(Integer.parseInt(elevatordata.getString("ObliguityXAlarm")));//前限位报警
+        sbElevatorAddrecord.setObliguityYAlarm(Integer.parseInt(elevatordata.getString("ObliguityYAlarm")));//后限位报警
+        sbElevatorAddrecord.setPeopleCnt(elevatordata.getString("PeopleCnt"));//载重人数
+        sbElevatorAddrecord.setIsLimitWarning(0);//超限位报警
         sbElevatorAddrecordService.insertSbElevatorAddrecord(sbElevatorAddrecord);
         js.put("laod",Double.valueOf(elevatordata.getString("Weight"))*1000);
         body.add(js);
-
+        sbElevatorAddrecord.setLaod(Double.valueOf(elevatordata.getString("Weight"))*1000);
+        sendElevatorToPERSONNEL.rcajDate(sbElevatorAddrecord);
         return body;
     }
 

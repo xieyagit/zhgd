@@ -74,7 +74,7 @@ spring:
   # redis
   redis:
     host: 39.108.103.150
-    port: 8083
+    port: 8080
     password: redis123
     # 缓存过期时间，单位毫秒
     ttime-to-live: 60000s
@@ -97,6 +97,7 @@ spring:
       #expiry-timeout: 0
 
 
+
 eureka:
   instance:
     instance-id: user-api-8081
@@ -114,8 +115,6 @@ eureka:
       # 开启健康检查 （需要spring-boot-starter-actuator依赖）
       enabled: false
     serviceUrl:
-      #     defaultZone: http://47.112.23.241:9001/eureka/,http://47.112.23.241:9002/eureka/  # 注册中心访问地址
-     defaultZone: http://localhost:9003/eureka/  # 注册中心访问地址
 
 
 
@@ -135,6 +134,10 @@ pagehelper:
   reasonable: true
   supportMethodsArguments: true
   params: count=countSql
+
+#定时任务
+autotask: false
+
 
 # Shiro
 shiro:

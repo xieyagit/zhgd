@@ -51,11 +51,13 @@ public class OptionsCraneApi {
     @Autowired
     private IModuleToPushService moduleToPushService;
     @Autowired
-    private IHjProjectService iHjProjectService;
-    @Autowired
     private ISbCraneBindingService iSb;
     @Autowired
     private com.hujiang.project.cay.cay cay;
+    @Autowired
+    private SendCraneToPERSONNEL sendCraneToPERSONNEL;
+    @Autowired
+    private ISbCraneBindingService iSbCraneBindingService;
 
     //塔吊模块权限
     private static final  int PRIVILEGESID=7;
@@ -125,8 +127,7 @@ public class OptionsCraneApi {
         object.put("scznl",scznl);
         object.put("manufacturerId",manufacturerId);
         object.put("installCompany",installCompany);
-  	    int result = iSb.insertSbCraneBinding(sbCraneBinding);
-        if(scznl.equals("CAY")) {
+  	int result = iSb.insertSbCraneBinding(sbCraneBinding);        if(scznl.equals("CAY")) {
             ThreadUtils.async(new Runnable() {
                 @Override
                 public void run() {
@@ -139,8 +140,14 @@ public class OptionsCraneApi {
                     }
                 }
             });
+        }else if(scznl.equals("RCAJ")){
+            SbCraneBinding craneBinding = new SbCraneBinding();
+            craneBinding.setHxzid(sbCraneBinding.getHxzid());
+            List<SbCraneBinding> sbCraneBindingList = iSbCraneBindingService.selectSbCraneBindingList(craneBinding);
+            sbCraneBinding.setDname((sbCraneBindingList.size()+1)+"#"+craneName);
+            sendCraneToPERSONNEL.rcajMachine(sbCraneBinding);
         }
-        if (result > 0) {
+              if (result > 0) {
             jsonObject.put("msg", "成功");
             jsonObject.put("code", 0);
         } else {
