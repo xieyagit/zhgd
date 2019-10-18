@@ -1,5 +1,6 @@
 package com.hujiang.project.zhgd.hjAttendanceRecord.task;
 
+import com.hujiang.framework.AutoTaskBase;
 import com.hujiang.project.zhgd.hjAttendanceRecord.service.IHjAttendanceRecordService;
 import com.hujiang.project.zhgd.hjProject.domain.HjProject;
 import com.hujiang.project.zhgd.hjProject.service.IHjProjectService;
@@ -18,8 +19,8 @@ import java.util.logging.Logger;
  * @author: Mr.LiuYong
  * @create: 2019-07-05 11:14
  **/
-//@Component
-public class AttendanceTask {
+@Component
+public class AttendanceTask extends AutoTaskBase {
     private Logger logger = Logger.getLogger(AttendanceTask.class.getName());
     @Autowired
     private IHjAttendanceRecordService attendanceRecordService;
@@ -28,10 +29,24 @@ public class AttendanceTask {
     @Autowired
     private IHjProjectWorkersService workersService;
 
+
+    @Scheduled(cron="0 0 0 */1 * ?")
+    public void task1() {
+        super.exec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    addBB();
+                }
+                catch (Exception e) {
+                    // logger
+                }
+            }
+        });
+    }
     /**
      * 每天凌晨0点添加考勤报表数据
      */
-//    @Scheduled(cron="0 0 0 */1 * ?")
     public void addBB(){
         logger.info("\r com.hujiang.project.zhgd.hjAttendanceRecord.task.AttendanceTask.addBB:每天凌晨0点添加考勤报表数据  START");
         HjProject project = new HjProject();

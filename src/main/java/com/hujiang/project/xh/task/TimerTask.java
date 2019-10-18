@@ -3,6 +3,7 @@ package com.hujiang.project.xh.task;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hujiang.framework.AutoTaskBase;
 import com.hujiang.project.xh.Api.xhApi;
 import com.hujiang.project.xh.tokenApi.TokenApi;
 import com.hujiang.project.xh.utils.HttpUtilsXh;
@@ -18,6 +19,9 @@ import com.hujiang.project.zhgd.hjSynchronizationInformation.domain.HjSynchroniz
 import com.hujiang.project.zhgd.hjSynchronizationInformation.service.IHjSynchronizationInformationService;
 import com.hujiang.project.zhgd.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -25,8 +29,7 @@ import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-//@Component
-public class TimerTask {
+public class TimerTask extends AutoTaskBase {
     @Autowired
     private IHjProjectWorkersService hjProjectWorkersService;
     @Autowired
@@ -37,11 +40,13 @@ public class TimerTask {
     private TokenApi tokenApi;
     @Autowired
     private IHjAttendanceRecordService hjAttendanceRecordService;
+
+
     /**
      * 每个小时推送星河数据
      */
-//    @Scheduled(cron="0 0 0/1 * * ?")
     public void add() throws Exception{
+        System.out.println("autotask======================================================================>>> " + autotask);
         //获取一个小时内的考勤数据
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Date date=new Date();
@@ -109,10 +114,24 @@ public class TimerTask {
                     }
                     xhHttpApi.setRecord(c,pid);
 
-
                 }
             }
         }
 
+    }
+
+    @Scheduled(cron="0 0 0/1 * * ?")
+    public void task1() {
+        super.exec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    add();
+                }
+                catch (Exception e) {
+                    // logger
+                }
+            }
+        });
     }
 }

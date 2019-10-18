@@ -63,13 +63,41 @@ public class SbCraneAddrecord
 	private  Double ratedWeight;
 	/**倾角*/
 	private String obliguity;
-
+	/**项目ID*/
+	private Integer projectId;
+	/** 监督编号*/
+	private String jdbh;
+	/**防碰撞报警*/
+	private Integer multiAlarmAll;
 
 	private String dname; 	//塔吊名称
 	private Integer userid;
 
+	public Integer getMultiAlarmAll() {
+		return multiAlarmAll;
+	}
 
-    public String getObliguity() {
+	public void setMultiAlarmAll(Integer multiAlarmAll) {
+		this.multiAlarmAll = multiAlarmAll;
+	}
+
+	public Integer getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(Integer projectId) {
+		this.projectId = projectId;
+	}
+
+	public String getJdbh() {
+		return jdbh;
+	}
+
+	public void setJdbh(String jdbh) {
+		this.jdbh = jdbh;
+	}
+
+	public String getObliguity() {
         return obliguity;
     }
 

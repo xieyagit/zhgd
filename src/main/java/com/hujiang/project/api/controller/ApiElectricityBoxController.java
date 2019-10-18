@@ -245,7 +245,7 @@ public class ApiElectricityBoxController {
      */
     public JSONObject reportElectricBoxParamete(SbProjectElectricityBox sbP) throws IOException, URISyntaxException {
         //        // 判断项目ID的，设备ID是否存在d
-        List<SbProjectElectricityBox> iSbProjectElectricityBoxs = iSbProjectElectricityBoxService.selectByProjectIdAndHxzId(sbP);
+       // List<SbProjectElectricityBox> iSbProjectElectricityBoxs = iSbProjectElectricityBoxService.selectByProjectIdAndHxzId(sbP);
 
         JSONObject resultJson = new JSONObject();
 
@@ -339,6 +339,7 @@ public class ApiElectricityBoxController {
         JSONObject resultJson = new JSONObject();
         // 判断项目ID的，设备ID是否存在d
         SbProjectElectricityBox sbProjectElectricityBox = new SbProjectElectricityBox();
+        sbProjectElectricityBox.setScznl("CAY");
         sbProjectElectricityBox.setElectricityBoxId(sc.getElectricityBoxId());
         List<SbProjectElectricityBox> iSbProjectElectricityBoxs = iSbProjectElectricityBoxService.selectByProjectIdAndHxzId(sbProjectElectricityBox);
         if (iSbProjectElectricityBoxs != null) {
@@ -360,7 +361,7 @@ public class ApiElectricityBoxController {
             // 区管项目
             JSONObject regionJsonObject = new JSONObject();
             List<JSONObject> regionJsons = new ArrayList<>();
-            if (iSbProjectElectricityBoxs.get(0).getSubId() != null && !iSbProjectElectricityBoxs.get(0).getSubId().equals("")) {
+            if (iSbProjectElectricityBoxs.size()>0) {
 
                 JSONObject object = new JSONObject();
                 object.put("PROJECT_ID", sc.getElectricityBoxId());// 项目ID;

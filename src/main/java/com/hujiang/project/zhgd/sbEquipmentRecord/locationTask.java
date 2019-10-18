@@ -2,6 +2,7 @@ package com.hujiang.project.zhgd.sbEquipmentRecord;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hujiang.framework.AutoTaskBase;
 import com.hujiang.project.zhgd.sbDeviceimei.service.ISbDeviceimeiService;
 import com.hujiang.project.zhgd.sbEquipmentRecord.domain.SbEquipmentRecord;
 import com.hujiang.project.zhgd.sbEquipmentRecord.service.ISbEquipmentRecordService;
@@ -28,19 +29,32 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-@RestController
-@RequestMapping(value = "/provider/locationTask",method = RequestMethod.POST)
-//@Component()
+//@RestController
+//@RequestMapping(value = "/provider/locationTask",method = RequestMethod.POST)
+@Component()
 //@EnableScheduling
-public class locationTask {
+public class locationTask extends AutoTaskBase {
     @Autowired
     private ISbDeviceimeiService deviceimeiService;
     @Autowired
     private ISbEquipmentRecordService equipmentRecordService;
 
+    @Scheduled(cron="0 0/10 * * * ?")
+    public void task1() {
+        super.exec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    add();
+                }
+                catch (Exception e) {
+                    // logger
+                }
+            }
+        });
+    }
 
-    @PostMapping(value = "/add")
-//    @Scheduled(cron="0 0/10 * * * ?")
+//    @PostMapping(value = "/add")
     public void add() throws Exception {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
