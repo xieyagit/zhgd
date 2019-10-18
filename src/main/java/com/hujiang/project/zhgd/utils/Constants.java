@@ -61,12 +61,12 @@ public class Constants {
     public static final String CAY_CS = "http://139.159.186.240/misInter/";
 
     //对接城安院使用的token+市管
-    public static final String TOKEN_CS = "?token=CF8116A785BAF1296C6A2C19E4A426E45E0A19C5";
+    public static final String TOKEN_CS = "?token=EBDECFCC5DE096892050A8E6913168A7A0A41963";
     //对接城安院使用的token+区管
-    public static final String TOKEN_SCHJ = "?token=CF8116A785BAF1296C6A2C19E4A426E45E0A19C5";
+    public static final String TOKEN_SCHJ = "?token=EBDECFCC5DE096892050A8E6913168A7A0A41963";
 
     //城安院查询出项目监督编号以及工程id(区管项目)
-    public static final String CAY_QGXM = "http://139.159.197.174/misInter/";
+    public static final String CAY_QGXM = "http://183.233.90.234:6868/misInter/";
 
     //人才安居
     public static final String RCAJ="http://218.17.11.171:7010";
