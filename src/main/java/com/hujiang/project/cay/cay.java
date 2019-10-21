@@ -30,28 +30,31 @@ public class cay {
         jsonObject1.put("name",hjProject.getProjectName());
         /** 区管项目*/
         JSONObject jsonObject2 = ZCAPIClient.reportedCay2019s("authorize/getProjInfos",jsonObject1);
-        if (jsonObject2.getString("jdbh")!=null && jsonObject2.getString("jdbh") != ""){
-            object.put("jdbh",jsonObject2.getString("jdbh"));
-            object.put("xmid",jsonObject2.getString("xmid"));
-        }else {
-            object.put("jdbh","");
-            object.put("xmid","");
-        }
-        /** 市管项目*/
-        String xmid = ZCAPIClient.reportedCay2019("authorize/getProjInfos",jsonObject1);
-        if (xmid != null && xmid!="") {
-            JSONObject j = new JSONObject();
-            j.put("pguid", xmid);
-            JSONObject object1 = ZCAPIClient.reportedCay("authorize/getGcbyProj", j);
-            JSONArray data = object1.getJSONArray("res");
-            JSONObject datas = data.getJSONObject(0);
-            object.put("jdbh",datas.getString("jdbh"));
-            object.put("xmid",datas.getString("xmid"));
-            object.put("subId",datas.getString("gcid"));
-        }else {
-            object.put("jdbh","");
-            object.put("xmid","");
-            object.put("subId","");
+        if (jsonObject2.getString("jdbh")!=null){
+            if (jsonObject2.getString("jdbh")!=null){
+                object.put("jdbh",jsonObject2.getString("jdbh"));
+                object.put("xmid",jsonObject2.getString("xmid"));
+            } else {
+                object.put("jdbh","");
+                object.put("xmid","");
+            }
+        } else {
+            /** 市管项目*/
+            String xmid = ZCAPIClient.reportedCay2019("authorize/getProjInfos",jsonObject1);
+            if (xmid != null) {
+                JSONObject j = new JSONObject();
+                j.put("pguid", xmid);
+                JSONObject object1 = ZCAPIClient.reportedCay("authorize/getGcbyProj", j);
+                JSONArray data = object1.getJSONArray("res");
+                JSONObject datas = data.getJSONObject(0);
+                object.put("jdbh",datas.getString("jdbh"));
+                object.put("xmid",datas.getString("xmid"));
+                object.put("subId",datas.getString("gcid"));
+            } else {
+                object.put("jdbh","");
+                object.put("xmid","");
+                object.put("subId","");
+            }
         }
         return object;
     }

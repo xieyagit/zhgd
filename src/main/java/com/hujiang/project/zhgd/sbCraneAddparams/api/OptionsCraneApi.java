@@ -2,7 +2,10 @@ package com.hujiang.project.zhgd.sbCraneAddparams.api;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hujiang.common.utils.JsonUtils;
 import com.hujiang.common.utils.ThreadUtils;
+import com.hujiang.framework.jms.JmsMessageInfo;
+import com.hujiang.framework.jms.JmsMessageType;
 import com.hujiang.project.zhgd.hjProject.domain.HjProject;
 import com.hujiang.project.zhgd.hjProject.service.IHjProjectService;
 import com.hujiang.project.zhgd.hjProjectUser.domain.HjProjectUser;
@@ -25,8 +28,10 @@ import com.hujiang.project.zhgd.utils.ZCAPIClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import javax.jms.Queue;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collections;
@@ -58,6 +63,10 @@ public class OptionsCraneApi {
     private SendCraneToPERSONNEL sendCraneToPERSONNEL;
     @Autowired
     private ISbCraneBindingService iSbCraneBindingService;
+    @Autowired
+    private Queue craneCayQueue;
+    @Autowired
+    private JmsMessagingTemplate jmsMessagingTemplate;
 
     //塔吊模块权限
     private static final  int PRIVILEGESID=7;
@@ -127,17 +136,23 @@ public class OptionsCraneApi {
         object.put("scznl",scznl);
         object.put("manufacturerId",manufacturerId);
         object.put("installCompany",installCompany);
-        int result = iSb.insertSbCraneBinding(sbCraneBinding);
-        if(scznl.equals("CAY")) {
-            TDCAY(object);
-        }else if(scznl.equals("RCAJ")){
+  	    int result = iSb.insertSbCraneBinding(sbCraneBinding);
+  	    if(scznl.equals("CAY")) {
+            sbCraneBinding.setHxzid(sbCraneBinding.getHxzid());
+            List<SbCraneBinding> sbCraneBindingList = iSbCraneBindingService.selectSbCraneBindingList(sbCraneBinding);
+            sbCraneBinding.setDname((sbCraneBindingList.size()+1)+"#塔吊");
+            JmsMessageInfo<SbCraneBinding> messageMachine = new JmsMessageInfo<SbCraneBinding>();
+            messageMachine.setBody(sbCraneBinding);
+            messageMachine.setType(JmsMessageType.Machine);
+            jmsMessagingTemplate.convertAndSend(craneCayQueue, JsonUtils.toJson(messageMachine));
+        }
+  	    if(scznl.equals("RCAJ")){
             SbCraneBinding craneBinding = new SbCraneBinding();
             craneBinding.setHxzid(sbCraneBinding.getHxzid());
             List<SbCraneBinding> sbCraneBindingList = iSbCraneBindingService.selectSbCraneBindingList(craneBinding);
             sbCraneBinding.setDname((sbCraneBindingList.size()+1)+"#"+craneName);
             sendCraneToPERSONNEL.rcajMachine(sbCraneBinding);
         }
-
         if (result > 0) {
             jsonObject.put("msg", "成功");
             jsonObject.put("code", 0);
@@ -294,80 +309,5 @@ public class OptionsCraneApi {
 
         //projectUserList
         return jsonObject;
-    }
-
-    /**塔吊上传至城安院*/
-
-    public String TDCAY(JSONObject jsonObject) throws IOException, URISyntaxException {
-
-        JSONArray array = new JSONArray();
-        JSONArray array1 = new JSONArray();
-        String f = null;
-        /** (市管项目)*/
-        if (jsonObject.getString("subId") != null) {
-            //上报城安院基本信息（开始）
-            JSONObject json = new JSONObject();
-            json.put("ProjectID", jsonObject.getString("xmid"));//所属项目编号
-            json.put("Jdbh", jsonObject.getString("jdbh"));//项目监督编号
-            json.put("Dev_GUID", Tools.encodeToMD5s(jsonObject.getString("hxzId")));//设备编号
-            json.put("Dev_UID", jsonObject.getString("craneName"));//设备用户编号
-            List<SbCraneBinding> list = iSb.selectByHxzId(jsonObject.getInteger("projectId"));
-            int k = list.size();
-            json.put("Dev_Name", k+"#塔吊");//设备名称（命名规 则：阿拉伯数字# 塔吊；示例：1#塔 吊 2#塔吊，同个 项目下数字不能 重复）
-            json.put("Jc_dev_company", jsonObject.getString("installCompany"));//监测设备厂商
-            json.put("Serial_Num", jsonObject.getString("SerialNum"));//广东省统一安装告 知编号（产权备案 编号）
-            json.put("sub_id", jsonObject.getString("subId"));//工程 id
-            array.add(json);
-            JSONObject object1 = new JSONObject();
-            object1.put("PList",array);
-            f = ZCAPIClient.SGXMCAY("tower/towerInfo",object1);
-            //上报城安院参数信息
-            JSONObject object2 = new JSONObject();
-            object2.put("TC_PGUID", jsonObject.getString("xmid"));//所属项目编号
-            object2.put("Jdbh", jsonObject.getString("jdbh"));//项目监督编号
-            object2.put("TC_GUID", Tools.encodeToMD5s(jsonObject.getString("hxzId")));//设备编号
-            object2.put("TC_MaxScope",jsonObject.getString("TCMaxScope"));//最大幅度(M)
-            object2.put("TC_MaxHeight",jsonObject.getString("TCMaxHeight"));//最大高度（M）
-            object2.put("TC_LoadCapacity",jsonObject.getString(" TCLoadCapacity"));//最大载重（KG）
-            object2.put("Tower_type",2);//塔机类型（ 1-动臂塔式起重机， 2-其他, 3-塔头塔式起重机， 4-平头塔式起重机）
-            object2.put("tc_load_moment",jsonObject.getString("tcLoadMoment"));//额定起重力矩（N·m）
-            object2.put("sub_id", jsonObject.getString("gcid"));//工程 id
-            JSONObject object3 = new JSONObject();
-            JSONArray array2 = new JSONArray();
-            array2.add(object2);
-            object3.put("PList",array2);
-            f += ZCAPIClient.SGXMCAY("tower/towerParams",object3);
-        }
-        /** (区管项目)*/
-        if (jsonObject.getString("subId") == null) {
-            JSONObject object1 = new JSONObject();
-            object1.put("ProjectID", jsonObject.getString("xmid"));//所属项目编号
-            object1.put("Jdbh", jsonObject.getString("jdbh"));//项目监督编号
-            object1.put("Dev_GUID", Tools.encodeToMD5s(jsonObject.getString("hxzId")));//设备编号
-            object1.put("Dev_UID", jsonObject.getString("craneName"));//设备用户编号
-            object1.put("Jc_dev_company", jsonObject.getString("installCompany"));//监测设备厂商
-            object1.put("Serial_Num", jsonObject.getString("SerialNum"));//广东省统一安装告 知编号（产权备案 编号）
-            array1.add(object1);
-            JSONObject object = new JSONObject();
-            object.put("PList",array1);
-            f = ZCAPIClient.QGXMCAY("tower/towerInfo",object);
-            System.out.println("上报城安院塔吊基本信息状态："+f);
-            //上报城安院参数信息
-            JSONObject jsonObject3 = new JSONObject();
-            jsonObject3.put("TC_PGUID",jsonObject.getString("xmid"));//所属项目ID
-            jsonObject3.put("Jdbh",jsonObject.getString("jdbh"));//项目监督编号
-            jsonObject3.put("TC_GUID",Tools.encodeToMD5s(jsonObject.getString("hxzId")));//设备号
-            jsonObject3.put("TC_MaxScope",jsonObject.getString("TCMaxScope"));//最大幅度
-            jsonObject3.put("TC_MaxHeight",jsonObject.getString("TCMaxHeight"));//最大高度
-            jsonObject3.put("TC_LoadCapacity",jsonObject.getString("TCLoadCapacity"));//最大载重（KG)
-            jsonObject3.put("Tower_type",2);//塔机类型（ 1-动臂塔式起重机， 2-其他, 3-塔头塔式起重机， 4-平头塔式起重机）
-            jsonObject3.put("tc_load_moment",jsonObject.getString("tcLoadMoment"));//额定起重力矩（N·m）
-            JSONArray jsonArray = new JSONArray();
-            jsonArray.add(jsonObject3);
-            JSONObject jsonObject4 = new JSONObject();
-            jsonObject4.put("PList",jsonArray);
-            f += ZCAPIClient.QGXMCAY("tower/towerParams",jsonObject4);
-        }
-        return f;
     }
 }

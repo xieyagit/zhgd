@@ -7,7 +7,9 @@ package com.hujiang.project.zhgd.utils;
  * @create: 2019-05-24 10:07
  **/
 public class Constants {
-    //车辆
+    //惠州两制对接住建局
+    public static final String XIETWOSYSTEMS = "http://";
+
     public static final String Version = "http://szwb.sz.gov.cn:2018/openapi/";
     //塔吊
     public static final String Tower_crane = " http://szwb.sz.gov.cn:2019//CWRService/";
