@@ -17,6 +17,7 @@ public class Hire {
     private Double areaXloc;
     private Double areaYloc;
     private Double areaRadius;
+    private Integer projectId;
 
     public String getAreaName() {
         return areaName;
@@ -130,23 +131,11 @@ public class Hire {
         this.areaRadius = areaRadius;
     }
 
-    @Override
-    public String toString() {
-        return "Hire{" +
-                "id=" + id +
-                ", userName='" + userName + '\'' +
-                ", userPhone='" + userPhone + '\'' +
-                ", constructionName='" + constructionName + '\'' +
-                ", imei='" + imei + '\'' +
-                ", bat=" + bat +
-                ", watchDate=" + watchDate +
-                ", xloc=" + xloc +
-                ", yloc=" + yloc +
-                ", address='" + address + '\'' +
-                ", areaName='" + areaName + '\'' +
-                ", areaXloc=" + areaXloc +
-                ", areaYloc=" + areaYloc +
-                ", areaRadius=" + areaRadius +
-                '}';
+    public Integer getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Integer projectId) {
+        this.projectId = projectId;
     }
 }

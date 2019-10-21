@@ -4,6 +4,7 @@ import com.hujiang.project.zhgd.dustEmissionThresholdValue.domain.DustEmissionTh
 import com.hujiang.project.zhgd.dustEmissionThresholdValue.service.IDustEmissionThresholdValueService;
 import com.hujiang.project.zhgd.jpush.api.examples.PushExample;
 import com.hujiang.project.zhgd.jpush.api.push.model.PushPayload;
+import com.hujiang.project.zhgd.sbProjectDustEmission.task.SmsMessageInfo;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +26,13 @@ public class SbDustEmission extends BaseSmsMessage<SbDustEmission>
 {
 	private static final long serialVersionUID = 1L;
 
-	//扬尘模块权限
+	/** 扬尘模块权限 */
 	private static final Integer PRIVILEGESID=26;
-
-	//短信推送标题
+	/** 短信推送标题 */
 	private static final  String TITLE = "TSP检测";
-
+    /** 推送弹窗标题 */
 	private static final String ALTER="您有一条新的扬尘超标记录";
-
-	//短信模板ID
+    /** TSP短信模板ID */
 	private static final Integer TEMPID = 167973;
 
 	@Autowired
@@ -239,7 +238,7 @@ public class SbDustEmission extends BaseSmsMessage<SbDustEmission>
     }
 
 	@Override
-	public void push(Integer userId, Integer projectId, String alias, boolean isApnsProduction, String userPhone) {
+	public void push(SmsMessageInfo smsMessageInfo) {
 		String saveTitle = null;
 		String saveAlert = site + "扬尘检查设备";
 		Map<String, String> tempPara = null;
@@ -264,10 +263,10 @@ public class SbDustEmission extends BaseSmsMessage<SbDustEmission>
 
 				//推送
 				PushPayload payload = PushExample.buildPushObjectAllRegistrationIdAlertWithTitle
-						(ALTER, alias, TITLE, isApnsProduction,extras);
+						(ALTER, smsMessageInfo.getAlias(), TITLE, false,extras);
 				pushExample.testSendPush(payload);
 				//将推送消息保存到数据库
-				this.saveExcessive(saveTitle, this.getSn(), projectId, userId, saveAlert, PRIVILEGESID);
+				this.saveExcessive(saveTitle, this.getSn(), projectId, smsMessageInfo.getUserId(), saveAlert, PRIVILEGESID);
 			}
 			if (this.getPm10().doubleValue() >= limitPm10) {
 				saveTitle = "PM10超标";
@@ -275,10 +274,10 @@ public class SbDustEmission extends BaseSmsMessage<SbDustEmission>
 						+ this.getPm10().doubleValue() + "μg/m3\n");
 				//推送
 				PushPayload payload = PushExample.buildPushObjectAllRegistrationIdAlertWithTitle
-						(ALTER, alias, TITLE, isApnsProduction,extras);
+						(ALTER, smsMessageInfo.getAlias(), TITLE, false,extras);
 				pushExample.testSendPush(payload);
 				//将推送消息保存到数据库
-				this.saveExcessive(saveTitle, this.getSn(), projectId, userId, saveAlert, PRIVILEGESID);
+				this.saveExcessive(saveTitle, this.getSn(), projectId, smsMessageInfo.getUserId(), saveAlert, PRIVILEGESID);
 
 			}
 			if (this.getTsp().doubleValue() >= limitTsp) {
@@ -287,10 +286,10 @@ public class SbDustEmission extends BaseSmsMessage<SbDustEmission>
 						+ this.getTsp().doubleValue() + "μg/m3\n");
 				//推送
 				PushPayload payload = PushExample.buildPushObjectAllRegistrationIdAlertWithTitle
-						(ALTER, alias, TITLE, isApnsProduction,extras);
+						(ALTER, smsMessageInfo.getAlias(), TITLE, false,extras);
 				pushExample.testSendPush(payload);
 				//将推送消息保存到数据库
-				this.saveExcessive(saveTitle, this.getSn(), projectId, userId, saveAlert, PRIVILEGESID);
+				this.saveExcessive(saveTitle, this.getSn(), projectId, smsMessageInfo.getUserId(), saveAlert, PRIVILEGESID);
 			}
 			if (this.getNoise().doubleValue() >= limitNoise) {
 
@@ -299,10 +298,10 @@ public class SbDustEmission extends BaseSmsMessage<SbDustEmission>
 						+ this.getNoise().doubleValue() + "DB\n");
 				//推送
 				PushPayload payload = PushExample.buildPushObjectAllRegistrationIdAlertWithTitle
-						(ALTER, alias, TITLE, isApnsProduction,extras);
+						(ALTER, smsMessageInfo.getAlias(), TITLE, false,extras);
 				pushExample.testSendPush(payload);
 				//将推送消息保存到数据库
-				this.saveExcessive(saveTitle, this.getSn(), projectId, userId, saveAlert, PRIVILEGESID);
+				this.saveExcessive(saveTitle, this.getSn(), projectId, smsMessageInfo.getUserId(), saveAlert, PRIVILEGESID);
 			}
 			if (this.getTemperature().doubleValue() >= limitTemperature) {
 				saveTitle = "高温预警";
@@ -310,10 +309,10 @@ public class SbDustEmission extends BaseSmsMessage<SbDustEmission>
 						+ this.getTemperature().doubleValue() + "℃\n");
 				//推送
 				PushPayload payload = PushExample.buildPushObjectAllRegistrationIdAlertWithTitle
-						(ALTER, alias, TITLE, isApnsProduction,extras);
+						(ALTER, smsMessageInfo.getAlias(), TITLE, false,extras);
 				pushExample.testSendPush(payload);
 				//将推送消息保存到数据库
-				this.saveExcessive(saveTitle, this.getSn(), projectId, userId, saveAlert, PRIVILEGESID);
+				this.saveExcessive(saveTitle, this.getSn(), projectId, smsMessageInfo.getUserId(), saveAlert, PRIVILEGESID);
 			}
 			if (this.getHumidity().doubleValue() >= limitHumidity) {
 				saveTitle = "湿度超标";
@@ -322,10 +321,10 @@ public class SbDustEmission extends BaseSmsMessage<SbDustEmission>
 				//推送
 //                PushExample pushExample = new PushExample();
 				PushPayload payload = PushExample.buildPushObjectAllRegistrationIdAlertWithTitle
-						(ALTER, alias, TITLE, isApnsProduction,extras);
+						(ALTER, smsMessageInfo.getAlias(), TITLE, false,extras);
 				pushExample.testSendPush(payload);
 				//将推送消息保存到数据库
-				this.saveExcessive(saveTitle, this.getSn(), projectId, userId, saveAlert, PRIVILEGESID);
+				this.saveExcessive(saveTitle, this.getSn(), projectId, smsMessageInfo.getUserId(), saveAlert, PRIVILEGESID);
 			}
 			if (this.getWindSpeed().doubleValue() >= limitWindSpeed) {
 				saveTitle = "风速超标";
@@ -335,10 +334,10 @@ public class SbDustEmission extends BaseSmsMessage<SbDustEmission>
 				//推送
 //                PushExample pushExample = new PushExample();
 				PushPayload payload = PushExample.buildPushObjectAllRegistrationIdAlertWithTitle
-						(ALTER, alias, TITLE, isApnsProduction,extras);
+						(ALTER, smsMessageInfo.getAlias(), TITLE, false,extras);
 				pushExample.testSendPush(payload);
 				//将推送消息保存到数据库
-				this.saveExcessive(saveTitle, this.getSn(), projectId, userId, saveAlert, PRIVILEGESID);
+				this.saveExcessive(saveTitle, this.getSn(), projectId, smsMessageInfo.getUserId(), saveAlert, PRIVILEGESID);
 			}
 
 
@@ -347,7 +346,7 @@ public class SbDustEmission extends BaseSmsMessage<SbDustEmission>
 			tempPara.put("site", site);  //站点
 			tempPara.put("content", alertBuffer.toString());   //内容
 			if(alertBuffer.toString()!=null && !("").equals(alertBuffer.toString())){
-				this.shortCreedNumber(userPhone, projectId, userId, tempPara, TEMPID, "扬尘超标");
+				this.shortCreedNumber(smsMessageInfo.getUserPhone(), projectId, smsMessageInfo.getUserId(), tempPara, TEMPID, "扬尘超标");
 			}
 		}
 	}

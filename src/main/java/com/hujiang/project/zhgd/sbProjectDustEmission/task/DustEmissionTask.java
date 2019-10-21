@@ -135,7 +135,6 @@ public class DustEmissionTask extends AutoTaskBase {
                     list.add(dustEmission);
                 }
             }
-
             if(list.size() > 0 ) {
                 JmsMessageInfo<List<SbDustEmission>> messageInfo = new JmsMessageInfo<List<SbDustEmission>>();
                 messageInfo.setBody(list);

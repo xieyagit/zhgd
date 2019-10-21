@@ -1,12 +1,11 @@
 package com.hujiang.project.zhgd.sbHire.mapper;
 
-import com.hujiang.project.zhgd.sbArea.domain.OptionsUser;
-import com.hujiang.project.zhgd.sbEquipmentRecord.domain.SbEquipmentRecord;
+import com.hujiang.project.zhgd.sbHire.domain.SbAreaProject;
 import com.hujiang.project.zhgd.sbHire.domain.Hire;
 import com.hujiang.project.zhgd.sbHire.domain.HirePeople;
 import com.hujiang.project.zhgd.sbHire.domain.SbHire;
 import org.apache.ibatis.annotations.Param;
-import org.bytedeco.javacpp.presets.opencv_core;
+
 
 import java.util.List;
 
@@ -18,7 +17,7 @@ import java.util.List;
  */
 public interface SbHireMapper 
 {
-
+	public List<SbAreaProject> selectAreaProjectList();
 
 	/**
 	 * pc

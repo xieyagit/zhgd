@@ -62,7 +62,7 @@ public class OptionsElevatorApi {
             jsonObject.put("data",optionsElevatorList);
         }
         else {
-            jsonObject.put("msg", "查询失败");
+            jsonObject.put("msg", "查询成功");
             jsonObject.put("code", -1);
             jsonObject.put("data", optionsElevatorList);
         }

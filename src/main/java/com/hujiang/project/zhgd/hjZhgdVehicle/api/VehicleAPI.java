@@ -142,7 +142,7 @@ public class VehicleAPI extends BaseController {
                 vehicleList2.setTotal((int) dataTable.getTotal());
             } catch (Exception e) {
                 e.printStackTrace();
-                jsonObject.put("msg", "查询失败");
+                jsonObject.put("msg", "查询成功");
                 jsonObject.put("code", -1);
                 jsonObject.put("data", dataTable);
             }
