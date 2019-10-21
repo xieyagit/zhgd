@@ -72,22 +72,22 @@ public class locationTask extends AutoTaskBase {
             }
         });
     }
-//    @Scheduled(cron="0 */5 * * * ?")
-//    public void task2() {
-//        super.exec(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    addWarning();
-//                }
-//                catch (Exception e) {
-//                    // logger
-//                }
-//            }
-//        });
-//    }
+    @Scheduled(cron="0 */5 * * * ?")
+    public void task2() {
+        super.exec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    addWarning();
+                }
+                catch (Exception e) {
+                    // logger
+                }
+            }
+        });
+    }
 
-    @PostMapping(value = "/add")
+//    @PostMapping(value = "/add")
     public void add() throws Exception {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
