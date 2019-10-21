@@ -207,7 +207,9 @@ public class ElectricityBoxTask extends AutoTaskBase {
                 //人才安居
                sendTemperatureToPERSONNEL.rcajDate(sc);
                 //城安院
-                apiElectricityBoxController.reportElectricBoxState(sc,j.getInteger("wran_type"));
+                sc.setWranType(j.getInteger("wran_type"));
+               sendTemperatureToPERSONNEL.cayDate(sc);
+               apiElectricityBoxController.reportElectricBoxState(sc,j.getInteger("wran_type"));
 
 
             }

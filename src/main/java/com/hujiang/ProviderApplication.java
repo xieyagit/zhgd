@@ -45,7 +45,5 @@ public class ProviderApplication
                 "     ___)( )(___\n" +
                 "    (((__) (__)))");
 
-        HaiKangAI.a();
-
     }
 }

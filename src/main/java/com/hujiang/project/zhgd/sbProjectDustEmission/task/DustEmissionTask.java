@@ -37,8 +37,8 @@ import java.util.*;
  * 扬尘检测定时任务
  */
 //@Component("dustEmissionTask")
-//@RestController
-//@RequestMapping(value = "/provider/tasks",method = RequestMethod.POST)
+@RestController
+@RequestMapping(value = "/provider/tasks",method = RequestMethod.POST)
 public class DustEmissionTask {
 
     private final Logger logger = LoggerFactory.getLogger(ZCAPIClient.class);
@@ -49,6 +49,9 @@ public class DustEmissionTask {
 
     @Autowired
     private Queue tspPersonnelQueue;
+
+    @Autowired
+    private Queue tspCayQueue;
 
     @Autowired
     private JmsMessagingTemplate jmsMessagingTemplate;
@@ -80,11 +83,10 @@ public class DustEmissionTask {
      * 5分钟执行一次扬尘数据获取
      * @throws Exception
      */
-    //@PostMapping(value = "insert")
+    @PostMapping(value = "insert")
     public void add()throws Exception {
 
         System.out.println("定时任务dustEmissionTask  add");
-
         int count = 0;
         ArrayList<SbDustEmission> list = null;
         List<SbProjectDustEmission> projectDustEmissions = projectDustEmissionService.selectSbProjectDustEmissionList(null);
@@ -92,7 +94,6 @@ public class DustEmissionTask {
         if(projectDustEmissions.size() > 0) {
             apiKey = tspPersonnelService.getApikey(projectDustEmissions.get(0).getProjectId());
         }
-
         for (SbProjectDustEmission p : projectDustEmissions) {
 
             count++; //用于消息队列计数
@@ -112,32 +113,33 @@ public class DustEmissionTask {
             JSONObject originalData = JSONObject.parseObject(s);
             JSONObject digest = JSONObject.parseObject(originalData.getString("Data"));
             if (digest.size()>0){
-                SbProjectDustEmission emission = new SbProjectDustEmission();
-                emission.setSn(p.getSn());
-                emission.setScznl("CAY");
-                List<SbProjectDustEmission> list1 = projectDustEmissionService.selectSbProjectDustEmissionList(emission);
-
-                if(list1.size()>0){
-                    ThreadUtils.async(new Runnable(){
-
-                        @Override
-                        public void run() {
-                            try {
-                                cayTsp(sbDustEmission);
-                            } catch (IOException e) {
-
-                                logger.error("城安院错误(insert): " + e.getMessage() + ", 参数错误："+sbDustEmission);
-                            } catch (URISyntaxException e) {
-                                logger.error("城安院错误(insert): " + e.getMessage() + ", 参数错误："+sbDustEmission);
-                            }
-                        }
-                    });
-                }
+//                SbProjectDustEmission emission = new SbProjectDustEmission();
+//                emission.setSn(p.getSn());
+//                emission.setScznl("CAY");
+//                List<SbProjectDustEmission> list1 = projectDustEmissionService.selectSbProjectDustEmissionList(emission);
+//                if(list1.size()>0){
+////                    ThreadUtils.async(new Runnable(){
+////                        @Override
+////                        public void run() {
+////                            try {
+////
+////                                cayTsp(sbDustEmission);
+////
+////                            } catch (IOException e) {
+////                                logger.error("城安院错误(insert): " + e.getMessage() + ", 参数错误："+sbDustEmission);
+////                            } catch (URISyntaxException e) {
+////                                logger.error("城安院错误(insert): " + e.getMessage() + ", 参数错误："+sbDustEmission);
+////                            }
+////                        }
+////                    });
+////                }
 
                 //保存新的扬尘记录
                 SbDustEmission dustEmission = JSONObject.parseObject(digest.toJSONString(), SbDustEmission.class);
                 dustEmission.setJdbh(p.getJdbh());
                 dustEmission.setSn(p.getSn());
+                dustEmission.setXmid(p.getXmid());
+                dustEmission.setSubId(p.getSubId());
 
                 List<SbDustEmission> dustEmissions = dustEmissionService.selectSbDustEmissionList(dustEmission);
                 this.tspsb(dustEmission);
@@ -169,13 +171,22 @@ public class DustEmissionTask {
                     dustEmissionService.insertSbDustEmission(dustEmission);
                 }
 
+                /** 添加扬尘数据列表，待发送到消息队列(城安院) */
+                if (p.getScznl().equals("CAY")){
+                    if (p.getJdbh() != null){
+                        JmsMessageInfo<SbDustEmission> messageInfo = new JmsMessageInfo<SbDustEmission>();
+                        messageInfo.setBody(dustEmission);
+                        messageInfo.setType(JmsMessageType.Data);
+                        jmsMessagingTemplate.convertAndSend(tspCayQueue, JsonUtils.toJson(messageInfo));
+                    }
+                }
+
                 /**添加扬尘数据到列表，待发送到消息队列**/
                 if(apiKey != null && !apiKey.isEmpty()) {
                     list.add(dustEmission);
                 }
             }
-
-            if(list.size() > 0 && count == projectDustEmissions.size()) { //最多每50条发送一次消息
+            if(list.size() > 0 && count == projectDustEmissions.size()) {
                 JmsMessageInfo<List<SbDustEmission>> messageInfo = new JmsMessageInfo<List<SbDustEmission>>();
                 messageInfo.setBody(list);
                 messageInfo.setType(JmsMessageType.Data);

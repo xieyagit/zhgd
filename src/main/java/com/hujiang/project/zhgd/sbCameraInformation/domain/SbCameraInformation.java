@@ -12,9 +12,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class SbCameraInformation
 {
 	private static final long serialVersionUID = 1L;
-	
-	/**  */
-	private Integer id;
 	/** 消息链路id */
 	private String traceId;
 	/** 任务id */
@@ -76,7 +73,7 @@ public class SbCameraInformation
 	/** 分类结果置信度range=[0,1000] */
 	private String attrConf;
 	/** 规则id */
-	private Integer ruleId;
+	private String ruleId;
 	/** 规则名称 */
 	private String ruleName;
 	/** 唯一标识*/
@@ -90,15 +87,6 @@ public class SbCameraInformation
 		this.msgId = msgId;
 	}
 
-	public void setId(Integer id)
-	{
-		this.id = id;
-	}
-
-	public Integer getId() 
-	{
-		return id;
-	}
 	public void setTraceId(String traceId) 
 	{
 		this.traceId = traceId;
@@ -369,12 +357,12 @@ public class SbCameraInformation
 	{
 		return attrConf;
 	}
-	public void setRuleId(Integer ruleId) 
+	public void setRuleId(String ruleId)
 	{
 		this.ruleId = ruleId;
 	}
 
-	public Integer getRuleId() 
+	public String getRuleId()
 	{
 		return ruleId;
 	}
@@ -390,7 +378,6 @@ public class SbCameraInformation
 	@Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
             .append("traceId", getTraceId())
             .append("taskId", getTaskId())
             .append("taskName", getTaskName())

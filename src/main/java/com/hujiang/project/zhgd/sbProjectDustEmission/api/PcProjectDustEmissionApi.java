@@ -3,7 +3,6 @@ package com.hujiang.project.zhgd.sbProjectDustEmission.api;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.utils.JsonUtils;
-import com.hujiang.common.utils.ThreadUtils;
 import com.hujiang.framework.jms.JmsMessageInfo;
 import com.hujiang.framework.jms.JmsMessageType;
 import com.hujiang.framework.web.controller.BaseController;
@@ -41,6 +40,9 @@ public class PcProjectDustEmissionApi extends BaseController {
 
     @Autowired
     private Queue tspPersonnelQueue;
+
+    @Autowired
+    private Queue tspCayQueue;
 
     @Autowired
     private JmsMessagingTemplate jmsMessagingTemplate;
@@ -120,69 +122,57 @@ public class PcProjectDustEmissionApi extends BaseController {
             message.setBody(sbProjectDustEmission);
             message.setType(JmsMessageType.Machine);
             jmsMessagingTemplate.convertAndSend(tspPersonnelQueue, JsonUtils.toJson(message));
+
             if (sbProjectDustEmission.getScznl().equals("CAY")) {
-                ThreadUtils.async(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            cayTsp(sbProjectDustEmission);
-                        } catch (IOException e) {
-                            logger.error("城安院错误(projectDustEmissionAddSave): " + e.getMessage() + ", 参数错误：" + sbProjectDustEmission);
-                        } catch (URISyntaxException e) {
-                            logger.error("城安院错误(projectDustEmissionAddSave): " + e.getMessage() + ", 参数错误：" + sbProjectDustEmission);
-                        }
-                    }
-                });
-
-
+                jmsMessagingTemplate.convertAndSend(tspCayQueue,JsonUtils.toJson(message));
             }
             return success();
         }
         return error(-1,"添加失败");
     }
 
-    /** 上报城安院环境监测设备信息*/
-    public String cayTsp(SbProjectDustEmission sbProjectDustEmission) throws IOException, URISyntaxException {
-        JSONArray body =new JSONArray();
-        JSONObject js1=new JSONObject();
-        Integer projectId = null;
-        String f = null;
-        HjProject hjProject = iHjProjectService.selectHjProjectById(Integer.valueOf(String.valueOf(sbProjectDustEmission.getProjectId())));
-        JSONObject jsonObject1 = new JSONObject();
-        jsonObject1.put("curpage","1");
-        jsonObject1.put("name",hjProject.getProjectName());
-        /** 区管项目*/
-        if (sbProjectDustEmission.getSubId().equals("")) {
-            js1.put("PROJECT_ID", sbProjectDustEmission.getXmid());//所属项目编号
-            js1.put("Jdbh", sbProjectDustEmission.getJdbh());//项目监督编号
-            js1.put("DEV_GUID",sbProjectDustEmission.getSn());//设备编号
-            js1.put("MD_NAME",sbProjectDustEmission.getComments());//设备名称
-            js1.put("MD_TYPE",MD_TYPEMD_TYPE);//设备类型（“环境”固定死）
-            body.add(js1);
-            JSONObject object = new JSONObject();
-            object.put("PList",body);
-            f = ZCAPIClient.QGXMCAY("hj/sync_hj",object);
-        }
-        /** 市管项目*/
-        JSONObject object1 = new JSONObject();
-        JSONArray array = new JSONArray();
-        if (!sbProjectDustEmission.getSubId().equals("")) {
-            object1.put("PROJECT_ID", sbProjectDustEmission.getXmid());//所属项目编号
-            object1.put("Jdbh", sbProjectDustEmission.getJdbh());//项目监督编号
-            object1.put("DEV_GUID",sbProjectDustEmission.getSn());//设备编号
-            SbProjectDustEmission dustEmission = new SbProjectDustEmission();
-            dustEmission.setProjectId(sbProjectDustEmission.getProjectId());
-            List<SbProjectDustEmission> emissions = projectDustEmissionService.selectProjectDustEmissionListData(dustEmission);
-            object1.put("MD_NAME",(emissions.size()+1)+"#检测点");//设备名称（命名规则：阿 拉伯数字#监测点；示例： 1#监测点，2#监测点，同 个项目下数字不能重复）
-            object1.put("MD_TYPE",MD_TYPEMD_TYPE);//设备类型（“环境”固定死）
-            object1.put("sub_id", sbProjectDustEmission.getSubId());//工程ID
-            array.add(object1);
-            JSONObject object2 = new JSONObject();
-            object2.put("PList",array);
-            f = ZCAPIClient.SGXMCAY("tower/oper_pec",object2);
-        }
-        return f;
-    }
+//    /** 上报城安院环境监测设备信息*/
+//    public String cayTsp(SbProjectDustEmission sbProjectDustEmission) throws IOException, URISyntaxException {
+//        JSONArray body =new JSONArray();
+//        JSONObject js1=new JSONObject();
+//        Integer projectId = null;
+//        String f = null;
+//        HjProject hjProject = iHjProjectService.selectHjProjectById(Integer.valueOf(String.valueOf(sbProjectDustEmission.getProjectId())));
+//        JSONObject jsonObject1 = new JSONObject();
+//        jsonObject1.put("curpage","1");
+//        jsonObject1.put("name",hjProject.getProjectName());
+//        /** 区管项目*/
+//        if (sbProjectDustEmission.getSubId().equals("")) {
+//            js1.put("PROJECT_ID", sbProjectDustEmission.getXmid());//所属项目编号
+//            js1.put("Jdbh", sbProjectDustEmission.getJdbh());//项目监督编号
+//            js1.put("DEV_GUID",sbProjectDustEmission.getSn());//设备编号
+//            js1.put("MD_NAME",sbProjectDustEmission.getComments());//设备名称
+//            js1.put("MD_TYPE",MD_TYPEMD_TYPE);//设备类型（“环境”固定死）
+//            body.add(js1);
+//            JSONObject object = new JSONObject();
+//            object.put("PList",body);
+//            f = ZCAPIClient.QGXMCAY("hj/sync_hj",object);
+//        }
+//        /** 市管项目*/
+//        JSONObject object1 = new JSONObject();
+//        JSONArray array = new JSONArray();
+//        if (!sbProjectDustEmission.getSubId().equals("")) {
+//            object1.put("PROJECT_ID", sbProjectDustEmission.getXmid());//所属项目编号
+//            object1.put("Jdbh", sbProjectDustEmission.getJdbh());//项目监督编号
+//            object1.put("DEV_GUID",sbProjectDustEmission.getSn());//设备编号
+//            SbProjectDustEmission dustEmission = new SbProjectDustEmission();
+//            dustEmission.setProjectId(sbProjectDustEmission.getProjectId());
+//            List<SbProjectDustEmission> emissions = projectDustEmissionService.selectProjectDustEmissionListData(dustEmission);
+//            object1.put("MD_NAME",(emissions.size()+1)+"#检测点");//设备名称（命名规则：阿 拉伯数字#监测点；示例： 1#监测点，2#监测点，同 个项目下数字不能重复）
+//            object1.put("MD_TYPE",MD_TYPEMD_TYPE);//设备类型（“环境”固定死）
+//            object1.put("sub_id", sbProjectDustEmission.getSubId());//工程ID
+//            array.add(object1);
+//            JSONObject object2 = new JSONObject();
+//            object2.put("PList",array);
+//            f = ZCAPIClient.SGXMCAY("tower/oper_pec",object2);
+//        }
+//        return f;
+//    }
 
     /**
      * 根据id查询

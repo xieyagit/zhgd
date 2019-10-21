@@ -38,6 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="attrConf"    column="attr_conf"    />
         <result property="ruleId"    column="ruleId"    />
         <result property="ruleName"    column="ruleName"    />
+        <result property="msgId"    column="msg_id"    />
     </resultMap>
 	
 	<sql id="selectSbCameraInformationVo">
@@ -213,18 +214,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <insert id="insertInformation" parameterType="java.util.List">
-        insert ignore sb_camera_information(trace_id, task_id, task_name, task_type, train_id, channel_id, device_id, device_serial, device_name, channel_no,
-        channel_name, group_id, group_name, captureTime, resultUrl, width, height, modelID, target_id, `type`, confidence, `name`, rect, properties, classify,
-         attr_type, type_name, attr_value, value_name, attr_conf, ruleId, ruleName)
+        insert ignore sb_camera_information(msg_id,trace_id, task_id, task_name, task_type,
+                                            train_id, channel_id, device_id, device_serial, device_name,
+                                            channel_no,channel_name, group_id, group_name, captureTime,
+                                            resultUrl, width, height, modelID, target_id,
+                                            `type`, confidence, `name`, rect, properties,
+                                            classify,attr_type, type_name, attr_value, value_name,
+                                            attr_conf, ruleId, ruleName)
         values
-        <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.traceId}, #{item.taskId}, #{item.taskName}, #{item.taskType},
-            (#{item.trainId}, #{item.channelId}, #{item.deviceId}, #{item.deviceSerial},
-            (#{item.deviceName}, #{item.channelNo}, #{item.channelName}, #{item.groupId},
-            (#{item.groupName}, #{item.captureTime}, #{item.resultUrl}, #{item.width},
-            (#{item.height}, #{item.modelID}, #{item.targetId}, #{item.type},
-            (#{item.confidence}, #{item.name}, #{item.rect}, #{item.properties},
-            (#{item.classify}, #{item.attrType}, #{item.attrValue}, #{item.valueName},
+        <foreach collection="list" item="item" index="messages" separator=",">
+            (#{item.msgId},#{item.traceId}, #{item.taskId}, #{item.taskName}, #{item.taskType},
+            #{item.trainId}, #{item.channelId}, #{item.deviceId}, #{item.deviceSerial}, #{item.deviceName},
+            #{item.channelNo}, #{item.channelName}, #{item.groupId},#{item.groupName}, #{item.captureTime}
+            #{item.resultUrl}, #{item.width},#{item.height}, #{item.modelID}, #{item.targetId},
+            #{item.type},#{item.confidence}, #{item.name}, #{item.rect}, #{item.properties},
+            #{item.classify}, #{item.attrType},#{item.typeName} #{item.attrValue}, #{item.valueName},
             #{item.attrConf}, #{item.ruleId}, #{item.ruleName})
         </foreach>
     </insert>

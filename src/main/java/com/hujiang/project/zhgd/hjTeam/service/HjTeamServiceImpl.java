@@ -1,8 +1,6 @@
 package com.hujiang.project.zhgd.hjTeam.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.hujiang.framework.web.domain.AjaxResult;
 import com.hujiang.project.zhgd.hjTeam.domain.TeamParam;
@@ -115,7 +113,10 @@ public class HjTeamServiceImpl implements IHjTeamService
 			e.printStackTrace();
 			return AjaxResult.error(-1,"查询失败！");
 		}
-		return AjaxResult.error(-1,"该参建单位下无班组！");
+		Map<String, Object> map = new HashMap<>();
+		map.put("data", Collections.emptyList());
+		return map;
+//		return AjaxResult.error(-1,"该参建单位下无班组！");
 	}
 
 }

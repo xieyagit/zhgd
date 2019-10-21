@@ -2,6 +2,7 @@ package com.hujiang.project.zhgd.sbCamera.api;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hujiang.project.haiKang.HaiKangAI;
 import com.hujiang.project.zhgd.sbCamera.domain.SbCamera;
 import com.hujiang.project.zhgd.sbCamera.service.ISbCameraService;
 import com.hujiang.project.zhgd.utils.ZCAPIClient;
@@ -21,4 +22,11 @@ public class sbCameraApi {
     @Autowired
     private ISbCameraService iSbCameraService;
 
+    @Autowired
+    private HaiKangAI ai;
+
+    @PostMapping(value = "a")
+    public void a(){
+        ai.a();
+    }
 }
