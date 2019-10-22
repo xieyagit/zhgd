@@ -16,8 +16,8 @@ import java.util.List;
  */
 public interface ISbHireService 
 {
-
 	public List<SbAreaProject> selectAreaProjectList();
+
 	/**
 	 * pc和移动
 	 * 查询全部项目名称

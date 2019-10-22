@@ -50,6 +50,17 @@ public class SbCraneBinding
 	/** 设备安装单位 */
 	private String installCompany;
 
+
+	private String craneName;
+
+	public String getCraneName() {
+		return craneName;
+	}
+
+	public void setCraneName(String craneName) {
+		this.craneName = craneName;
+	}
+
 	public void setId(Integer id)
 	{
 		this.id = id;

@@ -36,6 +36,16 @@ public class HjAttendanceDevice
 	private String connectTime;
 	/** 备注	 */
 	private String remark;
+	/** 连接状态，1，正常，0,断线 */
+	private String isConnect;
+
+	public String getIsConnect() {
+		return isConnect;
+	}
+
+	public void setIsConnect(String isConnect) {
+		this.isConnect = isConnect;
+	}
 
 	public String getRemark() {
 		return remark;
@@ -148,6 +158,7 @@ public class HjAttendanceDevice
             .append("deviceIp", getDeviceIp())
             .append("connectTime", getConnectTime())
             .append("remark", getRemark())
+            .append("isConnect", getIsConnect())
             .toString();
     }
 }

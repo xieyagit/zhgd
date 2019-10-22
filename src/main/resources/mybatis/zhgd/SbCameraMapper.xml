@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbCamera.mapper.SbCameraMapper">
+    
+    <resultMap type="SbCamera" id="SbCameraResult">
+        <result property="id"    column="id"    />
+        <result property="clientId"    column="client_id"    />
+        <result property="clientSecret"    column="client_secret"    />
+    </resultMap>
+	
+	<sql id="selectSbCameraVo">
+        select id, client_id, client_secret from sb_camera
+    </sql>
+	
+    <select id="selectSbCameraList" parameterType="SbCamera" resultMap="SbCameraResult">
+        <include refid="selectSbCameraVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="clientId != null  and clientId != '' "> and client_id = #{clientId}</if>
+             <if test="clientSecret != null  and clientSecret != '' "> and client_secret = #{clientSecret}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbCameraById" parameterType="Integer" resultMap="SbCameraResult">
+        <include refid="selectSbCameraVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbCamera" parameterType="SbCamera">
+        insert into sb_camera
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="clientId != null  and clientId != ''  ">client_id,</if>
+			<if test="clientSecret != null  and clientSecret != ''  ">client_secret,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="clientId != null  and clientId != ''  ">#{clientId},</if>
+			<if test="clientSecret != null  and clientSecret != ''  ">#{clientSecret},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbCamera" parameterType="SbCamera">
+        update sb_camera
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="clientId != null  and clientId != ''  ">client_id = #{clientId},</if>
+            <if test="clientSecret != null  and clientSecret != ''  ">client_secret = #{clientSecret},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbCameraById" parameterType="Integer">
+        delete from sb_camera where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbCameraByIds" parameterType="String">
+        delete from sb_camera where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

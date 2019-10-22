@@ -22,6 +22,14 @@ public class JmsConfig {
 
     public final static String TEMPERATURE_PERSONNEL_QUEUE = "TEMPERATURE_PERSONNEL_QUEUE";
 
+    public final static String TSP_CAY_QUEUE = "TSP_CAY_QUEUE";
+
+    public final static String CRANE_CAY_QUEUE = "CRANE_CAY_QUEUE";
+
+    public final static String ELEVATOR_CAY_QUEUE = "ELEVATOR_CAY_QUEUE";
+
+    public final static String TEMPERATURE_CAY_QUEUE = "TEMPERATURE_CAY_QUEUE";
+
     //定义人才安居的扬尘设备存放消息的队列
     @Bean(value="tspPersonnelQueue")
     public Queue tspPersonnelQueue() {
@@ -40,10 +48,35 @@ public class JmsConfig {
         return new ActiveMQQueue(JmsConfig.CRANE_PERSONNEL_QUEUE);
     }
 
+
     //定义人才安居的电箱设备存放消息的队列
     @Bean(value="temperaturePersonnelQueue")
     public Queue temperaturePersonnelQueue() {
         return new ActiveMQQueue(JmsConfig.TEMPERATURE_PERSONNEL_QUEUE);
+    }
+
+    //定义城安院的扬尘设备存放消息的队列
+    @Bean(value="tspCayQueue")
+    public Queue tspCayQueue() {
+        return new ActiveMQQueue(JmsConfig.TSP_CAY_QUEUE);
+    }
+    
+    //定义城安院的塔吊设备存放消息的队列
+    @Bean(value="craneCayQueue")
+    public Queue craneCayQueue() {
+        return new ActiveMQQueue(JmsConfig.CRANE_CAY_QUEUE);
+    }
+
+    //定义城安院的升降机设备存放消息的队列
+    @Bean(value="elevatorCayQueue")
+    public Queue elevatorCayQueue() {
+        return new ActiveMQQueue(JmsConfig.ELEVATOR_CAY_QUEUE);
+    }
+
+    //定义城安院的电箱设备存放消息的队列
+    @Bean(value="temperatureCayQueue")
+    public Queue temperatureCayQueue() {
+        return new ActiveMQQueue(JmsConfig.TEMPERATURE_CAY_QUEUE);
     }
 
     @Value("${spring.activemq.user}")
