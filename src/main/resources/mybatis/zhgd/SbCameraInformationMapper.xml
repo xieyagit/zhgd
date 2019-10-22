@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbCameraInformation.mapper.SbCameraInformationMapper">
+    
+    <resultMap type="SbCameraInformation" id="SbCameraInformationResult">
+        <result property="id"    column="id"    />
+        <result property="traceId"    column="trace_id"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="taskName"    column="task_name"    />
+        <result property="taskType"    column="task_type"    />
+        <result property="trainId"    column="train_id"    />
+        <result property="channelId"    column="channel_id"    />
+        <result property="deviceId"    column="device_id"    />
+        <result property="deviceSerial"    column="device_serial"    />
+        <result property="deviceName"    column="device_name"    />
+        <result property="channelNo"    column="channel_no"    />
+        <result property="channelName"    column="channel_name"    />
+        <result property="groupId"    column="group_id"    />
+        <result property="groupName"    column="group_name"    />
+        <result property="captureTime"    column="captureTime"    />
+        <result property="resultUrl"    column="resultUrl"    />
+        <result property="width"    column="width"    />
+        <result property="height"    column="height"    />
+        <result property="modelID"    column="modelID"    />
+        <result property="targetId"    column="target_id"    />
+        <result property="type"    column="type"    />
+        <result property="confidence"    column="confidence"    />
+        <result property="name"    column="name"    />
+        <result property="rect"    column="rect"    />
+        <result property="properties"    column="properties"    />
+        <result property="classify"    column="classify"    />
+        <result property="attrType"    column="attr_type"    />
+        <result property="typeName"    column="type_name"    />
+        <result property="attrValue"    column="attr_value"    />
+        <result property="valueName"    column="value_name"    />
+        <result property="attrConf"    column="attr_conf"    />
+        <result property="ruleId"    column="ruleId"    />
+        <result property="ruleName"    column="ruleName"    />
+        <result property="msgId"    column="msg_id"    />
+    </resultMap>
+	
+	<sql id="selectSbCameraInformationVo">
+        select id, trace_id, task_id, task_name, task_type, train_id, channel_id, device_id, device_serial, device_name, channel_no, channel_name, group_id, group_name, captureTime, resultUrl, width, height, modelID, target_id, `type`, confidence, `name`, rect, properties, classify, attr_type, type_name, attr_value, value_name, attr_conf, ruleId, ruleName from sb_camera_information
+    </sql>
+	
+    <select id="selectSbCameraInformationList" parameterType="SbCameraInformation" resultMap="SbCameraInformationResult">
+        <include refid="selectSbCameraInformationVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="traceId != null  and traceId != '' "> and trace_id = #{traceId}</if>
+             <if test="taskId != null  and taskId != '' "> and task_id = #{taskId}</if>
+             <if test="taskName != null  and taskName != '' "> and task_name = #{taskName}</if>
+             <if test="taskType != null  and taskType != '' "> and task_type = #{taskType}</if>
+             <if test="trainId != null  and trainId != '' "> and train_id = #{trainId}</if>
+             <if test="channelId != null  and channelId != '' "> and channel_id = #{channelId}</if>
+             <if test="deviceId != null  and deviceId != '' "> and device_id = #{deviceId}</if>
+             <if test="deviceSerial != null  and deviceSerial != '' "> and device_serial = #{deviceSerial}</if>
+             <if test="deviceName != null  and deviceName != '' "> and device_name = #{deviceName}</if>
+             <if test="channelNo != null "> and channel_no = #{channelNo}</if>
+             <if test="channelName != null  and channelName != '' "> and channel_name = #{channelName}</if>
+             <if test="groupId != null  and groupId != '' "> and group_id = #{groupId}</if>
+             <if test="groupName != null  and groupName != '' "> and group_name = #{groupName}</if>
+             <if test="captureTime != null "> and captureTime = #{captureTime}</if>
+             <if test="resultUrl != null  and resultUrl != '' "> and resultUrl = #{resultUrl}</if>
+             <if test="width != null  and width != '' "> and width = #{width}</if>
+             <if test="height != null  and height != '' "> and height = #{height}</if>
+             <if test="modelID != null  and modelID != '' "> and modelID = #{modelID}</if>
+             <if test="targetId != null "> and target_id = #{targetId}</if>
+             <if test="type != null "> and type = #{type}</if>
+             <if test="confidence != null "> and confidence = #{confidence}</if>
+             <if test="name != null  and name != '' "> and name = #{name}</if>
+             <if test="rect != null  and rect != '' "> and rect = #{rect}</if>
+             <if test="properties != null  and properties != '' "> and properties = #{properties}</if>
+             <if test="classify != null  and classify != '' "> and classify = #{classify}</if>
+             <if test="attrType != null  and attrType != '' "> and attr_type = #{attrType}</if>
+             <if test="typeName != null  and typeName != '' "> and type_name = #{typeName}</if>
+             <if test="attrValue != null "> and attr_value = #{attrValue}</if>
+             <if test="valueName != null  and valueName != '' "> and value_name = #{valueName}</if>
+             <if test="attrConf != null  and attrConf != '' "> and attr_conf = #{attrConf}</if>
+             <if test="ruleId != null "> and ruleId = #{ruleId}</if>
+             <if test="ruleName != null  and ruleName != '' "> and ruleName = #{ruleName}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbCameraInformationById" parameterType="Integer" resultMap="SbCameraInformationResult">
+        <include refid="selectSbCameraInformationVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbCameraInformation" parameterType="SbCameraInformation">
+        insert into sb_camera_information
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="traceId != null  and traceId != ''  ">trace_id,</if>
+			<if test="taskId != null  and taskId != ''  ">task_id,</if>
+			<if test="taskName != null  and taskName != ''  ">task_name,</if>
+			<if test="taskType != null  and taskType != ''  ">task_type,</if>
+			<if test="trainId != null  and trainId != ''  ">train_id,</if>
+			<if test="channelId != null  and channelId != ''  ">channel_id,</if>
+			<if test="deviceId != null  and deviceId != ''  ">device_id,</if>
+			<if test="deviceSerial != null  and deviceSerial != ''  ">device_serial,</if>
+			<if test="deviceName != null  and deviceName != ''  ">device_name,</if>
+			<if test="channelNo != null  ">channel_no,</if>
+			<if test="channelName != null  and channelName != ''  ">channel_name,</if>
+			<if test="groupId != null  and groupId != ''  ">group_id,</if>
+			<if test="groupName != null  and groupName != ''  ">group_name,</if>
+			<if test="captureTime != null  ">captureTime,</if>
+			<if test="resultUrl != null  and resultUrl != ''  ">resultUrl,</if>
+			<if test="width != null  and width != ''  ">width,</if>
+			<if test="height != null  and height != ''  ">height,</if>
+			<if test="modelID != null  and modelID != ''  ">modelID,</if>
+			<if test="targetId != null  ">target_id,</if>
+			<if test="type != null  ">type,</if>
+			<if test="confidence != null  ">confidence,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="rect != null  and rect != ''  ">rect,</if>
+			<if test="properties != null  and properties != ''  ">properties,</if>
+			<if test="classify != null  and classify != ''  ">classify,</if>
+			<if test="attrType != null  and attrType != ''  ">attr_type,</if>
+			<if test="typeName != null  and typeName != ''  ">type_name,</if>
+			<if test="attrValue != null  ">attr_value,</if>
+			<if test="valueName != null  and valueName != ''  ">value_name,</if>
+			<if test="attrConf != null  and attrConf != ''  ">attr_conf,</if>
+			<if test="ruleId != null  ">ruleId,</if>
+			<if test="ruleName != null  and ruleName != ''  ">ruleName,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="traceId != null  and traceId != ''  ">#{traceId},</if>
+			<if test="taskId != null  and taskId != ''  ">#{taskId},</if>
+			<if test="taskName != null  and taskName != ''  ">#{taskName},</if>
+			<if test="taskType != null  and taskType != ''  ">#{taskType},</if>
+			<if test="trainId != null  and trainId != ''  ">#{trainId},</if>
+			<if test="channelId != null  and channelId != ''  ">#{channelId},</if>
+			<if test="deviceId != null  and deviceId != ''  ">#{deviceId},</if>
+			<if test="deviceSerial != null  and deviceSerial != ''  ">#{deviceSerial},</if>
+			<if test="deviceName != null  and deviceName != ''  ">#{deviceName},</if>
+			<if test="channelNo != null  ">#{channelNo},</if>
+			<if test="channelName != null  and channelName != ''  ">#{channelName},</if>
+			<if test="groupId != null  and groupId != ''  ">#{groupId},</if>
+			<if test="groupName != null  and groupName != ''  ">#{groupName},</if>
+			<if test="captureTime != null  ">#{captureTime},</if>
+			<if test="resultUrl != null  and resultUrl != ''  ">#{resultUrl},</if>
+			<if test="width != null  and width != ''  ">#{width},</if>
+			<if test="height != null  and height != ''  ">#{height},</if>
+			<if test="modelID != null  and modelID != ''  ">#{modelID},</if>
+			<if test="targetId != null  ">#{targetId},</if>
+			<if test="type != null  ">#{type},</if>
+			<if test="confidence != null  ">#{confidence},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="rect != null  and rect != ''  ">#{rect},</if>
+			<if test="properties != null  and properties != ''  ">#{properties},</if>
+			<if test="classify != null  and classify != ''  ">#{classify},</if>
+			<if test="attrType != null  and attrType != ''  ">#{attrType},</if>
+			<if test="typeName != null  and typeName != ''  ">#{typeName},</if>
+			<if test="attrValue != null  ">#{attrValue},</if>
+			<if test="valueName != null  and valueName != ''  ">#{valueName},</if>
+			<if test="attrConf != null  and attrConf != ''  ">#{attrConf},</if>
+			<if test="ruleId != null  ">#{ruleId},</if>
+			<if test="ruleName != null  and ruleName != ''  ">#{ruleName},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbCameraInformation" parameterType="SbCameraInformation">
+        update sb_camera_information
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="traceId != null  and traceId != ''  ">trace_id = #{traceId},</if>
+            <if test="taskId != null  and taskId != ''  ">task_id = #{taskId},</if>
+            <if test="taskName != null  and taskName != ''  ">task_name = #{taskName},</if>
+            <if test="taskType != null  and taskType != ''  ">task_type = #{taskType},</if>
+            <if test="trainId != null  and trainId != ''  ">train_id = #{trainId},</if>
+            <if test="channelId != null  and channelId != ''  ">channel_id = #{channelId},</if>
+            <if test="deviceId != null  and deviceId != ''  ">device_id = #{deviceId},</if>
+            <if test="deviceSerial != null  and deviceSerial != ''  ">device_serial = #{deviceSerial},</if>
+            <if test="deviceName != null  and deviceName != ''  ">device_name = #{deviceName},</if>
+            <if test="channelNo != null  ">channel_no = #{channelNo},</if>
+            <if test="channelName != null  and channelName != ''  ">channel_name = #{channelName},</if>
+            <if test="groupId != null  and groupId != ''  ">group_id = #{groupId},</if>
+            <if test="groupName != null  and groupName != ''  ">group_name = #{groupName},</if>
+            <if test="captureTime != null  ">captureTime = #{captureTime},</if>
+            <if test="resultUrl != null  and resultUrl != ''  ">resultUrl = #{resultUrl},</if>
+            <if test="width != null  and width != ''  ">width = #{width},</if>
+            <if test="height != null  and height != ''  ">height = #{height},</if>
+            <if test="modelID != null  and modelID != ''  ">modelID = #{modelID},</if>
+            <if test="targetId != null  ">target_id = #{targetId},</if>
+            <if test="type != null  ">type = #{type},</if>
+            <if test="confidence != null  ">confidence = #{confidence},</if>
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="rect != null  and rect != ''  ">rect = #{rect},</if>
+            <if test="properties != null  and properties != ''  ">properties = #{properties},</if>
+            <if test="classify != null  and classify != ''  ">classify = #{classify},</if>
+            <if test="attrType != null  and attrType != ''  ">attr_type = #{attrType},</if>
+            <if test="typeName != null  and typeName != ''  ">type_name = #{typeName},</if>
+            <if test="attrValue != null  ">attr_value = #{attrValue},</if>
+            <if test="valueName != null  and valueName != ''  ">value_name = #{valueName},</if>
+            <if test="attrConf != null  and attrConf != ''  ">attr_conf = #{attrConf},</if>
+            <if test="ruleId != null  ">ruleId = #{ruleId},</if>
+            <if test="ruleName != null  and ruleName != ''  ">ruleName = #{ruleName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbCameraInformationById" parameterType="Integer">
+        delete from sb_camera_information where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbCameraInformationByIds" parameterType="String">
+        delete from sb_camera_information where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="insertInformation" parameterType="java.util.List">
+        insert ignore sb_camera_information(msg_id,trace_id, task_id, task_name, task_type,
+                                            train_id, channel_id, device_id, device_serial, device_name,
+                                            channel_no,channel_name, group_id, group_name, captureTime,
+                                            resultUrl, width, height, modelID, target_id,
+                                            `type`, confidence, `name`, rect, properties,
+                                            classify,attr_type, type_name, attr_value, value_name,
+                                            attr_conf, ruleId, ruleName)
+        values
+        <foreach collection="list" item="item" index="messages" separator=",">
+            (#{item.msgId},#{item.traceId}, #{item.taskId}, #{item.taskName}, #{item.taskType},
+            #{item.trainId}, #{item.channelId}, #{item.deviceId}, #{item.deviceSerial}, #{item.deviceName},
+            #{item.channelNo}, #{item.channelName}, #{item.groupId},#{item.groupName}, #{item.captureTime}
+            #{item.resultUrl}, #{item.width},#{item.height}, #{item.modelID}, #{item.targetId},
+            #{item.type},#{item.confidence}, #{item.name}, #{item.rect}, #{item.properties},
+            #{item.classify}, #{item.attrType},#{item.typeName} #{item.attrValue}, #{item.valueName},
+            #{item.attrConf}, #{item.ruleId}, #{item.ruleName})
+        </foreach>
+    </insert>
+</mapper>

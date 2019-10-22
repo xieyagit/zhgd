@@ -72,6 +72,69 @@ public class SbCraneAddrecord
 
 	private String dname; 	//塔吊名称
 	private Integer userid;
+	private String xmid;
+	private String subId;
+	private String DownlineTime;
+	private String WorkEndTime;
+	private String WorkMaxHeight;
+	private String PunchTime;
+	private String ClosingTime;
+
+	public String getPunchTime() {
+		return PunchTime;
+	}
+
+	public void setPunchTime(String punchTime) {
+		PunchTime = punchTime;
+	}
+
+	public String getClosingTime() {
+		return ClosingTime;
+	}
+
+	public void setClosingTime(String closingTime) {
+		ClosingTime = closingTime;
+	}
+
+	public String getWorkEndTime() {
+		return WorkEndTime;
+	}
+
+	public void setWorkEndTime(String workEndTime) {
+		WorkEndTime = workEndTime;
+	}
+
+	public String getWorkMaxHeight() {
+		return WorkMaxHeight;
+	}
+
+	public void setWorkMaxHeight(String workMaxHeight) {
+		WorkMaxHeight = workMaxHeight;
+	}
+
+	public String getDownlineTime() {
+		return DownlineTime;
+	}
+
+	public void setDownlineTime(String downlineTime) {
+		DownlineTime = downlineTime;
+	}
+
+	public String getSubId() {
+		return subId;
+	}
+
+	public void setSubId(String subId) {
+		this.subId = subId;
+	}
+
+	public String getXmid() {
+		return xmid;
+	}
+
+	public void setXmid(String xmid) {
+		this.xmid = xmid;
+	}
 
 	public Integer getMultiAlarmAll() {
 		return multiAlarmAll;

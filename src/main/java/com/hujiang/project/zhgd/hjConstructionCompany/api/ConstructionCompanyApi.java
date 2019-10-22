@@ -137,6 +137,12 @@ public class ConstructionCompanyApi extends BaseController{
                 platformName=h.getPlatformName();
                 token=h.getApiKey();
             }
+
+            /** 对接惠州市住建局 */
+            if ("XIEHOUS".equals(h.getPlatformName())){
+
+            }
+
         }
 
         logger.info("保存参建单位");

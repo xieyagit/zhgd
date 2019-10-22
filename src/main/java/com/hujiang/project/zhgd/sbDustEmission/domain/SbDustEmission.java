@@ -72,10 +72,32 @@ public class SbDustEmission extends BaseSmsMessage<SbDustEmission>
 
 	/**项目监督编号**/
 	private String Jdbh;
+	/** 项目ID（城安院） */
+	private String xmid;
+	/** 工程ID */
+	private String subId;
+
+
 
 	private String site;
 
 	private Integer projectId;
+
+	public String getXmid() {
+		return xmid;
+	}
+
+	public void setXmid(String xmid) {
+		this.xmid = xmid;
+	}
+
+	public String getSubId() {
+		return subId;
+	}
+
+	public void setSubId(String subId) {
+		this.subId = subId;
+	}
 
 	public Integer getProjectId() {
 		return projectId;

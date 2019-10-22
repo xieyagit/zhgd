@@ -226,8 +226,8 @@ public class DeyeCraneApi {
         //保存塔吊实时数据
 
         //上传工务署
-        JSONArray body=setCraneBody(s);
-        JSONArray body2=setWarningBody(s);
+//        JSONArray body=setCraneBody(s);
+//        JSONArray body2=setWarningBody(s);
 
         //上传城安院
         SbCraneBinding sbCraneBinding = new SbCraneBinding();
@@ -235,26 +235,27 @@ public class DeyeCraneApi {
         sbCraneBinding.setScznl("CAY");
         List<SbCraneBinding> list = iSbCraneBindingService.selectSbCraneBindingList(sbCraneBinding);
         if (list.size()>0) {
-            ThreadUtils.async(new Runnable(){
-
-                @Override
-                public void run() {
-                    try {
-                        tdsssjCay(s);
-                        tdyjCay(s);
-                    } catch (IOException e) {
-                        logger.error("城安院错误(RealtimeDataCrane): " + e.getMessage() + ", 参数错误："+s);
-                    } catch (URISyntaxException e) {
-                        logger.error("城安院错误(RealtimeDataCrane): " + e.getMessage() + ", 参数错误："+s);
-                    }
-                }
-            });
+//            ThreadUtils.async(new Runnable(){
+//
+//                @Override
+//                public void run() {
+//                    try {
+////                        tdsssjCay(s);
+//                        tdyjCay(s);
+//                    } catch (IOException e) {
+//                        logger.error("城安院错误(RealtimeDataCrane): " + e.getMessage() + ", 参数错误："+s);
+//                    } catch (URISyntaxException e) {
+//                        logger.error("城安院错误(RealtimeDataCrane): " + e.getMessage() + ", 参数错误："+s);
+//                    }
+//                }
+//            });
+//            sendCraneToPERSONNEL.cayDate(s);
         }
 
 //
-        setZCData(s.getString("HxzId"),body,"/crane/addRecord","crane");
+//        setZCData(s.getString("HxzId"),body,"/crane/addRecord","crane");
 
-        setZCData(s.getString("HxzId"),body2,"/crane/warning","crane");
+//        setZCData(s.getString("HxzId"),body2,"/crane/warning","crane");
 
         //返回json字符串
         JSONObject results=new JSONObject();
@@ -304,98 +305,107 @@ public class DeyeCraneApi {
         list.add(body);
         sbCraneAddrecord.setLoad(Double.valueOf(data.getString("Weight"))*1000);
         sendCraneToPERSONNEL.rcajDate(sbCraneAddrecord);
+        //上传城安院
+        SbCraneBinding sbCraneBinding = new SbCraneBinding();
+        sbCraneBinding.setHxzid(sbCraneAddrecord.getHxzid());
+        sbCraneBinding.setScznl("CAY");
+        List<SbCraneBinding> lists = iSbCraneBindingService.selectSbCraneBindingList(sbCraneBinding);
+        if (lists.size()>0) {
+            sendCraneToPERSONNEL.cayDate(sbCraneAddrecord);
+            sendCraneToPERSONNEL.cayWarning(sbCraneAddrecord);
+        }
         return list;
     }
 
-    /** 上报城安院塔吊实时数据*/
-    public String tdsssjCay(JSONObject jsonObject) throws IOException, URISyntaxException {
-        Integer projectId = null;
-        String k = null;
-        SbCraneBinding sbCraneBinding = new SbCraneBinding();
-        sbCraneBinding.setHxzid(jsonObject.getString("HxzId"));
-        List<SbCraneBinding> list = iSbCraneBindingService.selectSbCraneBindingList(sbCraneBinding);
-        HjProject hjProject = iHjProjectService.selectHjProjectById(list.get(0).getPid());
-        JSONObject jsonObject1 = new JSONObject();
-        jsonObject1.put("curpage","1");
-        jsonObject1.put("name",hjProject.getProjectName());
-        /** 区管项目*/
-        JSONObject jsonObject2 = ZCAPIClient.reportedCay2019s("authorize/getProjInfos",jsonObject1);
-        if (jsonObject2 != null) {
-            JSONObject object1 = new JSONObject();
-            object1.put("PGUID", jsonObject2.getString("xmid"));//所属项目编号
-            object1.put("Jdbh", jsonObject2.getString("jdbh"));//项目监督编号
-            object1.put("GUID",Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备号
-            object1.put("yxsk",jsonObject.getString("RTime"));//运行时刻
-            object1.put("zz",jsonObject.getInteger("Weight")*1000);//载重（KG)
-            object1.put("lj",df2.format(Double.valueOf(jsonObject.getString("Weight"))*Double.valueOf(jsonObject.getString("RRange"))));//力矩
-            object1.put("jd",jsonObject.getString("Angle"));//回转角度
-            object1.put("zxw",jsonObject.getString("NegAngleAlarm"));//是否左限位报警
-            object1.put("yxw",jsonObject.getString("PosAngleAlarm"));//是否右限位报警
-            object1.put("fd",jsonObject.getString("RRange"));//幅度
-            object1.put("qxw",jsonObject.get("MinRangeAlarm"));//是否前限位报警(0.否1.是)
-            object1.put("hxw",jsonObject.getString("MaxRangeAlarm"));//是否后限位报警(0.否1.是)
-            object1.put("gd",jsonObject.getString("Height"));//高度
-            object1.put("sxw",jsonObject.getString("HeightAlarm"));//是否上限位报警(0.否1.是)
-            object1.put("fs",jsonObject.getString("WindSpeed"));//风速
-            if (jsonObject.getInteger("PosAngleAlarm")==1 || jsonObject.getInteger("NegAngleAlarm")==1) {
-                object1.put("hzxw", "1");//是否回转限位报 警
-            }else {
-                object1.put("hzxw", "0");//是否回转限位报 警
-            }
-            JSONArray jsonArray = new JSONArray();
-            jsonArray.add(object1);
-            JSONObject object = new JSONObject();
-            object.put("PList",jsonArray);
-            k = ZCAPIClient.QGXMCAY("lifter/ele_par",object);
-        }
-        /** 市管项目*/
-        String xmid = ZCAPIClient.reportedCay2019("authorize/getProjInfos",jsonObject1);
-        if (xmid != null) {
-            //上报城安院升降机基本信息（开始）
-            JSONObject j = new JSONObject();
-            j.put("pguid", xmid);
-            JSONObject object = ZCAPIClient.reportedCay("authorize/getGcbyProj", j);
-            JSONArray data = object.getJSONArray("res");
-            JSONObject datas = data.getJSONObject(0);
-            JSONObject json = new JSONObject();
-            json.put("PGUID", datas.getString("xmid"));//所属项目编号
-            json.put("Jdbh", datas.getString("jdbh"));//项目监督编号
-            json.put("GUID",Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备号
-            json.put("yxsk",jsonObject.getString("RTime"));//运行时刻
-            json.put("zz",jsonObject.getInteger("Weight")*1000);//载重
-            json.put("lj",df2.format(Double.valueOf(jsonObject.getString("Weight"))*Double.valueOf(jsonObject.getString("RRange"))));//力矩
-            json.put("ljb",jsonObject.getString("Moment"));//力矩比
-            json.put("jd",jsonObject.getString("Angle"));//回转角度
-            json.put("zxw",jsonObject.getString("NegAngleAlarm"));//是否左限位报警
-            json.put("yxw",jsonObject.getString("PosAngleAlarm"));//是否右限位报警
-            json.put("fd",jsonObject.getString("RRange"));//幅度
-            json.put("qxw",jsonObject.get("MinRangeAlarm"));//是否前限位报警(0.否1.是)
-            json.put("hxw",jsonObject.getString("MaxRangeAlarm"));//是否后限位报警(0.否1.是)
-            json.put("gd",jsonObject.getString("Height"));//高度
-            json.put("sxw",jsonObject.getString("HeightAlarm"));//是否上限位报警(0.否1.是)
-            json.put("fs",jsonObject.getString("WindSpeed"));//风速
-            if (jsonObject.getInteger("PosAngleAlarm")==1 || jsonObject.getInteger("NegAngleAlarm")==1) {
-                json.put("hzxw", "1");//是否回转限位报 警
-            }else {
-                json.put("hzxw", "0");//是否回转限位报 警
-            }
-            json.put("fpz",jsonObject.getInteger("MultiAlarmAll"));//防碰撞报警
-
-            SbCraneWorkloop sbCraneWorkloop = iSbCraneWorkloopService.selectTD(jsonObject.getString("hxzid"));
-            if (jsonObject.getInteger("WindSpeed")>= 13.8 && sbCraneWorkloop.getMaxWindSpeed()>13.8) {
-                json.put("cfszy", "1");//是否超风速作业 报警（风速大于6 级（大于13.8 m/s），在连续两个工作循环工作，发生报警）
-            }else {
-                json.put("cfszy", "0");//是否超风速作业 报警（风速大于6 级（大于13.8 m/s），在连续两个工作循环工作，发生报警）
-            }
-            json.put("sub_id",datas.getString("gcid"));//工程ID
-            JSONArray array = new JSONArray();
-            array.add(json);
-            JSONObject object1 = new JSONObject();
-            object1.put("PList",array);
-            k = ZCAPIClient.QGXMCAY("tower/tow_t_data",object1);
-        }
-        return k;
-    }
+//    /** 上报城安院塔吊实时数据*/
+//    public String tdsssjCay(JSONObject jsonObject) throws IOException, URISyntaxException {
+//        Integer projectId = null;
+//        String k = null;
+//        SbCraneBinding sbCraneBinding = new SbCraneBinding();
+//        sbCraneBinding.setHxzid(jsonObject.getString("HxzId"));
+//        List<SbCraneBinding> list = iSbCraneBindingService.selectSbCraneBindingList(sbCraneBinding);
+//        HjProject hjProject = iHjProjectService.selectHjProjectById(list.get(0).getPid());
+//        JSONObject jsonObject1 = new JSONObject();
+//        jsonObject1.put("curpage","1");
+//        jsonObject1.put("name",hjProject.getProjectName());
+//        /** 区管项目*/
+//        JSONObject jsonObject2 = ZCAPIClient.reportedCay2019s("authorize/getProjInfos",jsonObject1);
+//        if (jsonObject2 != null) {
+//            JSONObject object1 = new JSONObject();
+//            object1.put("PGUID", jsonObject2.getString("xmid"));//所属项目编号
+//            object1.put("Jdbh", jsonObject2.getString("jdbh"));//项目监督编号
+//            object1.put("GUID",Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备号
+//            object1.put("yxsk",jsonObject.getString("RTime"));//运行时刻
+//            object1.put("zz",jsonObject.getInteger("Weight")*1000);//载重（KG)
+//            object1.put("lj",df2.format(Double.valueOf(jsonObject.getString("Weight"))*Double.valueOf(jsonObject.getString("RRange"))));//力矩
+//            object1.put("jd",jsonObject.getString("Angle"));//回转角度
+//            object1.put("zxw",jsonObject.getString("NegAngleAlarm"));//是否左限位报警
+//            object1.put("yxw",jsonObject.getString("PosAngleAlarm"));//是否右限位报警
+//            object1.put("fd",jsonObject.getString("RRange"));//幅度
+//            object1.put("qxw",jsonObject.get("MinRangeAlarm"));//是否前限位报警(0.否1.是)
+//            object1.put("hxw",jsonObject.getString("MaxRangeAlarm"));//是否后限位报警(0.否1.是)
+//            object1.put("gd",jsonObject.getString("Height"));//高度
+//            object1.put("sxw",jsonObject.getString("HeightAlarm"));//是否上限位报警(0.否1.是)
+//            object1.put("fs",jsonObject.getString("WindSpeed"));//风速
+//            if (jsonObject.getInteger("PosAngleAlarm")==1 || jsonObject.getInteger("NegAngleAlarm")==1) {
+//                object1.put("hzxw", "1");//是否回转限位报 警
+//            }else {
+//                object1.put("hzxw", "0");//是否回转限位报 警
+//            }
+//            JSONArray jsonArray = new JSONArray();
+//            jsonArray.add(object1);
+//            JSONObject object = new JSONObject();
+//            object.put("PList",jsonArray);
+//            k = ZCAPIClient.QGXMCAY("lifter/ele_par",object);
+//        }
+//        /** 市管项目*/
+//        String xmid = ZCAPIClient.reportedCay2019("authorize/getProjInfos",jsonObject1);
+//        if (xmid != null) {
+//            //上报城安院升降机基本信息（开始）
+//            JSONObject j = new JSONObject();
+//            j.put("pguid", xmid);
+//            JSONObject object = ZCAPIClient.reportedCay("authorize/getGcbyProj", j);
+//            JSONArray data = object.getJSONArray("res");
+//            JSONObject datas = data.getJSONObject(0);
+//            JSONObject json = new JSONObject();
+//            json.put("PGUID", datas.getString("xmid"));//所属项目编号
+//            json.put("Jdbh", datas.getString("jdbh"));//项目监督编号
+//            json.put("GUID",Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备号
+//            json.put("yxsk",jsonObject.getString("RTime"));//运行时刻
+//            json.put("zz",jsonObject.getInteger("Weight")*1000);//载重
+//            json.put("lj",df2.format(Double.valueOf(jsonObject.getString("Weight"))*Double.valueOf(jsonObject.getString("RRange"))));//力矩
+//            json.put("ljb",jsonObject.getString("Moment"));//力矩比
+//            json.put("jd",jsonObject.getString("Angle"));//回转角度
+//            json.put("zxw",jsonObject.getString("NegAngleAlarm"));//是否左限位报警
+//            json.put("yxw",jsonObject.getString("PosAngleAlarm"));//是否右限位报警
+//            json.put("fd",jsonObject.getString("RRange"));//幅度
+//            json.put("qxw",jsonObject.get("MinRangeAlarm"));//是否前限位报警(0.否1.是)
+//            json.put("hxw",jsonObject.getString("MaxRangeAlarm"));//是否后限位报警(0.否1.是)
+//            json.put("gd",jsonObject.getString("Height"));//高度
+//            json.put("sxw",jsonObject.getString("HeightAlarm"));//是否上限位报警(0.否1.是)
+//            json.put("fs",jsonObject.getString("WindSpeed"));//风速
+//            if (jsonObject.getInteger("PosAngleAlarm")==1 || jsonObject.getInteger("NegAngleAlarm")==1) {
+//                json.put("hzxw", "1");//是否回转限位报 警
+//            }else {
+//                json.put("hzxw", "0");//是否回转限位报 警
+//            }
+//            json.put("fpz",jsonObject.getInteger("MultiAlarmAll"));//防碰撞报警
+//
+//            SbCraneWorkloop sbCraneWorkloop = iSbCraneWorkloopService.selectTD(jsonObject.getString("hxzid"));
+//            if (jsonObject.getInteger("WindSpeed")>= 13.8 && sbCraneWorkloop.getMaxWindSpeed()>13.8) {
+//                json.put("cfszy", "1");//是否超风速作业 报警（风速大于6 级（大于13.8 m/s），在连续两个工作循环工作，发生报警）
+//            }else {
+//                json.put("cfszy", "0");//是否超风速作业 报警（风速大于6 级（大于13.8 m/s），在连续两个工作循环工作，发生报警）
+//            }
+//            json.put("sub_id",datas.getString("gcid"));//工程ID
+//            JSONArray array = new JSONArray();
+//            array.add(json);
+//            JSONObject object1 = new JSONObject();
+//            object1.put("PList",array);
+//            k = ZCAPIClient.QGXMCAY("tower/tow_t_data",object1);
+//        }
+//        return k;
+//    }
 
     /**
      * 转换预警数据
@@ -430,63 +440,63 @@ public class DeyeCraneApi {
     }
 
     /** 转换为上传城安院塔吊预警数据*/
-    public String tdyjCay(JSONObject jsonObject) throws IOException, URISyntaxException {
-        Integer projectId = null;
-        String k = null;
-        SbCraneBinding sbCraneBinding = new SbCraneBinding();
-        sbCraneBinding.setHxzid(jsonObject.getString("HxzId"));
-        List<SbCraneBinding> list = iSbCraneBindingService.selectSbCraneBindingList(sbCraneBinding);
-        HjProject hjProject = iHjProjectService.selectHjProjectById(list.get(0).getPid());
-        JSONObject jsonObject1 = new JSONObject();
-        jsonObject1.put("curpage","1");
-        jsonObject1.put("name",hjProject.getProjectName());
-        /** 市管项目*/
-        String xmid = ZCAPIClient.reportedCay2019("authorize/getProjInfos",jsonObject1);
-        JSONArray array = new JSONArray();
-        if (xmid != null) {
-            //上报城安院升降机基本信息（开始）
-            JSONObject j = new JSONObject();
-            j.put("pguid", xmid);
-            JSONObject object = ZCAPIClient.reportedCay("authorize/getGcbyProj", j);
-            JSONArray data = object.getJSONArray("res");
-            JSONObject datas = data.getJSONObject(0);
-            JSONObject json = new JSONObject();
-            json.put("PGUID",datas.getString("xmid"));//所属项目编号
-            json.put("Jdbh",datas.getString("jdbh"));//项目监督编号
-            json.put("sub_id",datas.getString("gcid"));//工程ID
-            json.put("GUID",Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备号
-            json.put("zz",jsonObject.getString("Weight"));//载重
-            json.put("lj",df2.format(Double.valueOf(jsonObject.getString("Weight"))*Double.valueOf(jsonObject.getString("RRange"))));
-            json.put("jd",jsonObject.getString("Angle"));//回转角度
-            json.put("fd",jsonObject.getString("RRange"));//幅度
-            json.put("gd",jsonObject.getString("Height"));//高度
-            json.put("fs",jsonObject.getString("WindSpeed"));//风速
-            array.add(json);
-            JSONObject jsonObject2 = new JSONObject();
-            jsonObject2.put("PList",array);
-            k = ZCAPIClient.QGXMCAY("tower/tow_Warning",jsonObject2);
-        }
-        /** 区管项目*/
-        JSONObject jsonObject2 = ZCAPIClient.reportedCay2019s("authorize/getProjInfos",jsonObject1);
-        JSONArray jsonArray = new JSONArray();
-        if (jsonObject2 != null) {
-            JSONObject object1 = new JSONObject();
-            object1.put("PGUID", jsonObject2.getString("xmid"));//所属项目编号
-            object1.put("Jdbh", jsonObject2.getString("jdbh"));//项目监督编号
-            object1.put("GUID", Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备号
-            object1.put("zz",jsonObject.getString("Weight"));//载重
-            object1.put("lj",df2.format(Double.valueOf(jsonObject.getString("Weight"))*Double.valueOf(jsonObject.getString("RRange"))));//力矩
-            object1.put("jd",jsonObject.getString("Angle"));//回转角度
-            object1.put("fd",jsonObject.getString("RRange"));//幅度
-            object1.put("gd",jsonObject.getString("Height"));//高度
-            object1.put("fs",jsonObject.getString("WindSpeed"));//风速
-            jsonArray.add(object1);
-            JSONObject object = new JSONObject();
-            object.put("PList",jsonArray);
-            k = ZCAPIClient.QGXMCAY("tower/tow_Warning",object);
-        }
-        return k;
-    }
+//    public String tdyjCay(JSONObject jsonObject) throws IOException, URISyntaxException {
+//        Integer projectId = null;
+//        String k = null;
+//        SbCraneBinding sbCraneBinding = new SbCraneBinding();
+//        sbCraneBinding.setHxzid(jsonObject.getString("HxzId"));
+//        List<SbCraneBinding> list = iSbCraneBindingService.selectSbCraneBindingList(sbCraneBinding);
+//        HjProject hjProject = iHjProjectService.selectHjProjectById(list.get(0).getPid());
+//        JSONObject jsonObject1 = new JSONObject();
+//        jsonObject1.put("curpage","1");
+//        jsonObject1.put("name",hjProject.getProjectName());
+//        /** 市管项目*/
+//        String xmid = ZCAPIClient.reportedCay2019("authorize/getProjInfos",jsonObject1);
+//        JSONArray array = new JSONArray();
+//        if (xmid != null) {
+//            //上报城安院升降机基本信息（开始）
+//            JSONObject j = new JSONObject();
+//            j.put("pguid", xmid);
+//            JSONObject object = ZCAPIClient.reportedCay("authorize/getGcbyProj", j);
+//            JSONArray data = object.getJSONArray("res");
+//            JSONObject datas = data.getJSONObject(0);
+//            JSONObject json = new JSONObject();
+//            json.put("PGUID",datas.getString("xmid"));//所属项目编号
+//            json.put("Jdbh",datas.getString("jdbh"));//项目监督编号
+//            json.put("GUID",Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备号
+//            json.put("zz",jsonObject.getString("Weight"));//载重
+//            json.put("lj",df2.format(Double.valueOf(jsonObject.getString("Weight"))*Double.valueOf(jsonObject.getString("RRange"))));//力矩
+//            json.put("jd",jsonObject.getString("Angle"));//回转角度
+//            json.put("fd",jsonObject.getString("RRange"));//幅度
+//            json.put("gd",jsonObject.getString("Height"));//高度
+//            json.put("fs",jsonObject.getString("WindSpeed"));//风速
+//            json.put("sub_id",datas.getString("gcid"));//工程ID
+//            array.add(json);
+//            JSONObject jsonObject2 = new JSONObject();
+//            jsonObject2.put("PList",array);
+//            k = ZCAPIClient.QGXMCAY("tower/tow_Warning",jsonObject2);
+//        }
+//        /** 区管项目*/
+//        JSONObject jsonObject2 = ZCAPIClient.reportedCay2019s("authorize/getProjInfos",jsonObject1);
+//        JSONArray jsonArray = new JSONArray();
+//        if (jsonObject2 != null) {
+//            JSONObject object1 = new JSONObject();
+//            object1.put("PGUID", jsonObject2.getString("xmid"));//所属项目编号
+//            object1.put("Jdbh", jsonObject2.getString("jdbh"));//项目监督编号
+//            object1.put("GUID", Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备号
+//            object1.put("zz",jsonObject.getString("Weight"));//载重
+//            object1.put("lj",df2.format(Double.valueOf(jsonObject.getString("Weight"))*Double.valueOf(jsonObject.getString("RRange"))));//力矩
+//            object1.put("jd",jsonObject.getString("Angle"));//回转角度
+//            object1.put("fd",jsonObject.getString("RRange"));//幅度
+//            object1.put("gd",jsonObject.getString("Height"));//高度
+//            object1.put("fs",jsonObject.getString("WindSpeed"));//风速
+//            jsonArray.add(object1);
+//            JSONObject object = new JSONObject();
+//            object.put("PList",jsonArray);
+//            k = ZCAPIClient.QGXMCAY("tower/tow_Warning",object);
+//        }
+//        return k;
+//    }
 
 
     /**
@@ -590,22 +600,24 @@ public class DeyeCraneApi {
             sbCraneBinding1.setScznl("CAY");
             List<SbCraneBinding> list = iSbCraneBindingService.selectSbCraneBindingList(sbCraneBinding1);
             if (list.size()>0) {
-                ThreadUtils.async(new Runnable(){
-                    @Override
-                    public void run() {
-                        try {
-                            tdtdscCay(s);
-                        } catch (IOException e) {
-                            logger.error("城安院错误塔吊(RuntimeData): " + e.getMessage() + ", 参数错误："+s);
-                        } catch (URISyntaxException e) {
-                            logger.error("城安院错误塔吊(RuntimeData): " + e.getMessage() + ", 参数错误："+s);
-                        }
-                    }
-                });
-
-
+//                ThreadUtils.async(new Runnable(){
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            tdtdscCay(s);
+//                        } catch (IOException e) {
+//                            logger.error("城安院错误塔吊(RuntimeData): " + e.getMessage() + ", 参数错误："+s);
+//                        } catch (URISyntaxException e) {
+//                            logger.error("城安院错误塔吊(RuntimeData): " + e.getMessage() + ", 参数错误："+s);
+//                        }
+//                    }
+//                });
+                SbCraneAddrecord sbCraneAddrecord = new SbCraneAddrecord();
+                sbCraneAddrecord.setHxzid(s.getString("Hxzid"));
+                sbCraneAddrecord.setDownlineTime(s.getString("DownlineTime"));
+                sbCraneAddrecord.setRuntime(s.getString("OnlineTime"));
+                sendCraneToPERSONNEL.cayElectrify(sbCraneAddrecord);
             }
-
             JSONArray body2 = electrifyCrane(s,"crane");
             setZCData(s.getString("HxzId"), body2, "/crane/electrify", "crane");
         }
@@ -620,26 +632,27 @@ public class DeyeCraneApi {
             sbElevatorBinding.setScznl("CAY");
             List<SbElevatorBinding> list = iSbElevatorBindingService.selectSbElevatorBindingList(sbElevatorBinding);
             if (list.size()>0) {
-                ThreadUtils.async(new Runnable(){
-                    @Override
-                    public void run() {
-                        try {
-                            tdtdscCay(s);
-                        } catch (IOException e) {
-                            logger.error("城安院错误升降机(RuntimeData): " + e.getMessage() + ", 参数错误："+s);
-                        } catch (URISyntaxException e) {
-                            logger.error("城安院错误升降机(RuntimeData): " + e.getMessage() + ", 参数错误："+s);
-                        }
-                    }
-                });
+//                ThreadUtils.async(new Runnable(){
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            tdtdscCay(s);
+//                        } catch (IOException e) {
+//                            logger.error("城安院错误升降机(RuntimeData): " + e.getMessage() + ", 参数错误："+s);
+//                        } catch (URISyntaxException e) {
+//                            logger.error("城安院错误升降机(RuntimeData): " + e.getMessage() + ", 参数错误："+s);
+//                        }
+//                    }
+//                });
+                SbElevatorAddrecord sbElevatorAddrecord = new SbElevatorAddrecord();
+                sbElevatorAddrecord.setHxzid(s.getString("Hxzid"));
+                sbElevatorAddrecord.setDownlineTime(s.getString("DownlineTime"));
+                sendElevatorToPERSONNEL.cayElectrify(sbElevatorAddrecord);
 
             }
-
             JSONArray body2 = electrifyCrane(s,"elevator");
             setZCData(s.getString("HxzId"), body2, "/elevator/electrify", "elevator");
         }
-
-
         //返回json字符串
         JSONObject results=new JSONObject();
         results.put("cmd","RuntimeData");
@@ -650,61 +663,60 @@ public class DeyeCraneApi {
         return results;
     }
 
-    /** 上报塔吊通电时间接口 (城安院) */
-    public String tdtdscCay(JSONObject jsonObject) throws IOException, URISyntaxException {
-        Integer projectId = null;
-        String k = null;
-        SbCraneBinding sbCraneBinding = new SbCraneBinding();
-        sbCraneBinding.setHxzid(jsonObject.getString("HxzId"));
-        List<SbCraneBinding> list = iSbCraneBindingService.selectSbCraneBindingList(sbCraneBinding);
-        HjProject hjProject = iHjProjectService.selectHjProjectById(list.get(0).getPid());
-        JSONObject jsonObject1 = new JSONObject();
-        jsonObject1.put("curpage","1");
-        jsonObject1.put("name",hjProject.getProjectName());
-
-        JSONArray body =new JSONArray();
-        JSONObject js1=new JSONObject();
-        if(StringUtils.isBlank(jsonObject.getString("DownlineTime"))){
-            js1.put("device_no",Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备号
-            js1.put("runtime",jsonObject.getString("OnlineTime"));//运行时刻
-            js1.put("operation","1");//事件类型（0 断电，1 通电）
-        }else {
-            js1.put("device_no",Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备号
-            js1.put("runtime",jsonObject.getString("DownlineTime"));//运行时刻
-            js1.put("operation","0");//事件类型（0 断电，1 通电）
-        }
-        /** 市管项目*/
-        String xmid = ZCAPIClient.reportedCay2019("authorize/getProjInfos",jsonObject1);
-        JSONArray array = new JSONArray();
-        if (xmid != null) {
-            //上报城安院升降机基本信息（开始）
-            JSONObject j = new JSONObject();
-            j.put("pguid", xmid);
-            JSONObject object = ZCAPIClient.reportedCay("authorize/getGcbyProj", j);
-            JSONArray data = object.getJSONArray("res");
-            JSONObject datas = data.getJSONObject(0);
-            js1.put("PGUID", datas.getString("xmid"));//所属项目编号
-            js1.put("Jdbh", datas.getString("jdbh"));//项目监督编号
-            js1.put("sub_id", datas.getString("gcid"));//工程ID
-            array.add(js1);
-            JSONObject jsonObject2 = new JSONObject();
-            jsonObject2.put("PList",array);
-            k = ZCAPIClient.QGXMCAY("tower_t_state",jsonObject2);
-        }
-        /** 区管项目*/
-        JSONObject jsonObject2 = ZCAPIClient.reportedCay2019s("authorize/getProjInfos",jsonObject1);
-        JSONArray jsonArray = new JSONArray();
-        if (jsonObject2 != null) {
-            JSONObject object1 = new JSONObject();
-            object1.put("PGUID", jsonObject2.getString("xmid"));//所属项目编号
-            object1.put("Jdbh", jsonObject2.getString("jdbh"));//项目监督编号
-            jsonArray.add(object1);
-            JSONObject object = new JSONObject();
-            object.put("PList",jsonArray);
-            k = ZCAPIClient.QGXMCAY("tower/tower_t_state",object);
-        }
-        return k;
-    }
+//    /** 上报塔吊通电时间接口 (城安院) */
+//    public String tdtdscCay(JSONObject jsonObject) throws IOException, URISyntaxException {
+//        Integer projectId = null;
+//        String k = null;
+//        SbCraneBinding sbCraneBinding = new SbCraneBinding();
+//        sbCraneBinding.setHxzid(jsonObject.getString("HxzId"));
+//        List<SbCraneBinding> list = iSbCraneBindingService.selectSbCraneBindingList(sbCraneBinding);
+//        HjProject hjProject = iHjProjectService.selectHjProjectById(list.get(0).getPid());
+//        JSONObject jsonObject1 = new JSONObject();
+//        jsonObject1.put("curpage","1");
+//        jsonObject1.put("name",hjProject.getProjectName());
+//        JSONArray body =new JSONArray();
+//        JSONObject js1=new JSONObject();
+//        if(StringUtils.isBlank(jsonObject.getString("DownlineTime"))){
+//            js1.put("device_no",Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备号
+//            js1.put("runtime",jsonObject.getString("OnlineTime"));//运行时刻
+//            js1.put("operation","1");//事件类型（0 断电，1 通电）
+//        }else {
+//            js1.put("device_no",Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备号
+//            js1.put("runtime",jsonObject.getString("DownlineTime"));//运行时刻
+//            js1.put("operation","0");//事件类型（0 断电，1 通电）
+//        }
+//        /** 市管项目*/
+//        String xmid = ZCAPIClient.reportedCay2019("authorize/getProjInfos",jsonObject1);
+//        JSONArray array = new JSONArray();
+//        if (xmid != null) {
+//            //上报城安院升降机基本信息（开始）
+//            JSONObject j = new JSONObject();
+//            j.put("pguid", xmid);
+//            JSONObject object = ZCAPIClient.reportedCay("authorize/getGcbyProj", j);
+//            JSONArray data = object.getJSONArray("res");
+//            JSONObject datas = data.getJSONObject(0);
+//            js1.put("PGUID", datas.getString("xmid"));//所属项目编号
+//            js1.put("Jdbh", datas.getString("jdbh"));//项目监督编号
+//            js1.put("sub_id", datas.getString("gcid"));//工程ID
+//            array.add(js1);
+//            JSONObject jsonObject2 = new JSONObject();
+//            jsonObject2.put("PList",array);
+//            k = ZCAPIClient.QGXMCAY("tower_t_state",jsonObject2);
+//        }
+//        /** 区管项目*/
+//        JSONObject jsonObject2 = ZCAPIClient.reportedCay2019s("authorize/getProjInfos",jsonObject1);
+//        JSONArray jsonArray = new JSONArray();
+//        if (jsonObject2 != null) {
+//            JSONObject object1 = new JSONObject();
+//            object1.put("PGUID", jsonObject2.getString("xmid"));//所属项目编号
+//            object1.put("Jdbh", jsonObject2.getString("jdbh"));//项目监督编号
+//            jsonArray.add(object1);
+//            JSONObject object = new JSONObject();
+//            object.put("PList",jsonArray);
+//            k = ZCAPIClient.QGXMCAY("tower/tower_t_state",object);
+//        }
+//        return k;
+//    }
 
     /**
      * 2.7上报塔机工作循环数据
@@ -725,18 +737,23 @@ public class DeyeCraneApi {
         sbCraneBinding1.setScznl("CAY");
         List<SbCraneBinding> list = iSbCraneBindingService.selectSbCraneBindingList(sbCraneBinding1);
         if (list.size()>0) {
-            ThreadUtils.async(new Runnable(){
-                @Override
-                public void run() {
-                    try {
-                        tdgzxhCay(s);
-                    } catch (IOException e) {
-                        logger.error("城安院错误(WorkDataCrane): " + e.getMessage() + ", 参数错误："+s);
-                    } catch (URISyntaxException e) {
-                        logger.error("城安院错误(WorkDataCrane): " + e.getMessage() + ", 参数错误："+s);
-                    }
-                }
-            });
+//            ThreadUtils.async(new Runnable(){
+//                @Override
+//                public void run() {
+//                    try {
+//                        tdgzxhCay(s);
+//                    } catch (IOException e) {
+//                        logger.error("城安院错误(WorkDataCrane): " + e.getMessage() + ", 参数错误："+s);
+//                    } catch (URISyntaxException e) {
+//                        logger.error("城安院错误(WorkDataCrane): " + e.getMessage() + ", 参数错误："+s);
+//                    }
+//                }
+//            });
+            SbCraneAddrecord sbCraneAddrecord = new SbCraneAddrecord();
+            sbCraneAddrecord.setHxzid(s.getString("Hxzid"));
+            sbCraneAddrecord.setWorkEndTime(s.getString("WorkEndTime"));
+            sbCraneAddrecord.setWorkMaxHeight(String.valueOf(Double.valueOf(Float.valueOf(s.getString("WorkMaxHeight")))/100));
+            sendCraneToPERSONNEL.cayWorkCycle(sbCraneAddrecord);
 
         }
 
@@ -749,56 +766,56 @@ public class DeyeCraneApi {
         return results;
     }
 
-    /** 上报城安院塔吊工作循环*/
-    public String tdgzxhCay(JSONObject jsonObject) throws IOException, URISyntaxException {
-        Integer projectId = null;
-        String k = null;
-        SbCraneBinding sbCraneBinding = new SbCraneBinding();
-        sbCraneBinding.setHxzid(jsonObject.getString("HxzId"));
-        List<SbCraneBinding> list = iSbCraneBindingService.selectSbCraneBindingList(sbCraneBinding);
-        HjProject hjProject = iHjProjectService.selectHjProjectById(list.get(0).getPid());
-        JSONObject jsonObject1 = new JSONObject();
-        jsonObject1.put("curpage","1");
-        jsonObject1.put("name",hjProject.getProjectName());
-        /** 市管项目*/
-        String xmid = ZCAPIClient.reportedCay2019("authorize/getProjInfos",jsonObject1);
-        JSONArray array = new JSONArray();
-        if (xmid != null) {
-            //上报城安院升降机基本信息（开始）
-            JSONObject j = new JSONObject();
-            j.put("pguid", xmid);
-            JSONObject object = ZCAPIClient.reportedCay("authorize/getGcbyProj", j);
-            JSONArray data = object.getJSONArray("res");
-            JSONObject datas = data.getJSONObject(0);
-            JSONObject json = new JSONObject();
-            json.put("PGUID",datas.getString("xmid"));//所属项目编号
-            json.put("Jdbh",datas.getString("jdbh"));//项目监督编号
-            json.put("sub_id",datas.getString("gcid"));//工程ID
-            json.put("GUID",Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备号
-            json.put("Yxsk_E",jsonObject.getString("WorkEndTime"));//工作循环结束时刻
-            json.put("ljb",Double.valueOf(Float.valueOf(jsonObject.getString("WorkMaxHeight")))/100);//工作循环中最高力矩比
-            array.add(json);
-            JSONObject jsonObject2 = new JSONObject();
-            jsonObject2.put("PList",array);
-            k = ZCAPIClient.QGXMCAY("tower/tow_cycle",jsonObject2);
-        }
-        /** 区管项目*/
-        JSONObject jsonObject2 = ZCAPIClient.reportedCay2019s("authorize/getProjInfos",jsonObject1);
-        JSONArray jsonArray = new JSONArray();
-        if (jsonObject2 != null) {
-            JSONObject object1 = new JSONObject();
-            object1.put("PGUID", jsonObject2.getString("xmid"));//所属项目编号
-            object1.put("Jdbh", jsonObject2.getString("jdbh"));//项目监督编号
-            object1.put("GUID", Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备号
-            object1.put("Yxsk_E",jsonObject.getString("WorkEndTime"));//工作循环结束时刻
-            object1.put("ljb",Double.valueOf(Float.valueOf(jsonObject.getString("WorkMaxHeight")))/100);//工作循环中最高力矩比
-            jsonArray.add(object1);
-            JSONObject object = new JSONObject();
-            object.put("PList",jsonArray);
-            k = ZCAPIClient.QGXMCAY("tower/tow_cycle",object);
-        }
-        return k;
-    }
+//    /** 上报城安院塔吊工作循环*/
+//    public String tdgzxhCay(JSONObject jsonObject) throws IOException, URISyntaxException {
+//        Integer projectId = null;
+//        String k = null;
+//        SbCraneBinding sbCraneBinding = new SbCraneBinding();
+//        sbCraneBinding.setHxzid(jsonObject.getString("HxzId"));
+//        List<SbCraneBinding> list = iSbCraneBindingService.selectSbCraneBindingList(sbCraneBinding);
+//        HjProject hjProject = iHjProjectService.selectHjProjectById(list.get(0).getPid());
+//        JSONObject jsonObject1 = new JSONObject();
+//        jsonObject1.put("curpage","1");
+//        jsonObject1.put("name",hjProject.getProjectName());
+//        /** 市管项目*/
+//        String xmid = ZCAPIClient.reportedCay2019("authorize/getProjInfos",jsonObject1);
+//        JSONArray array = new JSONArray();
+//        if (xmid != null) {
+//            //上报城安院升降机基本信息（开始）
+//            JSONObject j = new JSONObject();
+//            j.put("pguid", xmid);
+//            JSONObject object = ZCAPIClient.reportedCay("authorize/getGcbyProj", j);
+//            JSONArray data = object.getJSONArray("res");
+//            JSONObject datas = data.getJSONObject(0);
+//            JSONObject json = new JSONObject();
+//            json.put("PGUID",datas.getString("xmid"));//所属项目编号
+//            json.put("Jdbh",datas.getString("jdbh"));//项目监督编号
+//            json.put("sub_id",datas.getString("gcid"));//工程ID
+//            json.put("GUID",Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备号
+//            json.put("Yxsk_E",jsonObject.getString("WorkEndTime"));//工作循环结束时刻
+//            json.put("ljb",Double.valueOf(Float.valueOf(jsonObject.getString("WorkMaxHeight")))/100);//工作循环中最高力矩比
+//            array.add(json);
+//            JSONObject jsonObject2 = new JSONObject();
+//            jsonObject2.put("PList",array);
+//            k = ZCAPIClient.QGXMCAY("tower/tow_cycle",jsonObject2);
+//        }
+//        /** 区管项目*/
+//        JSONObject jsonObject2 = ZCAPIClient.reportedCay2019s("authorize/getProjInfos",jsonObject1);
+//        JSONArray jsonArray = new JSONArray();
+//        if (jsonObject2 != null) {
+//            JSONObject object1 = new JSONObject();
+//            object1.put("PGUID", jsonObject2.getString("xmid"));//所属项目编号
+//            object1.put("Jdbh", jsonObject2.getString("jdbh"));//项目监督编号
+//            object1.put("GUID", Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备号
+//            object1.put("Yxsk_E",jsonObject.getString("WorkEndTime"));//工作循环结束时刻
+//            object1.put("ljb",Double.valueOf(Float.valueOf(jsonObject.getString("WorkMaxHeight")))/100);//工作循环中最高力矩比
+//            jsonArray.add(object1);
+//            JSONObject object = new JSONObject();
+//            object.put("PList",jsonArray);
+//            k = ZCAPIClient.QGXMCAY("tower/tow_cycle",object);
+//        }
+//        return k;
+//    }
 
     /**
      * 2.8上报塔机报警数据
@@ -835,20 +852,36 @@ public class DeyeCraneApi {
         sbCraneBinding1.setHxzid(s.getString("HxzId"));
         sbCraneBinding1.setScznl("CAY");
         List<SbCraneBinding> list1 = iSbCraneBindingService.selectSbCraneBindingList(sbCraneBinding1);
-        if (list.size()>0 || list1.size()>0) {
-            ThreadUtils.async(new Runnable(){
-                @Override
-                public void run() {
-                    try {
-                        sjdkCay(s);
-                    } catch (IOException e) {
-                        logger.error("城安院错误(OperatorRecord): " + e.getMessage() + ", 参数错误："+s);
-                    } catch (URISyntaxException e) {
-                        logger.error("城安院错误(OperatorRecord): " + e.getMessage() + ", 参数错误："+s);
-                    }
-                }
-            });
+//        if (list.size()>0 || list1.size()>0) {
+//            ThreadUtils.async(new Runnable(){
+//                @Override
+//                public void run() {
+//                    try {
+//                        sjdkCay(s);
+//                    } catch (IOException e) {
+//                        logger.error("城安院错误(OperatorRecord): " + e.getMessage() + ", 参数错误："+s);
+//                    } catch (URISyntaxException e) {
+//                        logger.error("城安院错误(OperatorRecord): " + e.getMessage() + ", 参数错误："+s);
+//                    }
+//                }
+//            });
+        if (list1.size()>0) {
+            SbCraneAddrecord sbCraneAddrecord = new SbCraneAddrecord();
+            sbCraneAddrecord.setHxzid(Tools.encodeToMD5s(s.getString("HxzId")));
+            sbCraneAddrecord.setOperatorName(s.getString("workerName"));
+            sbCraneAddrecord.setPunchTime(s.getString("RunchTime"));
+            sbCraneAddrecord.setClosingTime(s.getString("ClosingTime"));
+            sendCraneToPERSONNEL.cayPunchTheClock(sbCraneAddrecord);
         }
+        if (list.size()>0) {
+            SbElevatorAddrecord sbElevatorAddrecord = new SbElevatorAddrecord();
+            sbElevatorAddrecord.setHxzid(Tools.encodeToMD5s(s.getString("Hxzid")));
+            sbElevatorAddrecord.setOperatorName(s.getString("workerName"));
+            sbElevatorAddrecord.setPunchTime(s.getString("RunchTime"));
+            sbElevatorAddrecord.setClosingTime(s.getString("ClosingTime"));
+            sendElevatorToPERSONNEL.cayPunchTheClock(sbElevatorAddrecord);
+        }
+//        }
         //将塔吊实时数据有json转换为对象
         JSONObject results=new JSONObject();
         results.put("cmd","OperatorRecord");
@@ -1106,18 +1139,21 @@ public class DeyeCraneApi {
         sbElevatorBinding.setScznl("CAY");
         List<SbElevatorBinding> list = iSbElevatorBindingService.selectSbElevatorBindingList(sbElevatorBinding);
         if (list.size()>0) {
-            ThreadUtils.async(new Runnable(){
-                @Override
-                public void run() {
-                    try {
-                        elevatorCaySSSJ(s,sList.get(0).getLLoadCapacity());
-                    } catch (IOException e) {
-                        logger.error("城安院错误(RealtimeDataElevator): " + e.getMessage() + ", 参数错误："+s+sList.get(0).getLLoadCapacity());
-                    } catch (URISyntaxException e) {
-                        logger.error("城安院错误(RealtimeDataElevator): " + e.getMessage() + ", 参数错误："+s+sList.get(0).getLLoadCapacity());
-                    }
-                }
-            });
+//            ThreadUtils.async(new Runnable(){
+//                @Override
+//                public void run() {
+//                    try {
+//                        elevatorCaySSSJ(s,sList.get(0).getLLoadCapacity());
+//                    } catch (IOException e) {
+//                        logger.error("城安院错误(RealtimeDataElevator): " + e.getMessage() + ", 参数错误："+s+sList.get(0).getLLoadCapacity());
+//                    } catch (URISyntaxException e) {
+//                        logger.error("城安院错误(RealtimeDataElevator): " + e.getMessage() + ", 参数错误："+s+sList.get(0).getLLoadCapacity());
+//                    }
+//                }
+//            });
+            SbElevatorAddrecord sbElevatorAddrecord = new SbElevatorAddrecord();
+
+            sendElevatorToPERSONNEL.cayDate(sbElevatorAddrecord);
         }
 
 
@@ -1200,19 +1236,26 @@ public class DeyeCraneApi {
         sbElevatorBinding.setScznl("CAY");
         List<SbElevatorBinding> list = iSbElevatorBindingService.selectSbElevatorBindingList(sbElevatorBinding);
         if (list.size()>0) {
-            ThreadUtils.async(new Runnable(){
-                @Override
-                public void run() {
-                    try {
-                        electrifyCAY(s);
-                        elevatorCayCZJL(s);
-                    } catch (IOException e) {
-                        logger.error("城安院错误(WorkDataElevator): " + e.getMessage() + ", 参数错误："+s);
-                    } catch (URISyntaxException e) {
-                        logger.error("城安院错误(WorkDataElevator): " + e.getMessage() + ", 参数错误："+s);
-                    }
-                }
-            });
+//            ThreadUtils.async(new Runnable(){
+//                @Override
+//                public void run() {
+//                    try {
+//                        electrifyCAY(s);
+//                        elevatorCayCZJL(s);
+//                    } catch (IOException e) {
+//                        logger.error("城安院错误(WorkDataElevator): " + e.getMessage() + ", 参数错误："+s);
+//                    } catch (URISyntaxException e) {
+//                        logger.error("城安院错误(WorkDataElevator): " + e.getMessage() + ", 参数错误："+s);
+//                    }
+//                }
+//            });
+            SbElevatorAddrecord sbElevatorAddrecord = new SbElevatorAddrecord();
+            sbElevatorAddrecord.setHxzid(s.getString("HxzId"));
+            sbElevatorAddrecord.setDownlineTime(s.getString("WorkStartTime"));//操作开始时间
+            sbElevatorAddrecord.setClosingTime(s.getString("WorkEndTime"));//操作结束时间
+            sbElevatorAddrecord.setLoadRatio(Double.valueOf(s.getString("MaxWeight")));//工作最大承重值
+            sbElevatorAddrecord.setIsOverWarning(Integer.valueOf(s.getString("WeightAlarm")));//是否发生超载
+            sendElevatorToPERSONNEL.cayWorkCycle(sbElevatorAddrecord);
         }
         setZCData(s.getString("HxzId"),body,"/elevator/operator","elevator");
 
@@ -1252,315 +1295,315 @@ public class DeyeCraneApi {
     }
 
     /**上报城安院司机打卡记录*/
-    public String sjdkCay(JSONObject jsonObject) throws IOException, URISyntaxException {
-        JSONArray body =new JSONArray();
-        JSONObject js1=new JSONObject();
-        Integer projectId = null;
-        String f = null;
-        String i = "升降机";
-        if (Integer.valueOf(jsonObject.getString("Type"))==1){
-            i="塔机";
-        }else if (Integer.valueOf(jsonObject.getString("Type"))==2){
-            i="升降机";
-        }
-//        else if (Integer.valueOf(jsonObject.getString("Type"))==3){
-//            i = "扬尘监测";
-//        }else if (Integer.valueOf(jsonObject.getString("Type"))==4){
-//            i = "卸料平台";
+//    public String sjdkCay(JSONObject jsonObject) throws IOException, URISyntaxException {
+//        JSONArray body =new JSONArray();
+//        JSONObject js1=new JSONObject();
+//        Integer projectId = null;
+//        String f = null;
+//        String i = "升降机";
+//        if (Integer.valueOf(jsonObject.getString("Type"))==1){
+//            i="塔机";
+//        }else if (Integer.valueOf(jsonObject.getString("Type"))==2){
+//            i="升降机";
 //        }
-        SbElevatorBinding sbElevatorBinding = new SbElevatorBinding();
-        sbElevatorBinding.setHxzid(jsonObject.getString("HxzId"));
-        sbElevatorBinding.setProjectId(projectId);
-        List<SbElevatorBinding> list = iSbElevatorBindingService.list(sbElevatorBinding);
-        HjProject hjProject = iHjProjectService.selectHjProjectById(list.get(0).getPid());
-        JSONObject jsonObject1 = new JSONObject();
-        jsonObject1.put("curpage","1");
-        jsonObject1.put("name",hjProject.getProjectName());
-        /** 区管项目*/
-        JSONObject jsonObject2 = ZCAPIClient.reportedCay2019s("authorize/getProjInfos",jsonObject1);
-        if (jsonObject2 != null) {
-            js1.put("projectId", jsonObject2.getString("xmid"));//所属项目编号
-            js1.put("jdbh", jsonObject2.getString("jdbh"));//项目监督编号
-            js1.put("devGuid",Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备编号
-            js1.put("devType",i);//设备类型（升降机/塔机）
-            js1.put("workerName",jsonObject.getString("Name"));//驾驶员姓名
-            js1.put("punchTime",jsonObject.getString("PunchTime"));//打卡（上机）时间
-            js1.put("closingTime",jsonObject.getString("ClosingTime"));//下班（关机）时间
-            body.add(js1);
-            JSONObject object = new JSONObject();
-            object.put("PList",body);
-            f = ZCAPIClient.QGXMCAY("tower/oper_pec",object);
-        }
-        /** 市管项目*/
-        String xmid = ZCAPIClient.reportedCay2019("authorize/getProjInfos",jsonObject1);
-        JSONObject object1 = new JSONObject();
-        JSONArray array = new JSONArray();
-        if (xmid != null) {
-            JSONObject j = new JSONObject();
-            j.put("pguid", xmid);
-            JSONObject object = ZCAPIClient.reportedCay("authorize/getGcbyProj", j);
-            JSONArray data = object.getJSONArray("res");
-            JSONObject datas = data.getJSONObject(0);
-            object1.put("projectId", datas.getString("xmid"));//所属项目编号
-            object1.put("Jdbh", datas.getString("jdbh"));//项目监督编号
-            object1.put("sub_id", datas.getString("gcid"));//工程ID
-            object1.put("devGuid",Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备编号
-            object1.put("devType",i);//设备类型（升降机/塔机）
-            object1.put("punchTime",jsonObject.getString("PunchTime"));//打卡（上机）时间
-            object1.put("closingTime",jsonObject.getString("ClosingTime"));//下班（关机）时间
-            array.add(object1);
-            JSONObject object2 = new JSONObject();
-            object2.put("PList",array);
-            f = ZCAPIClient.SGXMCAY("misInter/tower/oper_pec",jsonObject);
-        }
-        return f;
-    }
+////        else if (Integer.valueOf(jsonObject.getString("Type"))==3){
+////            i = "扬尘监测";
+////        }else if (Integer.valueOf(jsonObject.getString("Type"))==4){
+////            i = "卸料平台";
+////        }
+//        SbElevatorBinding sbElevatorBinding = new SbElevatorBinding();
+//        sbElevatorBinding.setHxzid(jsonObject.getString("HxzId"));
+//        sbElevatorBinding.setProjectId(projectId);
+//        List<SbElevatorBinding> list = iSbElevatorBindingService.list(sbElevatorBinding);
+//        HjProject hjProject = iHjProjectService.selectHjProjectById(list.get(0).getPid());
+//        JSONObject jsonObject1 = new JSONObject();
+//        jsonObject1.put("curpage","1");
+//        jsonObject1.put("name",hjProject.getProjectName());
+//        /** 区管项目*/
+//        JSONObject jsonObject2 = ZCAPIClient.reportedCay2019s("authorize/getProjInfos",jsonObject1);
+//        if (jsonObject2 != null) {
+//            js1.put("projectId", jsonObject2.getString("xmid"));//所属项目编号
+//            js1.put("jdbh", jsonObject2.getString("jdbh"));//项目监督编号
+//            js1.put("devGuid",Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备编号
+//            js1.put("devType",i);//设备类型（升降机/塔机）
+//            js1.put("workerName",jsonObject.getString("Name"));//驾驶员姓名
+//            js1.put("punchTime",jsonObject.getString("PunchTime"));//打卡（上机）时间
+//            js1.put("closingTime",jsonObject.getString("ClosingTime"));//下班（关机）时间
+//            body.add(js1);
+//            JSONObject object = new JSONObject();
+//            object.put("PList",body);
+//            f = ZCAPIClient.QGXMCAY("tower/oper_pec",object);
+//        }
+//        /** 市管项目*/
+//        String xmid = ZCAPIClient.reportedCay2019("authorize/getProjInfos",jsonObject1);
+//        JSONObject object1 = new JSONObject();
+//        JSONArray array = new JSONArray();
+//        if (xmid != null) {
+//            JSONObject j = new JSONObject();
+//            j.put("pguid", xmid);
+//            JSONObject object = ZCAPIClient.reportedCay("authorize/getGcbyProj", j);
+//            JSONArray data = object.getJSONArray("res");
+//            JSONObject datas = data.getJSONObject(0);
+//            object1.put("projectId", datas.getString("xmid"));//所属项目编号
+//            object1.put("Jdbh", datas.getString("jdbh"));//项目监督编号
+//            object1.put("sub_id", datas.getString("gcid"));//工程ID
+//            object1.put("devGuid",Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备编号
+//            object1.put("devType",i);//设备类型（升降机/塔机）
+//            object1.put("punchTime",jsonObject.getString("PunchTime"));//打卡（上机）时间
+//            object1.put("closingTime",jsonObject.getString("ClosingTime"));//下班（关机）时间
+//            array.add(object1);
+//            JSONObject object2 = new JSONObject();
+//            object2.put("PList",array);
+//            f = ZCAPIClient.SGXMCAY("misInter/tower/oper_pec",jsonObject);
+//        }
+//        return f;
+//    }
     /**
      * 上传塔机通电时间body数据(城安院)
      */
-    public String electrifyCAY(JSONObject workdatacrane) throws IOException, URISyntaxException {
-        JSONArray body =new JSONArray();
-        JSONObject js1=new JSONObject();
-        Integer projectId = null;
-        String f = null;
-        SbElevatorBinding sbElevatorBinding = new SbElevatorBinding();
-        sbElevatorBinding.setHxzid(workdatacrane.getString("HxzId"));
-        sbElevatorBinding.setProjectId(projectId);
-        List<SbElevatorBinding> list = iSbElevatorBindingService.list(sbElevatorBinding);
-        HjProject hjProject = iHjProjectService.selectHjProjectById(list.get(0).getPid());
-        JSONObject jsonObject1 = new JSONObject();
-        jsonObject1.put("curpage","1");
-        jsonObject1.put("name",hjProject.getProjectName());
-        /** 区管项目*/
-        JSONObject jsonObject2 = ZCAPIClient.reportedCay2019s("authorize/getProjInfos",jsonObject1);
-        if (jsonObject2 != null) {
-            js1.put("PGUID", jsonObject2.getString("xmid"));//所属项目编号
-            js1.put("Jdbh", jsonObject2.getString("jdbh"));//项目监督编号
-            if (StringUtils.isBlank(workdatacrane.getString("DownlineTime"))) {
-                js1.put("device_no", Tools.encodeToMD5s(workdatacrane.getString("HxzId")));//设备号
-                js1.put("runtime", workdatacrane.getString("OnlineTime"));//运行时刻
-                js1.put("operation", "1");//事件类型（0 断电，1 通电）
-            } else {
-                js1.put("device_no", Tools.encodeToMD5s(workdatacrane.getString("HxzId")));//设备号
-                js1.put("runtime", workdatacrane.getString("DownlineTime"));//运行时刻
-                js1.put("operation", "0");//事件类型（0 断电，1 通电）
-            }
-            body.add(js1);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("PList",body);
-            f = ZCAPIClient.QGXMCAY("lifter/ele_t_state",jsonObject);
-        }
-        /** 市管项目*/
-        String xmid = ZCAPIClient.reportedCay2019("authorize/getProjInfos",jsonObject1);
-        JSONObject object1 = new JSONObject();
-        JSONArray array = new JSONArray();
-        if (xmid != null) {
-            JSONObject j = new JSONObject();
-            j.put("pguid", xmid);
-            JSONObject object = ZCAPIClient.reportedCay("authorize/getGcbyProj", j);
-            JSONArray data = object.getJSONArray("res");
-            JSONObject datas = data.getJSONObject(0);
-            object1.put("PGUID", datas.getString("xmid"));//所属项目编号
-            object1.put("Jdbh", datas.getString("jdbh"));//项目监督编号
-            object1.put("sub_id",datas.getString("gcid"));//工程ID
-            if (StringUtils.isBlank(workdatacrane.getString("DownlineTime"))) {
-                object1.put("device_no", Tools.encodeToMD5s(workdatacrane.getString("HxzId")));//设备号
-                object1.put("runtime", workdatacrane.getString("OnlineTime"));//运行时刻
-                object1.put("operation", "1");//事件类型（0 断电，1 通电）
-            } else {
-                object1.put("device_no", Tools.encodeToMD5s(workdatacrane.getString("HxzId")));//设备号
-                object1.put("runtime", workdatacrane.getString("DownlineTime"));//运行时刻
-                object1.put("operation", "0");//事件类型（0 断电，1 通电）
-            }
-            array.add(object1);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("PList",js1);
-            f = ZCAPIClient.SGXMCAY("lifter/ele_t_state",jsonObject);
-        }
-        return f;
-    }
+//    public String electrifyCAY(JSONObject workdatacrane) throws IOException, URISyntaxException {
+//        JSONArray body =new JSONArray();
+//        JSONObject js1=new JSONObject();
+//        Integer projectId = null;
+//        String f = null;
+//        SbElevatorBinding sbElevatorBinding = new SbElevatorBinding();
+//        sbElevatorBinding.setHxzid(workdatacrane.getString("HxzId"));
+//        sbElevatorBinding.setProjectId(projectId);
+//        List<SbElevatorBinding> list = iSbElevatorBindingService.list(sbElevatorBinding);
+//        HjProject hjProject = iHjProjectService.selectHjProjectById(list.get(0).getPid());
+//        JSONObject jsonObject1 = new JSONObject();
+//        jsonObject1.put("curpage","1");
+//        jsonObject1.put("name",hjProject.getProjectName());
+//        /** 区管项目*/
+//        JSONObject jsonObject2 = ZCAPIClient.reportedCay2019s("authorize/getProjInfos",jsonObject1);
+//        if (jsonObject2 != null) {
+//            js1.put("PGUID", jsonObject2.getString("xmid"));//所属项目编号
+//            js1.put("Jdbh", jsonObject2.getString("jdbh"));//项目监督编号
+//            if (StringUtils.isBlank(workdatacrane.getString("DownlineTime"))) {
+//                js1.put("device_no", Tools.encodeToMD5s(workdatacrane.getString("HxzId")));//设备号
+//                js1.put("runtime", workdatacrane.getString("OnlineTime"));//运行时刻
+//                js1.put("operation", "1");//事件类型（0 断电，1 通电）
+//            } else {
+//                js1.put("device_no", Tools.encodeToMD5s(workdatacrane.getString("HxzId")));//设备号
+//                js1.put("runtime", workdatacrane.getString("DownlineTime"));//运行时刻
+//                js1.put("operation", "0");//事件类型（0 断电，1 通电）
+//            }
+//            body.add(js1);
+//            JSONObject jsonObject = new JSONObject();
+//            jsonObject.put("PList",body);
+//            f = ZCAPIClient.QGXMCAY("lifter/ele_t_state",jsonObject);
+//        }
+//        /** 市管项目*/
+//        String xmid = ZCAPIClient.reportedCay2019("authorize/getProjInfos",jsonObject1);
+//        JSONObject object1 = new JSONObject();
+//        JSONArray array = new JSONArray();
+//        if (xmid != null) {
+//            JSONObject j = new JSONObject();
+//            j.put("pguid", xmid);
+//            JSONObject object = ZCAPIClient.reportedCay("authorize/getGcbyProj", j);
+//            JSONArray data = object.getJSONArray("res");
+//            JSONObject datas = data.getJSONObject(0);
+//            object1.put("PGUID", datas.getString("xmid"));//所属项目编号
+//            object1.put("Jdbh", datas.getString("jdbh"));//项目监督编号
+//            object1.put("sub_id",datas.getString("gcid"));//工程ID
+//            if (StringUtils.isBlank(workdatacrane.getString("DownlineTime"))) {
+//                object1.put("device_no", Tools.encodeToMD5s(workdatacrane.getString("HxzId")));//设备号
+//                object1.put("runtime", workdatacrane.getString("OnlineTime"));//运行时刻
+//                object1.put("operation", "1");//事件类型（0 断电，1 通电）
+//            } else {
+//                object1.put("device_no", Tools.encodeToMD5s(workdatacrane.getString("HxzId")));//设备号
+//                object1.put("runtime", workdatacrane.getString("DownlineTime"));//运行时刻
+//                object1.put("operation", "0");//事件类型（0 断电，1 通电）
+//            }
+//            array.add(object1);
+//            JSONObject jsonObject = new JSONObject();
+//            jsonObject.put("PList",js1);
+//            f = ZCAPIClient.SGXMCAY("lifter/ele_t_state",jsonObject);
+//        }
+//        return f;
+//    }
 
 
         /** 上报城安院升降机操作记录*/
-    public JSONArray elevatorCayCZJL(JSONObject workdataelevator) throws IOException, URISyntaxException {
-        JSONArray body=new JSONArray();
-        JSONArray body1=new JSONArray();
-        JSONObject js=new JSONObject();
-        JSONObject js1=new JSONObject();
-        Integer projectId = null;
-        SbElevatorBinding sbElevatorBinding = new SbElevatorBinding();
-        sbElevatorBinding.setHxzid(workdataelevator.getString("HxzId"));
-        sbElevatorBinding.setProjectId(projectId);
-        List<SbElevatorBinding> list = iSbElevatorBindingService.list(sbElevatorBinding);
-        HjProject hjProject = iHjProjectService.selectHjProjectById(list.get(0).getPid());
-        JSONObject jsonObject1 = new JSONObject();
-        jsonObject1.put("curpage","1");
-        jsonObject1.put("name",hjProject.getProjectName());
-        JSONArray array = new JSONArray();
-        String xmid = ZCAPIClient.reportedCay2019("authorize/getProjInfos",jsonObject1);
-        /** 对接市管项目*/
-        if (xmid != null){
-            JSONObject j = new JSONObject();
-            j.put("pguid", xmid);
-            JSONObject object = ZCAPIClient.reportedCay("authorize/getGcbyProj", j);
-            JSONArray data = object.getJSONArray("res");
-            JSONObject datas = data.getJSONObject(0);
-            js.put("PGUID",datas.getString("xmid"));//所属项目编号
-            js.put("Jdbh",datas.getString("jdbh"));//项目监督编号
-            js.put("sub_id",datas.getString("gcid"));//工程ID
-            js.put("GUID", Tools.encodeToMD5s(workdataelevator.getString("HxzId")));//设备编号
-            js.put("Yxsk_S", workdataelevator.getString("WorkStartTime"));//操作开始时间
-            js.put("Yxsk_E", workdataelevator.getString("WorkEndTime"));//操作结束时间
-            js.put("zz", workdataelevator.getString("MaxWeight"));//工作最大承重值
-            js.put("cz", workdataelevator.getString("WeightAlarm"));//是否发生超载
-            js.put("Operator_A larm", "0");//是否非持卡人操作
-            body.add(js);
-            JSONObject object1 = new JSONObject();
-            object1.put("PList",body);
-            //上报城安院升降机操作记录
-            String f = ZCAPIClient.SGXMCAY("lifter/ele_t_run",object1);
-        }
-        /** 对接区管项目*/
-        JSONObject jsonObject2 = ZCAPIClient.reportedCay2019s("authorize/getProjInfos",jsonObject1);
-        if (jsonObject2 != null){
-            JSONObject object1 = new JSONObject();
-            object1.put("PGUID",jsonObject2.getString("xmid"));//所属项目编号
-            object1.put("Jdbh",jsonObject2.getString("jdbh"));//项目监督编号
-            object1.put("GUID", Tools.encodeToMD5s(workdataelevator.getString("HxzId")));//设备编号
-            object1.put("Yxsk_S", workdataelevator.getString("WorkStartTime"));//操作开始时间
-            object1.put("Yxsk_E", workdataelevator.getString("WorkEndTime"));//操作结束时间
-            object1.put("zz", workdataelevator.getString("MaxWeight"));//工作最大承重值
-            object1.put("cz", workdataelevator.getString("WeightAlarm"));//是否发生超载
-            object1.put("Operator_A larm", "0");//是否非持卡人操作
-
-            body1.add(object1);
-            JSONObject jsonObject3 = new JSONObject();
-            jsonObject3.put("PList",body1);
-            String f = ZCAPIClient.QGXMCAY("lifter/ele_t_run",jsonObject3);
-        }
-        return body;
-    }
+//    public JSONArray elevatorCayCZJL(JSONObject workdataelevator) throws IOException, URISyntaxException {
+//        JSONArray body=new JSONArray();
+//        JSONArray body1=new JSONArray();
+//        JSONObject js=new JSONObject();
+//        JSONObject js1=new JSONObject();
+//        Integer projectId = null;
+//        SbElevatorBinding sbElevatorBinding = new SbElevatorBinding();
+//        sbElevatorBinding.setHxzid(workdataelevator.getString("HxzId"));
+//        sbElevatorBinding.setProjectId(projectId);
+//        List<SbElevatorBinding> list = iSbElevatorBindingService.list(sbElevatorBinding);
+//        HjProject hjProject = iHjProjectService.selectHjProjectById(list.get(0).getPid());
+//        JSONObject jsonObject1 = new JSONObject();
+//        jsonObject1.put("curpage","1");
+//        jsonObject1.put("name",hjProject.getProjectName());
+//        JSONArray array = new JSONArray();
+//        String xmid = ZCAPIClient.reportedCay2019("authorize/getProjInfos",jsonObject1);
+//        /** 对接市管项目*/
+//        if (xmid != null){
+//            JSONObject j = new JSONObject();
+//            j.put("pguid", xmid);
+//            JSONObject object = ZCAPIClient.reportedCay("authorize/getGcbyProj", j);
+//            JSONArray data = object.getJSONArray("res");
+//            JSONObject datas = data.getJSONObject(0);
+//            js.put("PGUID",datas.getString("xmid"));//所属项目编号
+//            js.put("Jdbh",datas.getString("jdbh"));//项目监督编号
+//            js.put("sub_id",datas.getString("gcid"));//工程ID
+//            js.put("GUID", Tools.encodeToMD5s(workdataelevator.getString("HxzId")));//设备编号
+//            js.put("Yxsk_S", workdataelevator.getString("WorkStartTime"));//操作开始时间
+//            js.put("Yxsk_E", workdataelevator.getString("WorkEndTime"));//操作结束时间
+//            js.put("zz", workdataelevator.getString("MaxWeight"));//工作最大承重值
+//            js.put("cz", workdataelevator.getString("WeightAlarm"));//是否发生超载
+//            js.put("Operator_A larm", "0");//是否非持卡人操作
+//            body.add(js);
+//            JSONObject object1 = new JSONObject();
+//            object1.put("PList",body);
+//            //上报城安院升降机操作记录
+//            String f = ZCAPIClient.SGXMCAY("lifter/ele_t_run",object1);
+//        }
+//        /** 对接区管项目*/
+//        JSONObject jsonObject2 = ZCAPIClient.reportedCay2019s("authorize/getProjInfos",jsonObject1);
+//        if (jsonObject2 != null){
+//            JSONObject object1 = new JSONObject();
+//            object1.put("PGUID",jsonObject2.getString("xmid"));//所属项目编号
+//            object1.put("Jdbh",jsonObject2.getString("jdbh"));//项目监督编号
+//            object1.put("GUID", Tools.encodeToMD5s(workdataelevator.getString("HxzId")));//设备编号
+//            object1.put("Yxsk_S", workdataelevator.getString("WorkStartTime"));//操作开始时间
+//            object1.put("Yxsk_E", workdataelevator.getString("WorkEndTime"));//操作结束时间
+//            object1.put("zz", workdataelevator.getString("MaxWeight"));//工作最大承重值
+//            object1.put("cz", workdataelevator.getString("WeightAlarm"));//是否发生超载
+//            object1.put("Operator_A larm", "0");//是否非持卡人操作
+//
+//            body1.add(object1);
+//            JSONObject jsonObject3 = new JSONObject();
+//            jsonObject3.put("PList",body1);
+//            String f = ZCAPIClient.QGXMCAY("lifter/ele_t_run",jsonObject3);
+//        }
+//        return body;
+//    }
 
     /** 上报城安院升降机实时数据（运行时间需要30s上报一次）(区管项目+非区管项目)*/
-    public JSONArray elevatorCaySSSJ(JSONObject jsonObject,Double a) throws IOException, URISyntaxException {
-        JSONArray body = new JSONArray();
-        JSONObject pList = new JSONObject();
-        Integer projectId = null;
-        SbElevatorBinding sbElevatorBinding = new SbElevatorBinding();
-        sbElevatorBinding.setHxzid(jsonObject.getString("HxzId"));
-        sbElevatorBinding.setProjectId(projectId);
-        List<SbElevatorBinding> list = iSbElevatorBindingService.list(sbElevatorBinding);
-        HjProject hjProject = iHjProjectService.selectHjProjectById(list.get(0).getPid());
-        JSONObject jsonObject1 = new JSONObject();
-        jsonObject1.put("curpage","1");
-        jsonObject1.put("name",hjProject.getProjectName());
-        /**区管项目*/
-        JSONObject jsonObject2 = ZCAPIClient.reportedCay2019s("authorize/getProjInfos",jsonObject1);
-        if (jsonObject2 != null){
-            JSONObject object1 = new JSONObject();
-            object1.put("pguid",jsonObject2.getString("xmid"));//所属项目编号
-            object1.put("Jdbh",jsonObject2.getString("jdbh"));//项目监督编号
-            object1.put("guid",Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备ID
-            Integer i = Integer.valueOf(jsonObject.getString("Weight"))*1000;
-            object1.put("zz",i);//载重（kg）
-            object1.put("yxsk",jsonObject.getString("RTime"));//运行时刻
-            object1.put("gd",jsonObject.getString("Height"));//高度
-            int k = 0;
-            if (Integer.valueOf(jsonObject.getString("NoPreAlarm"))==0){
-                k = 0;
-            } else if (Integer.valueOf(jsonObject.getString("IdError")) == 1){
-                k=1;
-            }else if (Integer.valueOf(jsonObject.getString("TopAlarm"))==1) {
-                k=8;
-            }else if (Integer.valueOf(jsonObject.getString("BottomAlarm"))==1){
-                k=128;
-            }
-            object1.put("zt",k);//状态(0 正常状态/1 IC 卡无效/2 安全器故障/4 上高度预警/8 上高度报警/16 非本人操作/32 监理授权/64 加节模式/128 下限位报警)
-            object1.put("sxw",jsonObject.getString("TopAlarm"));//是否上限位报警（0-否，1-是，2-无上限位）
-            object1.put("xxw",jsonObject.getString("BottomAlarm"));//是否下限位报警（0-否，1-是，2-无下限位）
-            object1.put("Aqq_alarm",jsonObject.getString("FallAlarm "));//是否安全器（防坠器）报警
-            object1.put("zz_alarm",jsonObject.getString("WeightAlarm"));//是否超重报警
-            int qxw = 0;
-            int hxw = 0;
-            if (Integer.valueOf(jsonObject.getString("DoorState"))==1){
-                qxw = 1;
-                hxw = 1;
-            }else if (Integer.valueOf(jsonObject.getString("DoorState"))==2){
-                qxw = 0;
-                hxw = 1;
-            }else if (Integer.valueOf(jsonObject.getString("DoorState"))==3){
-                qxw = 1;
-                hxw = 0;
-            }
-            object1.put("qxw",qxw);//是否前（外）限位报警
-            object1.put("hxw",hxw);//是否后（内）限位报警
-            body.add(object1);
-            JSONObject jsonObject3 = new JSONObject();
-            jsonObject3.put("PList",body);
-            String f = ZCAPIClient.QGXMCAY("lifter/ele_t_data",jsonObject3);
-        }
-        /** 市管项目*/
-        JSONArray array = new JSONArray();
-        String xmid = ZCAPIClient.reportedCay2019("authorize/getProjInfos",jsonObject1);
-        if (xmid != null){
-            JSONObject j = new JSONObject();
-            j.put("pguid", xmid);
-            JSONObject object = ZCAPIClient.reportedCay("authorize/getGcbyProj", j);
-            JSONArray data = object.getJSONArray("res");
-            JSONObject datas = data.getJSONObject(0);
-            JSONObject json = new JSONObject();
-            json.put("pguid",datas.getString("xmid"));//所属项目编号
-            json.put("Jdbh",datas.getString("jdbh"));//项目监督编号
-            json.put("sub_id",datas.getString("gcid"));//工程ID
-            json.put("guid",Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备ID
-            Integer i = Integer.valueOf(jsonObject.getString("Weight"))*1000;
-            json.put("zz",i);//载重（kg）
-            json.put("load_ratio",df2.format(Double.valueOf(jsonObject.getString("Weight"))/a));//载重比
-            json.put("yxsk",jsonObject.getString("RTime"));//运行时刻
-            json.put("gd",jsonObject.getString("Height"));//高度
-            int k = 0;
-            if (Integer.valueOf(jsonObject.getString("NoPreAlarm"))==0){
-                k = 0;
-            } else if (Integer.valueOf(jsonObject.getString("IdError")) == 1){
-                k=1;
-            }else if (Integer.valueOf(jsonObject.getString("TopAlarm"))==1) {
-                k=8;
-            }else if (Integer.valueOf(jsonObject.getString("BottomAlarm"))==1){
-                k=128;
-            }
-            json.put("zt",k);//状态(0 正常状态/1 IC 卡无效/2 安全器故障/4 上高度预警/8 上高度报警/16 非本人操作/32 监理授权/64 加节模式/128 下限位报警)
-            json.put("sxw",jsonObject.getString("TopAlarm"));//是否上限位报警（0-否，1-是，2-无上限位）
-            json.put("xxw",jsonObject.getString("BottomAlarm"));//是否下限位报警（0-否，1-是，2-无下限位）
-            json.put("zz_alarm",jsonObject.getString("WeightAlarm"));//是否超重报警
-            int qxw = 0;
-            int hxw = 0;
-            if (Integer.valueOf(jsonObject.getString("DoorState"))==1){
-                qxw = 1;
-                hxw = 1;
-            }else if (Integer.valueOf(jsonObject.getString("DoorState"))==2){
-                qxw = 0;
-                hxw = 1;
-            }else if (Integer.valueOf(jsonObject.getString("DoorState"))==3){
-                qxw = 1;
-                hxw = 0;
-            }
-            json.put("qxw",qxw);//是否前（外）限位报警
-            json.put("hxw",hxw);//是否后（内）限位报警
-            if (jsonObject.getString("TopAlarm").equals("1")||jsonObject.getString("BottomAlarm").equals("1")) {
-                json.put("cxw", "1");//超限位报警(1报警）
-            }else {
-                json.put("cxw", "0");//超限位报警(1报警）
-            }
-            array.add(json);
-            JSONObject jsonObject4 = new JSONObject();
-            jsonObject4.put("PList",array);
-            String sgxmsjj = ZCAPIClient.SGXMCAY("lifter/ele_t_data",jsonObject4);
-            System.out.println("上报城安院升降机实时数据状态："+sgxmsjj);
-        }
-        if (jsonObject2 != null){
-            return body;
-        }else {
-            return array;
-        }
-    }
+//    public JSONArray elevatorCaySSSJ(JSONObject jsonObject,Double a) throws IOException, URISyntaxException {
+//        JSONArray body = new JSONArray();
+//        JSONObject pList = new JSONObject();
+//        Integer projectId = null;
+//        SbElevatorBinding sbElevatorBinding = new SbElevatorBinding();
+//        sbElevatorBinding.setHxzid(jsonObject.getString("HxzId"));
+//        sbElevatorBinding.setProjectId(projectId);
+//        List<SbElevatorBinding> list = iSbElevatorBindingService.list(sbElevatorBinding);
+//        HjProject hjProject = iHjProjectService.selectHjProjectById(list.get(0).getPid());
+//        JSONObject jsonObject1 = new JSONObject();
+//        jsonObject1.put("curpage","1");
+//        jsonObject1.put("name",hjProject.getProjectName());
+//        /**区管项目*/
+//        JSONObject jsonObject2 = ZCAPIClient.reportedCay2019s("authorize/getProjInfos",jsonObject1);
+//        if (jsonObject2 != null){
+//            JSONObject object1 = new JSONObject();
+//            object1.put("pguid",jsonObject2.getString("xmid"));//所属项目编号
+//            object1.put("Jdbh",jsonObject2.getString("jdbh"));//项目监督编号
+//            object1.put("guid",Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备ID
+//            Integer i = Integer.valueOf(jsonObject.getString("Weight"))*1000;
+//            object1.put("zz",i);//载重（kg）
+//            object1.put("yxsk",jsonObject.getString("RTime"));//运行时刻
+//            object1.put("gd",jsonObject.getString("Height"));//高度
+//            int k = 0;
+//            if (Integer.valueOf(jsonObject.getString("NoPreAlarm"))==0){
+//                k = 0;
+//            } else if (Integer.valueOf(jsonObject.getString("IdError")) == 1){
+//                k=1;
+//            }else if (Integer.valueOf(jsonObject.getString("TopAlarm"))==1) {
+//                k=8;
+//            }else if (Integer.valueOf(jsonObject.getString("BottomAlarm"))==1){
+//                k=128;
+//            }
+//            object1.put("zt",k);//状态(0 正常状态/1 IC 卡无效/2 安全器故障/4 上高度预警/8 上高度报警/16 非本人操作/32 监理授权/64 加节模式/128 下限位报警)
+//            object1.put("sxw",jsonObject.getString("TopAlarm"));//是否上限位报警（0-否，1-是，2-无上限位）
+//            object1.put("xxw",jsonObject.getString("BottomAlarm"));//是否下限位报警（0-否，1-是，2-无下限位）
+//            object1.put("Aqq_alarm",jsonObject.getString("FallAlarm "));//是否安全器（防坠器）报警
+//            object1.put("zz_alarm",jsonObject.getString("WeightAlarm"));//是否超重报警
+//            int qxw = 0;
+//            int hxw = 0;
+//            if (Integer.valueOf(jsonObject.getString("DoorState"))==1){
+//                qxw = 1;
+//                hxw = 1;
+//            }else if (Integer.valueOf(jsonObject.getString("DoorState"))==2){
+//                qxw = 0;
+//                hxw = 1;
+//            }else if (Integer.valueOf(jsonObject.getString("DoorState"))==3){
+//                qxw = 1;
+//                hxw = 0;
+//            }
+//            object1.put("qxw",qxw);//是否前（外）限位报警
+//            object1.put("hxw",hxw);//是否后（内）限位报警
+//            body.add(object1);
+//            JSONObject jsonObject3 = new JSONObject();
+//            jsonObject3.put("PList",body);
+//            String f = ZCAPIClient.QGXMCAY("lifter/ele_t_data",jsonObject3);
+//        }
+//        /** 市管项目*/
+//        JSONArray array = new JSONArray();
+//        String xmid = ZCAPIClient.reportedCay2019("authorize/getProjInfos",jsonObject1);
+//        if (xmid != null){
+//            JSONObject j = new JSONObject();
+//            j.put("pguid", xmid);
+//            JSONObject object = ZCAPIClient.reportedCay("authorize/getGcbyProj", j);
+//            JSONArray data = object.getJSONArray("res");
+//            JSONObject datas = data.getJSONObject(0);
+//            JSONObject json = new JSONObject();
+//            json.put("pguid",datas.getString("xmid"));//所属项目编号
+//            json.put("Jdbh",datas.getString("jdbh"));//项目监督编号
+//            json.put("sub_id",datas.getString("gcid"));//工程ID
+//            json.put("guid",Tools.encodeToMD5s(jsonObject.getString("HxzId")));//设备ID
+//            Integer i = Integer.valueOf(jsonObject.getString("Weight"))*1000;
+//            json.put("zz",i);//载重（kg）
+//            json.put("zzb",df2.format(Double.valueOf(jsonObject.getString("Weight"))/a));//载重比
+//            json.put("yxsk",jsonObject.getString("RTime"));//运行时刻
+//            json.put("gd",jsonObject.getString("Height"));//高度
+//            int k = 0;
+//            if (Integer.valueOf(jsonObject.getString("NoPreAlarm"))==0){
+//                k = 0;
+//            } else if (Integer.valueOf(jsonObject.getString("IdError")) == 1){
+//                k=1;
+//            }else if (Integer.valueOf(jsonObject.getString("TopAlarm"))==1) {
+//                k=8;
+//            }else if (Integer.valueOf(jsonObject.getString("BottomAlarm"))==1){
+//                k=128;
+//            }
+//            json.put("zt",k);//状态(0 正常状态/1 IC 卡无效/2 安全器故障/4 上高度预警/8 上高度报警/16 非本人操作/32 监理授权/64 加节模式/128 下限位报警)
+//            json.put("sxw",jsonObject.getString("TopAlarm"));//是否上限位报警（0-否，1-是，2-无上限位）
+//            json.put("xxw",jsonObject.getString("BottomAlarm"));//是否下限位报警（0-否，1-是，2-无下限位）
+//            json.put("zz_alarm",jsonObject.getString("WeightAlarm"));//是否超重报警
+//            int qxw = 0;
+//            int hxw = 0;
+//            if (Integer.valueOf(jsonObject.getString("DoorState"))==1){
+//                qxw = 1;
+//                hxw = 1;
+//            }else if (Integer.valueOf(jsonObject.getString("DoorState"))==2){
+//                qxw = 0;
+//                hxw = 1;
+//            }else if (Integer.valueOf(jsonObject.getString("DoorState"))==3){
+//                qxw = 1;
+//                hxw = 0;
+//            }
+//            json.put("qxw",qxw);//是否前（外）限位报警
+//            json.put("hxw",hxw);//是否后（内）限位报警
+//            if (jsonObject.getString("TopAlarm").equals("1")||jsonObject.getString("BottomAlarm").equals("1")) {
+//                json.put("cxw", "1");//超限位报警(1报警）
+//            }else {
+//                json.put("cxw", "0");//超限位报警(1报警）
+//            }
+//            array.add(json);
+//            JSONObject jsonObject4 = new JSONObject();
+//            jsonObject4.put("PList",array);
+//            String sgxmsjj = ZCAPIClient.SGXMCAY("lifter/ele_t_data",jsonObject4);
+//            System.out.println("上报城安院升降机实时数据状态："+sgxmsjj);
+//        }
+//        if (jsonObject2 != null){
+//            return body;
+//        }else {
+//            return array;
+//        }
+//    }
 }
