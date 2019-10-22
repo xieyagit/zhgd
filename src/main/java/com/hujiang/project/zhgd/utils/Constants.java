@@ -57,8 +57,8 @@ public class Constants {
     //public static final String ZCAPI = "http://szwb.sz.gov.cn:2018/openapi";
     //定位接口
     public static final String LOCALTION = "http://101.37.34.43:8080/datainterface/data/getinfos.ll";
-    public static final String LOCALTIONDATA = "http://58.246.211.154:23333/Location/data/getinfos.do";
-
+    public static final String LOCALTIONDATA = "http://home.welleplus.com.cn:58000/Location/data/getinfos.do";
+    public static final String LOCALTIONDATAWARNING = "http://home.welleplus.com.cn:58000/Location/data/getwarns.do";
     //对接城安院地址 市管项目
     public static final String CAY_CS = "http://139.159.186.240/misInter/";
 

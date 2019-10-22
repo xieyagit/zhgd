@@ -1,6 +1,6 @@
 package com.hujiang.project.zhgd.sbHire.service;
 
-import com.hujiang.project.zhgd.sbArea.domain.OptionsUser;
+import com.hujiang.project.zhgd.sbHire.domain.SbAreaProject;
 import com.hujiang.project.zhgd.sbHire.domain.Hire;
 import com.hujiang.project.zhgd.sbHire.domain.HirePeople;
 import com.hujiang.project.zhgd.sbHire.domain.SbHire;
@@ -16,6 +16,8 @@ import java.util.List;
  */
 public interface ISbHireService 
 {
+	public List<SbAreaProject> selectAreaProjectList();
+
 	/**
 	 * pc和移动
 	 * 查询全部项目名称

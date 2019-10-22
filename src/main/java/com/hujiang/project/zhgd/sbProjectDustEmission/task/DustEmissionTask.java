@@ -66,19 +66,6 @@ public class DustEmissionTask {
     private JPushSMS jPushSMS;
 
 
-//    public static void main(String age[])throws  Exception{
-//        JSONObject jsonObject = new JSONObject();
-//        jsonObject.fluentPut("SN", "MjAxOTAzMjIwMTEwMDAwMQ==");
-//        jsonObject.fluentPut("CMD", "GetData");
-//        //请求url 获取新的扬尘监测数据
-//        String s = Util.httpPostWithJSON(Constants.DUSTEMISSION, jsonObject);
-//        //获取的原始数据
-//        JSONObject  originalData = JSONObject.parseObject(s);
-//        JSONObject digest = JSONObject.parseObject(originalData.getString("Data"));
-//        System.out.println( new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()-1000*60*60*24*7)));
-//
-//    }
-
     /**
      * 5分钟执行一次扬尘数据获取
      * @throws Exception
@@ -113,27 +100,6 @@ public class DustEmissionTask {
             JSONObject originalData = JSONObject.parseObject(s);
             JSONObject digest = JSONObject.parseObject(originalData.getString("Data"));
             if (digest.size()>0){
-//                SbProjectDustEmission emission = new SbProjectDustEmission();
-//                emission.setSn(p.getSn());
-//                emission.setScznl("CAY");
-//                List<SbProjectDustEmission> list1 = projectDustEmissionService.selectSbProjectDustEmissionList(emission);
-//                if(list1.size()>0){
-////                    ThreadUtils.async(new Runnable(){
-////                        @Override
-////                        public void run() {
-////                            try {
-////
-////                                cayTsp(sbDustEmission);
-////
-////                            } catch (IOException e) {
-////                                logger.error("城安院错误(insert): " + e.getMessage() + ", 参数错误："+sbDustEmission);
-////                            } catch (URISyntaxException e) {
-////                                logger.error("城安院错误(insert): " + e.getMessage() + ", 参数错误："+sbDustEmission);
-////                            }
-////                        }
-////                    });
-////                }
-
                 //保存新的扬尘记录
                 SbDustEmission dustEmission = JSONObject.parseObject(digest.toJSONString(), SbDustEmission.class);
                 dustEmission.setJdbh(p.getJdbh());

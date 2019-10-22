@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbEquipmentWarning.mapper.SbEquipmentWarningMapper">
+    
+    <resultMap type="SbEquipmentWarning" id="SbEquipmentWarningResult">
+        <result property="id"    column="id"    />
+        <result property="imei"    column="imei"    />
+        <result property="warningType"    column="warningType"    />
+        <result property="warningTime"    column="warningTime"    />
+        <result property="projectId" column="projectId"/>
+        <result property="areaId" column="areaId"/>
+        <result property="areaName" column="areaName"/>
+        <result property="userId" column="userId"/>
+        <result property="userName" column="userName"/>
+    </resultMap>
+	
+	<sql id="selectSbEquipmentWarningVo">
+        select * from sb_equipment_warning
+    </sql>
+    <select id="warningCount" parameterType="Map" resultType="Integer">
+        SELECT count(*) FROM `sb_equipment_warning`
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="imei != null  and imei != '' "> and imei = #{imei}</if>
+            <if test="warningType != null"> and warningType = #{warningType}</if>
+            <if test="warningTime != null "> and TO_DAYS(warningTime) = TO_DAYS(#{warningTime})</if>
+            <if test="projectId != null">and projectId = #{projectId}</if>
+        </where>
+    </select>
+
+    <select id="getWarningList" parameterType="SbEquipmentWarning" resultMap="SbEquipmentWarningResult">
+        SELECT w.id,o.id AS userId ,o.emp_name  AS userName,w.warningType,w.warningTime,a.`name` AS areaName,a.id AS areaId from sb_equipment_warning AS w
+        LEFT JOIN sb_hire AS h ON(w.imei = h.imei)
+        LEFT JOIN hj_project_workers AS o ON(o.id = h.peopleId)
+        LEFT JOIN sb_area AS a ON(a.id=h.areaId)
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="warningType != null"> and warningType = #{warningType}</if>
+            <if test="warningTime != null ">and warningTime between #{startTime} and #{endTime}</if>
+            <if test="projectId != null">and projectId = #{projectId}</if>
+            <if test="areaId != null">and a.id = #{areaId}</if>
+            <if test="areaId != null and areaId != ''">and a.`name` = #{areaName}</if>
+            <if test="userId != null">and o.id = #{userId}</if>
+            <if test="userName != null and userName != ''">and o.emp_name = #{userName}</if>
+        </where>
+    </select>
+
+    <select id="selectSbEquipmentWarningList" parameterType="SbEquipmentWarning" resultMap="SbEquipmentWarningResult">
+        <include refid="selectSbEquipmentWarningVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="imei != null  and imei != '' "> and imei = #{imei}</if>
+             <if test="warningType != null"> and warningType = #{warningType}</if>
+             <if test="warningTime != null "> and warningTime = #{warningTime}</if>
+             <if test="projectId != null">and projectId = #{projectId}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbEquipmentWarningById" parameterType="Integer" resultMap="SbEquipmentWarningResult">
+        <include refid="selectSbEquipmentWarningVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbEquipmentWarning" parameterType="SbEquipmentWarning">
+        insert into sb_equipment_warning
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="imei != null  and imei != ''  ">imei,</if>
+			<if test="warningType != null ">warningType,</if>
+			<if test="warningTime != null  ">warningTime,</if>
+            <if test="projectId != null  ">projectId,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="imei != null  and imei != ''  ">#{imei},</if>
+			<if test="warningType != null">#{warningType},</if>
+			<if test="warningTime != null  ">#{warningTime},</if>
+            <if test="projectId != null  ">#{projectId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbEquipmentWarning" parameterType="SbEquipmentWarning">
+        update sb_equipment_warning
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="imei != null  and imei != ''  ">imei = #{imei},</if>
+            <if test="warningType != null">warningType = #{warningType},</if>
+            <if test="warningTime != null  ">warningTime = #{warningTime},</if>
+            <if test="projectId != null  ">projectId = #{projectId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbEquipmentWarningById" parameterType="Integer">
+        delete from sb_equipment_warning where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbEquipmentWarningByIds" parameterType="String">
+        delete from sb_equipment_warning where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
