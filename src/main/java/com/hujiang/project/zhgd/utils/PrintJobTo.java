@@ -13,7 +13,7 @@ import java.util.Date;
 
 public class PrintJobTo {
 
-    /** 设置文字水印
+    /** 设置文字水印 
      * @param sourceImg 源图片路径
      * @param targetImg 保存的图片路径
      * @param watermark 水印内容
