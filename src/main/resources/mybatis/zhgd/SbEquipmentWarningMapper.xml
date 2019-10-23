@@ -38,7 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>
             <if test="id != null "> and id = #{id}</if>
             <if test="warningType != null"> and warningType = #{warningType}</if>
-            <if test="warningTime != null ">and warningTime between #{startTime} and #{endTime}</if>
+            <if test="(startTime != null and startTime != '') and (endTime != null and endTime != '' )">and warningTime between #{startTime} and #{endTime}</if>
             <if test="projectId != null">and projectId = #{projectId}</if>
             <if test="areaId != null">and a.id = #{areaId}</if>
             <if test="areaId != null and areaId != ''">and a.`name` = #{areaName}</if>
