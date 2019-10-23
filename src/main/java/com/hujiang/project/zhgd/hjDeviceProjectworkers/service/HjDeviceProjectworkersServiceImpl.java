@@ -92,7 +92,7 @@ public class HjDeviceProjectworkersServiceImpl implements IHjDeviceProjectworker
 		return hjDeviceProjectworkersMapper.selectHjProjectworkersList(param);
 	}
 	@Override
-	public List<HjProjectWorkers> selectHjProjectworkersListTwo(Map<String,String> param){
+	public List<HjDeviceProjectworkersParam> selectHjProjectworkersListTwo(Map<String,String> param){
 		return hjDeviceProjectworkersMapper.selectHjProjectworkersListTwo(param);
 	}
 	@Override

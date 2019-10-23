@@ -56,7 +56,7 @@ public class HqController {
     private IHjProjectService hjProjectService;
     @RequestMapping("/Verify")
     public void zp(@RequestBody String json)throws Exception{
-        System.out.println(json);
+//        System.out.println(json);
         JSONObject str=JSONObject.parseObject(json);
         JSONObject content=JSONObject.parseObject(str.getString("content"));
         JSONArray logs=JSONArray.parseArray(content.getString("logs"));
