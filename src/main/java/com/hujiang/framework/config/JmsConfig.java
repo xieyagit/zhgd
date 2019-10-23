@@ -22,6 +22,9 @@ public class JmsConfig {
 
     public final static String TEMPERATURE_PERSONNEL_QUEUE = "TEMPERATURE_PERSONNEL_QUEUE";
 
+
+    public final static String OPEN_YS="OPEN_YS";
+
     public final static String TSP_CAY_QUEUE = "TSP_CAY_QUEUE";
 
     public final static String CRANE_CAY_QUEUE = "CRANE_CAY_QUEUE";
@@ -29,6 +32,7 @@ public class JmsConfig {
     public final static String ELEVATOR_CAY_QUEUE = "ELEVATOR_CAY_QUEUE";
 
     public final static String TEMPERATURE_CAY_QUEUE = "TEMPERATURE_CAY_QUEUE";
+
 
     //定义人才安居的扬尘设备存放消息的队列
     @Bean(value="tspPersonnelQueue")
@@ -53,6 +57,11 @@ public class JmsConfig {
     @Bean(value="temperaturePersonnelQueue")
     public Queue temperaturePersonnelQueue() {
         return new ActiveMQQueue(JmsConfig.TEMPERATURE_PERSONNEL_QUEUE);
+    }
+    //海康人脸机添加人员存放消息队列
+    @Bean(value="openYsQueue")
+    public Queue openYs() {
+        return new ActiveMQQueue(JmsConfig.OPEN_YS);
     }
 
     //定义城安院的扬尘设备存放消息的队列
