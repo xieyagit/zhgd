@@ -64,8 +64,8 @@ public class PrintJobTo {
             upload.mkdirs();
         }
         String getPath=upload.getAbsolutePath();
-        String fileName=getPath+"\\"+new Date().getTime()+img.substring(img.lastIndexOf("/")+1);
-        String fileName2=getPath+"\\"+new Date().getTime()+img.substring(img.lastIndexOf("/")+1,img.lastIndexOf("."))+".jpg";
+        String fileName=getPath+"\\"+new Date().getTime()+"1.jpg";
+        String fileName2=getPath+"\\"+new Date().getTime()+"2.jpg";
         System.out.println(fileName2);
         File localFile = new File(fileName);
         image.transferTo(localFile);
