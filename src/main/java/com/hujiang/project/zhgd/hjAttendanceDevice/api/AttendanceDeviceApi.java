@@ -1,10 +1,13 @@
 package com.hujiang.project.zhgd.hjAttendanceDevice.api;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hujiang.framework.web.controller.BaseController;
 import com.hujiang.framework.web.domain.AjaxResult;
+import com.hujiang.framework.web.page.TableDataInfo;
 import com.hujiang.project.ys.util.YsUtil;
 import com.hujiang.project.zhgd.hjAttendanceDevice.domain.HjAttendanceDevice;
 import com.hujiang.project.zhgd.hjAttendanceDevice.service.IHjAttendanceDeviceService;
+import com.hujiang.project.zhgd.hjAttendanceRecord.domain.HjAttendanceRecord;
 import com.hujiang.project.zhgd.utils.Constants;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -20,7 +23,7 @@ import java.util.List;
 
 @RestController
     @RequestMapping(value = "/provider/attendanceDeviceApi")
-    public class AttendanceDeviceApi {
+    public class AttendanceDeviceApi extends BaseController {
 
         @Autowired
         private IHjAttendanceDeviceService hjAttendanceDeviceService;
@@ -55,5 +58,11 @@ import java.util.List;
 
             return AjaxResult.success("修改成功");
         }
+        @PostMapping
+        public TableDataInfo list(@RequestBody HjAttendanceDevice hjAttendanceDevice){
+            startPage();
+            List<HjAttendanceDevice> list = hjAttendanceDeviceService.selectHjAttendanceDeviceList(hjAttendanceDevice);
 
+            return getDataTable(list);
+        }
     }

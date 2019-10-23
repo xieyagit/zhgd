@@ -22,6 +22,24 @@ public class HjDeviceProjectworkersParam
 	private String faceUrl;
 
 	private String status;
+	private String empSex;
+	private String idCode;
+
+	public String getIdCode() {
+		return idCode;
+	}
+
+	public void setIdCode(String idCode) {
+		this.idCode = idCode;
+	}
+
+	public String getEmpSex() {
+		return empSex;
+	}
+
+	public void setEmpSex(String empSex) {
+		this.empSex = empSex;
+	}
 
 	public String getStatus() {
 		return status;

@@ -57,7 +57,7 @@ public interface IHjDeviceProjectworkersService
 	public int deleteHjDeviceProjectworkersByIds(String ids);
 
 	public List<HjProjectWorkers> selectHjProjectworkersList(Map<String,String> param);
-	public List<HjProjectWorkers> selectHjProjectworkersListTwo(Map<String,String> param);
+	public List<HjDeviceProjectworkersParam> selectHjProjectworkersListTwo(Map<String,String> param);
 	public int deleteIds(Map<String,String> param);
 	public int deleteHjDeviceProjectworkersTwo(HjDeviceProjectworkers hjDeviceProjectworkers);
 	public List<HjDeviceProjectworkersParam> selectHjProjectworkersListThree(Map<String,String> param);
