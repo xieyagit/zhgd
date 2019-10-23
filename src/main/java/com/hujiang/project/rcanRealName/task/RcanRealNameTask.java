@@ -22,7 +22,6 @@ import com.hujiang.project.zhgd.hjTeam.service.IHjTeamService;
 import com.hujiang.project.zhgd.utils.BASE64DecodedMultipartFile;
 import com.hujiang.project.zhgd.utils.Constants;
 import com.hujiang.project.zhgd.utils.Tools;
-import com.hujiang.project.zhgd.utils.ZCgetImageId;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -34,8 +33,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -97,7 +94,9 @@ public class RcanRealNameTask extends AutoTaskBase {
             }
         });
     }
-//    @PostMapping(value = "/v")
+
+    @PostMapping(value = "/v")
+    //    @Scheduled(cron="0 0 4 * * ? ")
     public void  setProjectUser() throws Exception {
 
         HjSynchronizationInformation hs=new HjSynchronizationInformation();
@@ -116,7 +115,8 @@ public class RcanRealNameTask extends AutoTaskBase {
      * 同步考勤记录
      * @throws Exception
      */
-//    @PostMapping(value = "/b")
+    @PostMapping(value = "/b")
+//    @Scheduled(cron="0 0/30 * * * ? ")
     public void setJiLu()throws Exception{
         HjSynchronizationInformation hs=new HjSynchronizationInformation();
         hs.setState(1);
@@ -315,75 +315,75 @@ public class RcanRealNameTask extends AutoTaskBase {
                     setCompany(xmcode,api_key_szzjt,api_secret_szzjt,pid);
                 }
                 List<HjConstructionCompany>   hcsList2 = hjConstructionCompanyService.selectHjConstructionCompanyList(hc);
-                    HjConstructionCompany  hcs=hcsList2.get(0);
-                    //班组是否存在
-                    ht.setRemark(a.getString("BZDataID"));
-                    List<HjTeam> htsList=hjTeamService.selectHjTeamList(ht);
-                    if(htsList.size()<=0) {
-                        //添加班组
-                        setTeam(xmcode,api_key_szzjt,api_secret_szzjt,pid);
-                    }
+                HjConstructionCompany  hcs=hcsList2.get(0);
+                //班组是否存在
+                ht.setRemark(a.getString("BZDataID"));
+                List<HjTeam> htsList=hjTeamService.selectHjTeamList(ht);
+                if(htsList.size()<=0) {
+                    //添加班组
+                    setTeam(xmcode,api_key_szzjt,api_secret_szzjt,pid);
+                }
                 List<HjTeam> htsList2=hjTeamService.selectHjTeamList(ht);
-                        HjTeam  hts = htsList2.get(0);
+                HjTeam  hts = htsList2.get(0);
 
-                        // 人员是否存在
-                        workers.setRemark(a.getString("Kaoqinhao"));//id,一指通工号
-                        workers.setProjectId(pid);
-                        List<HjProjectWorkers> hp1List = hjProjectWorkersService.selectHjProjectWorkersList(workers);
-                        String statusYZT=a.getString("Status");
-                        //人员存在的话根据状态操作
-                        if(hp1List.size()>0){
-                            HjProjectWorkers p=hp1List.get(0);
-                            //人员本地状态
-                            String statusBD=p.getEnterAndRetreatCondition().toString();
-                            //人员存在但状态不一致，根据状态进行进场或退出操作
-                            if(statusBD.equals(statusYZT)){
-                                //如果是在场，就进场,本地更新状态
-                                if("1".equals(statusYZT)){
-                                    JSONArray body=getBodyJC(a,hcs,hts,apiKey);
-                                    String s=dockingRCAJ(body.toString(),h,"/api/person/post8");
-                                    JSONObject resultJson=JSONObject.parseObject(s);
-                                    String b=resultJson.getString("success");
-                                    if("true".equals(b)){
+                // 人员是否存在
+                workers.setRemark(a.getString("Kaoqinhao"));//id,一指通工号
+                workers.setProjectId(pid);
+                List<HjProjectWorkers> hp1List = hjProjectWorkersService.selectHjProjectWorkersList(workers);
+                String statusYZT=a.getString("Status");
+                //人员存在的话根据状态操作
+                if(hp1List.size()>0){
+                    HjProjectWorkers p=hp1List.get(0);
+                    //人员本地状态
+                    String statusBD=p.getEnterAndRetreatCondition().toString();
+                    //人员存在但状态不一致，根据状态进行进场或退出操作
+                    if(statusBD.equals(statusYZT)){
+                        //如果是在场，就进场,本地更新状态
+                        if("1".equals(statusYZT)){
+                            JSONArray body=getBodyJC(a,hcs,hts,apiKey);
+                            String s=dockingRCAJ(body.toString(),h,"/api/person/post");
+                            JSONObject resultJson=JSONObject.parseObject(s);
+                            String b=resultJson.getString("success");
+                            if("true".equals(b)){
 
-                                        p.setEnterAndRetreatCondition(0);
-                                        hjProjectWorkersService.updateHjProjectWorkers(p);
-                                    }
-                                }else{
-                                    //如果是离场，就人员退场，本地更新状态
-                                    JSONObject body=getBodyLC(a);
-                                    String s=dockingRCAJ(body.toString(),h,"/api/Person/Remove");
-                                    JSONObject resultJson=JSONObject.parseObject(s);
-                                    String b=resultJson.getString("success");
-                                    if("true".equals(b)){
-
-                                        p.setEnterAndRetreatCondition(1);
-                                        hjProjectWorkersService.updateHjProjectWorkers(p);
-                                    }
-                                }
+                                p.setEnterAndRetreatCondition(0);
+                                hjProjectWorkersService.updateHjProjectWorkers(p);
                             }
-
                         }else{
-                            //如果人员不存在，则看状态，如在场，则进场保存，若离场，则保存
-                            if("1".equals(statusYZT)){
-                                //进场保存
-                                JSONArray body=getBodyJC(a,hcs,hts,apiKey);
-                                String s=dockingRCAJ(body.toString(),h,"/api/person/post");
-                                JSONObject resultJson=JSONObject.parseObject(s);
-                                String b=resultJson.getString("success");
-                                if("true".equals(b)){
+                            //如果是离场，就人员退场，本地更新状态
+                            JSONObject body=getBodyLC(a);
+                            String s=dockingRCAJ(body.toString(),h,"/api/Person/Remove");
+                            JSONObject resultJson=JSONObject.parseObject(s);
+                            String b=resultJson.getString("success");
+                            if("true".equals(b)){
 
-                                    getPW(a,workers,pid,hcs,hts);
-                                    hjProjectWorkersService.insertHjProjectWorkers(workers);
-                                }
-
-                            }else{
-                                //只保存
-                                getPW(a,workers,pid,hcs,hts);
-                                hjProjectWorkersService.insertHjProjectWorkers(workers);
+                                p.setEnterAndRetreatCondition(1);
+                                hjProjectWorkersService.updateHjProjectWorkers(p);
                             }
-
                         }
+                    }
+
+                }else{
+                    //如果人员不存在，则看状态，如在场，则进场保存，若离场，则保存
+                    if("1".equals(statusYZT)){
+                        //进场保存
+                        JSONArray body=getBodyJC(a,hcs,hts,apiKey);
+                        String s=dockingRCAJ(body.toString(),h,"/api/person/post");
+                        JSONObject resultJson=JSONObject.parseObject(s);
+                        String b=resultJson.getString("success");
+                        if("true".equals(b)){
+
+                            getPW(a,workers,pid,hcs,hts);
+                            hjProjectWorkersService.insertHjProjectWorkers(workers);
+                        }
+
+                    }else{
+                        //只保存
+                        getPW(a,workers,pid,hcs,hts);
+                        hjProjectWorkersService.insertHjProjectWorkers(workers);
+                    }
+
+                }
 
 
 
@@ -416,29 +416,32 @@ public class RcanRealNameTask extends AutoTaskBase {
         JSONObject  a;
         HjConstructionCompany hc;
         HjTeam ht;
-        for(Object o:list){
-            hc=new HjConstructionCompany();
-            ht=new HjTeam();
-            a  = JSONObject.parseObject(o.toString());
+        for(Object o:list) {
+            hc = new HjConstructionCompany();
+            ht = new HjTeam();
+            a = JSONObject.parseObject(o.toString());
             ht.setRemark(a.getString("BZDataID"));
 
             ht.setProjectId(pid);
-
-            hc.setRemark(a.getString("FBDataID"));
-            HjConstructionCompany hjConstructionCompany=hjConstructionCompanyService.selectHjConstructionCompanyList(hc).get(0);
-            ht.setConstructionId(hjConstructionCompany.getId());
-            HjDictionaries hd=new HjDictionaries();
-            hd.setTitle(a.getString("Name").substring(0,2));
-            hd.setCategory("TEAM_TYPE_HOUS");
-            List<HjDictionaries> hdList=hjDictionariesService.selectHjDictionariesList(hd);
-            if(hdList.size()>0){
-                ht.setTeamType(hdList.get(0).getTag());
-                ht.setTeamName(hdList.get(0).getTitle());
-            }else{
-                ht.setTeamType("B47A5CAC0D751E04D18356AC2ADCA830");
-                ht.setTeamName("其他");
+            List<HjTeam> hjList = hjTeamService.selectHjTeamList(ht);
+            //没有的班组添加上传
+            if (hjList.size() <= 0) {
+                hc.setRemark(a.getString("FBDataID"));
+                HjConstructionCompany hjConstructionCompany = hjConstructionCompanyService.selectHjConstructionCompanyList(hc).get(0);
+                ht.setConstructionId(hjConstructionCompany.getId());
+                HjDictionaries hd = new HjDictionaries();
+                hd.setTitle(a.getString("Name").substring(0, 2));
+                hd.setCategory("TEAM_TYPE_HOUS");
+                List<HjDictionaries> hdList = hjDictionariesService.selectHjDictionariesList(hd);
+                if (hdList.size() > 0) {
+                    ht.setTeamType(hdList.get(0).getTag());
+                    ht.setTeamName(hdList.get(0).getTitle());
+                } else {
+                    ht.setTeamType("B47A5CAC0D751E04D18356AC2ADCA830");
+                    ht.setTeamName("其他");
+                }
+                hjTeamService.insertHjTeam(ht);
             }
-            hjTeamService.insertHjTeam(ht);
         }
     }
     public void setCompany(String  xmcode,String api_key_szzjt,String api_secret_szzjt,Integer pid) throws Exception
@@ -472,8 +475,9 @@ public class RcanRealNameTask extends AutoTaskBase {
             hd=new HjDictionaries();
             a  = JSONObject.parseObject(o.toString());
             hc.setRemark(a.getString("FBDataID"));
+            hc.setProjectId(pid);
             List<HjConstructionCompany> hcList=hjConstructionCompanyService.selectHjConstructionCompanyList(hc);
-            if(hcList.size()>0) {
+            if(hcList.size()<=0) {
                 hc.setConstructionName(a.getString("Name"));
                 hc.setShortName(a.getString("ShortName"));
                 hc.setLegalPerson(a.getString("OrgOwner"));
@@ -525,7 +529,7 @@ public class RcanRealNameTask extends AutoTaskBase {
         workers.setEnterAndRetreatCondition("1".equals(a.getString("Status")) ? 0 : 1);
         workers.setIdCode(a.getString("Shenfenzheng"));
         workers.setEmpPhon(a.getString("ShoujiHaoma"));
-        workers.setEmpSex(a.getString("Xingbie"));
+        workers.setEmpSex("男".equals(a.getString("Xingbie"))?"男":"女");
         workers.setEmpNation(a.getString("Mingzu"));
         workers.setIdAddress(a.getString("JiatingDz"));
         workers.setIdAgency(a.getString("id_agency"));
@@ -577,15 +581,15 @@ public class RcanRealNameTask extends AutoTaskBase {
 
         HttpPost http=new HttpPost(uri);
 
-            http.addHeader("AppKey", hs.getApiKey());
+        http.addHeader("AppKey", hs.getApiKey());
 
         client = HttpClients.createDefault();
         String respContent = null;
         // 设置报文实体编码为UTF-8，否则会出现中文乱码以及无法正确调用服务。
 
-            StringEntity entity = new StringEntity(json, "UTF-8");
-            entity.setContentType("application/json");
-            http.setEntity(entity);
+        StringEntity entity = new StringEntity(json, "UTF-8");
+        entity.setContentType("application/json");
+        http.setEntity(entity);
 
         HttpResponse resp = client.execute(http);
         if (resp.getStatusLine().getStatusCode() == 200) {
@@ -657,7 +661,7 @@ public class RcanRealNameTask extends AutoTaskBase {
         }
         return null;
     }
-private String getEmpCategory(HjConstructionCompany hc){
+    private String getEmpCategory(HjConstructionCompany hc){
         if(hc.getCompanyType()==3){
             return "01";
         }else if(hc.getCompanyType()==2){
@@ -667,5 +671,5 @@ private String getEmpCategory(HjConstructionCompany hc){
         }else{
             return "00";
         }
-}
+    }
 }
