@@ -38,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping(value = "/provider/Subscribe",method = RequestMethod.POST)
@@ -55,7 +56,7 @@ public class HqController {
     private IHjProjectService hjProjectService;
     @RequestMapping("/Verify")
     public void zp(@RequestBody String json)throws Exception{
-
+        System.out.println(json);
         JSONObject str=JSONObject.parseObject(json);
         JSONObject content=JSONObject.parseObject(str.getString("content"));
         JSONArray logs=JSONArray.parseArray(content.getString("logs"));
@@ -63,8 +64,14 @@ public class HqController {
             JSONObject log=JSONObject.parseObject(jo.toString());
 //        JSONObject info=JSONObject.parseObject(s.getString("info"));
         String deviceId=log.getString("sn");
-            HjProjectWorkers hpw=hjProjectWorkersService.selectHjProjectWorkersById(log.getInteger("user_id"));
+            System.out.println(deviceId);
+            String userId=log.getString("user_id");
+            System.out.println(userId);
+            Pattern pattern = Pattern.compile("^[0-9]*$");
+            if(pattern.matcher(userId).matches()){
 
+            HjProjectWorkers hpw=hjProjectWorkersService.selectHjProjectWorkersById(log.getInteger(userId));
+        if(hpw!=null){
         HjAttendanceDevice had=new HjAttendanceDevice();
         had.setDeviceNo(deviceId);
 
@@ -166,7 +173,7 @@ public class HqController {
                 har.setUploadTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
             }
             hjAttendanceRecordService.insertHjAttendanceRecord(har);
-        }
+        }}}
     }}
 
     /**
