@@ -79,6 +79,9 @@ public class SbHireApi extends BaseController{
                     JSONObject areaMap = new JSONObject();      //工区map
                     areaMap.put("areaId",area.getAreaId());
                     areaMap.put("areaName", area.getAreaName());
+                    areaMap.put("areaXloc",area.getXloc());
+                    areaMap.put("areaYloc",area.getYloc());
+                    areaMap.put("areaRadius",area.getRadius());
                     List<HirePeople> myPeopleList = peopleList.stream().filter(
                             a->a.getAreaId().equals(area.getAreaId())
                     ).collect(Collectors.toList());

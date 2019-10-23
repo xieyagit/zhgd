@@ -78,12 +78,9 @@ public class ProjectElectricityBoxApi extends BaseController {
 
     /**
      * 添加电箱
-     * @param sbP
-     * @return
-     * @author yant
      */
     @RequestMapping("/addSave")
-    public AjaxResult addSave(SbProjectElectricityBox sbP)
+    public AjaxResult addSave(@RequestBody SbProjectElectricityBox sbP)
     {
 
         if (sbP.getProjectId() == null || sbP.getElectricityBoxId() == null ||
@@ -106,8 +103,16 @@ public class ProjectElectricityBoxApi extends BaseController {
             //设备参数上报
             boxService.reportedEBox(sbPowerBoxAdd);
             if (sbP.getScznl().equals("CAY")) {
-                apiElectricityBoxController.reportElectricBoxParamete(sbP);
-            }else if(sbP.getScznl().equals("RCAJ")){
+//                apiElectricityBoxController.reportElectricBoxParamete(sbP);
+                SbProjectElectricityBox sbox = new SbProjectElectricityBox();
+                sbox.setElectricityBoxId(sbP.getElectricityBoxId());
+                List<SbProjectElectricityBox> projectElectricityBoxes = iProjectElectricityBoxService.selectSbProjectElectricityBoxList(sbox);
+
+                sbP.setElectricityBoxId(sbP.getElectricityBoxId());
+                sbP.setElectricityBoxName((projectElectricityBoxes.size()+1)+"#配电箱");
+                sendTemperatureToPERSONNEL.cayMachine(sbP);
+            }
+            if(sbP.getScznl().equals("RCAJ")){
                 SbProjectElectricityBox sbox = new SbProjectElectricityBox();
                 sbox.setElectricityBoxId(sbP.getElectricityBoxId());
                 List<SbProjectElectricityBox> projectElectricityBoxes = iProjectElectricityBoxService.selectSbProjectElectricityBoxList(sbox);

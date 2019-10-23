@@ -11,6 +11,8 @@ import com.hujiang.project.zhgd.moduleToPush.service.IModuleToPushService;
 import com.hujiang.project.zhgd.sbDustEmission.domain.BaseSmsMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +33,6 @@ public class JPushSMS {
 
     public void JPushAndJSMS(BaseSmsMessage smsMessage, Integer projectId){
 
-        //如果当前pm2.5大于阈值推送给当前项目具有扬尘权限的人员
         HjProjectUser projectUser = new HjProjectUser();
         projectUser.setProjectId(projectId);//p.getProjectId().intValue()
         //根据项目Id查询当前项目下的所有人员（ID）
@@ -39,20 +40,19 @@ public class JPushSMS {
         List<HjUserRole> userRoleList = userRoleService.selectHjUserRoleList(null);
         List<HjRolePrivileges> rolePrivilegesList = rolePrivilegesService.selectHjRolePrivilegesList(null);
         ModuleToPush moduleToPush = new ModuleToPush();
-        moduleToPush.setOnOff(1);
         moduleToPush.setPrivilegesId(smsMessage.getPrivilegesId());
         List<ModuleToPush> moduleToPushes = moduleToPushService.getModuleToPushList(moduleToPush);
-        List<HjProjectUser> canPushUserRoles = pushFilter(smsMessage.getPrivilegesId(), userRoleList, rolePrivilegesList, moduleToPushes, projectUserList);
+        List<SmsMessageInfo> canPushUserRoles = pushFilter(smsMessage.getPrivilegesId(), userRoleList, rolePrivilegesList, moduleToPushes, projectUserList);
 
-        for (HjProjectUser hjProjectUser : canPushUserRoles) {
-            smsMessage.push(hjProjectUser.getUserId(), projectId, hjProjectUser.getAlias(),
-                    false, hjProjectUser.getUserPhone());
+        for (SmsMessageInfo smsMessageInfo : canPushUserRoles) {
+            smsMessage.push(smsMessageInfo);
         }
     }
 
-    private List<HjProjectUser> pushFilter(Integer privilegesId, List<HjUserRole> userRoleList, List<HjRolePrivileges> rolePrivilegesList, List<ModuleToPush> moduleToPushes, List<HjProjectUser> projectUserList) {
+    private List<SmsMessageInfo> pushFilter(Integer privilegesId, List<HjUserRole> userRoleList, List<HjRolePrivileges> rolePrivilegesList, List<ModuleToPush> moduleToPushes, List<HjProjectUser> projectUserList) {
         List<ModuleToPush> pushes = moduleToPushes.stream()
-                .filter(a -> a.getPrivilegesId().equals(privilegesId) && a.getOnOff().equals(1))
+                .filter(a -> a.getPrivilegesId().equals(privilegesId) && (a.getOnOff().equals(1) || a.getFall().equals(1) ||
+                        a.getMove().equals(1) || a.getBat().equals(1)))
                 .collect(Collectors.toList());
 
         List<HjRolePrivileges> rolePrivileges = rolePrivilegesList.stream().filter(
@@ -68,7 +68,25 @@ public class JPushSMS {
                         a->userRoles.stream().map(b->b.getUserId()).collect(Collectors.toList()).contains(a.getUserId())
                 ).collect(Collectors.toList());
 
-        return projectUserList;
+        List<SmsMessageInfo> smsMessageInfos = new ArrayList<SmsMessageInfo>();
+        for(HjProjectUser user : projectUserList) {
+            if(!pushes.stream().filter(a->a.getUserId().equals(user.getUserId())).findFirst().isPresent()) {
+                continue;
+            }
+            ModuleToPush item = pushes.stream().filter(a->a.getUserId().equals(user.getUserId())).findFirst().get();
+            SmsMessageInfo messageInfo = new SmsMessageInfo();
+            messageInfo.setProjectId(user.getProjectId());
+            messageInfo.setUserId(user.getUserId());
+            messageInfo.setAlias(user.getAlias());
+            messageInfo.setUserPhone(user.getUserPhone());
+            messageInfo.setOnOff(item.getOnOff());
+            messageInfo.setBat(item.getBat());
+            messageInfo.setFall(item.getFall());
+            messageInfo.setMove(item.getMove());
+            smsMessageInfos.add(messageInfo);
+        }
+
+        return smsMessageInfos;
     }
 
 }

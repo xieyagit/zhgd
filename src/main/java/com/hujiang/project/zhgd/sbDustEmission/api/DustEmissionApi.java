@@ -500,67 +500,69 @@ public class DustEmissionApi extends BaseController {
 
         JSONObject ject = new JSONObject();
         List<SbProjectDustEmission> dustEmission = iSbProjectDustEmissionService.selectSn(projectId);
-        /** 扬尘*/
-        JSONArray array = new JSONArray();
-        JSONArray jsonArray = new JSONArray();
-        List<SbDustEmission> emissions = dustEmissionService.selectTsp(dustEmission.get(0).getSn());
-        List<SbDustEmission> result = new ArrayList<SbDustEmission>();
-        Date currentDate = new Date();
-        Date currentDate1 = new Date();
-        SbDustEmission item = null;
-        for (int i=1; i<=8; i++) {
-            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-            String finalCurrentDate = DateUtils.getDateTime(currentDate);
-            List<SbDustEmission> list = emissions.stream().filter(a->DateUtils.getDateTime(DateUtils.parseDate(a.getDate())).equals(finalCurrentDate)).collect(Collectors.toList());
+        if (dustEmission.size()>0) {
+            /** 扬尘*/
+            JSONArray array = new JSONArray();
+            JSONArray jsonArray = new JSONArray();
+            List<SbDustEmission> emissions = dustEmissionService.selectTsp(dustEmission.get(0).getSn());
+            List<SbDustEmission> result = new ArrayList<SbDustEmission>();
+            Date currentDate = new Date();
+            Date currentDate1 = new Date();
+            SbDustEmission item = null;
+            for (int i = 1; i <= 8; i++) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                String finalCurrentDate = DateUtils.getDateTime(currentDate);
+                List<SbDustEmission> list = emissions.stream().filter(a -> DateUtils.getDateTime(DateUtils.parseDate(a.getDate())).equals(finalCurrentDate)).collect(Collectors.toList());
 
-            JSONObject jsonObject = new JSONObject();
-            if (list.size()>0) {
-                if (dustEmission.get(0).getSn().equals(list.get(0).getSn())) {
-                    jsonObject.put(sdf.format(currentDate), list.get(0).getTsp());
-                    array.add(jsonObject);
+                JSONObject jsonObject = new JSONObject();
+                if (list.size() > 0) {
+                    if (dustEmission.get(0).getSn().equals(list.get(0).getSn())) {
+                        jsonObject.put(sdf.format(currentDate), list.get(0).getTsp());
+                        array.add(jsonObject);
+                    } else {
+                        jsonObject.put(sdf.format(currentDate), "");
+                        array.add(jsonObject);
+                    }
                 } else {
                     jsonObject.put(sdf.format(currentDate), "");
                     array.add(jsonObject);
                 }
-            }else {
-                jsonObject.put(sdf.format(currentDate), "");
-                array.add(jsonObject);
+                ject.put("tsp", array);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(currentDate);
+                calendar.add(Calendar.DAY_OF_MONTH, -1);
+                currentDate = calendar.getTime();
             }
-            ject.put("tsp", array);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(currentDate);
-            calendar.add(Calendar.DAY_OF_MONTH, -1);
-            currentDate = calendar.getTime();
-        }
 
-        /** 温度*/
-        List<SbDustEmission> emissions1 = dustEmissionService.selectTsp1(dustEmission.get(0).getSn());
-        List<SbDustEmission> result1 = new ArrayList<SbDustEmission>();
-        Calendar calendar2 = Calendar.getInstance();
-        calendar2.setTime(currentDate1);
-        calendar2.add(Calendar.HOUR_OF_DAY, -11);
-        currentDate1 = calendar2.getTime();
-        for (int i=1;i<=12;i++){
-            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH");
-            String finalCurrentDate = DateUtils.getDateTimes(currentDate1);
-            List<SbDustEmission> list = emissions1.stream().filter(a->DateUtils.getDateTimes(DateUtils.parseDate(a.getDate())).equals(finalCurrentDate)).collect(Collectors.toList());
-            JSONObject object = new JSONObject();
-            if (list.size()>0) {
-                object.put(sdf.format(currentDate1),list.get(0).getTemperature());
-                jsonArray.add(object);
-            } else {
-                object.put(sdf.format(currentDate1), "");
-                jsonArray.add(object);
+            /** 温度*/
+            List<SbDustEmission> emissions1 = dustEmissionService.selectTsp1(dustEmission.get(0).getSn());
+            List<SbDustEmission> result1 = new ArrayList<SbDustEmission>();
+            Calendar calendar2 = Calendar.getInstance();
+            calendar2.setTime(currentDate1);
+            calendar2.add(Calendar.HOUR_OF_DAY, -11);
+            currentDate1 = calendar2.getTime();
+            for (int i = 1; i <= 12; i++) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH");
+                String finalCurrentDate = DateUtils.getDateTimes(currentDate1);
+                List<SbDustEmission> list = emissions1.stream().filter(a -> DateUtils.getDateTimes(DateUtils.parseDate(a.getDate())).equals(finalCurrentDate)).collect(Collectors.toList());
+                JSONObject object = new JSONObject();
+                if (list.size() > 0) {
+                    object.put(sdf.format(currentDate1), list.get(0).getTemperature());
+                    jsonArray.add(object);
+                } else {
+                    object.put(sdf.format(currentDate1), "");
+                    jsonArray.add(object);
+                }
+                ject.put("temperature", jsonArray);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(currentDate1);
+                calendar.add(Calendar.HOUR_OF_DAY, +1);
+                currentDate1 = calendar.getTime();
             }
-            ject.put("temperature", jsonArray);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(currentDate1);
-            calendar.add(Calendar.HOUR_OF_DAY, +1);
-            currentDate1 = calendar.getTime();
-        }
-        if (ject==null){
-            ject.put("tsp", "");
-            ject.put("temperature", "");
+            if (ject == null) {
+                ject.put("tsp", "");
+                ject.put("temperature", "");
+            }
         }
         return ject;
     }

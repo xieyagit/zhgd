@@ -140,6 +140,7 @@
         <result property="startingTime" column="starting_time"/>
         <result property="idphotoScan" column="idphoto_scan"/>
         <result property="idphotoScan2" column="idphoto_scan2"/>
+        <result property="idAddress" column="id_address"/>
     </resultMap>
 
 
@@ -223,8 +224,8 @@
     </select>
 
     <select id="selectProjectWorkersListPC" parameterType="com.hujiang.project.zhgd.hjProjectWorkers.domain.HjProjectWorkers" resultMap="ProjectWorkerPCResult">
-        select pw.id,pw.emp_name,pw.is_team,pw.enter_And_Retreat_Condition,d.title,t.team_name,cc.construction_name,p.project_name from hj_project_workers pw
-          LEFT JOIN hj_dictionaries d ON pw.job_name= d.tag
+        select pw.id,pw.emp_name,pw.is_team,pw.enter_And_Retreat_Condition,d.title,t.team_name,cc.construction_name,p.project_name,pw.id_address as idAddress,pw.id_code as idCode,pw.emp_phon from hj_project_workers pw
+        LEFT JOIN hj_dictionaries d ON pw.job_name= d.tag
           LEFT JOIN hj_team t ON pw.work_typename_id=t.id
           LEFT JOIN hj_construction_company cc ON cc.id = pw.construction_id
           LEFT JOIN hj_project p ON p.id=pw.project_id
