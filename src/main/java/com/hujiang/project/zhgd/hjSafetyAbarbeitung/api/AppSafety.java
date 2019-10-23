@@ -120,7 +120,7 @@ public class AppSafety extends BaseController {
             }
             result.put("constructionList", constructionArray);
         } else {
-            jsonObject.put("msg", "查询失败");
+            jsonObject.put("msg", "查询成功");
             jsonObject.put("code", 0);
             jsonObject.put("data", Collections.emptyList());
         }
@@ -408,7 +408,7 @@ public class AppSafety extends BaseController {
                     jsonObject.put("code", 0);
                     jsonObject.put("data", safetyArray);
                 } else {
-                    jsonObject.put("msg", "查询失败");
+                    jsonObject.put("msg", "查询成功");
                     jsonObject.put("code", -1);
                     jsonObject.put("data", Collections.emptyList());
                 }
@@ -445,7 +445,7 @@ public class AppSafety extends BaseController {
                     jsonObject.put("code", 0);
                     jsonObject.put("data", safetyArray);
                 } else {
-                    jsonObject.put("msg", "查询失败");
+                    jsonObject.put("msg", "查询成功");
                     jsonObject.put("code", -1);
                     jsonObject.put("data", Collections.emptyList());
                 }
@@ -486,7 +486,7 @@ public class AppSafety extends BaseController {
                     jsonObject.put("code", 0);
                     jsonObject.put("data", safetyArray);
                 } else {
-                    jsonObject.put("msg", "查询失败");
+                    jsonObject.put("msg", "查询成功");
                     jsonObject.put("code", -1);
                     jsonObject.put("data", Collections.emptyList());
                 }

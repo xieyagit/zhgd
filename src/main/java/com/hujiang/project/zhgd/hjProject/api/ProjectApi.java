@@ -189,7 +189,11 @@ public class ProjectApi extends BaseController {
     public AjaxResult addSave(HjProject hjProject, Integer cid, MultipartFile file,String remark1,String shortName1  )throws Exception
     {
         out.println(cid);
-
+        String a = hjProject.getProjectRegion();
+        String b = a.substring(0,7);
+        if (b.equals("19,1207")){
+            out.println("对接惠州住建局");
+        }
 
         //保存項目-------------------------
         if (file != null&&!file.isEmpty()) {

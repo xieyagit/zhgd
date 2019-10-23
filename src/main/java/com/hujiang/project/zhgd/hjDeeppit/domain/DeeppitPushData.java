@@ -4,6 +4,7 @@ package com.hujiang.project.zhgd.hjDeeppit.domain;
 import com.hujiang.project.zhgd.jpush.api.examples.PushExample;
 import com.hujiang.project.zhgd.jpush.api.push.model.PushPayload;
 import com.hujiang.project.zhgd.sbDustEmission.domain.BaseSmsMessage;
+import com.hujiang.project.zhgd.sbProjectDustEmission.task.SmsMessageInfo;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -87,7 +88,7 @@ public class DeeppitPushData extends BaseSmsMessage<DeeppitPushData> {
     }
 
     @Override
-    public void push(Integer userId, Integer projectId, String alias, boolean isApnsProduction, String userPhone) {
+    public void push(SmsMessageInfo smsMessageInfo) {
         Map<String,String> extras = new HashMap<>();
         extras.put("skip", String.valueOf(DEEPPITPRIVILEGE));
         extras.put("append","");
@@ -104,12 +105,12 @@ public class DeeppitPushData extends BaseSmsMessage<DeeppitPushData> {
         //APP推送消息
         PushExample pushExample = new PushExample();
         PushPayload payload = PushExample.buildPushObjectAllRegistrationIdAlertWithTitle
-                ("您有一条新的建筑物异常记录", alias, "基坑监测", false,extras);
+                ("您有一条新的建筑物异常记录", smsMessageInfo.getAlias(), "基坑监测", false,extras);
         pushExample.testSendPush(payload);
         //将推送消息保存到数据库
-        this.saveExcessive(this.title,this.sn, projectId, userId, "基坑设备", DEEPPITPRIVILEGE);
+        this.saveExcessive(this.title,this.sn, smsMessageInfo.getProjectId(), smsMessageInfo.getUserId(), "基坑设备", DEEPPITPRIVILEGE);
 
         //发送短信
-        this.shortCreedNumber(userPhone, projectId, userId, tempPara,TEMPID,"基坑超标");
+        this.shortCreedNumber(smsMessageInfo.getUserPhone(), smsMessageInfo.getProjectId(), smsMessageInfo.getUserId(), tempPara,TEMPID,"基坑超标");
     }
 }

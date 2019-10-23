@@ -62,7 +62,7 @@ public class OptionsElevatorApi {
             jsonObject.put("data",optionsElevatorList);
         }
         else {
-            jsonObject.put("msg", "查询失败");
+            jsonObject.put("msg", "查询成功");
             jsonObject.put("code", -1);
             jsonObject.put("data", optionsElevatorList);
         }
@@ -83,74 +83,83 @@ public class OptionsElevatorApi {
         elevator.setPid(elevator.getProjectId());
         elevator.setUserid(4018);
         int result = iSbElevatorBindingService.insertSbElevatorBinding(elevator);
-
-        /** 获取城安院项目id&项目监管编号(市管项目)*/
-        if (elevator.getScznl().equals("CAY")) {
-            if (elevator.getSubId() != null) {
-                //上报城安院升降机基本信息（开始）
-                JSONObject json = new JSONObject();
-                json.put("ProjectID", elevator.getXmid());//所属项目编号
-                json.put("Jdbh", elevator.getJdbh());//项目监督编号
-                json.put("Dev_GUID", Tools.encodeToMD5s(elevator.getHxzId()));//设备编号
-                json.put("Dev_UID", elevator.getElevatorName());//设备用户编号
-                json.put("Jc_dev_company", elevator.getInstallCompany());//设备安装单位（监测设备厂商）
-                json.put("Serial_Num", elevator.getSerialNum());//广东省统一安装告知编号（使用登记号）
-	            SbElevatorBinding sbElevatorBinsing = new SbElevatorBinding();
-	            sbElevatorBinsing.setProjectId(elevator.getProjectId());
-                List<SbElevatorBinding> list = iSbElevatorBindingService.list(sbElevatorBinsing);
-                int i = list.size() ;
-                json.put("Dev_Name", i + "#升降机");//设备名称
-                json.put("sub_id", elevator.getSubId());//工程ID
-                array.add(json);
-                JSONObject object1 = new JSONObject();
-                object1.put("PList", array);
-                String h = ZCAPIClient.SGXMCAY("lifter/ele_info", object1);
-                System.out.println("上报城安院状态：" + h);
-                //上报城安院升降机基本信息（结束）
-                //上报城安院升降机参数信息 （开始）
-                JSONObject object2 = new JSONObject();
-                object2.put("L_PGUID", elevator.getXmid());// 所属项目
-                object2.put("Jdbh", elevator.getJdbh());//项目监督编号
-                object2.put("L_DGUID", elevator.getHxzid());//设备编号
-                object2.put("L_Load_Capacity", elevator.getCapacity());//最大载重（KG)
-                object2.put("L_Height", elevator.getHeight());//最大高度(M)
-                object2.put("sub_id", elevator.getSubId());//工程ID
-                array1.add(object2);
-                JSONObject jsonObject4 = new JSONObject();
-                jsonObject4.put("PList", array1);
-                //上报城安院升降机参数信息
-                String k = ZCAPIClient.SGXMCAY("lifter/ele_par", jsonObject4);
-                System.out.println("上报城安院升降机基本信息状态：" + k);
-                //上报城安院升降机参数信息 （结束）
-            } else {
-                /** 获取城安院项目id&项目监管编号(区管项目) */
-                JSONObject object1 = new JSONObject();
-                object1.put("ProjectID", elevator.getXmid());//所属项目编号
-                object1.put("Jdbh", elevator.getJdbh());//项目监督编号
-                object1.put("Dev_GUID", Tools.encodeToMD5s(elevator.getHxzid()));//设备编号
-                object1.put("Dev_UID", elevator.getElevatorName());//设备用户编号
-                object1.put("Jc_dev_company", elevator.getInstallCompany());//设备安装单位（监测设备厂商）
-                object1.put("Serial_Num", elevator.getSerialNum());//广东省统一安装告知编号（使用登记号）
-                jsonArray.add(object1);
-                JSONObject jsonObject3 = new JSONObject();
-                jsonObject3.put("PList", jsonArray);
-                //上报城安院升降机基本信息
-                String f = ZCAPIClient.QGXMCAY("lifter/ele_info", jsonObject3);
-                System.out.println("上报城安院升降机基本信息状态：" + f);
-                JSONObject object = new JSONObject();
-                object.put("L_PGUID", elevator.getXmid());//所属项目
-                object.put("Jdbh", elevator.getJdbh());//项目监督编号
-                object.put("L_DGUID", Tools.encodeToMD5s(elevator.getHxzid()));//设备编号
-                object.put("L_Load_Capacity", elevator.getCapacity());//最大载重（KG)
-                object.put("L_Height", elevator.getHeight());//最大高度(M)
-                jsonArray1.add(object);
-                JSONObject jsonObject4 = new JSONObject();
-                jsonObject4.put("PList", jsonArray1);
-                //上报城安院升降机参数信息
-                String k = ZCAPIClient.QGXMCAY("lifter/ele_par", jsonObject4);
-                System.out.println("上报城安院升降机基本信息状态：" + k);
-            }
-        }else if(elevator.getScznl().equals("RCAJ")){
+         /** 获取城安院项目id&项目监管编号(市管项目)*/
+         if (elevator.getScznl().equals("CAY")) {
+//            if (elevator.getSubId() != null) {
+//                //上报城安院升降机基本信息（开始）
+//                JSONObject json = new JSONObject();
+//                json.put("ProjectID", elevator.getXmid());//所属项目编号
+//                json.put("Jdbh", elevator.getJdbh());//项目监督编号
+//                json.put("Dev_GUID", Tools.encodeToMD5s(elevator.getHxzId()));//设备编号
+//                json.put("Dev_UID", elevator.getElevatorName());//设备用户编号
+//                json.put("Jc_dev_company", elevator.getInstallCompany());//设备安装单位（监测设备厂商）
+//                json.put("Serial_Num", elevator.getSerialNum());//广东省统一安装告知编号（使用登记号）
+//                SbElevatorBinding sbElevatorBinsing = new SbElevatorBinding();
+//                sbElevatorBinsing.setProjectId(elevator.getProjectId());
+//                List<SbElevatorBinding> list = iSbElevatorBindingService.list(sbElevatorBinsing);
+//
+//                int i = list.size() ;
+//                json.put("Dev_Name", i + "#升降机");//设备名称
+//                json.put("sub_id", elevator.getSubId());//工程ID
+//                array.add(json);
+//                JSONObject object1 = new JSONObject();
+//                object1.put("PList", array);
+//                String h = ZCAPIClient.SGXMCAY("lifter/ele_info", object1);
+//                System.out.println("上报城安院状态：" + h);
+//                //上报城安院升降机基本信息（结束）
+//                //上报城安院升降机参数信息 （开始）
+//                JSONObject object2 = new JSONObject();
+//                object2.put("L_PGUID", elevator.getXmid());// 所属项目
+//                object2.put("Jdbh", elevator.getJdbh());//项目监督编号
+//                object2.put("L_DGUID", elevator.getHxzid());//设备编号
+//                object2.put("L_Load_Capacity", elevator.getCapacity());//最大载重（KG)
+//                object2.put("L_Height", elevator.getHeight());//最大高度(M)
+//                object2.put("sub_id", elevator.getSubId());//工程ID
+//                array1.add(object2);
+//                JSONObject jsonObject4 = new JSONObject();
+//                jsonObject4.put("PList", array1);
+//                //上报城安院升降机参数信息
+//                String k = ZCAPIClient.SGXMCAY("lifter/ele_par", jsonObject4);
+//                System.out.println("上报城安院升降机基本信息状态：" + k);
+//                //上报城安院升降机参数信息 （结束）
+//            } else {
+//                /** 获取城安院项目id&项目监管编号(区管项目) */
+//                JSONObject object1 = new JSONObject();
+//                object1.put("ProjectID", elevator.getXmid());//所属项目编号
+//                object1.put("Jdbh", elevator.getJdbh());//项目监督编号
+//                object1.put("Dev_GUID", Tools.encodeToMD5s(elevator.getHxzid()));//设备编号
+//                object1.put("Dev_UID", elevator.getElevatorName());//设备用户编号
+//                object1.put("Jc_dev_company", elevator.getInstallCompany());//设备安装单位（监测设备厂商）
+//                object1.put("Serial_Num", elevator.getSerialNum());//广东省统一安装告知编号（使用登记号）
+//                jsonArray.add(object1);
+//                JSONObject jsonObject3 = new JSONObject();
+//                jsonObject3.put("PList", jsonArray);
+//                //上报城安院升降机基本信息
+//                String f = ZCAPIClient.QGXMCAY("lifter/ele_info", jsonObject3);
+//                System.out.println("上报城安院升降机基本信息状态：" + f);
+//                JSONObject object = new JSONObject();
+//                object.put("L_PGUID", elevator.getXmid());//所属项目
+//                object.put("Jdbh", elevator.getJdbh());//项目监督编号
+//                object.put("L_DGUID", Tools.encodeToMD5s(elevator.getHxzid()));//设备编号
+//                object.put("L_Load_Capacity", elevator.getCapacity());//最大载重（KG)
+//                object.put("L_Height", elevator.getHeight());//最大高度(M)
+//                jsonArray1.add(object);
+//                JSONObject jsonObject4 = new JSONObject();
+//                jsonObject4.put("PList", jsonArray1);
+//                //上报城安院升降机参数信息
+//                String k = ZCAPIClient.QGXMCAY("lifter/ele_par", jsonObject4);
+//                System.out.println("上报城安院升降机基本信息状态：" + k);
+//            }
+             SbElevatorBinding sbElevatorBinding = new SbElevatorBinding();
+             sbElevatorBinding.setHxzId(sbElevatorBinding.getHxzId());
+             List<SbElevatorBinding> sbElevatorBindingList = iSbElevatorBindingService.selectSbElevatorBindingList(sbElevatorBinding);
+             elevator.setDname((sbElevatorBindingList.size()+1)+"#升降机");
+             elevator.setElevatorName(elevator.getElevatorName());
+             elevator.setInstallCompany(elevator.getInstallCompany());
+             elevator.setSerialNum(elevator.getSerialNum());
+             sendElevatorToPERSONNEL.cayMachine(elevator);
+        }
+        if(elevator.getScznl().equals("RCAJ")){
             SbElevatorBinding sbElevatorBinding = new SbElevatorBinding();
             sbElevatorBinding.setHxzId(sbElevatorBinding.getHxzId());
             List<SbElevatorBinding> sbElevatorBindingList = iSbElevatorBindingService.selectSbElevatorBindingList(sbElevatorBinding);

@@ -9,10 +9,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="privilegesId"    column="privilegesId"    />
         <result property="userId"    column="userId"    />
         <result property="onOff"    column="on_off"    />
+        <result property="fall" column="fall"/>
+        <result property="move" column="move"/>
+        <result property="bat" column="bat"/>
     </resultMap>
 	
 	<sql id="selectModuleToPushVo">
-        select id, privilegesId, userId, on_off from module_to_push
+        select * from module_to_push
     </sql>
     <select id="selectModuleToPush" parameterType="ModuleToPush" resultMap="ModuleToPushResult">
         <include refid="selectModuleToPushVo"/>
@@ -21,16 +24,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="privilegesId != null "> and privilegesId = #{privilegesId}</if>
             <if test="userId != null "> and userId = #{userId}</if>
             <if test="onOff != null "> and on_off = #{onOff}</if>
+            <if test="fall != null "> and fall = #{fall}</if>
+            <if test="move != null "> and move = #{move}</if>
+            <if test="bat != null "> and bat = #{bat}</if>
         </where>
     </select>
     <select id="getModuleToPushList" parameterType="ModuleToPush" resultMap="ModuleToPushResult">
-        select DISTINCT privilegesId,on_off  from module_to_push
+        select * from module_to_push
         <where>
             <if test="id != null "> and id = #{id}</if>
             <if test="privilegesId != null "> and privilegesId = #{privilegesId}</if>
             <if test="userId != null "> and userId = #{userId}</if>
             <if test="onOff != null "> and on_off = #{onOff}</if>
+            <if test="fall != null "> and fall = #{fall}</if>
+            <if test="move != null "> and move = #{move}</if>
+            <if test="bat != null "> and bat = #{bat}</if>
         </where>
+        GROUP BY privilegesId,userId
     </select>
 	
     <select id="selectModuleToPushList" parameterType="ModuleToPush" resultMap="ModuleToPushResult">
@@ -40,6 +50,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="privilegesId != null "> and privilegesId = #{privilegesId}</if>
              <if test="userId != null "> and userId = #{userId}</if>
              <if test="onOff != null "> and on_off = #{onOff}</if>
+            <if test="fall != null "> and fall = #{fall}</if>
+            <if test="move != null "> and move = #{move}</if>
+            <if test="bat != null "> and bat = #{bat}</if>
          </where>
     </select>
     
@@ -55,12 +68,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="privilegesId != null  ">privilegesId,</if>
 			<if test="userId != null  ">userId,</if>
 			<if test="onOff != null  ">on_off,</if>
+            <if test="fall != null ">fall</if>
+            <if test="move != null ">move</if>
+            <if test="bat != null ">bat</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null  ">#{id},</if>
 			<if test="privilegesId != null  ">#{privilegesId},</if>
 			<if test="userId != null  ">#{userId},</if>
 			<if test="onOff != null  ">#{onOff},</if>
+            <if test="fall != null ">#{fall},</if>
+            <if test="move != null ">#{move},</if>
+            <if test="bat != null ">#{bat},</if>
          </trim>
     </insert>
 	 
@@ -68,6 +87,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update module_to_push
         <trim prefix="SET" suffixOverrides=",">
             <if test="onOff != null  ">on_off = #{onOff},</if>
+            <if test="fall != null ">fall = #{fall}</if>
+            <if test="move != null ">move = #{move}</if>
+            <if test="bat != null ">bat = #{bat}</if>
         </trim>
         where privilegesId = #{privilegesId} and userId = #{userId}
     </update>

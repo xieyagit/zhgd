@@ -7,7 +7,9 @@ package com.hujiang.project.zhgd.utils;
  * @create: 2019-05-24 10:07
  **/
 public class Constants {
-    //车辆
+    //惠州两制对接住建局
+    public static final String XIETWOSYSTEMS = "http://";
+
     public static final String Version = "http://szwb.sz.gov.cn:2018/openapi/";
     //塔吊
     public static final String Tower_crane = " http://szwb.sz.gov.cn:2019//CWRService/";
@@ -55,8 +57,8 @@ public class Constants {
     //public static final String ZCAPI = "http://szwb.sz.gov.cn:2018/openapi";
     //定位接口
     public static final String LOCALTION = "http://101.37.34.43:8080/datainterface/data/getinfos.ll";
-    public static final String LOCALTIONDATA = "http://58.246.211.154:23333/Location/data/getinfos.do";
-
+    public static final String LOCALTIONDATA = "http://home.welleplus.com.cn:58000/Location/data/getinfos.do";
+    public static final String LOCALTIONDATAWARNING = "http://home.welleplus.com.cn:58000/Location/data/getwarns.do";
     //对接城安院地址 市管项目
     public static final String CAY_CS = "http://139.159.186.240/misInter/";
 

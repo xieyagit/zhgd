@@ -21,8 +21,35 @@ public class ModuleToPush
 	private Integer userId;
 	/**  */
 	private Integer onOff;
+	private Integer fall;
+	private Integer move;
+	private Integer bat;
 
-	public void setId(Integer id) 
+	public Integer getFall() {
+		return fall;
+	}
+
+	public void setFall(Integer fall) {
+		this.fall = fall;
+	}
+
+	public Integer getMove() {
+		return move;
+	}
+
+	public void setMove(Integer move) {
+		this.move = move;
+	}
+
+	public Integer getBat() {
+		return bat;
+	}
+
+	public void setBat(Integer bat) {
+		this.bat = bat;
+	}
+
+	public void setId(Integer id)
 	{
 		this.id = id;
 	}
@@ -58,13 +85,17 @@ public class ModuleToPush
 	{
 		return onOff;
 	}
+
 	@Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("privilegesId", getPrivilegesId())
-            .append("userId", getUserId())
-            .append("onOff", getOnOff())
-            .toString();
-    }
+	public String toString() {
+		return "ModuleToPush{" +
+				"id=" + id +
+				", privilegesId=" + privilegesId +
+				", userId=" + userId +
+				", onOff=" + onOff +
+				", fall=" + fall +
+				", move=" + move +
+				", bat=" + bat +
+				'}';
+	}
 }

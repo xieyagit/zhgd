@@ -1,11 +1,11 @@
 package com.hujiang.project.zhgd.sbEquipmentRecord.service;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Service;
 import com.hujiang.project.zhgd.sbEquipmentRecord.mapper.SbEquipmentRecordMapper;
 import com.hujiang.project.zhgd.sbEquipmentRecord.domain.SbEquipmentRecord;
-import com.hujiang.project.zhgd.sbEquipmentRecord.service.ISbEquipmentRecordService;
 import com.hujiang.common.support.Convert;
 
 /**
@@ -15,10 +15,11 @@ import com.hujiang.common.support.Convert;
  * @date 2019-06-29
  */
 @Service
-public class SbEquipmentRecordServiceImpl implements ISbEquipmentRecordService 
+public class SbEquipmentRecordServiceImpl implements ISbEquipmentRecordService
 {
 	@Autowired
 	private SbEquipmentRecordMapper sbEquipmentRecordMapper;
+
 
 	/**
      * 查询定位记录信息
