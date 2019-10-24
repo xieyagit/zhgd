@@ -70,7 +70,7 @@ public class HqController {
             Pattern pattern = Pattern.compile("^[0-9]*$");
             if(pattern.matcher(userId).matches()){
 
-            HjProjectWorkers hpw=hjProjectWorkersService.selectHjProjectWorkersById(log.getInteger(userId));
+            HjProjectWorkers hpw=hjProjectWorkersService.selectHjProjectWorkersById(Integer.valueOf(userId));
         if(hpw!=null){
         HjAttendanceDevice had=new HjAttendanceDevice();
         had.setDeviceNo(deviceId);
