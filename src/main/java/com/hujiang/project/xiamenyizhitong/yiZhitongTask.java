@@ -36,9 +36,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-//@Component
-@RestController
-@RequestMapping(value = "/provider/o")
+@Component
+//@RestController
+//@RequestMapping(value = "/provider/o")
 public class yiZhitongTask extends AutoTaskBase {
     @Autowired
     private IHjProjectWorkersService hjProjectWorkersService;
@@ -114,7 +114,7 @@ public class yiZhitongTask extends AutoTaskBase {
      * 同步考勤记录
      * @throws Exception
      */
-    @PostMapping(value = "/b")
+//    @PostMapping(value = "/b")
 //    @Scheduled(cron="0 0/30 * * * ? ")
     public void setJiLu()throws Exception{
         HjSynchronizationInformation hs=new HjSynchronizationInformation();
