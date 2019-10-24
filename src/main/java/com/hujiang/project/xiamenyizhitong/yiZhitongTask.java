@@ -25,6 +25,9 @@ import com.hujiang.project.zhgd.utils.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
@@ -33,9 +36,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-@Component
-//@RestController
-//@RequestMapping(value = "/provider/o")
+//@Component
+@RestController
+@RequestMapping(value = "/provider/o")
 public class yiZhitongTask extends AutoTaskBase {
     @Autowired
     private IHjProjectWorkersService hjProjectWorkersService;
@@ -111,7 +114,7 @@ public class yiZhitongTask extends AutoTaskBase {
      * 同步考勤记录
      * @throws Exception
      */
-//    @PostMapping(value = "/b")
+    @PostMapping(value = "/b")
 //    @Scheduled(cron="0 0/30 * * * ? ")
     public void setJiLu()throws Exception{
         HjSynchronizationInformation hs=new HjSynchronizationInformation();
@@ -133,14 +136,6 @@ public class yiZhitongTask extends AutoTaskBase {
         Calendar beforeTime = Calendar.getInstance();
         beforeTime.add(Calendar.MINUTE, -30);//
         String startTime=dateFormat.format(beforeTime.getTime());
-        HjSynchronizationInformation hs=new HjSynchronizationInformation();
-        hs.setPlatformName("PERSONNEL");
-        hs.setApiType("keytype1");
-        hs.setProjectId(pid);
-        hs.setState(1);
-        List<HjSynchronizationInformation> hsList=hjSynchronizationInformationService.selectHjSynchronizationInformationList(hs);
-        if(hsList.size()>0){
-            HjSynchronizationInformation h=hsList.get(0);
 
             JSONObject jsonObject=new JSONObject();
             jsonObject.put("xmjc","API");
@@ -220,7 +215,7 @@ public class yiZhitongTask extends AutoTaskBase {
 
 
 
-                    }
+
 
 
 
