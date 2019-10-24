@@ -45,6 +45,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userId != null">and o.id = #{userId}</if>
             <if test="userName != null and userName != ''">and o.emp_name = #{userName}</if>
         </where>
+        order by  w.warningTime desc
     </select>
 
     <select id="selectSbEquipmentWarningList" parameterType="SbEquipmentWarning" resultMap="SbEquipmentWarningResult">
@@ -57,28 +58,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="projectId != null">and projectId = #{projectId}</if>
          </where>
     </select>
-    
+
+    <select id="selectSbEquipmentWarning" parameterType="SbEquipmentWarning" resultMap="SbEquipmentWarningResult">
+        <include refid="selectSbEquipmentWarningVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="imei != null  and imei != '' "> and imei = #{imei}</if>
+            <if test="warningType != null"> and warningType = #{warningType}</if>
+            <if test="warningTime != null "> and warningTime = #{warningTime}</if>
+            <if test="projectId != null">and projectId = #{projectId}</if>
+        </where>
+        order by warningTime desc limit 0,1
+    </select>
+
+
     <select id="selectSbEquipmentWarningById" parameterType="Integer" resultMap="SbEquipmentWarningResult">
         <include refid="selectSbEquipmentWarningVo"/>
         where id = #{id}
     </select>
         
     <insert id="insertSbEquipmentWarning" parameterType="SbEquipmentWarning">
-        insert into sb_equipment_warning
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">id,</if>
-			<if test="imei != null  and imei != ''  ">imei,</if>
-			<if test="warningType != null ">warningType,</if>
-			<if test="warningTime != null  ">warningTime,</if>
-            <if test="projectId != null  ">projectId,</if>
-         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">#{id},</if>
-			<if test="imei != null  and imei != ''  ">#{imei},</if>
-			<if test="warningType != null">#{warningType},</if>
-			<if test="warningTime != null  ">#{warningTime},</if>
-            <if test="projectId != null  ">#{projectId},</if>
-         </trim>
+      insert ignore into sb_equipment_warning
+           (imei,warningType , warningTime, projectId)
+      values
+      <foreach collection ="list" item="warning" index= "index" separator =",">
+       (#{warning.imei}, #{warning.warningType},#{warning.warningTime},#{warning.projectId})
+      </foreach >
     </insert>
 	 
     <update id="updateSbEquipmentWarning" parameterType="SbEquipmentWarning">

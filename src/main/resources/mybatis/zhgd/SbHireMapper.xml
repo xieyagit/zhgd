@@ -108,10 +108,8 @@
     </select>
 
     <select id="selectTimeList" parameterType="HirePeople" resultMap="HirePeopleResult">
-        SELECT * from(
         SELECT imei,bat,watchDate,xloc,yloc,address
-        from sb_equipment_record
-        GROUP BY imei ) a where 1=1
+        from sb_equipment_record where 1=1
         <if test="imei != null and imei != ''">and imei = #{imei}</if>
         ORDER BY watchDate desc
     </select>
