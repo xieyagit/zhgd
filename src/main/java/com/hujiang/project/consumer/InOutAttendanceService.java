@@ -98,7 +98,7 @@ public class InOutAttendanceService {
             if("ys".equals(h.getDeviceFactory())){
                 //负责处理海康设备的
                 isYsUser(hw,h.getDeviceNo());
-                System.out.println("我是测试2");
+//                System.out.println("我是测试2");
             }else{
                 //看是否是待删除人脸
                 hdpw.setStatus("2");

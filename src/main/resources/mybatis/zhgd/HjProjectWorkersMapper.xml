@@ -51,6 +51,7 @@
         <result property="updateDate" column="update_date"/>
         <result property="constructionId" column="construction_id"/>
         <result property="information" column="information"/>
+        <result property="isUpload" column="isUpload"/>
     </resultMap>
 
 
@@ -298,7 +299,7 @@
     </select>
 
     <sql id="selectHjProjectWorkersVo">
-        select id, emp_name, id_code, emp_phon, emp_sex, emp_nation, id_address, id_agency, id_validdate, date_of_birth, native_place, start_time, end_time, work_typename_id, is_team, cwr_iskeypsn, information,job_typename, job_name, emp_category, if_contract, emp_dept, ob_dept, emp_bankname, emp_cardnum, account_type, account_address, credential, remark, contract, entrance, exeunt, workConfirm, iDCardPDF, isTrain, face_url, emp_naticeplace, idphoto_scan, idphoto_scan2, bank_card_url, project_id, enter_And_Retreat_Condition, faceToken, create_date, update_date,construction_id from hj_project_workers
+        select id,isUpload, emp_name, id_code, emp_phon, emp_sex, emp_nation, id_address, id_agency, id_validdate, date_of_birth, native_place, start_time, end_time, work_typename_id, is_team, cwr_iskeypsn, information,job_typename, job_name, emp_category, if_contract, emp_dept, ob_dept, emp_bankname, emp_cardnum, account_type, account_address, credential, remark, contract, entrance, exeunt, workConfirm, iDCardPDF, isTrain, face_url, emp_naticeplace, idphoto_scan, idphoto_scan2, bank_card_url, project_id, enter_And_Retreat_Condition, faceToken, create_date, update_date,construction_id from hj_project_workers
 
 </sql>
 
@@ -351,6 +352,7 @@
              <if test="updateDate != null  and updateDate != '' "> and update_date = #{updateDate}</if>
             <if test="constructionId != null"> and construction_id = #{constructionId}</if>
             <if test="information != null"> and information = #{information}</if>
+            <if test="isUpload != null  and isUpload != '' "> and isUpload = #{isUpload}</if>
         </where>
     </select>
 
@@ -405,6 +407,7 @@
 			<if test="accountAddress != null  and accountAddress != ''  ">account_address,</if>
 			<if test="credential != null  and credential != ''  ">credential,</if>
 			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="isUpload != null  and isUpload != ''  ">isUpload,</if>
 			<if test="contract != null  ">contract,</if>
 			<if test="entrance != null  ">entrance,</if>
 			<if test="exeunt != null  ">exeunt,</if>
@@ -453,6 +456,7 @@
 			<if test="accountAddress != null  and accountAddress != ''  ">#{accountAddress},</if>
 			<if test="credential != null  and credential != ''  ">#{credential},</if>
 			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="isUpload != null  and isUpload != ''  ">#{isUpload},</if>
 			<if test="contract != null  ">#{contract},</if>
 			<if test="entrance != null  ">#{entrance},</if>
 			<if test="exeunt != null  ">#{exeunt},</if>
@@ -521,6 +525,7 @@
             <if test="faceToken != null  and faceToken != ''  ">faceToken = #{faceToken},</if>
             <if test="createDate != null  ">create_date = #{createDate},</if>
             <if test="updateDate != null  and updateDate != ''  ">update_date = #{updateDate},</if>
+            <if test="isUpload != null  and isUpload != ''  ">isUpload = #{isUpload},</if>
             <if test="constructionId != null">construction_id = #{constructionId},</if>
             <if test="information != null">information = #{information}</if>
         </trim>
