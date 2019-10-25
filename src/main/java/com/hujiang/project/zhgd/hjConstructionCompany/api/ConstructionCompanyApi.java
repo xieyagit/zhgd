@@ -69,82 +69,83 @@ public class ConstructionCompanyApi extends BaseController{
     {
 
         logger.info("保存参建单位开始");
-
-        //同步参建单位到住建局
-        HjSynchronizationInformation hs=new HjSynchronizationInformation();
-        hs.setProjectId(projectId);
-        hs.setState(1);
-        hs.setApiType("keytype1");
+        String platformName = null;
+        String token = null;
+        if("1".equals(hjConstructionCompany.getIsUpload())) {
+            //同步参建单位到住建局
+            HjSynchronizationInformation hs = new HjSynchronizationInformation();
+            hs.setProjectId(projectId);
+            hs.setState(1);
+            hs.setApiType("keytype1");
 //        hs.setPlatformName("HOUS");
-        List<HjSynchronizationInformation> hList=hjSynchronizationInformationService.selectHjSynchronizationInformationList(hs);
-        String platformName=null;
-        String token=null;
-        //有秘钥才去上传
-        for(HjSynchronizationInformation h:hList) {
-            //深圳住建局上传企业
-            if ("HOUS".equals(h.getPlatformName())) {
-                JSONObject json = new JSONObject();
-                json.put("Project_ID", h.getProjectNumber());
-                json.put("Company_Name", hjConstructionCompany.getConstructionName());
-                json.put("Legal_Person", hjConstructionCompany.getLegalPerson());
-                json.put("SUID", hjConstructionCompany.getSuid());
-                HjDictionaries hd = hjDictionariesService.selectHjDictionariesById(hjConstructionCompany.getCompanyType());
-                json.put("type", hd.getTag().split("-")[0]);
-                String url = ZCAPIClientTwo.getUrl(h.getApiSecret(), h.getApiKey(), "1.1", h.getClientSerial(), json.toString(), Constants.HJ_FORMALHOST + "AddCompany");
-                String result = ZCAPIClientTwo.httpPostWithJSON(url, json);
-                JSONObject s = JSONObject.parseObject(result);
-                if ("false".equals(s.getString("result"))) {
-                    HjLogging hl = new HjLogging();
-                    hl.setProjectId(projectId);
-                    hl.setLoggingMessage(s.getString("detail_message"));
-                    hl.setLoggingData(result);
-                    hl.setInOut("上传企业信息失败！");
-                    hl.setUserName(hjConstructionCompany.getConstructionName());
-                    hl.setLoggingTag(h.getPlatformName());
-                    hl.setLoggingTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-                    hjLoggingService.insertHjLogging(hl);
+            List<HjSynchronizationInformation> hList = hjSynchronizationInformationService.selectHjSynchronizationInformationList(hs);
 
+            //有秘钥才去上传
+            for (HjSynchronizationInformation h : hList) {
+                //深圳住建局上传企业
+                if ("HOUS".equals(h.getPlatformName())) {
+                    JSONObject json = new JSONObject();
+                    json.put("Project_ID", h.getProjectNumber());
+                    json.put("Company_Name", hjConstructionCompany.getConstructionName());
+                    json.put("Legal_Person", hjConstructionCompany.getLegalPerson());
+                    json.put("SUID", hjConstructionCompany.getSuid());
+                    HjDictionaries hd = hjDictionariesService.selectHjDictionariesById(hjConstructionCompany.getCompanyType());
+                    json.put("type", hd.getTag().split("-")[0]);
+                    String url = ZCAPIClientTwo.getUrl(h.getApiSecret(), h.getApiKey(), "1.1", h.getClientSerial(), json.toString(), Constants.HJ_FORMALHOST + "AddCompany");
+                    String result = ZCAPIClientTwo.httpPostWithJSON(url, json);
+                    JSONObject s = JSONObject.parseObject(result);
+                    if ("false".equals(s.getString("result"))) {
+                        HjLogging hl = new HjLogging();
+                        hl.setProjectId(projectId);
+                        hl.setLoggingMessage(s.getString("detail_message"));
+                        hl.setLoggingData(result);
+                        hl.setInOut("上传企业信息失败！");
+                        hl.setUserName(hjConstructionCompany.getConstructionName());
+                        hl.setLoggingTag(h.getPlatformName());
+                        hl.setLoggingTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+                        hjLoggingService.insertHjLogging(hl);
+
+                    }
+
+                } else if ("DGHOUS".equals(h.getPlatformName())) {
+                    //东莞住建局上传企业
+                    JSONObject body = new JSONObject();
+                    JSONObject body2 = new JSONObject();
+                    body2.put("Name", hjConstructionCompany.getConstructionName());
+                    body2.put("Email", hjConstructionCompany.getEmail());
+                    body2.put("SocialUnifiedCreditCode", hjConstructionCompany.getSuid());
+                    HjDictionaries hd = hjDictionariesService.selectHjDictionariesById(hjConstructionCompany.getCompanyType());
+                    body2.put("Type", hd.getTag().split("-")[2]);
+                    body2.put("VocationalAdmin", hjConstructionCompany.getContacts());
+                    body2.put("VocationalAdminLinktel", hjConstructionCompany.getMobilePhone());
+                    body.put("Data", body2);
+                    String url = APIClient.getUrlDG(h.getApiKey(), body.toString(), Constants.DG_HOUS + "/UploadCompany");
+                    String result = APIClient.httpPostWithJSONDG(url, body);
+                    JSONObject s = JSONObject.parseObject(result);
+                    if (!"1".equals(s.getString("StateCode"))) {
+                        HjLogging hl = new HjLogging();
+                        hl.setProjectId(projectId);
+                        hl.setLoggingMessage(s.getString("ErrMsg"));
+                        hl.setLoggingData(result);
+                        hl.setInOut("上传企业信息失败！");
+                        hl.setUserName(hjConstructionCompany.getConstructionName());
+                        hl.setLoggingTag(h.getPlatformName());
+                        hl.setLoggingTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+                        hjLoggingService.insertHjLogging(hl);
+                    } else {
+                        hjConstructionCompany.setComId(s.getJSONObject("ResultData").getInteger("ComId"));
+                    }
+                    platformName = h.getPlatformName();
+                    token = h.getApiKey();
                 }
 
-            }else if("DGHOUS".equals(h.getPlatformName())){
-                //东莞住建局上传企业
-                JSONObject body=new JSONObject();
-                JSONObject body2=new JSONObject();
-                body2.put("Name",hjConstructionCompany.getConstructionName());
-                 body2.put("Email",hjConstructionCompany.getEmail());
-                body2.put("SocialUnifiedCreditCode",hjConstructionCompany.getSuid());
-                HjDictionaries hd = hjDictionariesService.selectHjDictionariesById(hjConstructionCompany.getCompanyType());
-                body2.put("Type",hd.getTag().split("-")[2]);
-                body2.put("VocationalAdmin",hjConstructionCompany.getContacts());
-                body2.put("VocationalAdminLinktel",hjConstructionCompany.getMobilePhone());
-                body.put("Data",body2);
-                String url= APIClient.getUrlDG(h.getApiKey(),body.toString(),Constants.DG_HOUS+"/UploadCompany");
-                String result=APIClient.httpPostWithJSONDG(url,body);
-                JSONObject s = JSONObject.parseObject(result);
-                if(!"1".equals(s.getString("StateCode"))){
-                    HjLogging hl = new HjLogging();
-                    hl.setProjectId(projectId);
-                    hl.setLoggingMessage(s.getString("ErrMsg"));
-                    hl.setLoggingData(result);
-                    hl.setInOut("上传企业信息失败！");
-                    hl.setUserName(hjConstructionCompany.getConstructionName());
-                    hl.setLoggingTag(h.getPlatformName());
-                    hl.setLoggingTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-                    hjLoggingService.insertHjLogging(hl);
-                }else{
-                    hjConstructionCompany.setComId(s.getJSONObject("ResultData").getInteger("ComId"));
-                }
-                platformName=h.getPlatformName();
-                token=h.getApiKey();
-            }
-
-            /** 对接惠州市住建局 */
-            if ("XIEHOUS".equals(h.getPlatformName())){
+//            /** 对接惠州市住建局 */
+//            if ("XIEHOUS".equals(h.getPlatformName())){
+//
+//            }
 
             }
-
         }
-
         logger.info("保存参建单位");
         //保存参建单位信息
         int i= hjConstructionCompanyService.insertHjConstructionCompany(hjConstructionCompany);

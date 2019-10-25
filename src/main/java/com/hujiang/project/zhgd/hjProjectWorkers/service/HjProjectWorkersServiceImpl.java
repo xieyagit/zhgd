@@ -81,6 +81,9 @@ public class HjProjectWorkersServiceImpl implements IHjProjectWorkersService {
 
     @Autowired
     private JmsMessagingTemplate jmsMessagingTemplate;
+
+    @Autowired
+    private HjConstructionCompanyMapper hjConstructionCompanyMapper;
     private Logger logger = Logger.getLogger(HjProjectWorkersServiceImpl.class.getName());
 
 
@@ -287,7 +290,8 @@ public class HjProjectWorkersServiceImpl implements IHjProjectWorkersService {
 
                     if(tag == 0){
                         //执行相应同步信息
-                        boolean re = apiClient.registerEmployeeTest(hjProjectWorkers);
+                        boolean re =apiClient.registerEmployeeTest(hjProjectWorkers);
+
                         logger.info("执行相应同步信息---"+re);
                         if(re){
                             boolean b = moredianClient.enteringMoredianPerson( hjProjectWorkers, 1);
@@ -301,7 +305,8 @@ public class HjProjectWorkersServiceImpl implements IHjProjectWorkersService {
                             successIds += hjProjectWorkers.getId() + ",";//获取可执行人员id
                         }
                     }else {
-                        boolean re = apiClient.deleteUserLeaveProject(hjProjectWorkers);
+                        boolean re =apiClient.deleteUserLeaveProject(hjProjectWorkers);
+
                         logger.info("执行相应退场信息---"+re);
                         if(re){
                             boolean b = moredianClient.enteringMoredianPerson( hjProjectWorkers, 2);
@@ -434,6 +439,12 @@ public class HjProjectWorkersServiceImpl implements IHjProjectWorkersService {
                 }
             } else {
                 hjProjectWorkers.setEnterAndRetreatCondition(2);
+                HjConstructionCompany hcc=hjConstructionCompanyMapper.selectHjConstructionCompanyById(hjProjectWorkers.getConstructionId());
+                if("1".equals(hcc.getIsUpload())){
+                    hjProjectWorkers.setIsUpload("1");
+                }else{
+                    hjProjectWorkers.setIsUpload("0");
+                }
                 hjProjectWorkersMapper.insertHjProjectWorkers(hjProjectWorkers); // 加入项目工人表
 
 

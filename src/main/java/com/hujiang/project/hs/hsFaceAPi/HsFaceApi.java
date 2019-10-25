@@ -168,7 +168,7 @@ String aa=getJson(a);
                 add.put("version", version);
                 add.put("cmd", "delete person(s)");
                 add.put("flag", -1);
-                add.put("id", hdp.getPid());
+                add.put("id", hdp.getPid().toString());
                 add.put("command_id", hdp.getDid().toString());
             }
             return add.toString();

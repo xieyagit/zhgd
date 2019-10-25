@@ -26,11 +26,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createDate"    column="create_date"    />
         <result property="updateDate"    column="update_date"    />
         <result property="comId"    column="comId"    />
+        <result property="isUpload"    column="isUpload"    />
         <association property="dictionaries" select="com.hujiang.project.zhgd.hjDictionaries.mapper.HjDictionariesMapper.selectHjDictionariesById"  column="company_type"/>
     </resultMap>
 	
 	<sql id="selectHjConstructionCompanyVo">
-        select id, construction_name, short_name, capital, company_type, legal_person, suid, organization_code, bank_open, bank_num, bank_address, address, contacts, mobile_phone, email, remark, show_state, face_group, create_date, update_date,comId from hj_construction_company
+        select id,isUpload, construction_name, short_name, capital, company_type, legal_person, suid, organization_code, bank_open, bank_num, bank_address, address, contacts, mobile_phone, email, remark, show_state, face_group, create_date, update_date,comId from hj_construction_company
     </sql>
 	
     <select id="selectHjConstructionCompanyList" parameterType="HjConstructionCompany" resultMap="HjConstructionCompanyResult">
@@ -54,6 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
              <if test="showState != null "> and show_state = #{showState}</if>
              <if test="faceGroup != null  and faceGroup != '' "> and face_group = #{faceGroup}</if>
+             <if test="isUpload != null  and isUpload != '' "> and isUpload = #{isUpload}</if>
              <if test="createDate != null "> and create_date = #{createDate}</if>
              <if test="updateDate != null "> and update_date = #{updateDate}</if>
              <if test="comId != null "> and comId = #{comId}</if>
@@ -80,6 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
             <if test="showState != null "> and show_state = #{showState}</if>
             <if test="faceGroup != null  and faceGroup != '' "> and face_group = #{faceGroup}</if>
+            <if test="isUpload != null  and isUpload != '' "> and isUpload = #{isUpload}</if>
             <if test="createDate != null "> and create_date = #{createDate}</if>
             <if test="updateDate != null "> and update_date = #{updateDate}</if>
             <if test="comId != null "> and comId = #{comId}</if>
@@ -122,6 +125,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="remark != null  and remark != ''  ">remark,</if>
 			<if test="showState != null  ">show_state,</if>
 			<if test="faceGroup != null  and faceGroup != ''  ">face_group,</if>
+			<if test="isUpload != null  and isUpload != ''  ">isUpload,</if>
 			<if test="createDate != null  ">create_date,</if>
 			<if test="updateDate != null  ">update_date,</if>
 			<if test="comId != null  ">comId,</if>
@@ -145,6 +149,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="remark != null  and remark != ''  ">#{remark},</if>
 			<if test="showState != null  ">#{showState},</if>
 			<if test="faceGroup != null  and faceGroup != ''  ">#{faceGroup},</if>
+			<if test="isUpload != null  and isUpload != ''  ">#{isUpload},</if>
 			<if test="createDate != null  ">#{createDate},</if>
 			<if test="updateDate != null  ">#{updateDate},</if>
 			<if test="comId != null  ">#{comId},</if>
@@ -171,6 +176,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
             <if test="showState != null  ">show_state = #{showState},</if>
             <if test="faceGroup != null  and faceGroup != ''  ">face_group = #{faceGroup},</if>
+            <if test="isUpload != null  and isUpload != ''  ">isUpload = #{isUpload},</if>
             <if test="createDate != null  ">create_date = #{createDate},</if>
             <if test="updateDate != null  ">update_date = #{updateDate},</if>
             <if test="comId != null  ">comId = #{comId},</if>

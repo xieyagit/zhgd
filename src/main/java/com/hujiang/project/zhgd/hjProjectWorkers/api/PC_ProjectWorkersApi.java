@@ -16,6 +16,9 @@ import com.hujiang.framework.web.domain.AjaxResult;
 import com.hujiang.framework.web.page.TableDataInfo;
 import com.hujiang.project.zhgd.hjAttendanceRecord.domain.HjAttendanceRecord;
 import com.hujiang.project.zhgd.hjAttendanceRecord.service.IHjAttendanceRecordService;
+import com.hujiang.project.zhgd.hjConstructionCompany.domain.HjConstructionCompany;
+import com.hujiang.project.zhgd.hjConstructionCompany.service.IHjConstructionCompanyService;
+import com.hujiang.project.zhgd.hjConstructionProject.service.IHjConstructionProjectService;
 import com.hujiang.project.zhgd.hjProject.domain.HjProject;
 import com.hujiang.project.zhgd.hjProject.service.IHjProjectService;
 import com.hujiang.project.zhgd.hjProjectWorkers.domain.*;
@@ -65,7 +68,8 @@ public class PC_ProjectWorkersApi extends BaseController {
     private IHjProjectService hjProjectService;
     @Resource
     private MoredianClient moredianClient;
-
+    @Autowired
+    private IHjConstructionCompanyService hjConstructionCompanyService;
     /**
      * 查询项目工人列表
      */
@@ -103,6 +107,12 @@ public class PC_ProjectWorkersApi extends BaseController {
     @PostMapping("/edit")
     public AjaxResult editSave(HjProjectWorkers hjProjectWorkers)throws Exception
     {
+        HjConstructionCompany hcc=hjConstructionCompanyService.selectHjConstructionCompanyById(hjProjectWorkers.getConstructionId());
+        if("1".equals(hcc.getIsUpload())){
+            hjProjectWorkers.setIsUpload("1");
+        }else{
+            hjProjectWorkers.setIsUpload("0");
+        }
         int i = hjProjectWorkersService.updateHjProjectWorkers(hjProjectWorkers);
         if(i>0){
             boolean b = moredianClient.enteringMoredianPerson( hjProjectWorkersService.selectHjProjectWorkersById(hjProjectWorkers.getId()), 3);
