@@ -1,10 +1,6 @@
 package com.hujiang.project.zhgd.hjConstructionCompany.domain;
 
 import com.hujiang.project.zhgd.hjDictionaries.domain.HjDictionaries;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.util.Date;
 
     
 /**
@@ -63,6 +59,16 @@ public class HjConstructionCompany
 	private Integer projectId;
 	//企业ID
 	private  Integer comId;
+	/** 是否上传*/
+	private String isUpload;
+
+	public String getIsUpload() {
+		return isUpload;
+	}
+
+	public void setIsUpload(String isUpload) {
+		this.isUpload = isUpload;
+	}
 
 	public Integer getComId() {
 		return comId;

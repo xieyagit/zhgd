@@ -108,6 +108,6 @@ where d.device_no=#{deviceNo} and d.status=#{status} limit 1
     <!--艾达信人脸机获取指令-->
     <select id="selectHjProjectworkersListThree" parameterType="Map" resultMap="HjDeviceProjectworkersParamResult">
         select d.id did,p.id pid,p.emp_name,p.face_url,d.status from hj_project_workers p left join hj_device_projectworkers d on d.project_workers_id=p.id
-where  d.device_no=#{deviceNo} and (d.status!='2' or  d.status!='0')
+where  d.device_no=#{deviceNo} and (d.status='2' or  d.status='0')
     </select>
 </mapper>
