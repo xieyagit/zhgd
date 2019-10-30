@@ -151,7 +151,7 @@ public class DustEmissionTask extends AutoTaskBase {
                 }
 
                 /** 添加扬尘数据列表，待发送到消息队列(城安院) */
-                if (p.getScznl() != null &&p.getScznl().equals("CAY")){
+                if (p.getScznl() != null && p.getScznl().equals("CAY")){
                     if (p.getJdbh() != null){
                         JmsMessageInfo<SbDustEmission> messageInfo = new JmsMessageInfo<SbDustEmission>();
                         messageInfo.setBody(dustEmission);
