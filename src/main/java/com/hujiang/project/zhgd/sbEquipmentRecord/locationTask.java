@@ -162,13 +162,13 @@ public class locationTask extends AutoTaskBase {
         if("true".equals(status)){
             List<SbAreaProject> areaProjectList = sbHireMapper.selectAreaProjectList();
             JSONArray list=JSONArray.parseArray(originalData.getString("data"));
+            List<SbEquipmentWarning> equipmentWarningList = new ArrayList<>();
             for(Object jo : list) {
                 JSONObject data = JSONObject.parseObject(jo.toString());
                 data.remove("id");
                 String imei = data.getString("imei");
                 if (deviceList.contains(imei)) {
                     //转换成实体类数据
-                    List<SbEquipmentWarning> equipmentWarningList = new ArrayList<>();
                     List<SbAreaProject> areaProjects = areaProjectList.stream()
                             .filter(c -> c.getImei().equals(imei))
                             .collect(Collectors.toList());
@@ -176,8 +176,6 @@ public class locationTask extends AutoTaskBase {
                     equipmentWarning.setProjectId(areaProjects.get(0).getProjectId());
                     //保存定位数据
                     equipmentWarningList.add(equipmentWarning);
-                    equipmentWarningService.insertSbEquipmentWarning(equipmentWarningList);
-
                     List<ModuleToPush> pushes = moduleToPushes.stream()
                             .filter(s -> s.getPrivilegesId().equals(3) && (s.getOnOff().equals(1) || s.getFall().equals(1) ||
                                     s.getMove().equals(1) || s.getBat().equals(1)))
@@ -194,11 +192,8 @@ public class locationTask extends AutoTaskBase {
                         sbEquipmentWarning.setAdminId(pushItem.getUserId());
                         jPushSMS.JPushAndJSMS(sbEquipmentWarning,areaProjects.get(0).getProjectId());
                     }
-
-
-
-
                 }
+                equipmentWarningService.insertSbEquipmentWarning(equipmentWarningList);
             }
         }
     }
