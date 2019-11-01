@@ -12,6 +12,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.baidu.aip.face.AipFace;
 import com.hujiang.common.exception.BusinessException;
 import com.hujiang.common.utils.AliOcrUtil;
+import com.hujiang.common.utils.JsonUtils;
+import com.hujiang.framework.jms.JmsMessageInfo;
+import com.hujiang.framework.jms.JmsMessageType;
 import com.hujiang.framework.web.domain.AjaxResult;
 import com.hujiang.project.client.SystemClient;
 import com.hujiang.project.zhgd.hjAttendanceDevice.domain.HjAttendanceDevice;
@@ -31,17 +34,20 @@ import com.hujiang.project.zhgd.hjWorkerRecord.domain.HjWorkerRecord;
 import com.hujiang.project.zhgd.hjWorkerRecord.mapper.HjWorkerRecordMapper;
 import com.hujiang.project.zhgd.hjWorkers.domain.HjWorkers;
 import com.hujiang.project.zhgd.hjWorkers.mapper.HjWorkersMapper;
+import com.hujiang.project.zhgd.sbDustEmission.domain.SbDustEmission;
 import com.hujiang.project.zhgd.utils.APIClient;
 import com.hujiang.project.zhgd.utils.Constants;
 import com.hujiang.project.zhgd.utils.MoredianClient;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.stereotype.Service;import org.springframework.transaction.annotation.Transactional;
 import com.hujiang.project.zhgd.hjProjectWorkers.mapper.HjProjectWorkersMapper;
 import com.hujiang.common.support.Convert;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.jms.Queue;
 
 /**
  * 项目工人 服务层实现
@@ -70,7 +76,14 @@ public class HjProjectWorkersServiceImpl implements IHjProjectWorkersService {
     APIClient apiClient;
     @Resource
     private MoredianClient moredianClient;
+    @Autowired
+    private Queue openYsQueue;
 
+    @Autowired
+    private JmsMessagingTemplate jmsMessagingTemplate;
+
+    @Autowired
+    private HjConstructionCompanyMapper hjConstructionCompanyMapper;
     private Logger logger = Logger.getLogger(HjProjectWorkersServiceImpl.class.getName());
 
 
@@ -277,7 +290,8 @@ public class HjProjectWorkersServiceImpl implements IHjProjectWorkersService {
 
                     if(tag == 0){
                         //执行相应同步信息
-                        boolean re = apiClient.registerEmployeeTest(hjProjectWorkers);
+                        boolean re =apiClient.registerEmployeeTest(hjProjectWorkers);
+
                         logger.info("执行相应同步信息---"+re);
                         if(re){
                             boolean b = moredianClient.enteringMoredianPerson( hjProjectWorkers, 1);
@@ -291,7 +305,8 @@ public class HjProjectWorkersServiceImpl implements IHjProjectWorkersService {
                             successIds += hjProjectWorkers.getId() + ",";//获取可执行人员id
                         }
                     }else {
-                        boolean re = apiClient.deleteUserLeaveProject(hjProjectWorkers);
+                        boolean re =apiClient.deleteUserLeaveProject(hjProjectWorkers);
+
                         logger.info("执行相应退场信息---"+re);
                         if(re){
                             boolean b = moredianClient.enteringMoredianPerson( hjProjectWorkers, 2);
@@ -323,36 +338,40 @@ public class HjProjectWorkersServiceImpl implements IHjProjectWorkersService {
         return result;
     }
     public void hqAdd(HjProjectWorkers hw){
-        HjAttendanceDevice had=new HjAttendanceDevice();
-        had.setProjectId(hw.getProjectId());
-        List<HjAttendanceDevice> hadList=hjAttendanceDeviceService.selectHjAttendanceDeviceList(had);
-        HjDeviceProjectworkers hdpw=new HjDeviceProjectworkers();
-        hdpw.setProjectWorkersId(hw.getId());
-        List<HjDeviceProjectworkers> list;
-        for(HjAttendanceDevice h: hadList){
-            hdpw.setStatus("2");
-            hdpw.setDeviceNo(h.getDeviceNo());
-            list=hjDeviceProjectworkersService.selectHjDeviceProjectworkersList(hdpw);
-            if(list.size()>0){
-                hdpw.setStatus("1");
-                hjDeviceProjectworkersService.updateHjDeviceProjectworkersTwo(hdpw);
-            }else{
-                hdpw.setStatus("0");
-                hjDeviceProjectworkersService.insertHjDeviceProjectworkers(hdpw);
-            }
-
-        }
-
+//        HjAttendanceDevice had=new HjAttendanceDevice();
+//        had.setProjectId(hw.getProjectId());
+//        List<HjAttendanceDevice> hadList=hjAttendanceDeviceService.selectHjAttendanceDeviceList(had);
+//        HjDeviceProjectworkers hdpw=new HjDeviceProjectworkers();
+//        hdpw.setProjectWorkersId(hw.getId());
+//        List<HjDeviceProjectworkers> list;
+//        for(HjAttendanceDevice h: hadList){
+//            hdpw.setStatus("2");
+//            hdpw.setDeviceNo(h.getDeviceNo());
+//            list=hjDeviceProjectworkersService.selectHjDeviceProjectworkersList(hdpw);
+//            if(list.size()>0){
+//                hdpw.setStatus("1");
+//                hjDeviceProjectworkersService.updateHjDeviceProjectworkersTwo(hdpw);
+//            }else{
+//                hdpw.setStatus("0");
+//                hjDeviceProjectworkersService.insertHjDeviceProjectworkers(hdpw);
+//            }
+//
+//        }
+        //放进消息队列执行
+        JmsMessageInfo<HjProjectWorkers> messageInfo = new JmsMessageInfo<HjProjectWorkers>();
+        messageInfo.setBody(hw);
+        messageInfo.setType(JmsMessageType.INSERT_ATTENDANCE);
+        jmsMessagingTemplate.convertAndSend(openYsQueue, JsonUtils.toJson(messageInfo));
     }
     public void hqRemove(HjProjectWorkers hw){
 //        HjAttendanceDevice had=new HjAttendanceDevice();
 //        had.setProjectId(hw.getProjectId());
 //        List<HjAttendanceDevice> hadList=hjAttendanceDeviceService.selectHjAttendanceDeviceList(had);
 //        Map<String,String> map=new HashMap<String,String>();
-        HjDeviceProjectworkers hdpw=new HjDeviceProjectworkers();
-        hdpw.setStatus("2");
-        hdpw.setProjectWorkersId(hw.getId());
-        hjDeviceProjectworkersService.updateHjDeviceProjectworkersTwo(hdpw);
+//        HjDeviceProjectworkers hdpw=new HjDeviceProjectworkers();//
+//        hdpw.setStatus("2");//
+//        hdpw.setProjectWorkersId(hw.getId());//
+//        hjDeviceProjectworkersService.updateHjDeviceProjectworkersTwo(hdpw);//
 //        for(HjAttendanceDevice h: hadList){
 
 //         int i=   client.oneClean(h.getDeviceNo(),hw.getId());
@@ -364,7 +383,10 @@ public class HjProjectWorkersServiceImpl implements IHjProjectWorkersService {
 //             System.out.println("==================删除a："+a);
 //         }
 //        }
-
+        JmsMessageInfo<HjProjectWorkers> messageInfo = new JmsMessageInfo<HjProjectWorkers>();
+        messageInfo.setBody(hw);
+        messageInfo.setType(JmsMessageType.DELETE_ATTENDANCE);
+        jmsMessagingTemplate.convertAndSend(openYsQueue, JsonUtils.toJson(messageInfo));
     }
     /**
      * 修改前查询
@@ -417,6 +439,12 @@ public class HjProjectWorkersServiceImpl implements IHjProjectWorkersService {
                 }
             } else {
                 hjProjectWorkers.setEnterAndRetreatCondition(2);
+                HjConstructionCompany hcc=hjConstructionCompanyMapper.selectHjConstructionCompanyById(hjProjectWorkers.getConstructionId());
+                if("1".equals(hcc.getIsUpload())){
+                    hjProjectWorkers.setIsUpload("1");
+                }else{
+                    hjProjectWorkers.setIsUpload("0");
+                }
                 hjProjectWorkersMapper.insertHjProjectWorkers(hjProjectWorkers); // 加入项目工人表
 
 
