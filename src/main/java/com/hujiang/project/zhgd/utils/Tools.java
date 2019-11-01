@@ -1,5 +1,6 @@
 package com.hujiang.project.zhgd.utils;
 
+import com.hujiang.common.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.security.MessageDigest;
@@ -282,8 +283,17 @@ public class Tools {
                 (byte)value};
 }
 
+	/**
+     * 时间戳转换成日期格式字符串
+     * @param seconds 精确到秒的字符串
+	 * @return
+	 */
+    public static String timeStamp2Date(Integer seconds) {
+		String result1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(seconds * 1000));
+		System.out.println("10位数的时间戳（秒）--->Date:" + result1);
+		return  result1;
+    }
 
-	
 //	public static void main(String[] args) throws IOException {
 //		byte[] bs = {0,0,1,1};
 //		System.out.println(Tools.byteArrayToInt(bs));

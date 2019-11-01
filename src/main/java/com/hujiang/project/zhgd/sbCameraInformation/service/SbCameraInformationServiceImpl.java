@@ -89,4 +89,8 @@ public class SbCameraInformationServiceImpl implements ISbCameraInformationServi
 	public int insertInformation(List<SbCameraInformation> messages){
 		return sbCameraInformationMapper.insertInformation(messages);
 	}
+
+	public List<SbCameraInformation> selectSbCameraInformationLists(SbCameraInformation sbCameraInformation){
+		return sbCameraInformationMapper.selectSbCameraInformationLists(sbCameraInformation);
+	}
 }

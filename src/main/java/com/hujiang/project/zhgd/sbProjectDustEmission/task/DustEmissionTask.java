@@ -36,7 +36,7 @@ import java.util.*;
 /**
  * 扬尘检测定时任务
  */
-//@Component("dustEmissionTask")
+@Component("dustEmissionTask")
 @RestController
 @RequestMapping(value = "/provider/tasks",method = RequestMethod.POST)
 public class DustEmissionTask {
@@ -71,6 +71,7 @@ public class DustEmissionTask {
      * @throws Exception
      */
     @PostMapping(value = "insert")
+    @Scheduled(cron="0 0/5 * * * ?")
     public void add()throws Exception {
 
         System.out.println("定时任务dustEmissionTask  add");
@@ -138,18 +139,20 @@ public class DustEmissionTask {
                 }
 
                 /** 添加扬尘数据列表，待发送到消息队列(城安院) */
-                if (p.getScznl().equals("CAY")){
-                    if (p.getJdbh() != null){
-                        JmsMessageInfo<SbDustEmission> messageInfo = new JmsMessageInfo<SbDustEmission>();
-                        messageInfo.setBody(dustEmission);
-                        messageInfo.setType(JmsMessageType.Data);
-                        jmsMessagingTemplate.convertAndSend(tspCayQueue, JsonUtils.toJson(messageInfo));
+                if (p.getScznl() != null) {
+                    if (p.getScznl().equals("CAY")) {
+                        if (p.getJdbh() != null) {
+                            JmsMessageInfo<SbDustEmission> messageInfo = new JmsMessageInfo<SbDustEmission>();
+                            messageInfo.setBody(dustEmission);
+                            messageInfo.setType(JmsMessageType.Data);
+                            jmsMessagingTemplate.convertAndSend(tspCayQueue, JsonUtils.toJson(messageInfo));
+                        }
                     }
-                }
 
-                /**添加扬尘数据到列表，待发送到消息队列**/
-                if(apiKey != null && !apiKey.isEmpty()) {
-                    list.add(dustEmission);
+                    /**添加扬尘数据到列表，待发送到消息队列**/
+                    if (apiKey != null && !apiKey.isEmpty()) {
+                        list.add(dustEmission);
+                    }
                 }
             }
             if(list.size() > 0 && count == projectDustEmissions.size()) {

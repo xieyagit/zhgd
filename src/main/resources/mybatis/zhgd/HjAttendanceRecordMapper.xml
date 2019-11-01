@@ -30,13 +30,14 @@
     </select>
 
     <select id="ite"  parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
-        SELECT COUNT(r.employee_id) as count
-        FROM hj_attendance_record r INNER JOIN hj_project_workers w
-        ON  w.id = r.employee_id
-        where r.project_id = #{projectId}
-        and r.passed_time LIKE CONCAT(#{passedTime},'%')
-        and direction = 'in'
-        GROUP BY r.employee_id
+--         SELECT COUNT(r.employee_id) as count
+--         FROM hj_attendance_record r INNER JOIN hj_project_workers w
+--         ON  w.id = r.employee_id
+--         where r.project_id = #{projectId}
+--         and r.passed_time LIKE CONCAT(#{passedTime},'%')
+--         and direction = 'in'
+--         GROUP BY r.employee_id
+          SELECT count(a.employee_id) as `count` ,DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 11 HOUR) as passed_time FROM (select employee_id, project_id, MAX(passed_time) passed_time from hj_attendance_record where direction='in' and project_id = 312 group by employee_id,project_id) a INNER JOIN hj_project_workers p ON a.employee_id = p.id WHERE a.passed_time BETWEEN #{passedTimes} AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 11 HOUR)
     </select>
 
     <select id="attendance" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
