@@ -43,7 +43,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="entry" column="entry"/>
         <result property="userPhone" column="user_phone"/>
     </resultMap>
-	
+    <resultMap id="ProjectParam" type="com.hujiang.project.zhgd.hjSystemUser.domain.ProjectParam">
+        <result property="projectId" column="projectId"/>
+        <result property="projectName" column="projectName"/>
+    </resultMap>
+    <select id="getUserProjectList" parameterType="String" resultMap="ProjectParam">
+            select p.id projectId,p.project_name projectName from hj_project p  where p.id in
+            (select c.project_id from hj_company_project c where path like '%${companyId}%')
+    </select>
 	<sql id="selectHjSystemUserVo">
         select * from hj_system_user
     </sql>

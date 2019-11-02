@@ -69,9 +69,15 @@ public class PcCompanyLibraryApi extends BaseController {
         logger.info("保存公司信息库开始");
         hjCompanyLibraryService.insertHjCompanyLibrary(hjCompanyLibrary);
         logger.info("保存公司层级信息开始");
+
+        HjCompanyHierarchy hjh2=new HjCompanyHierarchy();
+        hjh2.setCompanyId(parentaId);
+        List<HjCompanyHierarchy> list=hjCompanyHierarchyService.selectHjCompanyHierarchyList(hjh2);
+        HjCompanyHierarchy hjh3=list.get(0);
+
         HjCompanyHierarchy hjh=new HjCompanyHierarchy();
         hjh.setCompanyId(hjCompanyLibrary.getId());
-        hjh.setParentId(parentaId);
+        hjh.setParentId(hjh3.getParentId()+","+hjh3.getCompanyId());
 //        System.out.println(hjh);
         return hjCompanyHierarchyService.insertHjCompanyHierarchy(hjh);
     }
