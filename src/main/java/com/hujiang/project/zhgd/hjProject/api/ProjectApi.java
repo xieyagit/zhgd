@@ -110,9 +110,9 @@ public class ProjectApi extends BaseController {
         //参建单位总数量
         int numC = hjProjectService.infoConstructionR(companyId);
         //在场工人总数量
-        int numW = hjProjectService.infoPWorkertR(companyId)*3;
+        int numW = hjProjectService.infoPWorkertR(companyId);
         //上工总人数
-        int numWorking = hjProjectService.infoPWorkingR(companyId)*30;
+        int numWorking = hjProjectService.infoPWorkingR(companyId);
         //投资总金额
         double totalMoney = hjProjectService.infoHjProjectR("project_cost",companyId,region);
         BigDecimal bd1 = new BigDecimal(totalMoney);
@@ -149,6 +149,7 @@ public class ProjectApi extends BaseController {
         map.put("numW",numW);
         map.put("numWing",numWorking);
         map.put("totalMoney",bd1);
+        map.put("code","0");
         return map;
     }
 

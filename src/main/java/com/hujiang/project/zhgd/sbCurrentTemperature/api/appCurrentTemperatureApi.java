@@ -61,7 +61,7 @@ public class appCurrentTemperatureApi extends BaseController {
             }else{
                 o.put("runningStatus",false);//设备异常
             }
-            if (sbCurrentTemperature.getDoorType()!= null) {
+            if (sbCurrentTemperature.getDoorType()!= null && sbCurrentTemperature.getDoorType()!= "") {
                 if (Integer.parseInt(sbCurrentTemperature.getDoorType()) == 0) {
                     o.put("doorLock", "关");//门锁状态
                 } else if (Integer.parseInt(sbCurrentTemperature.getDoorType()) == 1) {

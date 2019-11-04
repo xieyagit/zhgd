@@ -247,7 +247,7 @@ public class HjWorkersInformationApi extends BaseController {
     @RequestMapping(value = "/selectall")
     @ResponseBody
     public JSONObject selectall(@RequestBody HjWorkersInformation hjWorkersInformation){
-        startPage();
+
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray = new JSONArray();
         JSONArray jsonArray1 = new JSONArray();
@@ -257,13 +257,15 @@ public class HjWorkersInformationApi extends BaseController {
         information.setEmpName(hjWorkersInformation.getEmpName());                                      //姓名
         information.setIdCode(hjWorkersInformation.getIdCode());                                        //身份证号码
         information.setJobName(hjWorkersInformation.getJobName());                                      //工种名称
-        information.setWorkTypenameId(hjWorkersInformation.getWorkTypenameId());                        //所属班组
+        information.setWorkTypenameId(hjWorkersInformation.getWorkTypenameId());                         //所属班组
         information.setEmpDept(hjWorkersInformation.getEmpDept());                                      //所属工作部门
         information.setEnterAndRetreatCondition(hjWorkersInformation.getEnterAndRetreatCondition());    //进退场状态（0、进场。1、退场,2未同步）
         information.setMaterial(hjWorkersInformation.getMaterial());                                    //状态资料是否齐全（0、不齐全，1、齐全）
         information.setConstructionId(hjWorkersInformation.getConstructionId());                        //所属分包单位
         information.setProjectId(hjWorkersInformation.getProjectId());                                  //项目ID
         List<HjWorkersInformation> result = hjWorkersInformationService.selectall(information);
+        jsonObject.put("count",result.size());
+        startPage();
         List<HjWorkersInformation> result1 = hjWorkersInformationService.team(hjWorkersInformation.getProjectId());
         List<HjWorkersInformation> result2 = hjWorkersInformationService.dictionaries(hjWorkersInformation.getProjectId());
         List<HjWorkersInformation> result3 = hjWorkersInformationService.company(hjWorkersInformation.getProjectId());
@@ -328,7 +330,7 @@ public class HjWorkersInformationApi extends BaseController {
             }
             jsonArray.add(object);
         }
-        jsonObject.put("count",result.size());
+
         jsonObject.put("msg","查询成功");
         jsonObject.put("result_code",0);
         jsonObject.put("data",jsonArray);
