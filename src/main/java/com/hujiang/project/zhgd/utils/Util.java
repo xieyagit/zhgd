@@ -12,7 +12,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.springframework.util.ResourceUtils;
 import sun.misc.BASE64Decoder;
-import com.hujiang.project.zhgd.sbCamera.api.sbCameraApi;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -24,7 +23,7 @@ import java.util.regex.Pattern;
 
 public class Util {
     public static  AipFace aipFace = new AipFace(Constants.BD_APP_ID, Constants.BD_API_KEY, Constants.BD_SECRET_KEY);
-    private static sbCameraApi cameraApi;
+   // private static sbCameraApi cameraApi;
 
 
     public static void main(String[] args)throws Exception{

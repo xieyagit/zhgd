@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.utils.JsonUtils;
 import com.hujiang.common.utils.ThreadUtils;
+import com.hujiang.framework.AutoTaskBase;
 import com.hujiang.framework.jms.JmsMessageInfo;
 import com.hujiang.framework.jms.JmsMessageType;
 import com.hujiang.framework.web.domain.AjaxResult;
@@ -39,7 +40,7 @@ import java.util.*;
 //@Component("dustEmissionTask")
 @RestController
 @RequestMapping(value = "/provider/tasks",method = RequestMethod.POST)
-public class DustEmissionTask {
+public class DustEmissionTask extends AutoTaskBase {
 
     private final Logger logger = LoggerFactory.getLogger(ZCAPIClient.class);
     @Autowired
@@ -64,15 +65,27 @@ public class DustEmissionTask {
 
     @Resource
     private JPushSMS jPushSMS;
-
+    @Scheduled(cron="0 0/5 * * * ?")
+    public void task2() {
+        super.exec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    add();
+                }
+                catch (Exception e) {
+                }
+            }
+        });
+    }
 
     /**
      * 5分钟执行一次扬尘数据获取
      * @throws Exception
      */
     @PostMapping(value = "insert")
-    public void add()throws Exception {
 
+    public void add()throws Exception {
         System.out.println("定时任务dustEmissionTask  add");
         int count = 0;
         ArrayList<SbDustEmission> list = null;
@@ -138,7 +151,7 @@ public class DustEmissionTask {
                 }
 
                 /** 添加扬尘数据列表，待发送到消息队列(城安院) */
-                if (p.getScznl().equals("CAY")){
+                if (p.getScznl() != null && p.getScznl().equals("CAY")){
                     if (p.getJdbh() != null){
                         JmsMessageInfo<SbDustEmission> messageInfo = new JmsMessageInfo<SbDustEmission>();
                         messageInfo.setBody(dustEmission);

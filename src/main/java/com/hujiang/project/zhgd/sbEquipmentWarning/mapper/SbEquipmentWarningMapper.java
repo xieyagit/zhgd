@@ -20,6 +20,8 @@ public interface SbEquipmentWarningMapper
      * @return 定位报警信息
      */
 	public SbEquipmentWarning selectSbEquipmentWarningById(Integer id);
+
+	public SbEquipmentWarning selectSbEquipmentWarning();
 	
 	/**
      * 查询定位报警列表
@@ -35,7 +37,7 @@ public interface SbEquipmentWarningMapper
      * @param sbEquipmentWarning 定位报警信息
      * @return 结果
      */
-	public int insertSbEquipmentWarning(SbEquipmentWarning sbEquipmentWarning);
+	public int insertSbEquipmentWarning(List<SbEquipmentWarning> sbEquipmentWarning);
 	
 	/**
      * 修改定位报警
