@@ -84,18 +84,17 @@ public class DustEmissionTask extends AutoTaskBase {
      * @throws Exception
      */
     @PostMapping(value = "insert")
-
     public void add()throws Exception {
         System.out.println("定时任务dustEmissionTask  add");
         int count = 0;
         ArrayList<SbDustEmission> list = null;
         List<SbProjectDustEmission> projectDustEmissions = projectDustEmissionService.selectSbProjectDustEmissionList(null);
-        String apiKey = null;
-        if(projectDustEmissions.size() > 0) {
-            apiKey = tspPersonnelService.getApikey(projectDustEmissions.get(0).getProjectId());
-        }
-        for (SbProjectDustEmission p : projectDustEmissions) {
 
+        for (SbProjectDustEmission p : projectDustEmissions) {
+            String apiKey = null;
+            if(projectDustEmissions.size() > 0) {
+                apiKey = tspPersonnelService.getApikey(p.getProjectId());
+            }
             count++; //用于消息队列计数
             if(list == null) {
                 list = new ArrayList<SbDustEmission>();
@@ -119,10 +118,10 @@ public class DustEmissionTask extends AutoTaskBase {
                 dustEmission.setSn(p.getSn());
                 dustEmission.setXmid(p.getXmid());
                 dustEmission.setSubId(p.getSubId());
+                dustEmission.setProjectId(p.getProjectId().intValue());
 
                 List<SbDustEmission> dustEmissions = dustEmissionService.selectSbDustEmissionList(dustEmission);
                 this.tspsb(dustEmission);
-//                cayTsp(dustEmission);
                 ThreadUtils.async(new Runnable() {
                     @Override
                     public void run() {
