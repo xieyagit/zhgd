@@ -1,6 +1,7 @@
 package com.hujiang.project.zhgd.hjSystemUser.mapper;
 
 import com.hujiang.project.zhgd.hjSystemUser.domain.HjSystemUser;
+import com.hujiang.project.zhgd.hjSystemUser.domain.ProjectParam;
 import com.hujiang.project.zhgd.hjSystemUser.domain.UpdateUser;
 import com.hujiang.project.zhgd.hjSystemUser.domain.UserParam;
 import org.apache.ibatis.annotations.Param;
@@ -32,6 +33,7 @@ public interface HjSystemUserMapper
 
 	public HjSystemUser getByUser(@Param("userName")String userName);
 
+	public List<ProjectParam> getUserProjectList(@Param("companyId")String companyId);
 	/**
 	 * 修改基本信息
 	 * @param userName

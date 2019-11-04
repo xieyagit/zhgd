@@ -9,6 +9,8 @@ import com.hujiang.framework.web.controller.BaseController;
 import com.hujiang.framework.web.domain.AjaxResult;
 import com.hujiang.framework.web.page.TableDataInfo;
 import com.hujiang.project.zhgd.hjAttendanceRecord.service.IHjAttendanceRecordService;
+import com.hujiang.project.zhgd.hjCompanyHierarchy.domain.HjCompanyHierarchy;
+import com.hujiang.project.zhgd.hjCompanyHierarchy.service.IHjCompanyHierarchyService;
 import com.hujiang.project.zhgd.hjCompanyProject.domain.HjCompanyProject;
 import com.hujiang.project.zhgd.hjCompanyProject.service.IHjCompanyProjectService;
 import com.hujiang.project.zhgd.hjConstructionCompany.domain.HjConstructionCompany;
@@ -77,6 +79,9 @@ public class ProjectApi extends BaseController {
     private IHjDictionariesService hjDictionariesService;
     @Autowired
     private IHjLoggingService hjLoggingService;
+    @Autowired
+    private IHjCompanyHierarchyService hjCompanyHierarchyService;
+
     /**
      * 查询项目信息
      * @param hjProject
@@ -217,10 +222,14 @@ public class ProjectApi extends BaseController {
 //            hjProject.setConstructionId(cid);//总包单位
 //            hjProject.setSupervisorId(hjConstructionCompany.getId());//监理企业
         int s = hjProjectService.insertHjProject(hjProject);
-
+        HjCompanyHierarchy hjh2=new HjCompanyHierarchy();
+        hjh2.setCompanyId(cid);
+        List<HjCompanyHierarchy> list=hjCompanyHierarchyService.selectHjCompanyHierarchyList(hjh2);
+        HjCompanyHierarchy hjh3=list.get(0);
         HjCompanyProject hjCompanyProject = new HjCompanyProject();
         hjCompanyProject.setCompanyId(cid);
         hjCompanyProject.setProjectId(hjProject.getId());
+        hjCompanyProject.setPath(hjh3.getParentId()+","+hjh3.getCompanyId());
         hjCompanyProjectService.insertHjCompanyProject(hjCompanyProject);
         return toAjax(s);
     }
