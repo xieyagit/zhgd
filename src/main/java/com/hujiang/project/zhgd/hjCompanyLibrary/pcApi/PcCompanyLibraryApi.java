@@ -77,7 +77,12 @@ public class PcCompanyLibraryApi extends BaseController {
 
         HjCompanyHierarchy hjh=new HjCompanyHierarchy();
         hjh.setCompanyId(hjCompanyLibrary.getId());
-        hjh.setParentId(hjh3.getParentId()+","+hjh3.getCompanyId());
+        String parentId=hjh3.getParentId();
+        if("".equals(parentId)||parentId==null){
+            hjh.setParentId( hjh3.getCompanyId().toString());
+        }else {
+            hjh.setParentId(hjh3.getParentId() + "," + hjh3.getCompanyId());
+        }
 //        System.out.println(hjh);
         return hjCompanyHierarchyService.insertHjCompanyHierarchy(hjh);
     }
