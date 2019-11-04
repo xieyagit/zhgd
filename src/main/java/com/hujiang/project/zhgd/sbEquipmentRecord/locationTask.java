@@ -32,6 +32,7 @@ import javax.annotation.Resource;
 import java.net.URI;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -134,17 +135,12 @@ public class locationTask extends AutoTaskBase {
 
     @PostMapping(value = "/addWarning")
     public void addWarning() throws Exception {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date = new Date();
-        Calendar beforeTime = Calendar.getInstance();
+        SbEquipmentWarning waring = equipmentWarningService.selectSbEquipmentWarning();
         ModuleToPush moduleToPush = new ModuleToPush();
         moduleToPush.setPrivilegesId(3);
         List<ModuleToPush> moduleToPushes = moduleToPushService.getModuleToPushList(moduleToPush);
-        beforeTime.add(Calendar.MINUTE, -5);
-        String startTime=format.format(beforeTime.getTime());
-        String endTime=format.format(date.getTime());
         List<String> deviceList =deviceimeiService.selectDeviceimeiListAll(); //所有设备编号imei
-        String jsonData = Constants.LOCALTIONDATAWARNING+"?starttime="+startTime+"&endtime="+endTime;
+        String jsonData = Constants.LOCALTIONDATAWARNING+"?starttime="+waring.getWarningTime();
         CloseableHttpClient client;
         URL url = new URL(jsonData);
         URI uri = new URI(url.getProtocol(), url.getHost() + ":"
@@ -166,21 +162,20 @@ public class locationTask extends AutoTaskBase {
         if("true".equals(status)){
             List<SbAreaProject> areaProjectList = sbHireMapper.selectAreaProjectList();
             JSONArray list=JSONArray.parseArray(originalData.getString("data"));
+            List<SbEquipmentWarning> equipmentWarningList = new ArrayList<>();
             for(Object jo : list) {
                 JSONObject data = JSONObject.parseObject(jo.toString());
                 data.remove("id");
                 String imei = data.getString("imei");
                 if (deviceList.contains(imei)) {
                     //转换成实体类数据
-                    SbEquipmentWarning equipmentWarning = JSONObject.parseObject(data.toJSONString(), SbEquipmentWarning.class);
                     List<SbAreaProject> areaProjects = areaProjectList.stream()
                             .filter(c -> c.getImei().equals(imei))
                             .collect(Collectors.toList());
-
+                    SbEquipmentWarning equipmentWarning = JSONObject.parseObject(data.toJSONString(), SbEquipmentWarning.class);
                     equipmentWarning.setProjectId(areaProjects.get(0).getProjectId());
                     //保存定位数据
-                    equipmentWarningService.insertSbEquipmentWarning(equipmentWarning);
-
+                    equipmentWarningList.add(equipmentWarning);
                     List<ModuleToPush> pushes = moduleToPushes.stream()
                             .filter(s -> s.getPrivilegesId().equals(3) && (s.getOnOff().equals(1) || s.getFall().equals(1) ||
                                     s.getMove().equals(1) || s.getBat().equals(1)))
@@ -193,15 +188,12 @@ public class locationTask extends AutoTaskBase {
                         sbEquipmentWarning.setWarningTime(equipmentWarning.getWarningTime());
                         sbEquipmentWarning.setUserName(areaProjects.get(0).getUserName());
                         sbEquipmentWarning.setAreaName(areaProjects.get(0).getAreaName());
-                        sbEquipmentWarning.setUserPhone(areaProjects.get(0).getUserPhone());
+                        sbEquipmentWarning.setUserPhone(areaProjects.get(0).getUserPhone()!=null ? areaProjects.get(0).getUserPhone():"0");
                         sbEquipmentWarning.setAdminId(pushItem.getUserId());
                         jPushSMS.JPushAndJSMS(sbEquipmentWarning,areaProjects.get(0).getProjectId());
                     }
-
-
-
-
                 }
+                equipmentWarningService.insertSbEquipmentWarning(equipmentWarningList);
             }
         }
     }

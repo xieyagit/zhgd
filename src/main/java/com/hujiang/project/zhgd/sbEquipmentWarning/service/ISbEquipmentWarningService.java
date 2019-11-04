@@ -28,14 +28,14 @@ public interface ISbEquipmentWarningService
      * @return 定位报警集合
      */
 	public List<SbEquipmentWarning> selectSbEquipmentWarningList(SbEquipmentWarning sbEquipmentWarning);
-	
+	public SbEquipmentWarning selectSbEquipmentWarning();
 	/**
      * 新增定位报警
      * 
      * @param sbEquipmentWarning 定位报警信息
      * @return 结果
      */
-	public int insertSbEquipmentWarning(SbEquipmentWarning sbEquipmentWarning);
+	public int insertSbEquipmentWarning(List<SbEquipmentWarning> sbEquipmentWarning);
 	
 	/**
      * 修改定位报警

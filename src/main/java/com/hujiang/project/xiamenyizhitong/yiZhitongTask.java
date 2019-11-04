@@ -94,7 +94,6 @@ public class yiZhitongTask extends AutoTaskBase {
     /**
      * 每个小时获取一指通考勤记录
      */
-    //    @Scheduled(cron="0 0 4 * * ? ")
 //    @PostMapping(value = "/a")
     public void  setProjectUser() throws Exception {
 
@@ -115,7 +114,6 @@ public class yiZhitongTask extends AutoTaskBase {
      * @throws Exception
      */
 //    @PostMapping(value = "/b")
-//    @Scheduled(cron="0 0/30 * * * ? ")
     public void setJiLu()throws Exception{
         HjSynchronizationInformation hs=new HjSynchronizationInformation();
         hs.setState(1);

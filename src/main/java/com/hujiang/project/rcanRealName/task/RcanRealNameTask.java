@@ -96,7 +96,6 @@ public class RcanRealNameTask extends AutoTaskBase {
     }
 
     @PostMapping(value = "/v")
-    //    @Scheduled(cron="0 0 4 * * ? ")
     public void  setProjectUser() throws Exception {
 
         HjSynchronizationInformation hs=new HjSynchronizationInformation();
@@ -116,7 +115,6 @@ public class RcanRealNameTask extends AutoTaskBase {
      * @throws Exception
      */
     @PostMapping(value = "/b")
-//    @Scheduled(cron="0 0/30 * * * ? ")
     public void setJiLu()throws Exception{
         HjSynchronizationInformation hs=new HjSynchronizationInformation();
         hs.setState(1);

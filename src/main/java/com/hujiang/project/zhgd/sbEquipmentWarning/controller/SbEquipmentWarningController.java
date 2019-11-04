@@ -84,7 +84,7 @@ public class SbEquipmentWarningController extends BaseController
 	@Log(title = "定位报警", businessType = BusinessType.INSERT)
 	@PostMapping("/add")
 	@ResponseBody
-	public AjaxResult addSave(SbEquipmentWarning sbEquipmentWarning)
+	public AjaxResult addSave(List<SbEquipmentWarning> sbEquipmentWarning)
 	{		
 		return toAjax(sbEquipmentWarningService.insertSbEquipmentWarning(sbEquipmentWarning));
 	}

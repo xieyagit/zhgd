@@ -3,8 +3,8 @@ package com.hujiang.project.zhgd.sbEquipmentWarning.api;
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.JsonObject;
 import com.hujiang.framework.web.controller.BaseController;
+import com.hujiang.framework.web.page.PageDomain;
 import com.hujiang.framework.web.page.TableDataInfo;
-import com.hujiang.project.zhgd.sbArea.domain.OptionsUser;
 import com.hujiang.project.zhgd.sbEquipmentWarning.domain.SbEquipmentWarning;
 import com.hujiang.project.zhgd.sbEquipmentWarning.service.ISbEquipmentWarningService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +63,8 @@ public class PcEquipmentWarning extends BaseController {
                                      @RequestParam(value = "projectId",required = false)Integer projectId,
                                      @RequestParam(value = "startTime",required = false)String startTime,
                                      @RequestParam(value = "endTime",required = false)String endTime,
-                                     @RequestParam(value = "warningType",required = false)Integer warningType){
+                                     @RequestParam(value = "warningType",required = false)Integer warningType,
+                                     PageDomain pageDomain){
         JSONObject jsonObject = new JSONObject();
         SbEquipmentWarning sbEquipmentWarning = new SbEquipmentWarning();
         sbEquipmentWarning.setUserName(userName);
@@ -78,17 +79,35 @@ public class PcEquipmentWarning extends BaseController {
         List<SbEquipmentWarning> equipmentWarningList = equipmentWarningService.getWarningList(sbEquipmentWarning);
         TableDataInfo dataTable = getDataTable(equipmentWarningList);
         List<SbEquipmentWarning> rows = (List<SbEquipmentWarning>)dataTable.getRows();
-        if(rows!=null&& rows.size()>0){
-            if(equipmentWarningList != null && equipmentWarningList.size()>0){
-                jsonObject.put("msg","查询成功");
-                jsonObject.put("code",0);
-                jsonObject.put("data",equipmentWarningList);
+        int count = Integer.parseInt(String.valueOf(dataTable.getTotal()));
+        if(pageDomain.getPageNum()!=null && pageDomain.getPageSize()!=null) {
+            if ((pageDomain.getPageNum()) <= Math.ceil(count / (double) pageDomain.getPageSize())) {
+                if (rows != null && rows.size() > 0) {
+                    if (equipmentWarningList != null && equipmentWarningList.size() > 0) {
+                        jsonObject.put("msg", "查询成功");
+                        jsonObject.put("code", 0);
+                        jsonObject.put("total", dataTable.getTotal());//总记录数
+                        jsonObject.put("data", rows);
+                    }
+                }
+            } else {
+                jsonObject.put("msg", "查询成功");
+                jsonObject.put("code", 0);
+                jsonObject.put("total", dataTable.getTotal());//总记录数
+                jsonObject.put("data", Collections.emptyList());
             }
-    }else {
-            jsonObject.put("msg","查询成功");
-            jsonObject.put("code",0);
-            jsonObject.put("data",Collections.emptyList());
-        }
+        } else {
+                if(rows!=null&& rows.size()>0){
+                    if(equipmentWarningList != null && equipmentWarningList.size()>0){
+                        jsonObject.put("msg","查询成功");
+                        jsonObject.put("code",0);
+                        jsonObject.put("total",dataTable.getTotal());//总记录数
+                        jsonObject.put("data",rows);
+                    }
+                }
+            }
+
+
         return jsonObject;
     }
 }

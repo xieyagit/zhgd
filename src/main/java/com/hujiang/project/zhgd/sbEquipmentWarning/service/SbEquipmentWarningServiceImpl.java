@@ -53,15 +53,20 @@ public class SbEquipmentWarningServiceImpl implements ISbEquipmentWarningService
 	{
 	    return sbEquipmentWarningMapper.selectSbEquipmentWarningList(sbEquipmentWarning);
 	}
-	
-    /**
+
+	@Override
+	public SbEquipmentWarning selectSbEquipmentWarning() {
+		return sbEquipmentWarningMapper.selectSbEquipmentWarning();
+	}
+
+	/**
      * 新增定位报警
      * 
      * @param sbEquipmentWarning 定位报警信息
      * @return 结果
      */
 	@Override
-	public int insertSbEquipmentWarning(SbEquipmentWarning sbEquipmentWarning)
+	public int insertSbEquipmentWarning(List<SbEquipmentWarning> sbEquipmentWarning)
 	{
 	    return sbEquipmentWarningMapper.insertSbEquipmentWarning(sbEquipmentWarning);
 	}
