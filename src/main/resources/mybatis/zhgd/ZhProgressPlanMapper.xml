@@ -1,67 +1,76 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hujiang.project.zhgd.zhNode.mapper.ZhProgressPlanMapper">
-    
+
     <resultMap type="ZhProgressPlan" id="ZhProgressPlanResult">
-        <result property="id"    column="id"    />
-        <result property="name"    column="name"    />
-        <result property="state"    column="state"    />
-        <result property="predictStart"    column="predict_start"    />
-        <result property="predictEnd"    column="predict_end"    />
-        <result property="start"    column="start"    />
-        <result property="end"    column="end"    />
-        <result property="creatorId"    column="creator_id"    />
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="state" column="state"/>
+        <result property="predictStart" column="predict_start"/>
+        <result property="predictEnd" column="predict_end"/>
+        <result property="start" column="start"/>
+        <result property="end" column="end"/>
+        <result property="creatorId" column="creator_id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="progress" column="progress"/>
+
     </resultMap>
-	
-	<sql id="selectZhProgressPlanVo">
-        select id, name, state, predict_start, predict_end, start, end, creator_id from zh_progress_plan
+
+    <sql id="selectZhProgressPlanVo">
+        select id, name, state, predict_start, predict_end, start, end, creator_id,project_id,progress from zh_progress_plan
     </sql>
-	
+
     <select id="selectZhProgressPlanList" parameterType="ZhProgressPlan" resultMap="ZhProgressPlanResult">
         <include refid="selectZhProgressPlanVo"/>
-        <where>  
-            <if test="id != null "> and id = #{id}</if>
-             <if test="name != null  and name != '' "> and name = #{name}</if>
-             <if test="state != null "> and state = #{state}</if>
-             <if test="predictStart != null and predictStart != '' "> and predict_start = #{predictStart}</if>
-             <if test="predictEnd != null and predictEnd!= '' "> and predict_end = #{predictEnd}</if>
-             <if test="start != null "> and start = #{start}</if>
-             <if test="end != null "> and end = #{end}</if>
-             <if test="creatorId != null "> and creator_id = #{creatorId}</if>
-         </where>
+        <where>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="projectId != null ">and project_id = #{projectId}</if>
+            <if test="name != null  and name != '' ">and name = #{name}</if>
+            <if test="state != null ">and state = #{state}</if>
+            <if test="predictStart != null and predictStart != '' ">and predict_start = #{predictStart}</if>
+            <if test="predictEnd != null and predictEnd!= '' ">and predict_end = #{predictEnd}</if>
+            <if test="start != null ">and start = #{start}</if>
+            <if test="end != null ">and end = #{end}</if>
+            <if test="creatorId != null ">and creator_id = #{creatorId}</if>
+        </where>
+        order by predict_start ASC
     </select>
-    
+
     <select id="selectZhProgressPlanById" parameterType="Integer" resultMap="ZhProgressPlanResult">
         <include refid="selectZhProgressPlanVo"/>
         where id = #{id}
     </select>
-        
-    <insert id="insertZhProgressPlan" parameterType="ZhProgressPlan" >
+
+    <insert id="insertZhProgressPlan" parameterType="ZhProgressPlan">
         insert into zh_progress_plan
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">id,</if>
-			<if test="name != null  and name != ''  ">name,</if>
-			<if test="state != null  ">state,</if>
-			<if test="predictStart != null  ">predict_start,</if>
-			<if test="predictEnd != null  ">predict_end,</if>
-			<if test="start != null  ">start,</if>
-			<if test="end != null  ">end,</if>
-			<if test="creatorId != null  ">creator_id,</if>
-         </trim>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="name != null  and name != ''  ">name,</if>
+            <if test="state != null  ">state,</if>
+            <if test="predictStart != null  ">predict_start,</if>
+            <if test="predictEnd != null  ">predict_end,</if>
+            <if test="start != null  ">start,</if>
+            <if test="end != null  ">end,</if>
+            <if test="creatorId != null  ">creator_id,</if>
+            <if test="projectId != null  ">project_id,</if>
+            <if test="progress != null  ">progress,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">#{id},</if>
-			<if test="name != null  and name != ''  ">#{name},</if>
-			<if test="state != null  ">#{state},</if>
-			<if test="predictStart != null  ">#{predictStart},</if>
-			<if test="predictEnd != null  ">#{predictEnd},</if>
-			<if test="start != null  ">#{start},</if>
-			<if test="end != null  ">#{end},</if>
-			<if test="creatorId != null  ">#{creatorId},</if>
-         </trim>
+            <if test="id != null  ">#{id},</if>
+            <if test="name != null  and name != ''  ">#{name},</if>
+            <if test="state != null  ">#{state},</if>
+            <if test="predictStart != null  ">#{predictStart},</if>
+            <if test="predictEnd != null  ">#{predictEnd},</if>
+            <if test="start != null  ">#{start},</if>
+            <if test="end != null  ">#{end},</if>
+            <if test="creatorId != null  ">#{creatorId},</if>
+            <if test="projectId != null  ">#{projectId},</if>
+            <if test="progress != null  ">#{progress},</if>
+        </trim>
     </insert>
-	 
+
     <update id="updateZhProgressPlan" parameterType="ZhProgressPlan">
         update zh_progress_plan
         <trim prefix="SET" suffixOverrides=",">
@@ -72,16 +81,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="start != null  ">start = #{start},</if>
             <if test="end != null  ">end = #{end},</if>
             <if test="creatorId != null  ">creator_id = #{creatorId},</if>
+            <if test="projectId != null  ">project_id = #{projectId},</if>
+            <if test="progress != null  ">progress = #{progress},</if>
         </trim>
         where id = #{id}
     </update>
 
-	<delete id="deleteZhProgressPlanById" parameterType="Integer">
+    <delete id="deleteZhProgressPlanById" parameterType="Integer">
         delete from zh_progress_plan where id = #{id}
     </delete>
-	
+
     <delete id="deleteZhProgressPlanByIds" parameterType="String">
-        delete from zh_progress_plan where id in 
+        delete from zh_progress_plan where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
