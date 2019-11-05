@@ -1,5 +1,7 @@
 package com.hujiang.project.zhgd.zhNode.mapper;
 
+import com.hujiang.project.zhgd.zhNode.domain.ZhNode;
+import com.hujiang.project.zhgd.zhNode.domain.ZhNodeWithProgress;
 import com.hujiang.project.zhgd.zhNode.domain.ZhProgressNode;
 import java.util.List;	
 
@@ -50,7 +52,17 @@ public interface ZhProgressNodeMapper
      * @return 结果
      */
 	public int deleteZhProgressNodeById(Integer id);
-	
+
+	/**
+	 * 删除进度节点
+	 *
+	 * @param nodeId 进度节点ID
+	 * @return 结果
+	 */
+	public int deleteZhProgressNodeByNodeId(Integer nodeId);
+
+
+
 	/**
      * 批量删除进度节点
      * 
@@ -58,5 +70,11 @@ public interface ZhProgressNodeMapper
      * @return 结果
      */
 	public int deleteZhProgressNodeByIds(String[] ids);
-	
+
+	/**
+	 * 查询关联节点列表
+	 * @param zhProgressNode
+	 * @return
+	 */
+	public List<ZhNodeWithProgress> selectZhNodeProgressList(ZhProgressNode zhProgressNode);
 }

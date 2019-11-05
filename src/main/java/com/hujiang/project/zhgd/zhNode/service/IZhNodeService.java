@@ -19,6 +19,7 @@ public interface IZhNodeService
      */
 	public ZhNode selectZhNodeById(Integer id);
 
+
 	/**
 	 * 查询节点计划详情信息
 	 *
@@ -34,7 +35,14 @@ public interface IZhNodeService
      * @return 节点计划详情集合
      */
 	public List<ZhNode> selectZhNodeList(ZhNode zhNode);
-	
+
+	/**
+	 * 查询关键节点计划列表
+	 *
+	 * @return 节点计划详情信息
+	 */
+	public List<ZhNode> selectCruxZhNode(ZhNode zhNode);
+
 	/**
      * 新增节点计划详情
      * 
@@ -59,5 +67,46 @@ public interface IZhNodeService
 	 */
 	public int deleteZhNodeById(int id);
 
-	
+	/**
+	 * 查询即将开始节点列表
+	 * @param zhNode
+	 * @return
+	 */
+	public List<ZhNode> selectBeginZhNode(ZhNode zhNode);
+
+	/**
+	 * 查询即将完成节点列表
+	 * @param zhNode
+	 * @return
+	 */
+	public List<ZhNode> selectEndZhNode(ZhNode zhNode);
+
+
+
+	/**
+	 * 查询预警节点列表
+	 * @param zhNode
+	 * @return
+	 */
+	public List<ZhNode> selectWarningZhNode(ZhNode zhNode);
+
+
+	/**
+	 * 条件搜索节点列表
+	 * @param node
+	 * @return
+	 */
+	public List<ZhNode> selectNormalStartZhNode(ZhNode node);
+
+	public List<ZhNode> selectNoStartZhNode(ZhNode node);
+
+	public List<ZhNode> selectDelayStartZhNode(ZhNode node);
+
+	public List<ZhNode> selectDelayEndZhNode(ZhNode node);
+
+	public List<ZhNode> selectNormalEndZhNode(ZhNode node);
+
+	public List<ZhNode> selectNoEndZhNode(ZhNode node);
+
+	public List<ZhNode> selectAdvanceStartZhNode(ZhNode node);
 }
