@@ -1,5 +1,7 @@
 package com.hujiang.project.zhgd.zhNode.domain;
 
+import com.hujiang.common.utils.DateUtils;
+import com.hujiang.common.utils.StringUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -10,210 +12,323 @@ import java.util.Date;
 
 /**
  * 节点计划详情表 zh_node
- * 
+ *
  * @author hujiang
  * @date 2019-08-01
  */
 @ApiModel(value = "节点计划模型")
-public class ZhNode
-{
-	private static final long serialVersionUID = 1L;
-	
-	/** id */
-	private Integer id;
-	/** 节点编号 */
-	private Integer number;
-	/** 父节点id(顶级为0) */
-	private Integer parentId;
-	/** 节点名称 */
-	private String name;
-	/** 状态 0:正常开始 1:未开始 2:延期未开始 3:延期开始 4:延期完成 5:正常完成 */
-	private Integer state;
-	/** 预计开始时间 */
-	private String predictStart;
-	/** 预计结束时间 */
-	private String predictEnd;
-	/** 实际开始时间 */
-	private String start;
-	/** 实际结束时间 */
-	private String end;
-	/** 进度(%) */
-	private Integer progress;
-	/** 详情 */
-	private String content;
-	/** 创建时间 */
-	private String found;
-	/** 创建人id */
-	private Integer creatorId;
-	/** 管控级别 */
-	private Integer controlRank;
-	/** 负责人 */
-	private Integer principal;
-	/** 流水段id */
-	private Integer pipeliningSegment;
-	/** 备注 */
-	private String comment;
+public class ZhNode {
+    private static final long serialVersionUID = 1L;
 
-	public static long getSerialVersionUID() {
-		return serialVersionUID;
-	}
+    /**
+     * id
+     */
+    private Integer id;
+    /**
+     * 项目id
+     */
+    private Integer projectId;
+    /**
+     * 是否关键节点
+     */
+    private boolean crux;
+    /**
+     * 节点编号
+     */
+    private Integer number;
+    /**
+     * 父节点id(顶级为0)
+     */
+    private Integer parentId;
+    /**
+     * 节点名称
+     */
+    private String name;
+    /**
+     * 状态 0:开始 1:未开始 2:已完成
+     */
+    private Integer state;
+    /**
+     * 预计开始时间
+     */
+    private String predictStart;
+    /**
+     * 预计结束时间
+     */
+    private String predictEnd;
+    /**
+     * 实际开始时间
+     */
+    private String start;
+    /**
+     * 实际结束时间
+     */
+    private String end;
+    /**
+     * 进度(%)
+     */
+    private Integer progress;
+    /**
+     * 详情
+     */
+    private String content;
+    /**
+     * 创建时间
+     */
+    private String found;
+    /**
+     * 创建人id
+     */
+    private Integer creatorId;
+    /**
+     * 管控级别
+     */
+    private Integer controlRank;
+    /**
+     * 负责人
+     */
+    private Integer principal;
+    /**
+     * 流水段id
+     */
+    private Integer pipeliningSegment;
+    /**
+     * 备注
+     */
+    private String comment;
 
-	public Integer getId() {
-		return id;
-	}
+    /**
+     * 状态 0:正常开始 1:未开始 2:延期未开始 3:延期开始 4:延期完成 5:正常完成 6:提前开始 7：提前完成
+     */
+    private Integer status;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
-	public Integer getNumber() {
-		return number;
-	}
+    public Integer getStatus() {
+        Date date = new Date();
+        if (state != null) {
+            switch (state) {
+                case 0:
+                    if (!StringUtils.isEmpty(predictStart)&&!StringUtils.isEmpty(start)) {
+                        if (DateUtils.getDate(predictStart).getTime() == DateUtils.getDate(start).getTime()) {
+                            status = 0;
+                        } else if (DateUtils.getDate(predictStart).getTime() > DateUtils.getDate(start).getTime()) {
+                            status = 6;
+                        } else if (DateUtils.getDate(predictStart).getTime() < DateUtils.getDate(start).getTime()) {
+                            status = 3;
+                        }
+                        return status;
+                    }
+                    break;
+                case 1:
+                    if (!StringUtils.isEmpty(predictStart)) {
+                        if (DateUtils.getDate(predictStart).getTime() > date.getTime()) {
+                            status = 1;
+                        } else if (DateUtils.getDate(predictStart).getTime() < date.getTime()) {
+                            status = 2;
+                        }
+                        return status;
+                    }
+                    break;
+                case 2:
+                    if (!StringUtils.isEmpty(predictEnd)&&!StringUtils.isEmpty(end)){
+                        if (DateUtils.getDate(predictEnd).getTime() == DateUtils.getDate(end).getTime()) {
+                            status = 5;
+                        } else if (DateUtils.getDate(predictEnd).getTime() > DateUtils.getDate(end).getTime()) {
+                            status = 7;
+                        } else if (DateUtils.getDate(predictEnd).getTime() < DateUtils.getDate(end).getTime()) {
+                            status = 4;
+                        }
+                        return status;
+                    }
+                    break;
+            }
+        }
+        return status;
+    }
 
-	public void setNumber(Integer number) {
-		this.number = number;
-	}
 
-	public Integer getParentId() {
-		return parentId;
-	}
+    public boolean isCrux() {
+        return crux;
+    }
 
-	public void setParentId(Integer parentId) {
-		this.parentId = parentId;
-	}
+    public void setCrux(boolean crux) {
+        this.crux = crux;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public Integer getProjectId() {
+        return projectId;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setProjectId(Integer projectId) {
+        this.projectId = projectId;
+    }
 
-	public Integer getState() {
-		return state;
-	}
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
-	public void setState(Integer state) {
-		this.state = state;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public String getPredictStart() {
-		return predictStart;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public void setPredictStart(String predictStart) {
-		this.predictStart = predictStart;
-	}
+    public Integer getNumber() {
+        return number;
+    }
 
-	public String getPredictEnd() {
-		return predictEnd;
-	}
+    public void setNumber(Integer number) {
+        this.number = number;
+    }
 
-	public void setPredictEnd(String predictEnd) {
-		this.predictEnd = predictEnd;
-	}
+    public Integer getParentId() {
+        return parentId;
+    }
 
-	public String getStart() {
-		return start;
-	}
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
+    }
 
-	public void setStart(String start) {
-		this.start = start;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getEnd() {
-		return end;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setEnd(String end) {
-		this.end = end;
-	}
+    public Integer getState() {
 
-	public Integer getProgress() {
-		return progress;
-	}
+        return state;
+    }
 
-	public void setProgress(Integer progress) {
-		this.progress = progress;
-	}
+    public void setState(Integer state) {
+        this.state = state;
+    }
 
-	public String getContent() {
-		return content;
-	}
+    public String getPredictStart() {
+        return predictStart;
+    }
 
-	public void setContent(String content) {
-		this.content = content;
-	}
+    public void setPredictStart(String predictStart) {
+        this.predictStart = predictStart;
+    }
 
-	public String getFound() {
-		return found;
-	}
+    public String getPredictEnd() {
+        return predictEnd;
+    }
 
-	public void setFound(String found) {
-		this.found = found;
-	}
+    public void setPredictEnd(String predictEnd) {
+        this.predictEnd = predictEnd;
+    }
 
-	public Integer getCreatorId() {
-		return creatorId;
-	}
+    public String getStart() {
+        return start;
+    }
 
-	public void setCreatorId(Integer creatorId) {
-		this.creatorId = creatorId;
-	}
+    public void setStart(String start) {
+        this.start = start;
+    }
 
-	public Integer getControlRank() {
-		return controlRank;
-	}
+    public String getEnd() {
+        return end;
+    }
 
-	public void setControlRank(Integer controlRank) {
-		this.controlRank = controlRank;
-	}
+    public void setEnd(String end) {
+        this.end = end;
+    }
 
-	public Integer getPrincipal() {
-		return principal;
-	}
+    public Integer getProgress() {
+        return progress;
+    }
 
-	public void setPrincipal(Integer principal) {
-		this.principal = principal;
-	}
+    public void setProgress(Integer progress) {
+        this.progress = progress;
+    }
 
-	public Integer getPipeliningSegment() {
-		return pipeliningSegment;
-	}
+    public String getContent() {
+        return content;
+    }
 
-	public void setPipeliningSegment(Integer pipeliningSegment) {
-		this.pipeliningSegment = pipeliningSegment;
-	}
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-	public String getComment() {
-		return comment;
-	}
+    public String getFound() {
+        return found;
+    }
 
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
+    public void setFound(String found) {
+        this.found = found;
+    }
 
-	@Override
-	public String toString() {
-		return "ZhNode{" +
-				"id=" + id +
-				", number=" + number +
-				", parentId=" + parentId +
-				", name='" + name + '\'' +
-				", state=" + state +
-				", predictStart='" + predictStart + '\'' +
-				", predictEnd='" + predictEnd + '\'' +
-				", start='" + start + '\'' +
-				", end='" + end + '\'' +
-				", progress=" + progress +
-				", content='" + content + '\'' +
-				", found='" + found + '\'' +
-				", creatorId=" + creatorId +
-				", controlRank=" + controlRank +
-				", principal=" + principal +
-				", pipeliningSegment=" + pipeliningSegment +
-				", comment='" + comment + '\'' +
-				'}';
-	}
+    public Integer getCreatorId() {
+        return creatorId;
+    }
+
+    public void setCreatorId(Integer creatorId) {
+        this.creatorId = creatorId;
+    }
+
+    public Integer getControlRank() {
+        return controlRank;
+    }
+
+    public void setControlRank(Integer controlRank) {
+        this.controlRank = controlRank;
+    }
+
+    public Integer getPrincipal() {
+        return principal;
+    }
+
+    public void setPrincipal(Integer principal) {
+        this.principal = principal;
+    }
+
+    public Integer getPipeliningSegment() {
+        return pipeliningSegment;
+    }
+
+    public void setPipeliningSegment(Integer pipeliningSegment) {
+        this.pipeliningSegment = pipeliningSegment;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    @Override
+    public String toString() {
+        return "ZhNode{" +
+                "id=" + id +
+                ", projectId=" + projectId +
+                ", crux=" + crux +
+                ", number=" + number +
+                ", parentId=" + parentId +
+                ", name='" + name + '\'' +
+                ", state=" + state +
+                ", predictStart='" + predictStart + '\'' +
+                ", predictEnd='" + predictEnd + '\'' +
+                ", start='" + start + '\'' +
+                ", end='" + end + '\'' +
+                ", progress=" + progress +
+                ", content='" + content + '\'' +
+                ", found='" + found + '\'' +
+                ", creatorId=" + creatorId +
+                ", controlRank=" + controlRank +
+                ", principal=" + principal +
+                ", pipeliningSegment=" + pipeliningSegment +
+                ", comment='" + comment + '\'' +
+                '}';
+    }
 }

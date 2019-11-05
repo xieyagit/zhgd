@@ -35,7 +35,10 @@ public class HjAttendanceRecord
 	/** 上传时间 */
 	private String uploadTime;
 
-
+	/** 考勤设备类型 */
+	private String deviceType;
+	/** 考勤设备唯一识别码 */
+	private String deviceSn;
 
 	private  String name;//
 	private String title; //工种名称
@@ -43,6 +46,22 @@ public class HjAttendanceRecord
 	private int count1;		//今日考勤数
 	private int count2;		//今日在场人数
 	private String team;	//班组名称
+
+	public String getDeviceType() {
+		return deviceType;
+	}
+
+	public void setDeviceType(String deviceType) {
+		this.deviceType = deviceType;
+	}
+
+	public String getDeviceSn() {
+		return deviceSn;
+	}
+
+	public void setDeviceSn(String deviceSn) {
+		this.deviceSn = deviceSn;
+	}
 
 	public String getTeam() {
 		return team;
@@ -187,6 +206,14 @@ public class HjAttendanceRecord
 				", sitePhoto='" + sitePhoto + '\'' +
 				", createDate=" + createDate +
 				", uploadTime='" + uploadTime + '\'' +
+				", deviceType='" + deviceType + '\'' +
+				", deviceSn='" + deviceSn + '\'' +
+				", name='" + name + '\'' +
+				", title='" + title + '\'' +
+				", count=" + count +
+				", count1=" + count1 +
+				", count2=" + count2 +
+				", team='" + team + '\'' +
 				'}';
 	}
 }

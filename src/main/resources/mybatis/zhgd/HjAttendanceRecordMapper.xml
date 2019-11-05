@@ -13,6 +13,9 @@
         <result property="sitePhoto"    column="site_photo"    />
         <result property="createDate"    column="create_date"    />
         <result property="uploadTime"    column="upload_time"    />
+        <result property="deviceType"    column="device_type"    />
+        <result property="deviceSn"    column="device_sn"    />
+
     </resultMap>
 
     <sql id="selectHjAttendanceRecordVo">
@@ -262,6 +265,9 @@
             <if test="sitePhoto != null  and sitePhoto != ''  ">site_photo,</if>
             <if test="createDate != null  ">create_date,</if>
             <if test="uploadTime != null  and uploadTime != '' ">upload_time,</if>
+            <if test="deviceType != null  and deviceType != '' ">device_type,</if>
+            <if test="deviceSn != null  and deviceSn != '' ">device_sn,</if>
+
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null  ">#{id},</if>
@@ -273,6 +279,8 @@
             <if test="sitePhoto != null  and sitePhoto != ''  ">#{sitePhoto},</if>
             <if test="createDate != null  ">#{createDate},</if>
             <if test="uploadTime != null  and uploadTime != '' ">#{uploadTime},</if>
+            <if test="deviceType != null  and deviceType != '' ">#{deviceType},</if>
+            <if test="deviceSn != null  and deviceSn != '' ">#{deviceSn},</if>
         </trim>
     </insert>
 
