@@ -147,5 +147,7 @@ public interface HjProjectMapper
 	HjProject day(@Param("id") Integer id);
 	/** 集团搜索项目 */
 	List<HjProject> selectProjects(HjProject hjProject);
+	List<HjProject> selectProjectRegion(HjProject hjProject);
 
+	HjProject projectSelect(HjProject hjProject);
 }

@@ -65,5 +65,5 @@ public interface IHjConstructionProjectService
      * @return 结果
      */
 	public int deleteHjConstructionProjectByIds(String ids);
-	
+	public List<HjConstructionProject> hj(Integer id);
 }

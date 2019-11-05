@@ -82,6 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="hj.updateDate != null "> and update_date = #{hj.updateDate}</if>
             <if test="companyId != null "> and id in(select company_id from hj_company_hierarchy where parent_id=#{companyId} )</if>
 
+
         </where>
     </select>
     

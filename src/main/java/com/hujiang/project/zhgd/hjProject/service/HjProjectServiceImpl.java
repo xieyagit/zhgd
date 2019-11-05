@@ -213,4 +213,12 @@ public class HjProjectServiceImpl implements IHjProjectService
 	public List<HjProject> selectProjects(HjProject hjProject){
 		return hjProjectMapper.selectProjects(hjProject);
 	}
+    public List<HjProject> selectProjectRegion(HjProject hjProject){
+        return hjProjectMapper.selectProjectRegion(hjProject);
+    }
+
+    public HjProject projectSelect(HjProject hjProject){
+	    return hjProjectMapper.projectSelect(hjProject);
+    }
+
 }
