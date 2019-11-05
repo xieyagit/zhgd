@@ -130,16 +130,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <select id="infoPWorkertR" resultType="java.lang.Integer" >
-        select count(*) from hj_project_workers where project_id in (select project_id from hj_company_project where path LIKE CONCAT(#{companyId}, '%')) and enter_And_Retreat_Condition=0
+        select count(*) from hj_project_workers where project_id in (select project_id from hj_company_project where path LIKE CONCAT((select concat(path) from hj_company_project where company_id=#{companyId} LIMIT 1), '%')) and enter_And_Retreat_Condition=0
     </select>
 
 
     <select id="infoPWorkingR" resultType="java.lang.Integer" >
-        SELECT count(*) from hj_attendance_record where project_id in (select project_id from hj_company_project where path LIKE CONCAT(#{companyId}, '%') ) and direction ='in' and TO_DAYS(curdate())=TO_DAYS(passed_time)
+        SELECT count(*) from hj_attendance_record where project_id in (select project_id from hj_company_project where path LIKE CONCAT((select concat(path) from hj_company_project where company_id=#{companyId} LIMIT 1), '%') ) and TO_DAYS(curdate())=TO_DAYS(passed_time)
     </select>
 
     <select id="infoConstructionR" resultType="java.lang.Integer" >
-        select count(*) from hj_construction_project where project_id in (select project_id from hj_company_project where path LIKE CONCAT(#{companyId}, '%'))
+        select count(*) from hj_construction_project where project_id in (select project_id from hj_company_project where path LIKE CONCAT((select concat(path) from hj_company_project where company_id=#{companyId} LIMIT 1), '%'))
     </select>
 
     <select id="selectProjectPage" parameterType="Map" resultMap="HjProjectResult">

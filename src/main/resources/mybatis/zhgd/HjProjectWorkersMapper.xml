@@ -212,7 +212,6 @@
             <if test="ids == 0 "> AND emp_category=00 </if>/*工人考勤*/
             <if test="ids == 1 "> AND emp_category!=00 </if>/*管理考勤*/
             AND enter_And_Retreat_Condition=0
-            and direction = 'in'
         </where>
         group by hj_attendance_record.employee_id
     </select>
