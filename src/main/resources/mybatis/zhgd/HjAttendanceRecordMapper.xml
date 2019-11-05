@@ -33,13 +33,14 @@
     </select>
 
     <select id="ite"  parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
-        SELECT COUNT(r.employee_id) as count
-        FROM hj_attendance_record r INNER JOIN hj_project_workers w
-        ON  w.id = r.employee_id
-        where r.project_id = #{projectId}
-        and r.passed_time LIKE CONCAT(#{passedTime},'%')
-        and direction = 'in'
-        GROUP BY r.employee_id
+--         SELECT COUNT(r.employee_id) as count
+--         FROM hj_attendance_record r INNER JOIN hj_project_workers w
+--         ON  w.id = r.employee_id
+--         where r.project_id = #{projectId}
+--         and r.passed_time LIKE CONCAT(#{passedTime},'%')
+--         and direction = 'in'
+--         GROUP BY r.employee_id
+          SELECT count(a.employee_id) as `count` ,DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 11 HOUR) as passed_time FROM (select employee_id, project_id, MAX(passed_time) passed_time from hj_attendance_record where direction='in' and project_id = 312 group by employee_id,project_id) a INNER JOIN hj_project_workers p ON a.employee_id = p.id WHERE a.passed_time BETWEEN #{passedTimes} AND DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:00:00'),INTERVAL 11 HOUR)
     </select>
 
     <select id="attendance" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
@@ -399,7 +400,7 @@
     <select id="selectJinRiChuQin" parameterType="Integer" resultMap="HjAttendanceRecordResult">
         <include refid="selectHjAttendanceRecordVo"/>
         where
-        project_id=#{pid} and direction ='in' and TO_DAYS(curdate())=TO_DAYS(passed_time) GROUP BY employee_id
+        project_id=#{pid} and  TO_DAYS(curdate())=TO_DAYS(passed_time) GROUP BY employee_id
     </select>
     <!--指定项目关键岗位出勤-->
     <select id="selectGJGWChuQin" parameterType="Integer" resultMap="HjAttendanceRecordResult">
@@ -438,18 +439,14 @@ and TO_DAYS(curdate())=TO_DAYS(passed_time) ORDER BY passedTime desc  limit 50
     </resultMap>
     <!--该项目各个参建单位考勤人数-->
     <select id="getKQCount" resultType="TCount">
-
-select c.construction_name title,count(distinct employee_id) count from hj_attendance_record r join hj_project_workers w on r.employee_id=w.id
-join hj_construction_company c on w.construction_id = c.id
-where w.project_id=#{pid} and TO_DAYS(curdate()) = TO_DAYS(r.passed_time) GROUP BY c.id ORDER BY count desc
-
+        select c.construction_name title,count(distinct employee_id) count from hj_attendance_record r join hj_project_workers w on r.employee_id=w.id
+        join hj_construction_company c on w.construction_id = c.id
+        where w.project_id=#{pid} and TO_DAYS(curdate()) = TO_DAYS(r.passed_time) GROUP BY c.id ORDER BY count desc
     </select>
     <!--该项目各个参建单位在场人数-->
     <select id="getZCCount" resultType="TCount">
-
-select c.construction_name title,COUNT(w.id) count from hj_project_workers w join hj_construction_company c on w.construction_id=c.id
-where w.project_id=#{pid} and enter_And_Retreat_Condition=0 GROUP BY construction_id ORDER BY count desc
-
+        select c.construction_name title,COUNT(w.id) count from hj_project_workers w join hj_construction_company c on w.construction_id=c.id
+        where w.project_id=#{pid} and enter_And_Retreat_Condition=0 GROUP BY construction_id ORDER BY count desc
     </select>
     <!--在场实时人数-->
     <select id="selectZCSSRS" parameterType="Integer" resultMap="HjAttendanceRecordResult">

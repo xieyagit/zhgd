@@ -1,7 +1,9 @@
 package com.hujiang.project.zhgd.sbCameraInformation.mapper;
 
 import com.hujiang.project.zhgd.sbCameraInformation.domain.SbCameraInformation;
-import java.util.List;	
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 海康摄像头报警记录 数据层
@@ -26,7 +28,7 @@ public interface SbCameraInformationMapper
      * @return 海康摄像头报警记录集合
      */
 	public List<SbCameraInformation> selectSbCameraInformationList(SbCameraInformation sbCameraInformation);
-	
+
 	/**
      * 新增海康摄像头报警记录
      * 
@@ -61,10 +63,9 @@ public interface SbCameraInformationMapper
 
 	/**
 	 * 批量插入海康摄像头报警记录
-	 *
-	 * @param messages 需要插入的报警数据
-	 * @return 结果
 	 */
-	public int insertInformation(List<SbCameraInformation> messages);
+	public int insertInformation(@Param("messages") List<SbCameraInformation> messages);
+
+	public List<SbCameraInformation> selectSbCameraInformationLists(SbCameraInformation sbCameraInformation);
 	
 }

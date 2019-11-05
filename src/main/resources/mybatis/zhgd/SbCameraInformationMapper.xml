@@ -44,7 +44,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<sql id="selectSbCameraInformationVo">
         select id, trace_id, task_id, task_name, task_type, train_id, channel_id, device_id, device_serial, device_name, channel_no, channel_name, group_id, group_name, captureTime, resultUrl, width, height, modelID, target_id, `type`, confidence, `name`, rect, properties, classify, attr_type, type_name, attr_value, value_name, attr_conf, ruleId, ruleName from sb_camera_information
     </sql>
-	
+
+    <select id="selectSbCameraInformationLists" parameterType="SbCameraInformation" resultMap="SbCameraInformationResult">
+        select * from sb_camera_information
+        where captureTime BETWEEN DATE_SUB(curdate(),INTERVAL 0 DAY) AND DATE_SUB(curdate(),INTERVAL -1 DAY) AND device_serial = #{deviceSerial}
+        ORDER BY captureTime DESC
+        limit 10
+    </select>
+
     <select id="selectSbCameraInformationList" parameterType="SbCameraInformation" resultMap="SbCameraInformationResult">
         <include refid="selectSbCameraInformationVo"/>
         <where>  
@@ -214,22 +221,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <insert id="insertInformation" parameterType="java.util.List">
-        insert ignore sb_camera_information(msg_id,trace_id, task_id, task_name, task_type,
+        insert ignore into sb_camera_information(msg_id,trace_id, task_id, task_name, task_type,
                                             train_id, channel_id, device_id, device_serial, device_name,
                                             channel_no,channel_name, group_id, group_name, captureTime,
-                                            resultUrl, width, height, modelID, target_id,
-                                            `type`, confidence, `name`, rect, properties,
-                                            classify,attr_type, type_name, attr_value, value_name,
-                                            attr_conf, ruleId, ruleName)
+                                            resultUrl, width, height, ruleId, ruleName)
         values
-        <foreach collection="list" item="item" index="messages" separator=",">
-            (#{item.msgId},#{item.traceId}, #{item.taskId}, #{item.taskName}, #{item.taskType},
+        <foreach collection="messages" item="item"  separator="," close=";">
+            (
+            #{item.msgId},#{item.traceId}, #{item.taskId}, #{item.taskName}, #{item.taskType},
             #{item.trainId}, #{item.channelId}, #{item.deviceId}, #{item.deviceSerial}, #{item.deviceName},
-            #{item.channelNo}, #{item.channelName}, #{item.groupId},#{item.groupName}, #{item.captureTime}
-            #{item.resultUrl}, #{item.width},#{item.height}, #{item.modelID}, #{item.targetId},
-            #{item.type},#{item.confidence}, #{item.name}, #{item.rect}, #{item.properties},
-            #{item.classify}, #{item.attrType},#{item.typeName} #{item.attrValue}, #{item.valueName},
-            #{item.attrConf}, #{item.ruleId}, #{item.ruleName})
+            #{item.channelNo}, #{item.channelName}, #{item.groupId},#{item.groupName}, #{item.captureTime},
+            #{item.resultUrl}, #{item.width},#{item.height}, #{item.ruleId}, #{item.ruleName}
+            )
         </foreach>
     </insert>
 </mapper>

@@ -39,7 +39,7 @@ public class SbCameraInformation
 	/** 分组名称 */
 	private String groupName;
 	/** 抓图时间(时间戳) */
-	private Integer captureTime;
+	private String captureTime;
 	/** 图片报警地址 */
 	private String resultUrl;
 	/** 图片宽 */
@@ -204,16 +204,16 @@ public class SbCameraInformation
 	{
 		return groupName;
 	}
-	public void setCaptureTime(Integer captureTime) 
-	{
+
+	public String getCaptureTime() {
+		return captureTime;
+	}
+
+	public void setCaptureTime(String captureTime) {
 		this.captureTime = captureTime;
 	}
 
-	public Integer getCaptureTime() 
-	{
-		return captureTime;
-	}
-	public void setResultUrl(String resultUrl) 
+	public void setResultUrl(String resultUrl)
 	{
 		this.resultUrl = resultUrl;
 	}

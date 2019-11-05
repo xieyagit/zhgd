@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.hujiang.framework.web.domain.AjaxResult;
+import com.hujiang.project.zhgd.hjProject.domain.HjCompanyProjectTemp;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;import org.springframework.transaction.annotation.Transactional;
@@ -207,4 +208,17 @@ public class HjProjectServiceImpl implements IHjProjectService
 	public HjProject day(Integer id){
 		return hjProjectMapper.day(id);
 	}
+
+	/** 集团搜索项目 */
+	public List<HjProject> selectProjects(HjProject hjProject){
+		return hjProjectMapper.selectProjects(hjProject);
+	}
+    public List<HjProject> selectProjectRegion(HjProject hjProject){
+        return hjProjectMapper.selectProjectRegion(hjProject);
+    }
+
+    public HjProject projectSelect(HjProject hjProject){
+	    return hjProjectMapper.projectSelect(hjProject);
+    }
+
 }

@@ -26,12 +26,80 @@ public class SbCameraBinding
 	private String addingTime;
 	/** 状态（0.正常，1.非正常） */
 	private Integer deviceStatus;
-	/** 项目ID */
-	private Integer projectId;
+	/** 摄像头类型（1危区2安全帽3摄像头） */
+	private Integer typeId;
 	/** 摄像头客户表id */
 	private Integer camearId;
+	/** 视频流 */
+	private String video;
+	/** 项目ID */
+	private Integer projectId;
+	/** hls */
+    private String hls;
+    /** hlsHd */
+    private String hlsHd;
+    /** rtmp */
+    private String rtmp;
+    /** rtmpHd */
+    private String rtmpHd;
 
-	public void setId(Integer id) 
+    public String getHls() {
+        return hls;
+    }
+
+    public void setHls(String hls) {
+        this.hls = hls;
+    }
+
+    public String getHlsHd() {
+        return hlsHd;
+    }
+
+    public void setHlsHd(String hlsHd) {
+        this.hlsHd = hlsHd;
+    }
+
+    public String getRtmp() {
+        return rtmp;
+    }
+
+    public void setRtmp(String rtmp) {
+        this.rtmp = rtmp;
+    }
+
+    public String getRtmpHd() {
+        return rtmpHd;
+    }
+
+    public void setRtmpHd(String rtmpHd) {
+        this.rtmpHd = rtmpHd;
+    }
+
+    public Integer getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(Integer projectId) {
+		this.projectId = projectId;
+	}
+
+	public Integer getTypeId() {
+		return typeId;
+	}
+
+	public void setTypeId(Integer typeId) {
+		this.typeId = typeId;
+	}
+
+	public String getVideo() {
+		return video;
+	}
+
+	public void setVideo(String video) {
+		this.video = video;
+	}
+
+	public void setId(Integer id)
 	{
 		this.id = id;
 	}
@@ -85,15 +153,6 @@ public class SbCameraBinding
 	{
 		return deviceStatus;
 	}
-	public void setProjectId(Integer projectId) 
-	{
-		this.projectId = projectId;
-	}
-
-	public Integer getProjectId() 
-	{
-		return projectId;
-	}
 	public void setCamearId(Integer camearId) 
 	{
 		this.camearId = camearId;
@@ -103,17 +162,24 @@ public class SbCameraBinding
 	{
 		return camearId;
 	}
-	@Override
+
+    @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("equipmentSerialNumber", getEquipmentSerialNumber())
-            .append("equipmentType", getEquipmentType())
-            .append("equipmentName", getEquipmentName())
-            .append("addingTime", getAddingTime())
-            .append("deviceStatus", getDeviceStatus())
-            .append("projectId", getProjectId())
-            .append("camearId", getCamearId())
-            .toString();
+        return "SbCameraBinding{" +
+                "id=" + id +
+                ", equipmentSerialNumber='" + equipmentSerialNumber + '\'' +
+                ", equipmentType='" + equipmentType + '\'' +
+                ", equipmentName='" + equipmentName + '\'' +
+                ", addingTime='" + addingTime + '\'' +
+                ", deviceStatus=" + deviceStatus +
+                ", typeId=" + typeId +
+                ", camearId=" + camearId +
+                ", video='" + video + '\'' +
+                ", projectId=" + projectId +
+                ", hls='" + hls + '\'' +
+                ", hlsHd='" + hlsHd + '\'' +
+                ", rtmp='" + rtmp + '\'' +
+                ", rtmpHd='" + rtmpHd + '\'' +
+                '}';
     }
 }
