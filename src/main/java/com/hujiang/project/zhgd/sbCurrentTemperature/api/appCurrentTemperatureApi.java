@@ -18,13 +18,14 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 
 @RestController
 @RequestMapping(value = "/provider/appCurrentTemperature",method = RequestMethod.POST)
 public class appCurrentTemperatureApi extends BaseController {
-    Logger logger = Logger.getLogger(appCurrentTemperatureApi.class.getName());
+    Logger logger = LogManager.getLogManager().getLogger(appCurrentTemperatureApi.class.getName());
 
     @Autowired
     private ISbCurrentTemperatureService sbCurrentTemperatureService;
@@ -45,10 +46,12 @@ public class appCurrentTemperatureApi extends BaseController {
         //获取设备最新数据
 
         SbCurrentTemperature sbCurrentTemperature = sbCurrentTemperatureService.getSbCurrentTemperatureToOne(electricityBoxId);
+        logger.info("sbCurrentTemperature start-------------------------------->");
         JSONObject result =new JSONObject();
         JSONObject o =null;
         JSONObject r = new JSONObject();
         if(sbCurrentTemperature!=null){
+            logger.info("sbCurrentTemperature not null-------------------------------->");
             //电箱漏电（kwh）,电箱温度
             o = (JSONObject)JSONObject.toJSON(sbCurrentTemperature);
             //时间转毫秒
@@ -61,14 +64,14 @@ public class appCurrentTemperatureApi extends BaseController {
             }else{
                 o.put("runningStatus",false);//设备异常
             }
-            if (sbCurrentTemperature.getDoorType()!= null && sbCurrentTemperature.getDoorType()!= "") {
-                if (Integer.parseInt(sbCurrentTemperature.getDoorType()) == 0) {
-                    o.put("doorLock", "关");//门锁状态
-                } else if (Integer.parseInt(sbCurrentTemperature.getDoorType()) == 1) {
+            logger.info("sbCurrentTemperature getDoorType-------------------------------->" + sbCurrentTemperature.getDoorType());
+            o.put("doorLock", "关");//门锁状态
+
+            if (sbCurrentTemperature.getDoorType()!= null && !"".equals(sbCurrentTemperature.getDoorType())) {
+                if ("1".equals(sbCurrentTemperature.getDoorType())) {
+                    logger.info("sbCurrentTemperature getDoorType-------------------------------->开");
                     o.put("doorLock", "开");//门锁状态
                 }
-            }else{
-                o.put("doorLock", "关");//门锁状态
             }
 //            o.put("doorLock",Integer.parseInt(sbCurrentTemperature.getDoorType())==0?"关":"开");//门锁状态
             result.put("data",o);

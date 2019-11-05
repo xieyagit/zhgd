@@ -354,5 +354,19 @@ public class ProjectApi extends BaseController {
         return jsonObject;
     }
 
+    /** 搜索项目 */
+    @PostMapping(value = "/selectProjects")
+    public com.alibaba.fastjson.JSONObject selectProject(@RequestBody HjProject hjProject){
+        com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
+        List<HjProject> projects = hjProjectService.selectProjects(hjProject);
+        if (projects.size() !=0){
+            jsonObject.put("code",0);
+            jsonObject.put("data",projects);
+        }else {
+            jsonObject.put("code",1);
+            jsonObject.put("data","抱歉，您底下没有该项目！");
+        }
+        return jsonObject;
+    }
 
 }

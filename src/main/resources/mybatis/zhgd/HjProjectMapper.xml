@@ -83,7 +83,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id in (select project_id from hj_company_project where company_id = #{companyId}) and project_region = #{region}
     </select>-->
 
-
+    <select id="selectProjects"  resultMap="HjProjectResult" parameterType="HjProject">
+        SELECT * FROM hj_project a INNER JOIN hj_company_project b ON a.id = b. project_id
+        WHERE a.id in (SELECT id FROM hj_project WHERE project_name LIKE CONCAT('%',#{projectName}, '%'))
+        AND b.project_id in (SELECT id FROM hj_project WHERE project_name LIKE CONCAT('%',#{projectName}, '%'))
+        and b.path like  CONCAT(#{cid},'%')
+    </select>
 
     <select id="selectHjProjectListR" resultMap="HjProjectResult" >
         <include refid="selectHjProjectVo"/>
