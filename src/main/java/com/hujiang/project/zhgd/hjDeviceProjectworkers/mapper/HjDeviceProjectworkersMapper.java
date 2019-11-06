@@ -30,6 +30,7 @@ public interface HjDeviceProjectworkersMapper
      * @return 考勤设备人员集合
      */
 	public List<HjDeviceProjectworkers> selectHjDeviceProjectworkersList(HjDeviceProjectworkers hjDeviceProjectworkers);
+	public List<HjDeviceProjectworkers> selectHjDeviceProjectworkersListTwo(HjDeviceProjectworkers hjDeviceProjectworkers);
 	public List<HjProjectWorkers> selectHjProjectworkersList(Map<String,String> param);
 	public List<HjDeviceProjectworkersParam> selectHjProjectworkersListTwo(Map<String,String> param);
 	public List<HjDeviceProjectworkersParam> selectHjProjectworkersListThree(Map<String,String> param);

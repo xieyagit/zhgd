@@ -30,7 +30,8 @@ public interface IHjDeviceProjectworkersService
      * @return 考勤设备人员集合
      */
 	public List<HjDeviceProjectworkers> selectHjDeviceProjectworkersList(HjDeviceProjectworkers hjDeviceProjectworkers);
-	
+		public List<HjDeviceProjectworkers> selectHjDeviceProjectworkersListTwo(HjDeviceProjectworkers hjDeviceProjectworkers);
+
 	/**
      * 新增考勤设备人员
      * 

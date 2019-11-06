@@ -47,7 +47,12 @@ public class HjDeviceProjectworkersServiceImpl implements IHjDeviceProjectworker
 	{
 	    return hjDeviceProjectworkersMapper.selectHjDeviceProjectworkersList(hjDeviceProjectworkers);
 	}
-	
+	@Override
+	public List<HjDeviceProjectworkers> selectHjDeviceProjectworkersListTwo(HjDeviceProjectworkers hjDeviceProjectworkers)
+	{
+	    return hjDeviceProjectworkersMapper.selectHjDeviceProjectworkersListTwo(hjDeviceProjectworkers);
+	}
+
     /**
      * 新增考勤设备人员
      * 
