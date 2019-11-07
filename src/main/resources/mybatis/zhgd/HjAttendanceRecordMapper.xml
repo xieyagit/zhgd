@@ -33,7 +33,7 @@
     </select>
 
     <select id="ite"  parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
-        SELECT COUNT(r.employee_id) as count
+      SELECT COUNT(r.employee_id) as count
         FROM hj_attendance_record r INNER JOIN hj_project_workers w
         ON  w.id = r.employee_id
         where r.project_id = #{projectId}
