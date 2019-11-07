@@ -88,7 +88,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         WHERE
             a.id in (SELECT id FROM hj_project WHERE project_name LIKE CONCAT('%',#{projectName}, '%'))
             AND b.project_id in (SELECT id FROM hj_project WHERE project_name LIKE CONCAT('%',#{projectName}, '%'))
-            and b.path like  CONCAT(#{cid},'%')
+            and b.path like  CONCAT((select concat(path) from hj_company_project where company_id=#{cid} LIMIT 1),'%')
     </select>
 
     <select id="selectProjectRegion"  resultMap="HjProjectResult" parameterType="HjProject">
@@ -107,18 +107,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                             b.company_name like CONCAT('%',#{constructionName}, '%')
                         </if>
                     </where>
-                ) as c where c.path like CONCAT((select concat(path, ',') from hj_company_project where company_id=#{cid} LIMIT 1),'%')
+                ) as c where c.path like CONCAT((select concat(path) from hj_company_project where company_id=#{cid} LIMIT 1),'%')
             )
         </where>
     </select>
     <select id="selectHjProjectListR" resultMap="HjProjectResult" >
         <include refid="selectHjProjectVo"/>
-        <if test="companyId == 1">
-            where id in (select project_id from hj_company_project where path like CONCAT(#{companyId}, '%'))
-        </if>
-        <if test="companyId != 1">
-            where id in (select project_id from hj_company_project where path like CONCAT('1,',#{companyId}, '%'))
-        </if>
+        where id in (select project_id from hj_company_project where path like CONCAT('%,',#{companyId}))
         <!--<if test="region != 0"> and project_region like #{region}"%"</if>-->
     </select>
 
@@ -128,18 +123,36 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="region != 0"> and project_region like #{region}"%"</if>
     </select>
 
+    <select id="infoHjProjectRS" resultType="java.lang.Double" >
+        select IFNULL(sum(project_cost),0.0) FROM `hj_project` where id in (select project_id from hj_company_project where path LIKE CONCAT((SELECT parent_id from hj_company_hierarchy WHERE company_id = #{companyId} LIMIT 1), ',' ,#{companyId}, '%'))
+    </select>
+
 
     <select id="infoPWorkertR" resultType="java.lang.Integer" >
         select count(*) from hj_project_workers where project_id in (select project_id from hj_company_project where path LIKE CONCAT((select concat(path) from hj_company_project where company_id=#{companyId} LIMIT 1), '%')) and enter_And_Retreat_Condition=0
     </select>
 
+    <select id="infoPWorkertRS" resultType="java.lang.Integer" >
+        select count(*) from hj_project_workers where project_id in (select project_id from hj_company_project where path LIKE CONCAT((SELECT parent_id from hj_company_hierarchy WHERE company_id = #{companyId} LIMIT 1), ',' ,#{companyId}, '%')) and enter_And_Retreat_Condition=0
+    </select>
+
 
     <select id="infoPWorkingR" resultType="java.lang.Integer" >
         SELECT count(*) from hj_attendance_record where project_id in (select project_id from hj_company_project where path LIKE CONCAT((select concat(path) from hj_company_project where company_id=#{companyId} LIMIT 1), '%') ) and TO_DAYS(curdate())=TO_DAYS(passed_time)
+        GROUP BY employee_id
+    </select>
+
+    <select id="infoPWorkingRS" resultType="java.lang.Integer" >
+        SELECT count(*) from hj_attendance_record where project_id in (select project_id from hj_company_project where path LIKE CONCAT((SELECT parent_id from hj_company_hierarchy WHERE company_id = #{companyId} LIMIT 1), ',' ,#{companyId}, '%') ) and TO_DAYS(curdate())=TO_DAYS(passed_time)
+        GROUP BY employee_id
     </select>
 
     <select id="infoConstructionR" resultType="java.lang.Integer" >
         select count(*) from hj_construction_project where project_id in (select project_id from hj_company_project where path LIKE CONCAT((select concat(path) from hj_company_project where company_id=#{companyId} LIMIT 1), '%'))
+    </select>
+
+    <select id="infoConstructionRS" resultType="java.lang.Integer" >
+        select count(*) from hj_construction_project where project_id in (select project_id from hj_company_project where path LIKE CONCAT((SELECT parent_id from hj_company_hierarchy WHERE company_id = #{companyId} LIMIT 1), ',' ,#{companyId}, '%'))
     </select>
 
     <select id="selectProjectPage" parameterType="Map" resultMap="HjProjectResult">
