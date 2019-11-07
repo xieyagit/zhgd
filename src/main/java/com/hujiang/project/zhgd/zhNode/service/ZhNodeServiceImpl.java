@@ -19,81 +19,161 @@ import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 节点计划详情 服务层实现
- * 
+ *
  * @author hujiang
  * @date 2019-08-01
  */
 @Service
-public class ZhNodeServiceImpl implements IZhNodeService 
-{
-	@Autowired
-	private ZhNodeMapper zhNodeMapper;
+public class ZhNodeServiceImpl implements IZhNodeService {
+    @Autowired
+    private ZhNodeMapper zhNodeMapper;
 
-	/**
+    /**
      * 查询节点计划详情信息
-     * 
+     *
      * @param id 节点计划详情ID
      * @return 节点计划详情信息
      */
     @Override
-	public ZhNode selectZhNodeById(Integer id)
-	{
-	    return zhNodeMapper.selectZhNodeById(id);
-	}
+    public ZhNode selectZhNodeById(Integer id) {
+        return zhNodeMapper.selectZhNodeById(id);
+    }
 
-	@Override
-	public ZhNode selectZhNodeByProgressId(Integer progressId) {
-		return zhNodeMapper.selectZhNodeByProgressId(progressId);
-	}
+    /**
+     * 查询关键节点计划详情信息
+     *
+     * @param zhNode 节点计划详情信息
+     * @return 节点计划详情信息
+     */
+    @Override
+    public List<ZhNode> selectCruxZhNode(ZhNode zhNode) {
+        return zhNodeMapper.selectCruxZhNode(zhNode);
+    }
 
-	/**
+
+    @Override
+    public ZhNode selectZhNodeByProgressId(Integer progressId) {
+        return zhNodeMapper.selectZhNodeByProgressId(progressId);
+    }
+
+    /**
      * 查询节点计划详情列表
-     * 
+     *
      * @param zhNode 节点计划详情信息
      * @return 节点计划详情集合
      */
-	@Override
-	public List<ZhNode> selectZhNodeList(ZhNode zhNode)
-	{
-	    return zhNodeMapper.selectZhNodeList(zhNode);
-	}
-	
+    @Override
+    public List<ZhNode> selectZhNodeList(ZhNode zhNode) {
+        return zhNodeMapper.selectZhNodeList(zhNode);
+    }
+
     /**
      * 新增节点计划详情
-     * 
+     *
      * @param zhNode 节点计划详情信息
      * @return 结果
      */
-	@Override
-	public int insertZhNode(ZhNode zhNode)
-	{
-	    return zhNodeMapper.insertZhNode(zhNode);
-	}
-	
-	/**
+    @Override
+    public int insertZhNode(ZhNode zhNode) {
+        return zhNodeMapper.insertZhNode(zhNode);
+    }
+
+    /**
      * 修改节点计划详情
-     * 
+     *
      * @param zhNode 节点计划详情信息
      * @return 结果
      */
-	@Override
-	public int updateZhNode(ZhNode zhNode)
-	{
-	    return zhNodeMapper.updateZhNode(zhNode);
-	}
+    @Override
+    public int updateZhNode(ZhNode zhNode) {
+        return zhNodeMapper.updateZhNode(zhNode);
+    }
 
+
+    /**
+     * 删除节点计划详情对象
+     *
+     * @param id 需要删除的数据ID
+     * @return 结果
+     */
+    @Override
+    public int deleteZhNodeById(int id) {
+        return zhNodeMapper.deleteZhNodeById(id);
+    }
+
+    /**
+     * 查询预警节点列表
+     *
+     * @param zhNode
+     * @return
+     */
+    @Override
+    public List<ZhNode> selectWarningZhNode(ZhNode zhNode) {
+        return zhNodeMapper.selectWarningZhNode(zhNode);
+    }
 
 	/**
-	 * 删除节点计划详情对象
-	 *
-	 * @param id 需要删除的数据ID
-	 * @return 结果
+	 * 按条件搜索节点列表
+	 * @param node
+	 * @return
 	 */
 	@Override
-	public int deleteZhNodeById(int id) {
-		return zhNodeMapper.deleteZhNodeById(id);
-	}
+    public List<ZhNode> selectNormalStartZhNode(ZhNode node) {
+        return zhNodeMapper.selectNormalStartZhNode(node);
+    }
 
+    @Override
+    public List<ZhNode> selectNoStartZhNode(ZhNode node) {
+        return zhNodeMapper.selectNoStartZhNode(node);
+    }
+
+    @Override
+    public List<ZhNode> selectDelayStartZhNode(ZhNode node) {
+        return zhNodeMapper.selectDelayStartZhNode(node);
+    }
+
+    @Override
+    public List<ZhNode> selectDelayEndZhNode(ZhNode node) {
+        return zhNodeMapper.selectDelayEndZhNode(node);
+    }
+
+    @Override
+    public List<ZhNode> selectNormalEndZhNode(ZhNode node) {
+        return zhNodeMapper.selectNormalEndZhNode(node);
+    }
+
+    @Override
+    public List<ZhNode> selectNoEndZhNode(ZhNode node) {
+        return zhNodeMapper.selectNoEndZhNode(node);
+    }
+
+
+    @Override
+    public List<ZhNode> selectAdvanceStartZhNode(ZhNode node) {
+        return zhNodeMapper.selectAdvanceStartZhNode(node);
+    }
+
+    /**
+     * 查询即将开始节点列表
+     *
+     * @param zhNode
+     * @return
+     */
+    @Override
+    public List<ZhNode> selectBeginZhNode(ZhNode zhNode) {
+        return zhNodeMapper.selectBeginZhNode(zhNode);
+    }
+
+    /**
+     * 查询即将完成节点列表
+     *
+     * @param zhNode
+     * @return
+     */
+    @Override
+    public List<ZhNode> selectEndZhNode(ZhNode zhNode) {
+        return zhNodeMapper.selectEndZhNode(zhNode);
+    }
 
 
 

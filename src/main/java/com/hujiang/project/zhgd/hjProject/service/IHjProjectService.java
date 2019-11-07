@@ -1,5 +1,6 @@
 package com.hujiang.project.zhgd.hjProject.service;
 
+import com.hujiang.project.zhgd.hjProject.domain.HjCompanyProjectTemp;
 import com.hujiang.project.zhgd.hjProject.domain.HjProject;
 import org.apache.ibatis.annotations.Param;
 
@@ -130,4 +131,10 @@ public interface IHjProjectService
 	List<HjProject> item(Integer id);
 	/* 安全文明施工天数*/
 	HjProject day(Integer id);
+
+	/** 集团搜索项目 */
+	List<HjProject> selectProjects(HjProject hjProject);
+	List<HjProject> selectProjectRegion(HjProject hjProject);
+
+	HjProject projectSelect(HjProject hjProject);
 }

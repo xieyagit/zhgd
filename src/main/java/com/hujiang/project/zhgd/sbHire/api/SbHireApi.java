@@ -92,7 +92,11 @@ public class SbHireApi extends BaseController{
                         JSONObject userMap = new JSONObject();//人员map
                         if(!timeList.stream().filter(
                                 a->a.getImei().equals(times.getImei())).findAny().isPresent()) {
-                            continue;
+                            userMap.put("userId",times.getPeopleId());
+                            userMap.put("userName",times.getPeopleName());
+                            userMap.put("userXloc",null);
+                            userMap.put("userYloc",null);
+                            userMap.put("userStatus",false);//离线
                         }
                         else {
                             HirePeople myTime = timeList.stream().filter(

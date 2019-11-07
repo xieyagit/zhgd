@@ -79,6 +79,17 @@ public class HjProject
 	private String name;
 	//上传返回唯一编号
 	private Integer itemId;
+	/** 集团ID */
+	private String cid;
+
+	public String getCid() {
+		return cid;
+	}
+
+	public void setCid(String cid) {
+		this.cid = cid;
+	}
+
 
 	public Integer getItemId() {
 		return itemId;

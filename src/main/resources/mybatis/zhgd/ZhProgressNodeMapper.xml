@@ -1,55 +1,102 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hujiang.project.zhgd.zhNode.mapper.ZhProgressNodeMapper">
-    
+
     <resultMap type="ZhProgressNode" id="ZhProgressNodeResult">
-        <result property="id"    column="id"    />
-        <result property="progressId"    column="progress_id"    />
-        <result property="nodeId"    column="node_id"    />
-        <result property="nodeProgressRatio"    column="node_progress_ratio"    />
-        <result property="progressNodeRatio"    column="progress_node_ratio"    />
+        <result property="id" column="id"/>
+        <result property="progressId" column="progress_id"/>
+        <result property="nodeId" column="node_id"/>
+        <result property="nodeProgressRatio" column="node_progress_ratio"/>
+        <result property="progressNodeRatio" column="progress_node_ratio"/>
+        <result property="nodeProgress" column="node_progress"/>
+
     </resultMap>
-	
-	<sql id="selectZhProgressNodeVo">
-        select id, progress_id, node_id, node_progress_ratio, progress_node_ratio from zh_progress_node
+
+    <resultMap type="ZhNodeWithProgress" id="ZhNodeWithProgressResult">
+        <result property="number" column="number"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="name" column="name"/>
+        <result property="state" column="state"/>
+        <result property="predictStart" column="predict_start"/>
+        <result property="predictEnd" column="predict_end"/>
+        <result property="start" column="start"/>
+        <result property="end" column="end"/>
+        <result property="progress" column="progress"/>
+<!--        <result property="content" column="content"/>-->
+<!--        <result property="found" column="found"/>-->
+<!--        <result property="creatorId" column="creator_id"/>-->
+        <result property="controlRank" column="control_rank"/>
+        <result property="principal" column="principal"/>
+<!--        <result property="pipeliningSegment" column="pipelining_segment"/>-->
+<!--        <result property="comment" column="comment"/>-->
+        <result property="projectId" column="project_id"/>
+        <result property="crux" column="crux"/>
+        <result property="id" column="id"/>
+        <result property="progressId" column="progress_id"/>
+        <result property="nodeId" column="node_id"/>
+        <result property="nodeProgressRatio" column="node_progress_ratio"/>
+        <result property="progressNodeRatio" column="progress_node_ratio"/>
+        <result property="nodeProgress" column="node_progress"/>
+    </resultMap>
+
+    <sql id="selectZhProgressNodeVo">
+        select id, progress_id, node_id, node_progress_ratio, progress_node_ratio, node_progress from zh_progress_node
     </sql>
-	
+    <sql id="selectZhNodeWithProgress">
+        select n.number, n.parent_id, n.name, n.state, n.predict_start, n.predict_end, n.start, n.end, n.progress, n.control_rank, n.principal,n.project_id,n.crux, p.id, p.progress_id, p.node_id, p.node_progress_ratio, p.progress_node_ratio, p.node_progress from zh_node n join zh_progress_node p on n.id = p.node_id
+    </sql>
+
+    <select id="selectZhNodeProgressList" parameterType="ZhProgressNode" resultMap="ZhNodeWithProgressResult">
+        <include refid="selectZhNodeWithProgress"/>
+        <where>
+            <if test="id != null ">and p.id = #{id}</if>
+            <if test="progressId != null ">and p.progress_id = #{progressId}</if>
+            <if test="nodeId != null ">and p.node_id = #{nodeId}</if>
+            <if test="nodeProgress != null ">and p.node_progress = #{nodeProgress}</if>
+        </where>
+        order by n.predict_start ASC
+    </select>
+
     <select id="selectZhProgressNodeList" parameterType="ZhProgressNode" resultMap="ZhProgressNodeResult">
         <include refid="selectZhProgressNodeVo"/>
-        <where>  
-            <if test="id != null "> and id = #{id}</if>
-             <if test="progressId != null "> and progress_id = #{progressId}</if>
-             <if test="nodeId != null "> and node_id = #{nodeId}</if>
-             <if test="nodeProgressRatio != null "> and node_progress_ratio = #{nodeProgressRatio}</if>
-             <if test="progressNodeRatio != null "> and progress_node_ratio = #{progressNodeRatio}</if>
-         </where>
+        <where>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="progressId != null ">and progress_id = #{progressId}</if>
+            <if test="nodeId != null ">and node_id = #{nodeId}</if>
+            <if test="nodeProgressRatio != null ">and node_progress_ratio = #{nodeProgressRatio}</if>
+            <if test="progressNodeRatio != null ">and progress_node_ratio = #{progressNodeRatio}</if>
+            <if test="nodeProgress != null ">and node_progress = #{nodeProgress}</if>
+
+        </where>
     </select>
-    
+
     <select id="selectZhProgressNodeById" parameterType="Integer" resultMap="ZhProgressNodeResult">
         <include refid="selectZhProgressNodeVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertZhProgressNode" parameterType="ZhProgressNode">
         insert into zh_progress_node
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">id,</if>
-			<if test="progressId != null  ">progress_id,</if>
-			<if test="nodeId != null  ">node_id,</if>
-			<if test="nodeProgressRatio != null  ">node_progress_ratio,</if>
-			<if test="progressNodeRatio != null  ">progress_node_ratio,</if>
-         </trim>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="progressId != null  ">progress_id,</if>
+            <if test="nodeId != null  ">node_id,</if>
+            <if test="nodeProgressRatio != null  ">node_progress_ratio,</if>
+            <if test="progressNodeRatio != null  ">progress_node_ratio,</if>
+            <if test="nodeProgress != null  ">node_progress,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">#{id},</if>
-			<if test="progressId != null  ">#{progressId},</if>
-			<if test="nodeId != null  ">#{nodeId},</if>
-			<if test="nodeProgressRatio != null  ">#{nodeProgressRatio},</if>
-			<if test="progressNodeRatio != null  ">#{progressNodeRatio},</if>
-         </trim>
+            <if test="id != null  ">#{id},</if>
+            <if test="progressId != null  ">#{progressId},</if>
+            <if test="nodeId != null  ">#{nodeId},</if>
+            <if test="nodeProgressRatio != null  ">#{nodeProgressRatio},</if>
+            <if test="progressNodeRatio != null  ">#{progressNodeRatio},</if>
+            <if test="nodeProgress != null  ">#{node_progress},</if>
+        </trim>
     </insert>
-	 
+
     <update id="updateZhProgressNode" parameterType="ZhProgressNode">
         update zh_progress_node
         <trim prefix="SET" suffixOverrides=",">
@@ -57,19 +104,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="nodeId != null  ">node_id = #{nodeId},</if>
             <if test="nodeProgressRatio != null  ">node_progress_ratio = #{nodeProgressRatio},</if>
             <if test="progressNodeRatio != null  ">progress_node_ratio = #{progressNodeRatio},</if>
+            <if test="nodeProgress != null  ">node_progress = #{nodeProgress},</if>
         </trim>
         where id = #{id}
     </update>
 
-	<delete id="deleteZhProgressNodeById" parameterType="Integer">
+    <delete id="deleteZhProgressNodeById" parameterType="Integer">
         delete from zh_progress_node where id = #{id}
     </delete>
-	
+
+    <delete id="deleteZhProgressNodeByNodeId" parameterType="Integer">
+        delete from zh_progress_node where node_id = #{nodeId}
+    </delete>
+
     <delete id="deleteZhProgressNodeByIds" parameterType="String">
-        delete from zh_progress_node where id in 
+        delete from zh_progress_node where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

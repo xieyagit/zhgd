@@ -1,5 +1,6 @@
 package com.hujiang.project.zhgd.hjProject.mapper;
 
+import com.hujiang.project.zhgd.hjProject.domain.HjCompanyProjectTemp;
 import com.hujiang.project.zhgd.hjProject.domain.HjProject;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -144,4 +145,9 @@ public interface HjProjectMapper
 	List<HjProject> item(@Param("id") Integer id);
 	/* 安全文明施工天数*/
 	HjProject day(@Param("id") Integer id);
+	/** 集团搜索项目 */
+	List<HjProject> selectProjects(HjProject hjProject);
+	List<HjProject> selectProjectRegion(HjProject hjProject);
+
+	HjProject projectSelect(HjProject hjProject);
 }

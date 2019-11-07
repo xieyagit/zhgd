@@ -1,5 +1,7 @@
 package com.hujiang.project.zhgd.zhNode.service;
 
+import com.hujiang.project.zhgd.zhNode.domain.ZhNode;
+import com.hujiang.project.zhgd.zhNode.domain.ZhNodeWithProgress;
 import com.hujiang.project.zhgd.zhNode.domain.ZhProgressNode;
 import java.util.List;
 
@@ -11,6 +13,14 @@ import java.util.List;
  */
 public interface IZhProgressNodeService 
 {
+
+
+	/**
+	 * 查询计划关联节点列表
+	 * @param zhProgressNode
+	 * @return
+	 */
+	public List<ZhNodeWithProgress> selectZhNodeProgressList(ZhProgressNode zhProgressNode);
 	/**
      * 查询进度节点信息
      * 
@@ -58,5 +68,14 @@ public interface IZhProgressNodeService
 	 * @return 结果
 	 */
 	public int deleteZhProgressNodeById(int id);
+
+	/**
+	 * 根据节点id删除进度节点对象
+	 *
+	 * @param nodeId 需要删除的数据ID
+	 * @return 结果
+	 */
+	public int deleteZhProgressNodeByNodeId(int nodeId);
+
 	
 }

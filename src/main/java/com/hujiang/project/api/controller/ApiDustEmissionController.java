@@ -271,9 +271,11 @@ public class ApiDustEmissionController {
             }
 
             object.put("pm10avg",pm10avg);
+            object.put("code",0);
             return object;
         }else{
             JSONObject jsonObject = new JSONObject();
+            jsonObject.put("code",1);
             jsonObject.put("comments","无扬尘设备");
             jsonObject.put("id",0);
             return jsonObject;

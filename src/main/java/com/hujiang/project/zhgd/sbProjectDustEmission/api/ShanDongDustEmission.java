@@ -53,26 +53,26 @@ public class ShanDongDustEmission {
         dustEmission.setWinddirection(sdDustEmission.getWinddirection());
         dustEmission.setWindPower(sdDustEmission.getWindPower());
         dustEmission.setAirPressure(sdDustEmission.getAirPressure());
+
+        if(dustEmissionService.insertSbDustEmission(dustEmission)>0){
+            map.put("msg","成功");
+            map.put("code",0);
+        }else {
+            map.put("msg","失败");
+            map.put("code",-1);
+        }
+
         SbProjectDustEmission sbProjectDustEmission = new SbProjectDustEmission();
         sbProjectDustEmission.setSn(sdDustEmission.getSn());
         List<SbProjectDustEmission> projectDustEmissions = projectDustEmissionService.selectSbProjectDustEmissionList(sbProjectDustEmission);
         for (SbProjectDustEmission p : projectDustEmissions) {
-
             String site = p.getComments();
             String sn=p.getSn();
-
             dustEmission.setSn(sn);
             dustEmission.setSite(site);
             jpushDustEmission.JPushAndJSMS(dustEmission,p.getProjectId().intValue());
-            if(dustEmissionService.insertSbDustEmission(dustEmission)>0){
-                map.put("msg","成功");
-                map.put("code",0);
-            }else {
-                map.put("msg","失败");
-                map.put("code",-1);
-            }
-        }
 
+        }
         return map;
     }
 }

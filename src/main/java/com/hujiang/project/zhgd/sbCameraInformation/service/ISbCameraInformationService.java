@@ -58,4 +58,6 @@ public interface ISbCameraInformationService
 	 * @return 结果
 	 */
 	public int insertInformation(List<SbCameraInformation> messages);
+
+	public List<SbCameraInformation> selectSbCameraInformationLists(SbCameraInformation sbCameraInformation);
 }

@@ -56,7 +56,6 @@ public class HjCompanyProjectTemp
 	private int numProjectWorking;
 
 
-
 	public Integer getId() {
 		return id;
 	}

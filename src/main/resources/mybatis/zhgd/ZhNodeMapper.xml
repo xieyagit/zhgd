@@ -1,56 +1,59 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hujiang.project.zhgd.zhNode.mapper.ZhNodeMapper">
-    
+
     <resultMap type="ZhNode" id="ZhNodeResult">
-        <result property="id"    column="id"    />
-        <result property="number"    column="number"    />
-        <result property="parentId"    column="parent_id"    />
-        <result property="name"    column="name"    />
-        <result property="state"    column="state"    />
-        <result property="predictStart"    column="predict_start"    />
-        <result property="predictEnd"    column="predict_end"    />
-        <result property="start"    column="start"    />
-        <result property="end"    column="end"    />
-        <result property="progress"    column="progress"    />
-        <result property="content"    column="content"    />
-        <result property="found"    column="found"    />
-        <result property="creatorId"    column="creator_id"    />
-        <result property="controlRank"    column="control_rank"    />
-        <result property="principal"    column="principal"    />
-        <result property="pipeliningSegment"    column="pipelining_segment"    />
-        <result property="comment"    column="comment"    />
+        <result property="id" column="id"/>
+        <result property="number" column="number"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="name" column="name"/>
+        <result property="state" column="state"/>
+        <result property="predictStart" column="predict_start"/>
+        <result property="predictEnd" column="predict_end"/>
+        <result property="start" column="start"/>
+        <result property="end" column="end"/>
+        <result property="progress" column="progress"/>
+        <result property="content" column="content"/>
+        <result property="found" column="found"/>
+        <result property="creatorId" column="creator_id"/>
+        <result property="controlRank" column="control_rank"/>
+        <result property="principal" column="principal"/>
+        <result property="pipeliningSegment" column="pipelining_segment"/>
+        <result property="comment" column="comment"/>
+        <result property="projectId" column="project_id"/>
+        <result property="crux" column="crux"/>
     </resultMap>
-	
-	<sql id="selectZhNodeVo">
-        select id, number, parent_id, name, state, predict_start, predict_end, start, end, progress, content, found, creator_id, control_rank, principal, pipelining_segment, comment from zh_node
+
+    <sql id="selectZhNodeVo">
+        select id, number, parent_id, name, state, predict_start, predict_end, start, end, progress, content, found, creator_id, control_rank, principal, pipelining_segment, comment,project_id,crux from zh_node
     </sql>
-	
+
     <select id="selectZhNodeList" parameterType="ZhNode" resultMap="ZhNodeResult">
         <include refid="selectZhNodeVo"/>
-        <where>  
-            <if test="id != null "> and id = #{id}</if>
-             <if test="number != null "> and number = #{number}</if>
-             <if test="parentId != null "> and parent_id = #{parentId}</if>
-             <if test="name != null  and name != '' "> and name = #{name}</if>
-             <if test="state != null "> and state = #{state}</if>
-             <if test="predictStart != null and predictStart != '' "> and predict_start = #{predictStart}</if>
-             <if test="predictEnd != null and predictEnd != '' "> and predict_end = #{predictEnd}</if>
-             <if test="start != null "> and start = #{start}</if>
-             <if test="end != null "> and end = #{end}</if>
-             <if test="progress != null "> and progress = #{progress}</if>
-             <if test="content != null  and content != '' "> and content = #{content}</if>
-             <if test="found != null "> and found = #{found}</if>
-             <if test="creatorId != null "> and creator_id = #{creatorId}</if>
-             <if test="controlRank != null "> and control_rank = #{controlRank}</if>
-             <if test="principal != null "> and principal = #{principal}</if>
-             <if test="pipeliningSegment != null "> and pipelining_segment = #{pipeliningSegment}</if>
-             <if test="comment != null  and comment != '' "> and comment = #{comment}</if>
-         </where>
+        <where>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="number != null ">and number = #{number}</if>
+            <if test="parentId != null ">and parent_id = #{parentId}</if>
+            <if test="name != null  and name != '' ">and name = #{name}</if>
+            <if test="state != null ">and state = #{state}</if>
+            <if test="predictStart != null and predictStart != '' ">and predict_start &gt;= #{predictStart}</if>
+            <if test="predictEnd != null and predictEnd != '' ">and predict_end &lt;= #{predictEnd}</if>
+            <if test="start != null ">and start = #{start}</if>
+            <if test="end != null ">and end = #{end}</if>
+            <if test="progress != null ">and progress = #{progress}</if>
+            <if test="content != null  and content != '' ">and content = #{content}</if>
+            <if test="found != null ">and found = #{found}</if>
+            <if test="creatorId != null ">and creator_id = #{creatorId}</if>
+            <if test="controlRank != null ">and control_rank = #{controlRank}</if>
+            <if test="principal != null ">and principal = #{principal}</if>
+            <if test="pipeliningSegment != null ">and pipelining_segment = #{pipeliningSegment}</if>
+            <if test="comment != null  and comment != '' ">and comment = #{comment}</if>
+            <if test="projectId != null ">and project_id = #{projectId}</if>
+        </where>
     </select>
-    
+
     <select id="selectZhNodeById" parameterType="Integer" resultMap="ZhNodeResult">
         <include refid="selectZhNodeVo"/>
         where id = #{id}
@@ -61,48 +64,202 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id in (select node_id from zh_progress_node where progress_id = #{progressId})
     </select>
 
+    <select id="selectNormalStartZhNode" parameterType="ZhNode" resultMap="ZhNodeResult">
+        <include refid="selectZhNodeVo"/>
+        <where>
+            <if test="state != null ">and state = #{state}</if>
+            <if test="controlRank != null ">and control_rank = #{controlRank}</if>
+            <if test="projectId != null ">and project_id = #{projectId}</if>
+            <if test="predictStart != null and predictStart != '' ">and predict_start &gt; #{predictStart}</if>
+            <if test="predictEnd != null and predictEnd != '' ">and predict_end &lt; #{predictEnd}</if>
+            and predict_start = start
+        </where>
+    </select>
+
+
+    <select id="selectNoStartZhNode" parameterType="ZhNode" resultMap="ZhNodeResult">
+        <include refid="selectZhNodeVo"/>
+        <where>
+            <if test="state != null ">and state = #{state}</if>
+            <if test="controlRank != null ">and control_rank = #{controlRank}</if>
+            <if test="projectId != null ">and project_id = #{projectId}</if>
+            <if test="predictStart != null and predictStart != '' ">and predict_start &gt; #{predictStart}</if>
+            <if test="predictEnd != null and predictEnd != '' ">and predict_end &lt; #{predictEnd}</if>
+            and predict_start &lt; start
+        </where>
+    </select>
+
+    <select id="selectAdvanceStartZhNode" parameterType="ZhNode" resultMap="ZhNodeResult">
+        <include refid="selectZhNodeVo"/>
+        <where>
+            <if test="state != null ">and state = #{state}</if>
+            <if test="controlRank != null ">and control_rank = #{controlRank}</if>
+            <if test="projectId != null ">and project_id = #{projectId}</if>
+            <if test="predictStart != null and predictStart != '' ">and predict_start &gt; #{predictStart}</if>
+            <if test="predictEnd != null and predictEnd != '' ">and predict_end &lt; #{predictEnd}</if>
+            and predict_start &gt; start
+        </where>
+    </select>
+
+    <select id="selectDelayStartZhNode" parameterType="ZhNode" resultMap="ZhNodeResult">
+        <include refid="selectZhNodeVo"/>
+        <where>
+            <if test="state != null ">and state = #{state}</if>
+            <if test="controlRank != null ">and control_rank = #{controlRank}</if>
+            <if test="projectId != null ">and project_id = #{projectId}</if>
+            <if test="predictStart != null and predictStart != '' ">and predict_start &gt; #{predictStart}</if>
+            <if test="predictEnd != null and predictEnd != '' ">and predict_end &lt; #{predictEnd}</if>
+            <if test="start != null and start != '' ">and start &gt; #{start}</if>
+            <if test="end!= null and end != '' ">and predict_start &lt; #{end}</if>
+        </where>
+    </select>
+
+
+    <select id="selectNormalEndZhNode" parameterType="ZhNode" resultMap="ZhNodeResult">
+        <include refid="selectZhNodeVo"/>
+        <where>
+            <if test="state != null ">and state = #{state}</if>
+            <if test="controlRank != null ">and control_rank = #{controlRank}</if>
+            <if test="projectId != null ">and project_id = #{projectId}</if>
+            <if test="predictStart != null and predictStart != '' ">and predict_start &gt; #{predictStart}</if>
+            <if test="predictEnd != null and predictEnd != '' ">and predict_end &lt; #{predictEnd}</if>
+            and predict_end = end
+        </where>
+    </select>
+
+
+    <select id="selectNoEndZhNode" parameterType="ZhNode" resultMap="ZhNodeResult">
+        <include refid="selectZhNodeVo"/>
+        <where>
+            <if test="state != null ">and state = #{state}</if>
+            <if test="controlRank != null ">and control_rank = #{controlRank}</if>
+            <if test="projectId != null ">and project_id = #{projectId}</if>
+            <if test="predictStart != null and predictStart != '' ">and predict_start &gt; #{predictStart}</if>
+            <if test="predictEnd != null and predictEnd != '' ">and predict_end &lt; #{predictEnd}</if>
+            and predict_end &gt; end
+        </where>
+    </select>
+
+    <select id="selectDelayEndZhNode" parameterType="ZhNode" resultMap="ZhNodeResult">
+        <include refid="selectZhNodeVo"/>
+        <where>
+            <if test="state != null ">and state = #{state}</if>
+            <if test="projectId != null ">and project_id = #{projectId}</if>
+            <if test="controlRank != null ">and control_rank = #{controlRank}</if>
+            <if test="predictStart != null and predictStart != '' ">and predict_start &gt; #{predictStart}</if>
+            <if test="predictEnd != null and predictEnd != '' ">and predict_end &lt; #{predictEnd}</if>
+            and predict_end  &lt; end
+        </where>
+    </select>
+
+    <select id="selectEndZhNode" parameterType="ZhNode" resultMap="ZhNodeResult">
+        <include refid="selectZhNodeVo"/>
+        <where>
+            <if test="state != null ">and state = #{state}</if>
+            <if test="projectId != null ">and project_id = #{projectId}</if>
+            <if test="predictEnd != null and predictEnd != '' ">and predict_end &gt; #{end}</if>
+            <if test="predictEnd != null and predictEnd != '' ">and predict_end &lt; #{predictEnd}</if>
+        </where>
+        order by predict_end DESC
+    </select>
+
+
+    <select id="selectBeginZhNode" parameterType="ZhNode" resultMap="ZhNodeResult">
+        <include refid="selectZhNodeVo"/>
+        <where>
+            <if test="state != null ">and state = #{state}</if>
+            <if test="predictStart != null and predictStart != '' ">and predict_start &gt; #{start}</if>
+            <if test="predictStart != null and predictStart != '' ">and predict_start &lt; #{predictStart}</if>
+            <if test="projectId != null ">and project_id = #{projectId}</if>
+        </where>
+        order by predict_start DESC
+    </select>
+
+    <select id="selectWarningZhNode" parameterType="ZhNode" resultMap="ZhNodeResult">
+        <include refid="selectZhNodeVo"/>
+        <where>
+            state = 1
+            <if test="projectId != null ">and project_id = #{projectId}</if>
+            <if test="predictStart != null and predictStart != '' ">and predict_start &lt; #{predictStart}</if>
+            or state = 0
+            <if test="projectId != null ">and project_id = #{projectId}</if>
+            <if test="predictEnd != null and predictEnd != '' ">and predict_end &lt; #{predictEnd}</if>
+        </where>
+        order by predict_start DESC
+    </select>
+
+    <select id="selectCruxZhNode" parameterType="ZhNode" resultMap="ZhNodeResult">
+        <include refid="selectZhNodeVo"/>
+        <where>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="number != null ">and number = #{number}</if>
+            <if test="parentId != null ">and parent_id = #{parentId}</if>
+            <if test="name != null  and name != '' ">and name = #{name}</if>
+            <if test="state != null ">and state = #{state}</if>
+            <if test="predictStart != null and predictStart != '' ">and predict_start = #{predictStart}</if>
+            <if test="predictEnd != null and predictEnd != '' ">and predict_end = #{predictEnd}</if>
+            <if test="start != null ">and start = #{start}</if>
+            <if test="end != null ">and end = #{end}</if>
+            <if test="progress != null ">and progress = #{progress}</if>
+            <if test="content != null  and content != '' ">and content = #{content}</if>
+            <if test="found != null ">and found = #{found}</if>
+            <if test="creatorId != null ">and creator_id = #{creatorId}</if>
+            <if test="controlRank != null ">and control_rank = #{controlRank}</if>
+            <if test="principal != null ">and principal = #{principal}</if>
+            <if test="pipeliningSegment != null ">and pipelining_segment = #{pipeliningSegment}</if>
+            <if test="comment != null  and comment != '' ">and comment = #{comment}</if>
+            <if test="projectId != null ">and project_id = #{projectId}</if>
+            <if test="crux != null ">and crux = #{crux}</if>
+        </where>
+        order by predict_end ASC
+    </select>
+
     <insert id="insertZhNode" parameterType="ZhNode">
         insert into zh_node
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">id,</if>
-			<if test="number != null  ">`number`,</if>
-			<if test="parentId != null  ">parent_id,</if>
-			<if test="name != null  and name != ''  ">`name`,</if>
-			<if test="state != null  ">state,</if>
-			<if test="predictStart != null  ">predict_start,</if>
-			<if test="predictEnd != null  ">predict_end,</if>
-			<if test="start != null  ">start,</if>
-			<if test="end != null  ">`end`,</if>
-			<if test="progress != null  ">progress,</if>
-			<if test="content != null  and content != ''  ">content,</if>
-			<if test="found != null  ">`found`,</if>
-			<if test="creatorId != null  ">creator_id,</if>
-			<if test="controlRank != null  ">control_rank,</if>
-			<if test="principal != null  ">principal,</if>
-			<if test="pipeliningSegment != null  ">pipelining_segment,</if>
-			<if test="comment != null  and comment != ''  ">comment,</if>
-         </trim>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="number != null  ">`number`,</if>
+            <if test="parentId != null  ">parent_id,</if>
+            <if test="name != null  and name != ''  ">`name`,</if>
+            <if test="state != null  ">state,</if>
+            <if test="predictStart != null  ">predict_start,</if>
+            <if test="predictEnd != null  ">predict_end,</if>
+            <if test="start != null  ">start,</if>
+            <if test="end != null  ">`end`,</if>
+            <if test="progress != null  ">progress,</if>
+            <if test="content != null  and content != ''  ">content,</if>
+            <if test="found != null  ">`found`,</if>
+            <if test="creatorId != null  ">creator_id,</if>
+            <if test="controlRank != null  ">control_rank,</if>
+            <if test="principal != null  ">principal,</if>
+            <if test="pipeliningSegment != null  ">pipelining_segment,</if>
+            <if test="comment != null  and comment != ''  ">comment,</if>
+            <if test="projectId != null  ">project_id ,</if>
+            <if test="crux != null  ">crux ,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">#{id},</if>
-			<if test="number != null  ">#{number},</if>
-			<if test="parentId != null  ">#{parentId},</if>
-			<if test="name != null  and name != ''  ">#{name},</if>
-			<if test="state != null  ">#{state},</if>
-			<if test="predictStart != null  ">#{predictStart},</if>
-			<if test="predictEnd != null  ">#{predictEnd},</if>
-			<if test="start != null  ">#{start},</if>
-			<if test="end != null  ">#{end},</if>
-			<if test="progress != null  ">#{progress},</if>
-			<if test="content != null  and content != ''  ">#{content},</if>
-			<if test="found != null  ">#{found},</if>
-			<if test="creatorId != null  ">#{creatorId},</if>
-			<if test="controlRank != null  ">#{controlRank},</if>
-			<if test="principal != null  ">#{principal},</if>
-			<if test="pipeliningSegment != null  ">#{pipeliningSegment},</if>
-			<if test="comment != null  and comment != ''  ">#{comment},</if>
-         </trim>
+            <if test="id != null  ">#{id},</if>
+            <if test="number != null  ">#{number},</if>
+            <if test="parentId != null  ">#{parentId},</if>
+            <if test="name != null  and name != ''  ">#{name},</if>
+            <if test="state != null  ">#{state},</if>
+            <if test="predictStart != null  ">#{predictStart},</if>
+            <if test="predictEnd != null  ">#{predictEnd},</if>
+            <if test="start != null  ">#{start},</if>
+            <if test="end != null  ">#{end},</if>
+            <if test="progress != null  ">#{progress},</if>
+            <if test="content != null  and content != ''  ">#{content},</if>
+            <if test="found != null  ">#{found},</if>
+            <if test="creatorId != null  ">#{creatorId},</if>
+            <if test="controlRank != null  ">#{controlRank},</if>
+            <if test="principal != null  ">#{principal},</if>
+            <if test="pipeliningSegment != null  ">#{pipeliningSegment},</if>
+            <if test="comment != null  and comment != ''  ">#{comment},</if>
+            <if test="projectId != null  ">#{projectId},</if>
+            <if test="crux != null  ">#{crux},</if>
+        </trim>
     </insert>
-	 
+
     <update id="updateZhNode" parameterType="ZhNode">
         update zh_node
         <trim prefix="SET" suffixOverrides=",">
@@ -122,12 +279,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="principal != null and principal != '' ">principal = #{principal},</if>
             <if test="pipeliningSegment != null  ">pipelining_segment = #{pipeliningSegment},</if>
             <if test="comment != null  and comment != ''  ">comment = #{comment},</if>
+            <if test="projectId != null  ">project_id = #{projectId},</if>
+            <if test="crux != null  ">crux = #{crux},</if>
         </trim>
         where id = #{id}
     </update>
 
-	<delete id="deleteZhNodeById" parameterType="Integer">
+    <delete id="deleteZhNodeById" parameterType="Integer">
         delete from zh_node where id = #{id}
     </delete>
-    
+
 </mapper>

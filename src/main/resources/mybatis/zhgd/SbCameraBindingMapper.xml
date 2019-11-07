@@ -11,12 +11,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="equipmentName"    column="equipment_name"    />
         <result property="addingTime"    column="adding_time"    />
         <result property="deviceStatus"    column="device_status"    />
-        <result property="projectId"    column="project_id"    />
+        <result property="typeId"    column="type_id"    />
         <result property="camearId"    column="camear_id"    />
+        <result property="video"    column="video"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="hls"    column="hls"    />
+        <result property="hlsHd"    column="hlsHd"    />
+        <result property="rtmp"    column="rtmp"    />
+        <result property="rtmpHd"    column="rtmpHd"    />
     </resultMap>
 	
 	<sql id="selectSbCameraBindingVo">
-        select id, equipment_serial_number, equipment_type, equipment_name, adding_time, device_status, project_id, camear_id from sb_camera_binding
+        select rtmpHd,rtmp,hlsHd,hls,id, equipment_serial_number, equipment_type, equipment_name, adding_time, device_status, type_id, camear_id,video, project_id from sb_camera_binding
     </sql>
 	
     <select id="selectSbCameraBindingList" parameterType="SbCameraBinding" resultMap="SbCameraBindingResult">
@@ -28,8 +34,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="equipmentName != null  and equipmentName != '' "> and equipment_name = #{equipmentName}</if>
              <if test="addingTime != null "> and adding_time = #{addingTime}</if>
              <if test="deviceStatus != null "> and device_status = #{deviceStatus}</if>
-             <if test="projectId != null "> and project_id = #{projectId}</if>
+             <if test="typeId != null "> and type_id = #{typeId}</if>
              <if test="camearId != null "> and camear_id = #{camearId}</if>
+             <if test="projectId != null "> and project_id = #{projectId}</if>
          </where>
     </select>
     
@@ -47,8 +54,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="equipmentName != null  and equipmentName != ''  ">equipment_name,</if>
 			<if test="addingTime != null  ">adding_time,</if>
 			<if test="deviceStatus != null  ">device_status,</if>
-			<if test="projectId != null  ">project_id,</if>
+			<if test="typeId != null  ">type_id,</if>
 			<if test="camearId != null  ">camear_id,</if>
+			<if test="video != null and video != ''  ">video,</if>
+			<if test="projectId != null and projectId != ''  ">project_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null  ">#{id},</if>
@@ -57,8 +66,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="equipmentName != null  and equipmentName != ''  ">#{equipmentName},</if>
 			<if test="addingTime != null  ">#{addingTime},</if>
 			<if test="deviceStatus != null  ">#{deviceStatus},</if>
-			<if test="projectId != null  ">#{projectId},</if>
+			<if test="typeId != null  ">#{typeId},</if>
 			<if test="camearId != null  ">#{camearId},</if>
+			<if test="video != null and video != '' ">#{video},</if>
+			<if test="projectId != null and projectId != '' ">#{projectId},</if>
          </trim>
     </insert>
 	 
@@ -70,8 +81,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="equipmentName != null  and equipmentName != ''  ">equipment_name = #{equipmentName},</if>
             <if test="addingTime != null  ">adding_time = #{addingTime},</if>
             <if test="deviceStatus != null  ">device_status = #{deviceStatus},</if>
-            <if test="projectId != null  ">project_id = #{projectId},</if>
+            <if test="typeId != null  ">type_id = #{typeId},</if>
             <if test="camearId != null  ">camear_id = #{camearId},</if>
+            <if test="video != null and video != '' ">video = #{video},</if>
         </trim>
         where id = #{id}
     </update>

@@ -7,6 +7,7 @@
 //import com.hujiang.project.zhgd.sbCamera.service.ISbCameraService;
 //import com.hujiang.project.zhgd.sbCameraInformation.domain.SbCameraInformation;
 //import com.hujiang.project.zhgd.sbCameraInformation.service.ISbCameraInformationService;
+//import com.hujiang.project.zhgd.utils.Tools;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Component;
 //import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +23,6 @@
 //    private ISbCameraInformationService iSbCameraInformationService;
 //    @Override
 //    public void pushMessage(List<Message> messageList) {
-//        // TODO Auto-generated method stub
 //        // 异步处理消费到的消息
 //        try{
 //            List<SbCameraInformation> informations = new ArrayList<SbCameraInformation>(messageList.size());
@@ -46,19 +46,12 @@
 //                cameraInformation.setGroupId(object1.getString("groupId"));
 //                cameraInformation.setGroupName(object1.getString("groupName"));
 //                object1 = JSONObject.parseObject(object.getString("captureResult"));
-//                cameraInformation.setCaptureTime(object1.getInteger("captureTime"));
+//                String s = Tools.timeStamp2Date(object1.getInteger("captureTime"));
+//                cameraInformation.setCaptureTime(object1.getString("captureTime"));
 //                cameraInformation.setResultUrl(object1.getString("resultUrl"));
 //                object1 = JSONObject.parseObject(object.getString("algorithmResult"));
 //                cameraInformation.setWidth(object1.getString("width"));
 //                cameraInformation.setHeight(object1.getString("height"));
-//
-////                JSONObject object2 = JSONObject.parseObject(object1.getString("targets"));
-////
-////                JSONObject object3 = JSONObject.parseObject(object2.getString("obj"));
-////                cameraInformation.setModelID(object3.getString("modelID"));
-////                cameraInformation.setTargetId(object3.getInteger("id"));
-////                cameraInformation.setType(object3.getInteger("type"));
-////                cameraInformation.setConfidence(object3.getInteger("confidence"));
 //                object1 = JSONObject.parseObject(object.getString("ruleResult"));
 //                cameraInformation.setRuleId(object1.getString("ruleId"));
 //                cameraInformation.setRuleName(object1.getString("ruleName"));
