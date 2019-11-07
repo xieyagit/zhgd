@@ -80,7 +80,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="hj.remark != null  and hj.remark != '' "> and remark = #{hj.remark}</if>
             <if test="hj.createDate != null "> and create_date = #{hj.createDate}</if>
             <if test="hj.updateDate != null "> and update_date = #{hj.updateDate}</if>
-            <if test="companyId != null "> and id in(select company_id from hj_company_hierarchy where parent_id=#{companyId} )</if>
+            <if test="companyId != null "> and id in(select company_id from hj_company_hierarchy where parent_id like  '%,${companyId}' )</if>
 
 
         </where>

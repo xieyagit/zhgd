@@ -133,9 +133,9 @@ public class InOutAttendanceService {
                 deleteYs(hw,h.getDeviceNo());
             }else{
                 //看是否是待添加人脸
-                hdpw.setStatus("0");
+                hdpw.setStatus("12");
                 hdpw.setDeviceNo(h.getDeviceNo());
-                list=hjDeviceProjectworkersService.selectHjDeviceProjectworkersList(hdpw);
+                list=hjDeviceProjectworkersService.selectHjDeviceProjectworkersListTwo(hdpw);
                 //是的话就直接删除
                 if(list.size()>0){
                     hjDeviceProjectworkersService.deleteHjDeviceProjectworkersByIds(list.get(0).getId().toString());
