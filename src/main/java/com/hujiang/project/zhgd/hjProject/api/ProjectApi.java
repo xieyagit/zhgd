@@ -117,7 +117,7 @@ public class ProjectApi extends BaseController {
         //在场工人总数量
         int numW = hjProjectService.infoPWorkertR(companyId);
         //上工总人数
-        int numWorking = hjProjectService.infoPWorkingR(companyId);
+        List<HjProject> numWorking = hjProjectService.infoPWorkingR(companyId);
         //投资总金额
         double totalMoney = hjProjectService.infoHjProjectR("project_cost",companyId,region);
         BigDecimal bd1 = new BigDecimal(totalMoney);
@@ -152,7 +152,7 @@ public class ProjectApi extends BaseController {
         }*/
         map.put("numC",numC);
         map.put("numW",numW);
-        map.put("numWing",numWorking);
+        map.put("numWing",numWorking.size());
         map.put("totalMoney",bd1);
         map.put("code","0");
         return map;
@@ -430,5 +430,31 @@ public class ProjectApi extends BaseController {
             jsonObject.put("code",1);
         }
         return jsonObject;
+    }
+
+    @RequestMapping(value = "selectProjectAreaS")
+    public Map<String,Object> selectProjectAreas(@RequestParam(value = "companyId") Integer companyId) {
+        Map<String,Object> map = new HashMap<>();
+        List<HjProject> listP;
+        if (companyId == null){
+            map.put("error","参数不能为空");
+            return map;
+        }
+        Map mapTemp = new HashMap();
+        //参建单位总数量
+        int numC = hjProjectService.infoConstructionRS(companyId);
+        //在场工人总数量
+        int numW = hjProjectService.infoPWorkertRS(companyId);
+        //上工总人数
+        List<HjProject> numWorking = hjProjectService.infoPWorkingRS(companyId);
+        //投资总金额
+        double totalMoney = hjProjectService.infoHjProjectRS("project_cost",companyId);
+        BigDecimal bd1 = new BigDecimal(totalMoney);
+        map.put("numC",numC);
+        map.put("numW",numW);
+        map.put("numWing",numWorking.size());
+        map.put("totalMoney",bd1);
+        map.put("code","0");
+        return map;
     }
 }

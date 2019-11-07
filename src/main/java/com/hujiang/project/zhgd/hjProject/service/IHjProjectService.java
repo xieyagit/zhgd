@@ -59,11 +59,21 @@ public interface IHjProjectService
 	public double infoHjProjectR(@Param("name")String name, @Param("companyId")Integer companyId, @Param("region")String region);
 
 	/**
+	 * 统计系统所有的项目name的总和
+	 * @param name 字段名
+	 * @param companyId 公司Id
+	 * @return 项目集合
+	 */
+	public double infoHjProjectRS(@Param("name")String name, @Param("companyId")Integer companyId);
+
+
+	/**
 	 * 统计公司所有的项目参建单位的总和
 	 * @param companyId 公司Id
 	 * @return 项目集合
 	 */
 	public int infoConstructionR(@Param("companyId")Integer companyId);
+	public int infoConstructionRS(@Param("companyId")Integer companyId);
 
 	/**
 	 * 统计公司所有的项目在场总人数
@@ -73,11 +83,24 @@ public interface IHjProjectService
 	public int infoPWorkertR(@Param("companyId")Integer companyId);
 
 	/**
+	 * 统计公司所有的项目在场总人数
+	 * @param companyId 公司Id
+	 * @return 项目集合
+	 */
+	public int infoPWorkertRS(@Param("companyId")Integer companyId);
+	/**
 	 * 统计公司所有的项目今日上工总人数
 	 * @param companyId 公司Id
 	 * @return 项目集合
 	 */
-	public int infoPWorkingR(@Param("companyId")Integer companyId);
+	public List<HjProject> infoPWorkingR(@Param("companyId")Integer companyId);
+
+	/**
+	 * 统计公司所有的项目今日上工总人数
+	 * @param companyId 公司Id
+	 * @return 项目集合
+	 */
+	public List<HjProject> infoPWorkingRS(@Param("companyId")Integer companyId);
 
 	/**
      * 新增项目
