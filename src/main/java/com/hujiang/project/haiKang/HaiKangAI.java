@@ -4,7 +4,7 @@
 //import com.hikvision.building.cloud.Consumer;
 //import com.hikvision.building.cloud.http.Message;
 //import com.hikvision.building.cloud.service.IPushMessageService;
-//import com.hujiang.project.zhgd.sbCamera.service.ISabCameraService;
+//import com.hujiang.project.zhgd.sbCamera.service.ISbCameraService;
 //import com.hujiang.project.zhgd.sbCameraInformation.domain.SbCameraInformation;
 //import com.hujiang.project.zhgd.sbCameraInformation.service.ISbCameraInformationService;
 //import com.hujiang.project.zhgd.utils.Tools;
@@ -23,7 +23,6 @@
 //    private ISbCameraInformationService iSbCameraInformationService;
 //    @Override
 //    public void pushMessage(List<Message> messageList) {
-//        // TODO Auto-generated method stub
 //        // 异步处理消费到的消息
 //        try{
 //            List<SbCameraInformation> informations = new ArrayList<SbCameraInformation>(messageList.size());
