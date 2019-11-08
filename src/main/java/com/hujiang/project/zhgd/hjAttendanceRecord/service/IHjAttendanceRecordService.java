@@ -106,6 +106,7 @@ public interface IHjAttendanceRecordService
 	 * @return
 	 */
     Map<String, Object> insertAdministration(HjAttendanceRecord hjAttendanceRecord,MultipartFile file);
+    Map<String, Object> insertAdministrationNew(HjAttendanceRecord hjAttendanceRecord,MultipartFile file);
 
 	/**
 	 * pc端查看考勤记录

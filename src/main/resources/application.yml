@@ -86,7 +86,7 @@ spring:
   activemq:
     user: admin
     password: admin
-    broker-url: tcp://47.106.69.253:61616
+    broker-url: tcp://120.79.129.65:61616
 
     #true 表示使用内置的MQ，false则连接服务器
     in-memory: false

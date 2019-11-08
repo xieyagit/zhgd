@@ -381,7 +381,7 @@
             <if test="startTime != null  and startTime != '' "> and to_days(#{startTime})<![CDATA[ <=]]>to_days(create_date)</if>
             <if test="endTime != null  and endTime != '' "> and to_days(#{endTime})<![CDATA[ >=]]>to_days(create_date)</if>
         </where>
-        order by create_date desc
+        order by passed_time desc
     </select>
 
     <select id="selectAttendanceRecordListThree" parameterType="Integer" resultMap="HjAttendanceRecordResult">
