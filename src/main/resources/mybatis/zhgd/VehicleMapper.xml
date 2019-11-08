@@ -43,6 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id , RecordId , VehicleNo, PlateColor, DeptID, Camera_Mac, LiftType, LiftTime, `InOut`, img, CardType,color,orderId,`name`,gateinname,operatorin
         from hj_zhgd_vehicle
         WHERE LiftTime LIKE CONCAT(CONCAT(#{liftTime}), '%') and DeptID = #{deptID}
+        order by id DESC
     </select>
 
     <select id="selectscenes"  parameterType="Vehicle" resultMap="VehicleResult">

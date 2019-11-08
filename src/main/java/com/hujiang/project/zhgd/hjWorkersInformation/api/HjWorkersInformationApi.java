@@ -263,9 +263,12 @@ public class HjWorkersInformationApi extends BaseController {
         information.setMaterial(hjWorkersInformation.getMaterial());                                    //状态资料是否齐全（0、不齐全，1、齐全）
         information.setConstructionId(hjWorkersInformation.getConstructionId());                        //所属分包单位
         information.setProjectId(hjWorkersInformation.getProjectId());                                  //项目ID
-        List<HjWorkersInformation> result = hjWorkersInformationService.selectall(information);
-        jsonObject.put("count",result.size());
+        List<HjWorkersInformation> results = hjWorkersInformationService.selectall(information);
+        jsonObject.put("count",results.size());
         startPage();
+        List<HjWorkersInformation> result = hjWorkersInformationService.selectall(information);
+//        jsonObject.put("count",result.size());
+
         List<HjWorkersInformation> result1 = hjWorkersInformationService.team(hjWorkersInformation.getProjectId());
         List<HjWorkersInformation> result2 = hjWorkersInformationService.dictionaries(hjWorkersInformation.getProjectId());
         List<HjWorkersInformation> result3 = hjWorkersInformationService.company(hjWorkersInformation.getProjectId());

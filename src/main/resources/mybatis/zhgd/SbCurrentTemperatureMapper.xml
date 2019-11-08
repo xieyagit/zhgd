@@ -41,6 +41,7 @@
         on c.electricity_box_id = p.electricity_box_id
         where p.project_id = #{projectId}
         GROUP BY c.electricity_box_id
+        limit 1
     </select>
 
     <select id="selectkanban" parameterType="SbCurrentTemperature" resultMap="SbCurrentTemperatureResult">
