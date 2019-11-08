@@ -21,7 +21,8 @@ public abstract class AutoTaskBase {
             if(!autotask) {
                 return;
             }
-            runnable.run();
+            ThreadUtils.async(runnable);
+            int i = 0;
         }
         catch (Exception e) {
             // logger
