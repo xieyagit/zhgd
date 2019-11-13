@@ -11,7 +11,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.exception.BusinessException;
 import com.hujiang.common.utils.AliyunOSSClientUtil;
 import com.hujiang.common.utils.FaceMatchUtil;
+import com.hujiang.common.utils.JsonUtils;
 import com.hujiang.common.utils.StringUtil;
+import com.hujiang.framework.jms.JmsMessageInfo;
+import com.hujiang.framework.jms.JmsMessageType;
 import com.hujiang.framework.web.domain.AjaxResult;
 import com.hujiang.project.zhgd.hjAttendanceRecord.domain.DongTai;
 import com.hujiang.project.zhgd.hjAttendanceRecord.domain.Param;
@@ -22,6 +25,7 @@ import com.hujiang.project.zhgd.hjProjectWorkers.domain.TCount;
 import com.hujiang.project.zhgd.hjProjectWorkers.mapper.HjProjectWorkersMapper;
 import com.hujiang.project.zhgd.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.stereotype.Service;import org.springframework.transaction.annotation.Transactional;
 import com.hujiang.project.zhgd.hjAttendanceRecord.mapper.HjAttendanceRecordMapper;
 import com.hujiang.project.zhgd.hjAttendanceRecord.domain.HjAttendanceRecord;
@@ -29,6 +33,7 @@ import com.hujiang.common.support.Convert;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.jms.Queue;
 
 /**
  * 考勤记录 服务层实现
@@ -51,6 +56,10 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
 	@Resource
 	APIClient apiClient;
 	private Logger logger = Logger.getLogger(HjAttendanceRecordServiceImpl.class.getName());
+	@Autowired
+	private Queue attendanceRecord;
+	@Autowired
+	private JmsMessagingTemplate jmsMessagingTemplate;
 	/**
 	 * 获取最早一条上班考勤记录
 	 * @param hjAttendanceRecord
@@ -318,6 +327,90 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
           return null;
 	}
 
+	/**
+	 * app人脸考勤 由chencq于2019-11-8重构
+	 * @param hjAttendanceRecord
+	 * @param file
+	 * @return
+	 */
+	@Override
+	public Map<String, Object> insertAdministrationNew(HjAttendanceRecord hjAttendanceRecord, MultipartFile file) {
+		String nameUel = "";
+		try {
+//			String folder = AliyunOSSClientUtil.createFolder(AliyunOSSClientUtil.getOSSClient(), "hujiang", hjAttendanceRecord.getDirection().trim()+"/");  // 文件夹名称
+//			String filename= StringUtil.getRandomStringByLength(6)+new SimpleDateFormat("HHmmss")                                               //文件名称
+//					.format(new Date())+file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+//			String fileUrl = AliyunOSSClientUtil.uploadFileImg(file, folder,filename);
+//			if(!"".equals(fileUrl)) {
+//				nameUel = fileUrl.substring(0,fileUrl.lastIndexOf("?"));// 文件上传
+				String time=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+				String imgBase=BASE64DecodedMultipartFile.MultipartFileToBase64(PrintJobTo.addWorkMarkToMutipartFile(file,time));
+				// 根据项目id 查询 人脸组id
+				HjProject hjProject = hjProjectMapper.selectHjProjectById(hjAttendanceRecord.getProjectId());
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+				com.alibaba.fastjson.JSONArray jsonArray ;
+				com.alibaba.fastjson.JSONObject resultObject = new com.alibaba.fastjson.JSONObject();
+				try{
+					JSONObject jsonObject = new JSONObject();
+					jsonObject.put("image",imgBase);//k考勤照片
+					jsonObject.put("image_type","BASE64");
+					jsonObject.put("liveness_control","LOW");
+					jsonObject.put("group_id_list",hjProject.getFaceGroup());//人脸库
+					String s = Util.httpPostWithJSON("https://aip.baidubce.com/rest/2.0/face/v3/search?access_token="+ AuthService.getAuth(), jsonObject);
+					resultObject = com.alibaba.fastjson.JSONObject.parseObject(s);
+					com.alibaba.fastjson.JSONObject object1 = com.alibaba.fastjson.JSONObject.parseObject(resultObject.getString("result"));
+					jsonArray = com.alibaba.fastjson.JSONArray.parseArray(object1.getString("user_list"));//校验成功，获取返回结果
+				}catch (Exception e){
+					throw  new BusinessException("人脸识别异常：" + resultObject.toString());
+				}
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+				if (resultObject.getString("error_msg").equals("SUCCESS")) {
+//					  org.json.JSONArray jsonArray = resultObject.getJSONObject("result").getJSONArray("user_list");
+					for (int i = 0; i < jsonArray.size(); i++) {
+						if (jsonArray.getJSONObject(i).getLong("score") > Constants.ATTENDANCESCORE) {                  //人脸识别数据大于设置数据，考勤成功
+							String userId = jsonArray.getJSONObject(i).getString("user_id");   //获取匹配人脸的员工
+							HjProjectWorkers hjProjectWorkers = hjProjectWorkersMapper.selectHjProjectWorkersById(Integer.parseInt(userId));
+							if (hjProjectWorkers != null) {
+								if (hjProjectWorkers.getEnterAndRetreatCondition() == 0) {
+									JSONObject map=new JSONObject();
+									map.put("hjProjectWorkers",hjProjectWorkers);
+									map.put("hjAttendanceRecord",hjAttendanceRecord);
+									map.put("imgBase",imgBase);
+
+									JmsMessageInfo<String> messageInfo = new JmsMessageInfo<String>();
+									messageInfo.setBody(map.toJSONString());
+									messageInfo.setType(JmsMessageType.INSERT_ATTENDANCE);
+									jmsMessagingTemplate.convertAndSend(attendanceRecord, JsonUtils.toJson(messageInfo));
+
+
+
+									logger.info("考勤成功！添加考勤记录："+hjProjectWorkers.getEmpName());
+										//上传和插入由消息队列执行
+										return AjaxResult.success(hjProjectWorkers.getEmpName() + "考勤成功！");
+
+								} else {
+									return AjaxResult.error(-1, "考勤失败，该人员已退场！");
+								}
+							} else {
+								return AjaxResult.error(-1, "考勤失败,该考勤人员无考勤权限！");
+							}
+						}else {
+							return AjaxResult.error(-1, "考勤失败,人脸库中未查询到与该员工相似人脸！");
+						}
+					}
+				} else if (resultObject.getString("error_msg").equals("match user is not found")) {
+					return AjaxResult.error(-1, "考勤失败,人脸库中未查询到与该员工相似人脸！");
+				}
+
+		}catch (Exception e){
+			e.printStackTrace();
+			FaceMatchUtil.deleteUrl(nameUel); // 删除阿里云图片
+			return AjaxResult.error(-1,"考勤失败！");
+		}
+		return null;
+	}
 
 
 @Override

@@ -509,7 +509,7 @@ public class APIClient {
             jsonData.put("direction" , direction);                                                                // 通行方向  in—进，out—出
             jsonData.put("way" , "1");                                                                            // 通行方式 1—人脸识别，2—虹膜识别，3—指纹识别，4—掌形识别，5—身份证识别，6—实名卡，7—异常清退（适用于人员没有通过闸机系统出工地而导致人员状态不一致的情况），8—一键开闸(需要与闸机交互)， 9—应急通道（不需要与闸机交互），10—二维码识别，11-其他方式
             // 可以为空
-            jsonData.put("site_photo", PrintJobTo.zxToWatermark(img,new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())));  // 工地人脸照片数据，Base64编码，图像底部带过闸时间水印，黑底白字
+            jsonData.put("site_photo", img);  // 工地人脸照片数据，Base64编码，图像底部带过闸时间水印，黑底白字
             jsonData.put("longitude", "");                                                                        // 经度
             jsonData.put("latitude", "");                                                                         // 纬度
             jsonData.put("address", "");                                                                          // 位置（打考勤时所在的详细地址）

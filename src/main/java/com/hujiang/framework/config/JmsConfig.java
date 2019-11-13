@@ -33,6 +33,7 @@ public class JmsConfig {
 
     public final static String TEMPERATURE_CAY_QUEUE = "TEMPERATURE_CAY_QUEUE";
 
+    public final static String ATTENDANCE_RECORD="ATTENDANCE_RECORD";
 
     //定义人才安居的扬尘设备存放消息的队列
     @Bean(value="tspPersonnelQueue")
@@ -87,6 +88,9 @@ public class JmsConfig {
     public Queue temperatureCayQueue() {
         return new ActiveMQQueue(JmsConfig.TEMPERATURE_CAY_QUEUE);
     }
+
+    @Bean(value="attendanceRecord")
+    public Queue attendanceRecord(){return new ActiveMQQueue(JmsConfig.ATTENDANCE_RECORD);}
 
     @Value("${spring.activemq.user}")
     private String usrName;
