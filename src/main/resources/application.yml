@@ -61,9 +61,9 @@ spring:
     active: druid
   # 文件上传
   servlet:
-     multipart:
-       max-file-size:  30MB
-       max-request-size:  30MB
+    multipart:
+      max-file-size:  30MB
+      max-request-size:  30MB
   # 服务模块
   devtools:
     restart:
@@ -101,11 +101,11 @@ eureka:
   instance:
     instance-id: user-api-8083
     prefer-ip-address: true # 访问路径可以显示 IP
-      # 续约更新时间间隔（默认30秒）
+    # 续约更新时间间隔（默认30秒）
     lease-renewal-interval-in-seconds: 1
-       #续约到期时间（默认90秒）
+    #续约到期时间（默认90秒）
     lease-expiration-duration-in-seconds: 2
-#    ip-address: 120.79.129.65
+    #    ip-address: 120.79.129.65
     ip-address: 120.79.129.65
 
 
@@ -114,7 +114,7 @@ eureka:
       # 开启健康检查 （需要spring-boot-starter-actuator依赖）
       enabled: false
     serviceUrl:
-           defaultZone: http://47.112.23.241:9001/eureka/,http://47.112.23.241:9002/eureka/  # 注册中心访问地址
+      defaultZone: http://47.112.23.241:9001/eureka/,http://47.112.23.241:9002/eureka/  # 注册中心访问地址
       #defaultZone: http://localhost:9006/eureka/  # 注册中心访问地址
 
 
@@ -122,12 +122,12 @@ eureka:
 
 # MyBatis
 mybatis:
-    # 搜索指定包别名
-    typeAliasesPackage: com.hujiang.project
-    # 配置mapper的扫描，找到所有的mapper.xml映射文件
-    mapperLocations: classpath:mybatis/**/*Mapper.xml
-    # 加载全局的配置文件
-    configLocation: classpath:mybatis/mybatis-config.xml
+  # 搜索指定包别名
+  typeAliasesPackage: com.hujiang.project
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations: classpath:mybatis/**/*Mapper.xml
+  # 加载全局的配置文件
+  configLocation: classpath:mybatis/mybatis-config.xml
 
 # PageHelper分页插件
 pagehelper:
@@ -203,6 +203,7 @@ ribbon:
   ConnectTimeout: 5000 #ribbon请求连接的超时时间，默认值2000
   MaxAutoRetries: 0     #对当前实例的重试次数，默认0
   MaxAutoRetriesNextServer: 1 #对切换实例的重试次数，默认1
+ 
 feign:
   httpclient:
     connection-timeout: 60000
