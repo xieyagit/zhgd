@@ -31,9 +31,7 @@
                      column="company_type"/>
     </resultMap>
 
-    <sql id="selectHjConstructionCompanyVo">
-        select id, construction_name, short_name, capital, company_type, legal_person, suid, organization_code, bank_open, bank_num, bank_address, address, contacts, mobile_phone, email, remark, show_state, face_group, create_date, update_date,comId from hj_construction_company
-       </sql>
+
 	
 	<sql id="selectHjConstructionCompanyVo">
         select id,isUpload, construction_name, short_name, capital, company_type, legal_person, suid, organization_code, bank_open, bank_num, bank_address, address, contacts, mobile_phone, email, remark, show_state, face_group, create_date, update_date,comId from hj_construction_company
