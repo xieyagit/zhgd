@@ -5,6 +5,7 @@ import com.hujiang.project.zhgd.hjExcessiveSafety.service.IHjExcessiveSafetyServ
 import com.hujiang.project.zhgd.jsms.api.JSMSExample;
 import com.hujiang.project.zhgd.sbExcessiveDust.domain.SbExcessiveDust;
 import com.hujiang.project.zhgd.sbExcessiveDust.service.ISbExcessiveDustService;
+import com.hujiang.project.zhgd.sbProjectDustEmission.task.SmsMessageInfo;
 import com.hujiang.project.zhgd.shortCreedNumber.domain.ShortCreedNumber;
 import com.hujiang.project.zhgd.shortCreedNumber.service.IShortCreedNumberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +39,7 @@ public abstract class BaseSmsMessage<T> {
     @Autowired
     private IShortCreedNumberService shortCreedNumberService;
 
-    public abstract void push(Integer userId, Integer projectId, String alias,
-                              boolean isApnsProduction, String userPhone);
+    public abstract void push(SmsMessageInfo smsMessageInfo);
 
 
     /**
@@ -58,7 +58,8 @@ public abstract class BaseSmsMessage<T> {
         sbExcessiveDust.setGrade(GRADE);
         sbExcessiveDust.setPrivilegesId(privilegesId);
         sbExcessiveDust.setStatus(1);
-        excessiveDustService.insertSbExcessiveDust(sbExcessiveDust);
+        int result = excessiveDustService.insertSbExcessiveDust(sbExcessiveDust);
+        System.out.println(result);
     }
 
     /**

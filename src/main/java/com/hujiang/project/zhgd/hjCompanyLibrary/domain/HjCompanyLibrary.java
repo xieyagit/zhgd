@@ -56,6 +56,16 @@ public class HjCompanyLibrary
 	//单位类型
 	private HjDictionaries dictionaries;
 
+	private String path;
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
 	public HjDictionaries getDictionaries() {
 		return dictionaries;
 	}

@@ -9,6 +9,8 @@ import com.hujiang.framework.web.controller.BaseController;
 import com.hujiang.framework.web.domain.AjaxResult;
 import com.hujiang.framework.web.page.TableDataInfo;
 import com.hujiang.project.zhgd.hjAttendanceRecord.service.IHjAttendanceRecordService;
+import com.hujiang.project.zhgd.hjCompanyHierarchy.domain.HjCompanyHierarchy;
+import com.hujiang.project.zhgd.hjCompanyHierarchy.service.IHjCompanyHierarchyService;
 import com.hujiang.project.zhgd.hjCompanyProject.domain.HjCompanyProject;
 import com.hujiang.project.zhgd.hjCompanyProject.service.IHjCompanyProjectService;
 import com.hujiang.project.zhgd.hjConstructionCompany.domain.ConstructionCompany;
@@ -23,6 +25,7 @@ import com.hujiang.project.zhgd.hjLogging.service.IHjLoggingService;
 import com.hujiang.project.zhgd.hjProject.domain.HjCompanyProjectTemp;
 import com.hujiang.project.zhgd.hjProject.domain.HjProject;
 import com.hujiang.project.zhgd.hjProject.service.IHjProjectService;
+import com.hujiang.project.zhgd.hjProjectWorkers.domain.HjProjectWorkers;
 import com.hujiang.project.zhgd.hjProjectWorkers.service.IHjProjectWorkersService;
 import com.hujiang.project.zhgd.hjSynchronizationInformation.domain.HjSynchronizationInformation;
 import com.hujiang.project.zhgd.hjSynchronizationInformation.service.IHjSynchronizationInformationService;
@@ -79,6 +82,9 @@ public class ProjectApi extends BaseController {
     @Autowired
     private IHjLoggingService hjLoggingService;
 
+    @Autowired
+    private IHjCompanyHierarchyService hjCompanyHierarchyService;
+
     /**
      * 查询项目信息
      *
@@ -114,9 +120,15 @@ public class ProjectApi extends BaseController {
         //参建单位总数量
         int numC = hjProjectService.infoConstructionR(companyId);
         //在场工人总数量
-        int numW = hjProjectService.infoPWorkertR(companyId) * 3;
+
+//        int numW = hjProjectService.infoPWorkertR(companyId) * 3;
+//        //上工总人数
+//        int numWorking = hjProjectService.infoPWorkingR(companyId) * 30;
+
+        int numW = hjProjectService.infoPWorkertR(companyId);
         //上工总人数
-        int numWorking = hjProjectService.infoPWorkingR(companyId) * 30;
+        List<HjProject> numWorking = hjProjectService.infoPWorkingR(companyId);
+
         //投资总金额
         double totalMoney = hjProjectService.infoHjProjectR("project_cost", companyId, region);
         BigDecimal bd1 = new BigDecimal(totalMoney);
@@ -153,6 +165,12 @@ public class ProjectApi extends BaseController {
         map.put("numW", numW);
         map.put("numWing", numWorking);
         map.put("totalMoney", bd1);
+
+        map.put("numC",numC);
+        map.put("numW",numW);
+        map.put("numWing",numWorking.size());
+        map.put("totalMoney",bd1);
+        map.put("code","0");
         return map;
     }
 
@@ -194,7 +212,11 @@ public class ProjectApi extends BaseController {
     @RequestMapping(value = "/addProject", method = RequestMethod.POST)
     public AjaxResult addSave(HjProject hjProject, Integer cid, MultipartFile file, String remark1, String shortName1) throws Exception {
         out.println(cid);
-
+        String a = hjProject.getProjectRegion();
+        String b = a.substring(0,7);
+        if (b.equals("19,1207")){
+            out.println("对接惠州住建局");
+        }
 
         //保存項目-------------------------
         if (file != null && !file.isEmpty()) {
@@ -218,10 +240,14 @@ public class ProjectApi extends BaseController {
 //            hjProject.setConstructionId(cid);//总包单位
 //            hjProject.setSupervisorId(hjConstructionCompany.getId());//监理企业
         int s = hjProjectService.insertHjProject(hjProject);
-
+        HjCompanyHierarchy hjh2=new HjCompanyHierarchy();
+        hjh2.setCompanyId(cid);
+        List<HjCompanyHierarchy> list=hjCompanyHierarchyService.selectHjCompanyHierarchyList(hjh2);
+        HjCompanyHierarchy hjh3=list.get(0);
         HjCompanyProject hjCompanyProject = new HjCompanyProject();
         hjCompanyProject.setCompanyId(cid);
         hjCompanyProject.setProjectId(hjProject.getId());
+        hjCompanyProject.setPath(hjh3.getParentId()+","+hjh3.getCompanyId());
         hjCompanyProjectService.insertHjCompanyProject(hjCompanyProject);
         return toAjax(s);
     }
@@ -346,6 +372,23 @@ public class ProjectApi extends BaseController {
         return jsonObject;
     }
 
+    /** 搜索项目 */
+    @PostMapping(value = "/selectProjects")
+    public com.alibaba.fastjson.JSONObject selectProject(@RequestBody HjProject hjProject){
+        com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
+        List<HjProject> projects = hjProjectService.selectProjects(hjProject);
+        if (projects.size() !=0){
+            jsonObject.put("code",0);
+            jsonObject.put("name",hjProject.getProjectName());
+            jsonObject.put("data",projects);
+        }else {
+            jsonObject.put("code",1);
+            jsonObject.put("name",hjProject.getProjectName());
+            jsonObject.put("data","抱歉，您底下没有该项目！");
+        }
+        return jsonObject;
+    }
+
 
     /**
      * 查询项目参建单位（电视看板）
@@ -371,5 +414,92 @@ public class ProjectApi extends BaseController {
         result.put("msg", "查询成功！");
         result.put("data", map);
         return result;
+    }
+
+    /** 搜索项目 */
+    @PostMapping(value = "/selectProjectRegion")
+    public com.alibaba.fastjson.JSONObject selectProjectRegion(@RequestBody HjProject hjProject){
+        com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
+        if (hjProject.getProjectRegion().equals("1")){
+            jsonObject.put("code",1);
+            jsonObject.put("name",hjProject.getConstructionName());
+            jsonObject.put("data","抱歉，sorry！");
+            return jsonObject;
+        }
+        List<HjProject> projects = hjProjectService.selectProjectRegion(hjProject);
+        if (projects.size() !=0){
+            jsonObject.put("code",0);
+            jsonObject.put("name",hjProject.getConstructionName());
+            jsonObject.put("data",projects);
+        }else {
+            jsonObject.put("code",1);
+            jsonObject.put("name",hjProject.getConstructionName());
+            jsonObject.put("data","抱歉，sorry！");
+        }
+        return jsonObject;
+    }
+
+    /** 搜索项目信息 */
+    @PostMapping(value = "/selectHjProject")
+    public com.alibaba.fastjson.JSONObject projectSelect(@RequestBody HjProject hjProject){
+        com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
+        List<HjProjectWorkers> records = hjProjectWorkersService.listcount(hjProject.getId(),null);//在场工人
+        if (records.size()==0){
+            jsonObject.put("numW", "0");          //项目在场人员
+        }else {
+            jsonObject.put("numW", records.get(0).getCount());          //项目在场人员
+        }
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String dateNowStr = sdf.format(d);
+        String passedTime = dateNowStr;
+        List<HjProjectWorkers> record = hjProjectWorkersService.listcounts(hjProject.getId(),passedTime,null);
+        int s= record.size();
+        jsonObject.put("numWing", s);
+        HjProject hjProject1 = hjProjectService.selectHjProjectById(hjProject.getId());
+        if (hjProject1 != null) {
+            if (hjProject1.getProjectCost() == null) {
+                jsonObject.put("totalMoney", 0);
+            } else {
+                jsonObject.put("totalMoney", hjProject1.getProjectCost());
+            }
+        }else {
+            jsonObject.put("totalMoney", 0);
+        }
+        List<HjConstructionProject> hjConstructionProject = hjConstructionProjectService.hj(hjProject.getId());
+        if (hjConstructionProject.size()>0) {
+            jsonObject.put("numC", hjConstructionProject.size());
+            jsonObject.put("code",0);
+        }else {
+            jsonObject.put("numC", 0);
+            jsonObject.put("code",1);
+        }
+        return jsonObject;
+    }
+
+    @RequestMapping(value = "selectProjectAreaS")
+    public Map<String,Object> selectProjectAreas(@RequestParam(value = "companyId") Integer companyId) {
+        Map<String,Object> map = new HashMap<>();
+        List<HjProject> listP;
+        if (companyId == null){
+            map.put("error","参数不能为空");
+            return map;
+        }
+        Map mapTemp = new HashMap();
+        //参建单位总数量
+        int numC = hjProjectService.infoConstructionRS(companyId);
+        //在场工人总数量
+        int numW = hjProjectService.infoPWorkertRS(companyId);
+        //上工总人数
+        List<HjProject> numWorking = hjProjectService.infoPWorkingRS(companyId);
+        //投资总金额
+        double totalMoney = hjProjectService.infoHjProjectRS("project_cost",companyId);
+        BigDecimal bd1 = new BigDecimal(totalMoney);
+        map.put("numC",numC);
+        map.put("numW",numW);
+        map.put("numWing",numWorking.size());
+        map.put("totalMoney",bd1);
+        map.put("code","0");
+        return map;
     }
 }

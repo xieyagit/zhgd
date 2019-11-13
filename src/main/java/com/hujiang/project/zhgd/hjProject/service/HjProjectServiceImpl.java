@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.hujiang.framework.web.domain.AjaxResult;
+import com.hujiang.project.zhgd.hjProject.domain.HjCompanyProjectTemp;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;import org.springframework.transaction.annotation.Transactional;
@@ -88,6 +89,17 @@ public class HjProjectServiceImpl implements IHjProjectService
 	}
 
 	/**
+	 * 统计公司所有的项目name的总和
+	 * @param name 字段名
+	 * @param companyId 公司Id
+	 * @return 项目集合
+	 */
+	@Override
+	public double infoHjProjectRS(String name, Integer companyId) {
+		return hjProjectMapper.infoHjProjectRS(name,companyId);
+	}
+
+	/**
 	 * 统计公司所有的项目参建单位的总和
 	 * @param companyId 公司Id
 	 * @return 项目集合
@@ -95,6 +107,15 @@ public class HjProjectServiceImpl implements IHjProjectService
 	@Override
 	public int infoConstructionR(@Param("companyId")Integer companyId) {
 		return hjProjectMapper.infoConstructionR(companyId);
+	}
+	/**
+	 * 统计公司所有的项目参建单位的总和
+	 * @param companyId 公司Id
+	 * @return 项目集合
+	 */
+	@Override
+	public int infoConstructionRS(@Param("companyId")Integer companyId) {
+		return hjProjectMapper.infoConstructionRS(companyId);
 	}
 
 	/**
@@ -108,13 +129,33 @@ public class HjProjectServiceImpl implements IHjProjectService
 	}
 
 	/**
+	 * 统计公司所有的项目在场总人数
+	 * @param companyId 公司Id
+	 * @return 项目集合
+	 */
+	@Override
+	public int infoPWorkertRS(@Param("companyId")Integer companyId){
+		return hjProjectMapper.infoPWorkertRS(companyId);
+	}
+
+	/**
 	 * 统计公司所有的项目今日上工总人数
 	 * @param companyId 公司Id
 	 * @return 项目集合
 	 */
 	@Override
-	public int infoPWorkingR(@Param("companyId")Integer companyId){
+	public List<HjProject> infoPWorkingR(@Param("companyId")Integer companyId){
 		return hjProjectMapper.infoPWorkingR(companyId);
+	}
+
+	/**
+	 * 统计公司所有的项目今日上工总人数
+	 * @param companyId 公司Id
+	 * @return 项目集合
+	 */
+	@Override
+	public List<HjProject> infoPWorkingRS(@Param("companyId")Integer companyId){
+		return hjProjectMapper.infoPWorkingRS(companyId);
 	}
 
 	/**
@@ -207,4 +248,17 @@ public class HjProjectServiceImpl implements IHjProjectService
 	public HjProject day(Integer id){
 		return hjProjectMapper.day(id);
 	}
+
+	/** 集团搜索项目 */
+	public List<HjProject> selectProjects(HjProject hjProject){
+		return hjProjectMapper.selectProjects(hjProject);
+	}
+    public List<HjProject> selectProjectRegion(HjProject hjProject){
+        return hjProjectMapper.selectProjectRegion(hjProject);
+    }
+
+    public HjProject projectSelect(HjProject hjProject){
+	    return hjProjectMapper.projectSelect(hjProject);
+    }
+
 }

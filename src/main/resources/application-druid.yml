@@ -6,7 +6,8 @@ spring:
         druid:
             # 主库数据源
             master:
-                url: jdbc:mysql://rm-wz9b0hz7c6y891f98no.mysql.rds.aliyuncs.com:3306/zhgd_02?useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true&failOverReadOnly=false&serverTimezone=CTT&noAccessToProcedureBodies=true
+#                url: jdbc:mysql://47.106.69.253:3306/zhgd_02?useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true&failOverReadOnly=false&serverTimezone=CTT&noAccessToProcedureBodies=true&allowMultiQueries=true
+                url: jdbc:mysql://rm-wz9b0hz7c6y891f98no.mysql.rds.aliyuncs.com:3306/zhgd_02?useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true&failOverReadOnly=false&serverTimezone=CTT&noAccessToProcedureBodies=true&allowMultiQueries=true
                 username: zhgd
                 password: hujiang_zhgd
             # 从库数据源

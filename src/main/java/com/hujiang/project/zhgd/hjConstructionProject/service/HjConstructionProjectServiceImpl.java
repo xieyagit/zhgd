@@ -96,5 +96,7 @@ public class HjConstructionProjectServiceImpl implements IHjConstructionProjectS
 	{
 		return hjConstructionProjectMapper.deleteHjConstructionProjectByIds(Convert.toStrArray(ids));
 	}
-	
+	public List<HjConstructionProject> hj(Integer id){
+		return hjConstructionProjectMapper.hj(id);
+	}
 }

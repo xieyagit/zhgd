@@ -1,6 +1,7 @@
 package com.hujiang.project.zhgd.sbProjectElectricityBox.api;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hujiang.common.utils.Md5Utils;
 import com.hujiang.framework.aspectj.lang.annotation.Log;
 import com.hujiang.framework.aspectj.lang.enums.BusinessType;
 import com.hujiang.framework.web.controller.BaseController;
@@ -9,6 +10,7 @@ import com.hujiang.framework.web.page.TableDataInfo;
 import com.hujiang.project.api.controller.ApiElectricityBoxController;
 import com.hujiang.project.cay.cay;
 import com.hujiang.project.zhgd.sbCraneBinding.domain.SbCraneBinding;
+import com.hujiang.project.zhgd.sbCurrentTemperature.api.SendTemperatureToPERSONNEL;
 import com.hujiang.project.zhgd.sbProjectElectricityBox.domain.SbPowerBoxAdd;
 import com.hujiang.project.zhgd.sbProjectElectricityBox.domain.SbProjectElectricityBox;
 import com.hujiang.project.zhgd.sbProjectElectricityBox.service.ISbProjectElectricityBoxService;
@@ -35,11 +37,15 @@ import java.util.List;
 @RequestMapping(value = "/provider/ProjectElectricityBox")
 public class ProjectElectricityBoxApi extends BaseController {
     @Autowired
+    private ISbProjectElectricityBoxService iProjectElectricityBoxService;
+    @Autowired
     private ISbProjectElectricityBoxService boxService;
     @Autowired
     private com.hujiang.project.cay.cay cay;
     @Autowired
     private ApiElectricityBoxController apiElectricityBoxController;
+    @Autowired
+    private SendTemperatureToPERSONNEL sendTemperatureToPERSONNEL;
     /**
      * 根据项目id获取电箱设备编号
      * @param projectId
@@ -72,9 +78,6 @@ public class ProjectElectricityBoxApi extends BaseController {
 
     /**
      * 添加电箱
-     * @param sbP
-     * @return
-     * @author yant
      */
     @RequestMapping("/addSave")
     public AjaxResult addSave(@RequestBody SbProjectElectricityBox sbP)
@@ -85,36 +88,46 @@ public class ProjectElectricityBoxApi extends BaseController {
                 sbP.getElecLimit() == null ||sbP.getAroundTemp() == null){
             return AjaxResult.error(500,"参数错误");
         }
-        SbPowerBoxAdd sbPowerBoxAdd = new SbPowerBoxAdd();
-        BeanUtils.copyProperties(sbP,sbPowerBoxAdd);
         //将设备编号转换成MD5格式32位
         String electricityBoxId = Tools.encodeToMD5s(sbP.getElectricityBoxId());
-        sbPowerBoxAdd.setElectricityBoxId(electricityBoxId);
-        sbPowerBoxAdd.setType(1);
-        sbPowerBoxAdd.setInstallCompany(CommonChars.CompanyName);
-        sbPowerBoxAdd.setInstalladdType(2);
+        sbP.setType(1);
         sbP.setElectricityBoxName(sbP.getComments());
+        int i = boxService.insertSbProjectElectricityBox(sbP);
         try {
+            SbPowerBoxAdd sbPowerBoxAdd = new SbPowerBoxAdd();
+            BeanUtils.copyProperties(sbP,sbPowerBoxAdd);
+            sbPowerBoxAdd.setElectricityBoxId(electricityBoxId);
+            sbPowerBoxAdd.setType(1);
+            sbPowerBoxAdd.setInstallCompany(CommonChars.CompanyName);
+            sbPowerBoxAdd.setInstalladdType(2);
             //设备参数上报
-            AjaxResult result = boxService.reportedEBox(sbPowerBoxAdd);
-//            if ("true".equals(result.get("result"))){
-//                return result;
-//            }
+            boxService.reportedEBox(sbPowerBoxAdd);
             if (sbP.getScznl().equals("CAY")) {
+//                apiElectricityBoxController.reportElectricBoxParamete(sbP);
+                SbProjectElectricityBox sbox = new SbProjectElectricityBox();
+                sbox.setElectricityBoxId(sbP.getElectricityBoxId());
+                List<SbProjectElectricityBox> projectElectricityBoxes = iProjectElectricityBoxService.selectSbProjectElectricityBoxList(sbox);
 
-                apiElectricityBoxController.reportElectricBoxParamete(sbP);
+                sbP.setElectricityBoxId(sbP.getElectricityBoxId());
+                sbP.setElectricityBoxName((projectElectricityBoxes.size()+1)+"#配电箱");
+                sendTemperatureToPERSONNEL.cayMachine(sbP);
+            }
+            if(sbP.getScznl().equals("RCAJ")){
+                SbProjectElectricityBox sbox = new SbProjectElectricityBox();
+                sbox.setElectricityBoxId(sbP.getElectricityBoxId());
+                List<SbProjectElectricityBox> projectElectricityBoxes = iProjectElectricityBoxService.selectSbProjectElectricityBoxList(sbox);
+
+                sbP.setElectricityBoxId(sbP.getElectricityBoxId());
+                sbP.setElectricityBoxName((projectElectricityBoxes.size()+1)+"#"+sbP.getComments());
+                sendTemperatureToPERSONNEL.rcajMachine(sbP);
             }
         } catch (Exception e) {
             e.printStackTrace();
-//            return AjaxResult.error(-1,"添加电箱失败");
         }
-        int i = boxService.insertSbProjectElectricityBox(sbP);
         if(i>0){
             return AjaxResult.success();
         }else {
             AjaxResult ajaxResult = new AjaxResult();
-    //                ajaxResult.put("code",result.get("code"));
-    //                ajaxResult.put("message",result.get("message"));
             return ajaxResult;
         }
     }

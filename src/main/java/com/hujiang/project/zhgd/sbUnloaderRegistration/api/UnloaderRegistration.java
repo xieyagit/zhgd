@@ -24,7 +24,7 @@ import java.util.List;
  * 卸料
  */
 @RestController
-@RequestMapping(value = "/unloader/zhgd",method = RequestMethod.POST)
+@RequestMapping(value = "/provider/zhgd",method = RequestMethod.POST)
 public class UnloaderRegistration {
 
     //卸料注册信息

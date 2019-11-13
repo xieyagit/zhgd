@@ -1,26 +1,46 @@
 package com.hujiang.project.zhgd.sbArea.api;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.framework.web.controller.BaseController;
 import com.hujiang.framework.web.page.PageDomain;
 import com.hujiang.framework.web.page.TableDataInfo;
+import com.hujiang.project.zhgd.hjProjectUser.domain.HjProjectUser;
+import com.hujiang.project.zhgd.hjProjectUser.service.IHjProjectUserService;
+import com.hujiang.project.zhgd.hjRolePrivileges.domain.HjRolePrivileges;
+import com.hujiang.project.zhgd.hjRolePrivileges.service.IHjRolePrivilegesService;
 import com.hujiang.project.zhgd.hjSafetyAbarbeitung.domain.PcInspectionRecord;
+import com.hujiang.project.zhgd.hjSystemUser.domain.HjSystemUser;
+import com.hujiang.project.zhgd.hjSystemUser.service.IHjSystemUserService;
+import com.hujiang.project.zhgd.hjUserRole.domain.HjUserRole;
+import com.hujiang.project.zhgd.hjUserRole.service.IHjUserRoleService;
+import com.hujiang.project.zhgd.moduleToPush.domain.ModuleToPush;
+import com.hujiang.project.zhgd.moduleToPush.service.IModuleToPushService;
 import com.hujiang.project.zhgd.sbArea.domain.OptionsLocation;
 import com.hujiang.project.zhgd.sbArea.domain.OptionsUser;
 import com.hujiang.project.zhgd.sbArea.service.ISbAreaService;
-import com.hujiang.project.zhgd.sbHire.service.ISbHireService;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "/provider/LocationApi",method = RequestMethod.POST)
+@RequestMapping(value = "/provider/OptionsLocationApi",method = RequestMethod.POST)
 public class OptionsLocationApi extends BaseController {
     @Autowired
     private ISbAreaService areaService;
+    @Autowired
+    private IHjProjectUserService userService;
+    @Autowired
+    private IHjUserRoleService userRoleService;
+    @Autowired
+    private IHjSystemUserService systemUserService;
+    @Autowired
+    private IHjRolePrivilegesService rolePrivilegesService;
+    @Autowired
+    private IModuleToPushService moduleToPushService;
 
     @PostMapping("/getAreaList")
     public JSONObject getAreaList(@RequestParam("projectId")Integer projectId){
@@ -32,7 +52,7 @@ public class OptionsLocationApi extends BaseController {
             jsonObject.put("data",optionsLocationsList);
         }
         else {
-            jsonObject.put("msg", "查询失败");
+            jsonObject.put("msg", "查询成功");
             jsonObject.put("code", -1);
             jsonObject.put("data", optionsLocationsList);
         }
@@ -48,7 +68,7 @@ public class OptionsLocationApi extends BaseController {
             jsonObject.put("data",optionsLocations);
         }
         else {
-            jsonObject.put("msg", "查询失败");
+            jsonObject.put("msg", "查询成功");
             jsonObject.put("code", -1);
             jsonObject.put("data",optionsLocations);
         }
@@ -206,4 +226,73 @@ public class OptionsLocationApi extends BaseController {
         return jsonObject;
     }
 
+    @PostMapping(value = "/getWarningPeopleList")
+    public JSONObject getWarningPeopleList(@RequestParam("projectId")Integer projectId,
+                                       @RequestParam(value = "filed",required = false)String filed){
+        JSONObject jsonObject = new JSONObject();
+        JSONArray userArray = new JSONArray();
+        HjProjectUser projectUser = new HjProjectUser();
+        projectUser.setProjectId(projectId);//p.getProjectId().intValue()
+        List<HjProjectUser> projectUserList = userService.selectHjProjectUserList(projectUser);
+        List<HjUserRole> userRoleList = userRoleService.selectHjUserRoleList(null);
+        List<HjRolePrivileges> rolePrivilegesList = rolePrivilegesService.selectHjRolePrivilegesList(null);
+        List<HjSystemUser> systemUserList = systemUserService.getCraneUserList(null,filed);
+        ModuleToPush moduleToPush = new ModuleToPush();
+        moduleToPush.setPrivilegesId(3);
+        List<ModuleToPush> moduleToPushesList = moduleToPushService.selectModuleToPushList(moduleToPush);
+
+        if (projectUserList == null || projectUserList.size() < 1) {
+            jsonObject.put("msg","查询成功");
+            jsonObject.put("code",0);
+            jsonObject.put("data",userArray);
+            return jsonObject;
+        }
+        for (HjProjectUser hjProjectUser : projectUserList) {
+            HjUserRole userRole = new HjUserRole();
+            userRole.setUserId(hjProjectUser.getUserId());
+            List<HjUserRole> myUserRoleList = userRoleList.stream()
+                    .filter(a->a.getUserId().equals(hjProjectUser.getUserId()))
+                    .collect(Collectors.toList());
+            if (userRoleList == null || userRoleList.size() < 1) {
+                continue;
+            }
+            List<HjRolePrivileges> myRolePrivilegesList = rolePrivilegesList.stream()
+                    .filter(
+                            a-> a.getPrivilegesId().equals(3) &&
+                                    myUserRoleList.stream().map(b->b.getRoleId()).collect(Collectors.toList()).contains(a.getRoleId())
+                    )
+                    .collect(Collectors.toList());
+            if(myRolePrivilegesList == null || myRolePrivilegesList.size() < 1) {
+                continue;
+            }
+            List<HjSystemUser> mySystemUserList = systemUserList.stream()
+                    .filter(a->a.getId().equals(hjProjectUser.getUserId()))
+                    .collect(Collectors.toList());
+            if(mySystemUserList == null || mySystemUserList.size() < 1){
+                continue;
+            }
+            for (HjSystemUser systemUser:mySystemUserList){
+                JSONObject userMap = new JSONObject();
+                userMap.put("id",systemUser.getId());
+                userMap.put("userName",systemUser.getUserName());
+                userMap.put("userPhone",systemUser.getUserPhone());
+                userMap.put("userAccount",systemUser.getUserAccount());
+                if(!moduleToPushesList.stream().filter(a->a.getUserId().equals(systemUser.getId())).findAny().isPresent()) {
+                    userMap.put("onOff",0);
+                }
+                else {
+                    ModuleToPush moduleToPushs = moduleToPushesList.stream().filter(a->a.getUserId().equals(systemUser.getId())).findAny().get();
+                    userMap.put("onOff",moduleToPushs.getOnOff());
+                    userMap.put("bat",moduleToPushs.getBat());
+                    userMap.put("fall",moduleToPushs.getFall());
+                    userMap.put("move",moduleToPushs.getMove());
+                }
+                userArray.add(userMap);
+            }
+        }
+        jsonObject.put("msg","查询成功");
+        jsonObject.put("code",0);
+        jsonObject.put("data",userArray);
+        return jsonObject;
+    }
 }

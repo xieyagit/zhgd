@@ -63,13 +63,104 @@ public class SbCraneAddrecord
 	private  Double ratedWeight;
 	/**倾角*/
 	private String obliguity;
-
+	/**项目ID*/
+	private Integer projectId;
+	/** 监督编号*/
+	private String jdbh;
+	/**防碰撞报警*/
+	private Integer multiAlarmAll;
 
 	private String dname; 	//塔吊名称
 	private Integer userid;
+	private String xmid;
+	private String subId;
+	private String DownlineTime;
+	private String WorkEndTime;
+	private String WorkMaxHeight;
+	private String PunchTime;
+	private String ClosingTime;
 
+	public String getPunchTime() {
+		return PunchTime;
+	}
 
-    public String getObliguity() {
+	public void setPunchTime(String punchTime) {
+		PunchTime = punchTime;
+	}
+
+	public String getClosingTime() {
+		return ClosingTime;
+	}
+
+	public void setClosingTime(String closingTime) {
+		ClosingTime = closingTime;
+	}
+
+	public String getWorkEndTime() {
+		return WorkEndTime;
+	}
+
+	public void setWorkEndTime(String workEndTime) {
+		WorkEndTime = workEndTime;
+	}
+
+	public String getWorkMaxHeight() {
+		return WorkMaxHeight;
+	}
+
+	public void setWorkMaxHeight(String workMaxHeight) {
+		WorkMaxHeight = workMaxHeight;
+	}
+
+	public String getDownlineTime() {
+		return DownlineTime;
+	}
+
+	public void setDownlineTime(String downlineTime) {
+		DownlineTime = downlineTime;
+	}
+
+	public String getSubId() {
+		return subId;
+	}
+
+	public void setSubId(String subId) {
+		this.subId = subId;
+	}
+
+	public String getXmid() {
+		return xmid;
+	}
+
+	public void setXmid(String xmid) {
+		this.xmid = xmid;
+	}
+
+	public Integer getMultiAlarmAll() {
+		return multiAlarmAll;
+	}
+
+	public void setMultiAlarmAll(Integer multiAlarmAll) {
+		this.multiAlarmAll = multiAlarmAll;
+	}
+
+	public Integer getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(Integer projectId) {
+		this.projectId = projectId;
+	}
+
+	public String getJdbh() {
+		return jdbh;
+	}
+
+	public void setJdbh(String jdbh) {
+		this.jdbh = jdbh;
+	}
+
+	public String getObliguity() {
         return obliguity;
     }
 

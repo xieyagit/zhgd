@@ -10,6 +10,7 @@
         <result property="peopleId"    column="peopleId"    />
         <result property="areaId"    column="areaId"    />
     </resultMap>
+
     <resultMap id="HireResult" type="Hire">
         <result property="id" column="id"/>
         <result property="userName" column="userName"/>
@@ -55,17 +56,26 @@
         <result property="isPosition"    column="isPosition"    />
         <result property="address"    column="address"    />
     </resultMap>
-
+    <resultMap id="SbAreaProjectResult" type="SbAreaProject">
+        <result property="imei" column="imei"/>
+        <result property="userId" column="peopleId"/>
+        <result property="areaId" column="areaId"/>
+        <result property="areaName" column="name"/>
+        <result property="projectId" column="pid"/>
+        <result property="constructionId" column="bid"/>
+        <result property="userName" column="userName"/>
+        <result property="userPhone" column="userPhone"/>
+        <result property="adminId" column="adminId"/>
+    </resultMap>
 
     <sql id="selectSbHireVo">
         select id, imei, peopleId, areaId from sb_hire
     </sql>
-
-    <!--SELECT p.id as pId,p.project_name as projectName from sb_area a
-    LEFT JOIN hj_project p ON (a.pid = p.id) GROUP BY project_name-->
-    <!-- SELECT p.id as pId,p.project_name as projectName from sb_area a
-     LEFT JOIN hj_project p ON (a.pid = p.id) where p.id=#{projectId}
-     GROUP BY project_name-->
+    <select id="selectAreaProjectList" parameterType="SbAreaProject" resultMap="SbAreaProjectResult">
+        SELECT imei,peopleId,w.emp_name AS userName,areaId,`name`,pid,bid,phone AS userPhone,a.adminId FROM `sb_hire` AS h
+        LEFT JOIN sb_area AS a ON(a.id=h.areaId)
+        LEFT JOIN hj_project_workers AS w ON(w.id = h.peopleId)
+    </select>
     <select id="selectProject" parameterType="HirePeople" resultMap="HirePeopleResult">
         SELECT p.id as pId,p.project_name as projectName from hj_project p
       where p.id=#{projectId}
@@ -99,10 +109,9 @@
 
     <select id="selectTimeList" parameterType="HirePeople" resultMap="HirePeopleResult">
         SELECT imei,bat,watchDate,xloc,yloc,address
-        from sb_equipment_record
-        WHERE 1=1
+        from sb_equipment_record where 1=1
         <if test="imei != null and imei != ''">and imei = #{imei}</if>
-        ORDER BY watchDate desc LIMIT 0,1
+        ORDER BY watchDate desc
     </select>
 
     <select id="selectPeopleList" parameterType="HirePeople" resultMap="HirePeopleResult">
@@ -199,32 +208,6 @@
         GROUP BY
         h.peopleId
     </select>
-    <!--select u.id as id,u.emp_name as userName,u.emp_phon as userPhone,
-    (select construction_name from hj_construction_company c where a.bid=c.id) as constructionName,
-    r.imei as imei,r.bat as bat,r.watchDate as watchDate,r.xloc as xloc,r.yloc as yloc,r.address as address,
-    a.xloc as areaXloc,a.yloc as areaYloc,a.radius as areaRadius,a.name as areaName
-    from sb_hire h
-    LEFT JOIN hj_project_workers u ON(h.peopleId=u.id)
-    LEFT JOIN sb_area a ON (h.areaId=a.id)
-    LEFT JOIN sb_equipment_record r ON(h.imei=r.imei)
-    where 1=1
-    <if test="filed != null and filed != ''">
-        AND `emp_name`=#{filed}
-        <if test="startTime != null "> and `watchDate` &gt;=	#{startTime}</if>
-        <if test="endTime != null "> and `watchDate` &lt;= #{endTime}</if>
-        or r.imei=#{filed}
-        <if test="startTime != null "> and `watchDate` &gt;=	#{startTime}</if>
-        <if test="endTime != null "> and `watchDate` &lt;= #{endTime}</if>
-        or `emp_phon` = #{filed}
-        <if test="startTime != null "> and `watchDate`  &gt;=	#{startTime}</if>
-        <if test="endTime != null "> and `watchDate` &lt;= #{endTime}</if>
-    </if>
-    <if test="projectId != null and projectId != ''">
-        AND a.pid=#{projectId}
-    </if>
-    <if test="startTime != null "> and `watchDate` &gt;=	#{startTime}</if>
-    <if test="endTime != null "> and `watchDate` &lt;= #{endTime}</if>
-    ORDER BY watchDate desc-->
     <select id="selectHireHistory" parameterType="Hire" resultMap="HireResult">
         select h.imei,u.id as id,u.emp_name as userName,u.emp_phon as userPhone,
         (select construction_name from hj_construction_company c where a.bid=c.id) as constructionName,

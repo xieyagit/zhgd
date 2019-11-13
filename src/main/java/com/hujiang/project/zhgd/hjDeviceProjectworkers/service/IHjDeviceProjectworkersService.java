@@ -30,7 +30,9 @@ public interface IHjDeviceProjectworkersService
      * @return 考勤设备人员集合
      */
 	public List<HjDeviceProjectworkers> selectHjDeviceProjectworkersList(HjDeviceProjectworkers hjDeviceProjectworkers);
-	
+	//退场向人脸机删除人脸时验证指令的专用方法s
+		public List<HjDeviceProjectworkers> selectHjDeviceProjectworkersListTwo(HjDeviceProjectworkers hjDeviceProjectworkers);
+
 	/**
      * 新增考勤设备人员
      * 
@@ -57,7 +59,7 @@ public interface IHjDeviceProjectworkersService
 	public int deleteHjDeviceProjectworkersByIds(String ids);
 
 	public List<HjProjectWorkers> selectHjProjectworkersList(Map<String,String> param);
-	public List<HjProjectWorkers> selectHjProjectworkersListTwo(Map<String,String> param);
+	public List<HjDeviceProjectworkersParam> selectHjProjectworkersListTwo(Map<String,String> param);
 	public int deleteIds(Map<String,String> param);
 	public int deleteHjDeviceProjectworkersTwo(HjDeviceProjectworkers hjDeviceProjectworkers);
 	public List<HjDeviceProjectworkersParam> selectHjProjectworkersListThree(Map<String,String> param);

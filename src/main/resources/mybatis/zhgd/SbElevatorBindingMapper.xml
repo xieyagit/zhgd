@@ -26,7 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<sql id="selectSbElevatorBindingVo">
     select * from (
-	    select id, hxzid, pid, userid, dname, isSynchronization, device_no from sb_elevator_binding group by hxzid, pid
+	    select * from sb_elevator_binding group by hxzid, pid
     ) a
     </sql>
     <select id="selectHxzId" parameterType="SbElevatorBinding" resultMap="SbElevatorBindingResult">
@@ -55,7 +55,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
              <if test="scznl != null  and scznl != '' "> and scznl = #{scznl}</if>
          </where>
-        GROUP BY hxzid
     </select>
     
     <select id="selectSbElevatorBindingById" parameterType="Integer" resultMap="SbElevatorBindingResult">

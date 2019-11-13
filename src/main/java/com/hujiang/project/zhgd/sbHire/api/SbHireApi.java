@@ -79,6 +79,9 @@ public class SbHireApi extends BaseController{
                     JSONObject areaMap = new JSONObject();      //工区map
                     areaMap.put("areaId",area.getAreaId());
                     areaMap.put("areaName", area.getAreaName());
+                    areaMap.put("areaXloc",area.getXloc());
+                    areaMap.put("areaYloc",area.getYloc());
+                    areaMap.put("areaRadius",area.getRadius());
                     List<HirePeople> myPeopleList = peopleList.stream().filter(
                             a->a.getAreaId().equals(area.getAreaId())
                     ).collect(Collectors.toList());
@@ -89,7 +92,11 @@ public class SbHireApi extends BaseController{
                         JSONObject userMap = new JSONObject();//人员map
                         if(!timeList.stream().filter(
                                 a->a.getImei().equals(times.getImei())).findAny().isPresent()) {
-                            continue;
+                            userMap.put("userId",times.getPeopleId());
+                            userMap.put("userName",times.getPeopleName());
+                            userMap.put("userXloc",null);
+                            userMap.put("userYloc",null);
+                            userMap.put("userStatus",false);//离线
                         }
                         else {
                             HirePeople myTime = timeList.stream().filter(

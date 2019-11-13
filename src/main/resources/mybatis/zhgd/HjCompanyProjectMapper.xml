@@ -8,10 +8,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="id"    column="id"    />
         <result property="companyId"    column="company_id"    />
         <result property="projectId"    column="project_id"    />
+        <result property="path"    column="path"    />
     </resultMap>
 	
 	<sql id="selectHjCompanyProjectVo">
-        select id, company_id, project_id from hj_company_project
+        select id, company_id, project_id,path from hj_company_project
     </sql>
 	
     <select id="selectHjCompanyProjectList" parameterType="HjCompanyProject" resultMap="HjCompanyProjectResult">
@@ -20,6 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="id != null "> and id = #{id}</if>
              <if test="companyId != null "> and company_id = #{companyId}</if>
              <if test="projectId != null "> and project_id = #{projectId}</if>
+             <if test="path != null and path != ''  "> and path = #{path}</if>
          </where>
     </select>
     
@@ -34,11 +36,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="id != null  ">id,</if>
 			<if test="companyId != null  ">company_id,</if>
 			<if test="projectId != null  ">project_id,</if>
+			<if test="path != null and path != ''  ">path,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null  ">#{id},</if>
 			<if test="companyId != null  ">#{companyId},</if>
 			<if test="projectId != null  ">#{projectId},</if>
+            <if test="path != null and path != ''  ">#{path},</if>
          </trim>
     </insert>
 	 
@@ -47,6 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="companyId != null  ">company_id = #{companyId},</if>
             <if test="projectId != null  ">project_id = #{projectId},</if>
+            <if test="path != null and path != ''  ">path = #{path},</if>
         </trim>
         where id = #{id}
     </update>

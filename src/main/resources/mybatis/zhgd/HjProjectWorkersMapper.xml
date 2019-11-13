@@ -51,6 +51,7 @@
         <result property="updateDate" column="update_date"/>
         <result property="constructionId" column="construction_id"/>
         <result property="information" column="information"/>
+        <result property="isUpload" column="isUpload"/>
     </resultMap>
 
 
@@ -140,6 +141,7 @@
         <result property="startingTime" column="starting_time"/>
         <result property="idphotoScan" column="idphoto_scan"/>
         <result property="idphotoScan2" column="idphoto_scan2"/>
+        <result property="idAddress" column="id_address"/>
     </resultMap>
 
 
@@ -210,7 +212,6 @@
             <if test="ids == 0 "> AND emp_category=00 </if>/*工人考勤*/
             <if test="ids == 1 "> AND emp_category!=00 </if>/*管理考勤*/
             AND enter_And_Retreat_Condition=0
-            and direction = 'in'
         </where>
         group by hj_attendance_record.employee_id
     </select>
@@ -223,8 +224,8 @@
     </select>
 
     <select id="selectProjectWorkersListPC" parameterType="com.hujiang.project.zhgd.hjProjectWorkers.domain.HjProjectWorkers" resultMap="ProjectWorkerPCResult">
-        select pw.id,pw.emp_name,pw.is_team,pw.enter_And_Retreat_Condition,d.title,t.team_name,cc.construction_name,p.project_name from hj_project_workers pw
-          LEFT JOIN hj_dictionaries d ON pw.job_name= d.tag
+        select pw.id,pw.emp_name,pw.is_team,pw.enter_And_Retreat_Condition,d.title,t.team_name,cc.construction_name,p.project_name,pw.id_address as idAddress,pw.id_code as idCode,pw.emp_phon from hj_project_workers pw
+        LEFT JOIN hj_dictionaries d ON pw.job_name= d.tag
           LEFT JOIN hj_team t ON pw.work_typename_id=t.id
           LEFT JOIN hj_construction_company cc ON cc.id = pw.construction_id
           LEFT JOIN hj_project p ON p.id=pw.project_id
@@ -297,7 +298,7 @@
     </select>
 
     <sql id="selectHjProjectWorkersVo">
-        select id, emp_name, id_code, emp_phon, emp_sex, emp_nation, id_address, id_agency, id_validdate, date_of_birth, native_place, start_time, end_time, work_typename_id, is_team, cwr_iskeypsn, information,job_typename, job_name, emp_category, if_contract, emp_dept, ob_dept, emp_bankname, emp_cardnum, account_type, account_address, credential, remark, contract, entrance, exeunt, workConfirm, iDCardPDF, isTrain, face_url, emp_naticeplace, idphoto_scan, idphoto_scan2, bank_card_url, project_id, enter_And_Retreat_Condition, faceToken, create_date, update_date,construction_id from hj_project_workers
+        select id,isUpload, emp_name, id_code, emp_phon, emp_sex, emp_nation, id_address, id_agency, id_validdate, date_of_birth, native_place, start_time, end_time, work_typename_id, is_team, cwr_iskeypsn, information,job_typename, job_name, emp_category, if_contract, emp_dept, ob_dept, emp_bankname, emp_cardnum, account_type, account_address, credential, remark, contract, entrance, exeunt, workConfirm, iDCardPDF, isTrain, face_url, emp_naticeplace, idphoto_scan, idphoto_scan2, bank_card_url, project_id, enter_And_Retreat_Condition, faceToken, create_date, update_date,construction_id from hj_project_workers
 
 </sql>
 
@@ -350,6 +351,7 @@
              <if test="updateDate != null  and updateDate != '' "> and update_date = #{updateDate}</if>
             <if test="constructionId != null"> and construction_id = #{constructionId}</if>
             <if test="information != null"> and information = #{information}</if>
+            <if test="isUpload != null  and isUpload != '' "> and isUpload = #{isUpload}</if>
         </where>
     </select>
 
@@ -404,6 +406,7 @@
 			<if test="accountAddress != null  and accountAddress != ''  ">account_address,</if>
 			<if test="credential != null  and credential != ''  ">credential,</if>
 			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="isUpload != null  and isUpload != ''  ">isUpload,</if>
 			<if test="contract != null  ">contract,</if>
 			<if test="entrance != null  ">entrance,</if>
 			<if test="exeunt != null  ">exeunt,</if>
@@ -452,6 +455,7 @@
 			<if test="accountAddress != null  and accountAddress != ''  ">#{accountAddress},</if>
 			<if test="credential != null  and credential != ''  ">#{credential},</if>
 			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="isUpload != null  and isUpload != ''  ">#{isUpload},</if>
 			<if test="contract != null  ">#{contract},</if>
 			<if test="entrance != null  ">#{entrance},</if>
 			<if test="exeunt != null  ">#{exeunt},</if>
@@ -520,6 +524,7 @@
             <if test="faceToken != null  and faceToken != ''  ">faceToken = #{faceToken},</if>
             <if test="createDate != null  ">create_date = #{createDate},</if>
             <if test="updateDate != null  and updateDate != ''  ">update_date = #{updateDate},</if>
+            <if test="isUpload != null  and isUpload != ''  ">isUpload = #{isUpload},</if>
             <if test="constructionId != null">construction_id = #{constructionId},</if>
             <if test="information != null">information = #{information}</if>
         </trim>

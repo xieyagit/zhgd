@@ -277,6 +277,15 @@ public class BASE64DecodedMultipartFile implements MultipartFile {
             return false;
         }
     }
-
+    public static String MultipartFileToBase64(MultipartFile file) {
+        try {
+        BASE64Encoder base64Encoder =new BASE64Encoder();
+        String base64EncoderImg =base64Encoder.encode(file.getBytes()).replaceAll("\r|\n", "");
+        return base64EncoderImg;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
 
 }

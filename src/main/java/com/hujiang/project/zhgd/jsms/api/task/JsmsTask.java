@@ -1,5 +1,6 @@
 package com.hujiang.project.zhgd.jsms.api.task;
 
+import com.hujiang.framework.AutoTaskBase;
 import com.hujiang.project.zhgd.hjProject.domain.HjProject;
 import com.hujiang.project.zhgd.hjProject.service.IHjProjectService;
 import com.hujiang.project.zhgd.hjProjectUser.domain.HjProjectUser;
@@ -22,10 +23,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-//@Component("jSmsTask")
-@RestController
-@RequestMapping(value = "/provider/jSmsTask",method = RequestMethod.POST)
-public class JsmsTask {
+//@RestController
+//@RequestMapping(value = "/provider/jSmsTask",method = RequestMethod.POST)
+@Component("jSmsTask")
+public class JsmsTask extends AutoTaskBase {
     @Autowired
     private IShortCreedNumberService shortCreedNumberService;
     @Autowired
@@ -37,9 +38,7 @@ public class JsmsTask {
 
     private static final int OUTTEMPID = 168184;
 
-
-//        @Scheduled(cron="0 0/5 * * * ? ")
-    @PostMapping(value = "JSMS")
+    //    @PostMapping(value = "JSMS")
     public void JSMS() {
         List<ShortCreedNumber> shortCreedNumberList = shortCreedNumberService.selectShortCreedNumberList(null);
         List<HjProjectUser> hjProjectUserList = projectUserService.selectHjProjectUserList(null);  //查询这个项目下的所有人
@@ -66,5 +65,18 @@ public class JsmsTask {
         }
 
     }
-
+    @Scheduled(cron="0 0/5 * * * ? ")
+    public void task1() {
+        super.exec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    JSMS();
+                }
+                catch (Exception e) {
+                    // logger
+                }
+            }
+        });
+    }
 }

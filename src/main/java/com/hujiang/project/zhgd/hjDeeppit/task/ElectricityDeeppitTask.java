@@ -2,6 +2,7 @@ package com.hujiang.project.zhgd.hjDeeppit.task;
 
 
 import com.hujiang.common.utils.Md5Utils;
+import com.hujiang.framework.AutoTaskBase;
 import com.hujiang.framework.web.domain.AjaxResult;
 import com.hujiang.project.zhgd.hjDeeppit.domain.*;
 import com.hujiang.project.zhgd.hjDeeppit.service.*;
@@ -24,6 +25,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -33,10 +36,10 @@ import java.util.*;
 /**
  * 基坑、高支模定时任务
  */
-//@Component("ElectricityDeeppitTask")
-    @RestController
-    @RequestMapping(value = "/provider/ElectricityDeeppitTask")
-public class ElectricityDeeppitTask {
+//    @RestController
+//    @RequestMapping(value = "/provider/ElectricityDeeppitTask")
+@Component("ElectricityDeeppitTask")
+public class ElectricityDeeppitTask extends AutoTaskBase {
 
     String url = "https://api.zhiwucloud.com/api/v1";
     //默认供应商id
@@ -69,13 +72,40 @@ public class ElectricityDeeppitTask {
     @Autowired
     private IHighformworkDataService highformworkDataService;
 
+    @Scheduled(cron="0 0 12 ? * WED")
+    public void task1() {
+        super.exec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    tokens();
+                }
+                catch (Exception e) {
+                    // logger
+                }
+            }
+        });
+    }
+    @Scheduled(cron="0 */2 * * * ?")
+    public void task2() {
+        super.exec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    getStationAlarmDataAll();
+                }
+                catch (Exception e) {
+                    // logger
+                }
+            }
+        });
+    }
 
     /**
      * 更新所有token
      * @return
      */
-    //@Scheduled(cron="0 0 12 ? * WED")
-    @PostMapping("tokens")
+    //    @PostMapping("tokens")
     public AjaxResult tokens(){
         List<SbProjectDeeppitStructures> pdsl = sbProjectDeeppitStructuresService.selectSbProjectDeeppitStructuresList(null);
         for (SbProjectDeeppitStructures p :pdsl){
@@ -89,8 +119,7 @@ public class ElectricityDeeppitTask {
     /**
      * 获取所有用户的报警信息
      */
-    //@Scheduled(cron="0 */2 * * * ?")
-    @PostMapping("/insert")
+//    @PostMapping("/insert")
     public void getStationAlarmDataAll(){
 
         List<SbProjectDeeppitStructures> list = sbProjectDeeppitStructuresService.selectSbProjectDeeppitStructuresList(null);

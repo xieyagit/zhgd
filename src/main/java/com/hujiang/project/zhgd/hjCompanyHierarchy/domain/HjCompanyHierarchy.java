@@ -18,7 +18,7 @@ public class HjCompanyHierarchy
 	/** 公司ID */
 	private Integer companyId;
 	/** 父级ID（1级为0） */
-	private Integer parentId;
+	private String parentId;
 
 	public void setId(Integer id) 
 	{
@@ -38,12 +38,12 @@ public class HjCompanyHierarchy
 	{
 		return companyId;
 	}
-	public void setParentId(Integer parentId) 
+	public void setParentId(String parentId)
 	{
 		this.parentId = parentId;
 	}
 
-	public Integer getParentId() 
+	public String getParentId()
 	{
 		return parentId;
 	}

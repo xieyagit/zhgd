@@ -105,7 +105,7 @@ String aa=getJson(a);
         String sn = a.getString("device_sn");
         Map<String, String> param = new HashMap<String, String>();
         param.put("deviceNo", sn);
-        param.put("status", "1");
+//        param.put("status", "1");
         List<HjDeviceProjectworkersParam> hList1 = hjDeviceProjectworkersService.selectHjProjectworkersListThree(param);
         if (hList1.size() > 0) {
             HjDeviceProjectworkersParam hdp = hList1.get(0);
@@ -168,7 +168,7 @@ String aa=getJson(a);
                 add.put("version", version);
                 add.put("cmd", "delete person(s)");
                 add.put("flag", -1);
-                add.put("id", hdp.getPid());
+                add.put("id", hdp.getPid().toString());
                 add.put("command_id", hdp.getDid().toString());
             }
             return add.toString();

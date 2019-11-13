@@ -30,8 +30,10 @@ public interface HjDeviceProjectworkersMapper
      * @return 考勤设备人员集合
      */
 	public List<HjDeviceProjectworkers> selectHjDeviceProjectworkersList(HjDeviceProjectworkers hjDeviceProjectworkers);
+	//退场向人脸机删除人脸时验证指令的专用方法
+	public List<HjDeviceProjectworkers> selectHjDeviceProjectworkersListTwo(HjDeviceProjectworkers hjDeviceProjectworkers);
 	public List<HjProjectWorkers> selectHjProjectworkersList(Map<String,String> param);
-	public List<HjProjectWorkers> selectHjProjectworkersListTwo(Map<String,String> param);
+	public List<HjDeviceProjectworkersParam> selectHjProjectworkersListTwo(Map<String,String> param);
 	public List<HjDeviceProjectworkersParam> selectHjProjectworkersListThree(Map<String,String> param);
 
 	/**

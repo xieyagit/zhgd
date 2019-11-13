@@ -4,6 +4,7 @@ package com.hujiang.project.zhgd.hjghformwork.domain;
 import com.hujiang.project.zhgd.jpush.api.examples.PushExample;
 import com.hujiang.project.zhgd.jpush.api.push.model.PushPayload;
 import com.hujiang.project.zhgd.sbDustEmission.domain.BaseSmsMessage;
+import com.hujiang.project.zhgd.sbProjectDustEmission.task.SmsMessageInfo;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -87,7 +88,7 @@ public class JPushGhformwork extends BaseSmsMessage<JPushGhformwork> {
     }
 
     @Override
-    public void push(Integer userId, Integer projectId, String alias, boolean isApnsProduction, String userPhone) {
+    public void push(SmsMessageInfo smsMessageInfo) {
         Map<String,String> extras = new HashMap<>();
         extras.put("skip", String.valueOf(HGPRIVILEGE));
         extras.put("append","");
@@ -104,12 +105,12 @@ public class JPushGhformwork extends BaseSmsMessage<JPushGhformwork> {
         //APP推送消息
         PushExample pushExample = new PushExample();
         PushPayload payload = PushExample.buildPushObjectAllRegistrationIdAlertWithTitle
-                ("您有一条新的建筑物异常记录", alias, "高支模监测", false,extras);
+                ("您有一条新的建筑物异常记录", smsMessageInfo.getAlias(), "高支模监测", false,extras);
         pushExample.testSendPush(payload);
         //将推送消息保存到数据库
-        this.saveExcessive(this.title,this.sn, projectId, userId, "高支模设备", HGPRIVILEGE);
+        this.saveExcessive(this.title,this.sn, smsMessageInfo.getProjectId(), smsMessageInfo.getUserId(), "高支模设备", HGPRIVILEGE);
 
         //发送短信
-        this.shortCreedNumber(userPhone, projectId, userId, tempPara,TEMPID,"高支模超标");
+        this.shortCreedNumber(smsMessageInfo.getUserPhone(), smsMessageInfo.getProjectId(), smsMessageInfo.getUserId(), tempPara,TEMPID,"高支模超标");
     }
 }

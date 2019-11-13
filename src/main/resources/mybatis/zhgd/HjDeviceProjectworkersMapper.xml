@@ -24,7 +24,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="status != null and status != '' "> and status = #{status}</if>
          </where>
     </select>
-    
+    <!--退场向人脸机删除人脸时验证指令的专用方法 -->
+    <select id="selectHjDeviceProjectworkersListTwo" parameterType="HjDeviceProjectworkers" resultMap="HjDeviceProjectworkersResult">
+        <include refid="selectHjDeviceProjectworkersVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
+            <if test="projectWorkersId != null "> and project_workers_id = #{projectWorkersId}</if>
+            <if test="status != null and status != '' "> and status != '1' and status !='2'</if>
+        </where>
+    </select>
     <select id="selectHjDeviceProjectworkersById" parameterType="Integer" resultMap="HjDeviceProjectworkersResult">
         <include refid="selectHjDeviceProjectworkersVo"/>
         where id = #{id}
@@ -78,7 +87,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
     <resultMap type="HjProjectWorkers" id="HjProjectWorkersResult">
-        <result property="id" column="id"/>
+        <result property="id" column="did"/>
         <result property="empName" column="emp_name"/>
         <result property="idCode" column="id_code"/>
         <result property="empSex" column="emp_sex"/>
@@ -90,19 +99,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         and p.project_id = #{projectId}
     </select>
 
-    <select id="selectHjProjectworkersListTwo" parameterType="Map" resultMap="HjProjectWorkersResult">
-         select p.id,p.emp_name,p.id_code,p.emp_sex,p.face_url from hj_project_workers p where
-         p.id  in (select d.project_workers_id from hj_device_projectworkers d where device_no=#{deviceNo} and status=#{status}) limit 5
-    </select>
+
     <resultMap type="HjDeviceProjectworkersParam" id="HjDeviceProjectworkersParamResult">
         <result property="did" column="did"/>
         <result property="pid" column="pid"/>
         <result property="empName" column="emp_name"/>
         <result property="faceUrl" column="face_url"/>
         <result property="status" column="status"/>
+        <result property="empSex" column="emp_sex"/>
+        <result property="idCode" column="id_code"/>
+
     </resultMap>
+    <select id="selectHjProjectworkersListTwo" parameterType="Map" resultMap="HjDeviceProjectworkersParamResult">
+         select d.id  did,p.id pid,p.emp_name,p.id_code,p.emp_sex,p.face_url from hj_project_workers p left join hj_device_projectworkers d on d.project_workers_id=p.id
+where d.device_no=#{deviceNo} and d.status=#{status} limit 1
+    </select>
+    <!--艾达信人脸机获取指令-->
     <select id="selectHjProjectworkersListThree" parameterType="Map" resultMap="HjDeviceProjectworkersParamResult">
         select d.id did,p.id pid,p.emp_name,p.face_url,d.status from hj_project_workers p left join hj_device_projectworkers d on d.project_workers_id=p.id
-where  d.device_no=#{deviceNo} and d.status!=#{status} and  d.status!='3'
+where  d.device_no=#{deviceNo} and (d.status='2' or  d.status='0')
     </select>
 </mapper>

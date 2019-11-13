@@ -74,7 +74,7 @@ spring:
   # redis
   redis:
     host: 39.108.103.150
-    port: 8083
+    port: 8080
     password: redis123
     # 缓存过期时间，单位毫秒
     ttime-to-live: 60000s
@@ -86,7 +86,7 @@ spring:
   activemq:
     user: admin
     password: admin
-    broker-url: tcp://47.106.69.253:61616
+    broker-url: tcp://120.79.129.65:61616
 
     #true 表示使用内置的MQ，false则连接服务器
     in-memory: false
@@ -97,16 +97,21 @@ spring:
       #expiry-timeout: 0
 
 
+
 eureka:
   instance:
-    instance-id: user-api-8083
+    instance-id: user-api-8081
     prefer-ip-address: true # 访问路径可以显示 IP
     # 续约更新时间间隔（默认30秒）
     lease-renewal-interval-in-seconds: 1
     #续约到期时间（默认90秒）
     lease-expiration-duration-in-seconds: 2
+
     #    ip-address: 120.79.129.65
     ip-address: 120.79.129.65
+
+
+
 
 
   client:
@@ -114,8 +119,11 @@ eureka:
       # 开启健康检查 （需要spring-boot-starter-actuator依赖）
       enabled: false
     serviceUrl:
+
       defaultZone: http://47.112.23.241:9001/eureka/,http://47.112.23.241:9002/eureka/  # 注册中心访问地址
       #defaultZone: http://localhost:9006/eureka/  # 注册中心访问地址
+
+
 
 
 
@@ -135,6 +143,10 @@ pagehelper:
   reasonable: true
   supportMethodsArguments: true
   params: count=countSql
+
+#定时任务
+autotask: false
+
 
 # Shiro
 shiro:

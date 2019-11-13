@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbCameraBinding.mapper.SbCameraBindingMapper">
+    
+    <resultMap type="SbCameraBinding" id="SbCameraBindingResult">
+        <result property="id"    column="id"    />
+        <result property="equipmentSerialNumber"    column="equipment_serial_number"    />
+        <result property="equipmentType"    column="equipment_type"    />
+        <result property="equipmentName"    column="equipment_name"    />
+        <result property="addingTime"    column="adding_time"    />
+        <result property="deviceStatus"    column="device_status"    />
+        <result property="typeId"    column="type_id"    />
+        <result property="camearId"    column="camear_id"    />
+        <result property="video"    column="video"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="hls"    column="hls"    />
+        <result property="hlsHd"    column="hlsHd"    />
+        <result property="rtmp"    column="rtmp"    />
+        <result property="rtmpHd"    column="rtmpHd"    />
+    </resultMap>
+	
+	<sql id="selectSbCameraBindingVo">
+        select rtmpHd,rtmp,hlsHd,hls,id, equipment_serial_number, equipment_type, equipment_name, adding_time, device_status, type_id, camear_id,video, project_id from sb_camera_binding
+    </sql>
+	
+    <select id="selectSbCameraBindingList" parameterType="SbCameraBinding" resultMap="SbCameraBindingResult">
+        <include refid="selectSbCameraBindingVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="equipmentSerialNumber != null  and equipmentSerialNumber != '' "> and equipment_serial_number = #{equipmentSerialNumber}</if>
+             <if test="equipmentType != null  and equipmentType != '' "> and equipment_type = #{equipmentType}</if>
+             <if test="equipmentName != null  and equipmentName != '' "> and equipment_name = #{equipmentName}</if>
+             <if test="addingTime != null "> and adding_time = #{addingTime}</if>
+             <if test="deviceStatus != null "> and device_status = #{deviceStatus}</if>
+             <if test="typeId != null "> and type_id = #{typeId}</if>
+             <if test="camearId != null "> and camear_id = #{camearId}</if>
+             <if test="projectId != null "> and project_id = #{projectId}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbCameraBindingById" parameterType="Integer" resultMap="SbCameraBindingResult">
+        <include refid="selectSbCameraBindingVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbCameraBinding" parameterType="SbCameraBinding">
+        insert into sb_camera_binding
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="equipmentSerialNumber != null  and equipmentSerialNumber != ''  ">equipment_serial_number,</if>
+			<if test="equipmentType != null  and equipmentType != ''  ">equipment_type,</if>
+			<if test="equipmentName != null  and equipmentName != ''  ">equipment_name,</if>
+			<if test="addingTime != null  ">adding_time,</if>
+			<if test="deviceStatus != null  ">device_status,</if>
+			<if test="typeId != null  ">type_id,</if>
+			<if test="camearId != null  ">camear_id,</if>
+			<if test="video != null and video != ''  ">video,</if>
+			<if test="projectId != null and projectId != ''  ">project_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="equipmentSerialNumber != null  and equipmentSerialNumber != ''  ">#{equipmentSerialNumber},</if>
+			<if test="equipmentType != null  and equipmentType != ''  ">#{equipmentType},</if>
+			<if test="equipmentName != null  and equipmentName != ''  ">#{equipmentName},</if>
+			<if test="addingTime != null  ">#{addingTime},</if>
+			<if test="deviceStatus != null  ">#{deviceStatus},</if>
+			<if test="typeId != null  ">#{typeId},</if>
+			<if test="camearId != null  ">#{camearId},</if>
+			<if test="video != null and video != '' ">#{video},</if>
+			<if test="projectId != null and projectId != '' ">#{projectId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbCameraBinding" parameterType="SbCameraBinding">
+        update sb_camera_binding
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="equipmentSerialNumber != null  and equipmentSerialNumber != ''  ">equipment_serial_number = #{equipmentSerialNumber},</if>
+            <if test="equipmentType != null  and equipmentType != ''  ">equipment_type = #{equipmentType},</if>
+            <if test="equipmentName != null  and equipmentName != ''  ">equipment_name = #{equipmentName},</if>
+            <if test="addingTime != null  ">adding_time = #{addingTime},</if>
+            <if test="deviceStatus != null  ">device_status = #{deviceStatus},</if>
+            <if test="typeId != null  ">type_id = #{typeId},</if>
+            <if test="camearId != null  ">camear_id = #{camearId},</if>
+            <if test="video != null and video != '' ">video = #{video},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbCameraBindingById" parameterType="Integer">
+        delete from sb_camera_binding where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbCameraBindingByIds" parameterType="String">
+        delete from sb_camera_binding where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -13,7 +13,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<sql id="selectHjConstructionProjectVo">
         select id, construction_id, project_id from hj_construction_project
     </sql>
-	
+
+    <select id="hj" parameterType="HjConstructionProject" resultMap="HjConstructionProjectResult">
+        SELECT id FROM hj_construction_project WHERE project_id = #{id}
+    </select>
     <select id="selectHjConstructionProjectList" parameterType="HjConstructionProject" resultMap="HjConstructionProjectResult">
         <include refid="selectHjConstructionProjectVo"/>
         <where>  

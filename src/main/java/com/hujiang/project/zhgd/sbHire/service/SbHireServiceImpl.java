@@ -2,14 +2,13 @@ package com.hujiang.project.zhgd.sbHire.service;
 
 import java.util.List;
 
-import com.hujiang.project.zhgd.sbArea.domain.OptionsUser;
+import com.hujiang.project.zhgd.sbHire.domain.SbAreaProject;
 import com.hujiang.project.zhgd.sbHire.domain.Hire;
 import com.hujiang.project.zhgd.sbHire.domain.HirePeople;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.hujiang.project.zhgd.sbHire.mapper.SbHireMapper;
 import com.hujiang.project.zhgd.sbHire.domain.SbHire;
-import com.hujiang.project.zhgd.sbHire.service.ISbHireService;
 import com.hujiang.common.support.Convert;
 
 /**
@@ -19,12 +18,16 @@ import com.hujiang.common.support.Convert;
  * @date 2019-07-04
  */
 @Service
-public class SbHireServiceImpl implements ISbHireService 
+public class SbHireServiceImpl implements ISbHireService
 {
 	@Autowired
 	private SbHireMapper sbHireMapper;
 
 
+	@Override
+	public List<SbAreaProject> selectAreaProjectList() {
+		return sbHireMapper.selectAreaProjectList();
+	}
 
 	@Override
 	public List<HirePeople> selectProject(Integer projectId) {

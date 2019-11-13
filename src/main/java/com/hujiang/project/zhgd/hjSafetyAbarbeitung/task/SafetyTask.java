@@ -1,6 +1,7 @@
 package com.hujiang.project.zhgd.hjSafetyAbarbeitung.task;
 
 import com.google.gson.JsonObject;
+import com.hujiang.framework.AutoTaskBase;
 import com.hujiang.project.zhgd.hjConstructionCompany.service.IHjConstructionCompanyService;
 import com.hujiang.project.zhgd.hjExcessiveSafety.domain.HjExcessiveSafety;
 import com.hujiang.project.zhgd.hjExcessiveSafety.service.IHjExcessiveSafetyService;
@@ -31,10 +32,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-//@Component("SafetyTask")
-@RestController
-@RequestMapping(value = "/provider/safetyTask/",method = RequestMethod.POST)
-public class SafetyTask {
+@Component("SafetyTask")
+//@RestController
+//@RequestMapping(value = "/provider/safetyTask/",method = RequestMethod.POST)
+public class SafetyTask extends AutoTaskBase {
     @Autowired
     private IHjSafetyAbarbeitungService safetyAbarbeitungService;
     @Autowired
@@ -45,14 +46,25 @@ public class SafetyTask {
     private IShortCreedNumberService shortCreedNumberService;
     @Autowired
     private IHjExcessiveSafetyService excessiveSafetyService;
-//    @Resource
-//    private PushExample pushExample;
 
-//    private static final Map<String,String> extras = new HashMap<>();
+    @Scheduled(cron="0 15 10 * * ?")
+    public void task1() {
+        super.exec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    belongCalendar();
+                }
+                catch (Exception e) {
+                    // logger
+                }
+            }
+        });
+    }
     //短信模板ID
     private static final int TEMPID = 167973;
-//    @Scheduled(cron="0 15 10 * * ?")
-    @PostMapping(value = "/belongCalendar")
+
+    //    @PostMapping(value = "/belongCalendar")
     public void belongCalendar() throws ParseException {
         SimpleDateFormat sp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         HjSafetyAbarbeitung hjSafetyAbarbeitung = new HjSafetyAbarbeitung();

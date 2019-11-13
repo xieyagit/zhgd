@@ -75,7 +75,7 @@ public class AttendanceRecordApi {
     public Map<String, Object> insertAdministration( HjAttendanceRecord hjAttendanceRecord,
                                                     MultipartFile file)
     {
-        return hjAttendanceRecordService.insertAdministration(hjAttendanceRecord,file);
+        return hjAttendanceRecordService.insertAdministrationNew(hjAttendanceRecord,file);
     }
 /**
  * 智慧工地 现场工种
@@ -335,4 +335,5 @@ public class AttendanceRecordApi {
         }
         return jsonObject;
     }
+
 }

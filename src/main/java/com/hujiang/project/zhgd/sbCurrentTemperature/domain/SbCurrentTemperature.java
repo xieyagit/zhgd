@@ -35,6 +35,52 @@ public class SbCurrentTemperature
 	private String tm;
 	private String doorType;//门状态
 
+	private Integer wranType;
+	private String jdbh;
+	private Integer projectId;
+	private String xmid;
+	private String subId;
+
+	public String getXmid() {
+		return xmid;
+	}
+
+	public void setXmid(String xmid) {
+		this.xmid = xmid;
+	}
+
+	public String getSubId() {
+		return subId;
+	}
+
+	public void setSubId(String subId) {
+		this.subId = subId;
+	}
+
+	public String getJdbh() {
+		return jdbh;
+	}
+
+	public void setJdbh(String jdbh) {
+		this.jdbh = jdbh;
+	}
+
+	public Integer getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(Integer projectId) {
+		this.projectId = projectId;
+	}
+
+	public Integer getWranType() {
+		return wranType;
+	}
+
+	public void setWranType(Integer wranType) {
+		this.wranType = wranType;
+	}
+
 	public String getDoorType() {
 		return doorType;
 	}

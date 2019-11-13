@@ -32,9 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
     <select id="selectHjCompanyLibraryListTwo" parameterType="Integer" resultMap="HjCompanyLibraryResult">
     <include refid="selectHjCompanyLibraryVo"/>
-
        where id in (select company_id from hj_company_hierarchy where parent_id=#{companyId}) and show_state=0
-
     </select>
     <select id="selectHjCompanyLibraryList" parameterType="HjCompanyLibrary" resultMap="HjCompanyLibraryResult">
         <include refid="selectHjCompanyLibraryVo"/>
@@ -82,9 +80,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="hj.remark != null  and hj.remark != '' "> and remark = #{hj.remark}</if>
             <if test="hj.createDate != null "> and create_date = #{hj.createDate}</if>
             <if test="hj.updateDate != null "> and update_date = #{hj.updateDate}</if>
-            <if test="companyId != null "> and id in(select company_id from hj_company_hierarchy where parent_id=(select id from hj_company_hierarchy where company_id=#{companyId} ))</if>
-
+            <if test="companyId != null "> and id in(select company_id from hj_company_hierarchy where parent_id like CONCAT('%,',#{companyId}))</if>
         </where>
+        ORDER BY id DESC
     </select>
     
     <select id="selectHjCompanyLibraryById" parameterType="Integer" resultMap="HjCompanyLibraryResult">

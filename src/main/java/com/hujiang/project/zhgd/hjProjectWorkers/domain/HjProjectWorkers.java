@@ -115,6 +115,16 @@ public class HjProjectWorkers
 	 * 东莞劳务工花名册id
 	 */
 	private Integer rosterWokerId;
+	/** 是否上传 */
+	private  String isUpload;
+
+	public String getIsUpload() {
+		return isUpload;
+	}
+
+	public void setIsUpload(String isUpload) {
+		this.isUpload = isUpload;
+	}
 
 	public Integer getRosterWokerId() {
 		return rosterWokerId;

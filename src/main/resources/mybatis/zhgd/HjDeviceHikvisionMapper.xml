@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjDeviceHikvision.mapper.HjDeviceHikvisionMapper">
+    
+    <resultMap type="HjDeviceHikvision" id="HjDeviceHikvisionResult">
+        <result property="id"    column="id"    />
+        <result property="idCard"    column="idCard"    />
+    </resultMap>
+	
+	<sql id="selectHjDeviceHikvisionVo">
+        select id, idCard from hj_device_hikvision
+    </sql>
+	
+    <select id="selectHjDeviceHikvisionList" parameterType="HjDeviceHikvision" resultMap="HjDeviceHikvisionResult">
+        <include refid="selectHjDeviceHikvisionVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="idCard != null  and idCard != '' "> and idCard = #{idCard}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjDeviceHikvisionById" parameterType="Integer" resultMap="HjDeviceHikvisionResult">
+        <include refid="selectHjDeviceHikvisionVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjDeviceHikvision" parameterType="HjDeviceHikvision">
+        insert into hj_device_hikvision
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="idCard != null  and idCard != ''  ">idCard,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="idCard != null  and idCard != ''  ">#{idCard},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjDeviceHikvision" parameterType="HjDeviceHikvision">
+        update hj_device_hikvision
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="idCard != null  and idCard != ''  ">idCard = #{idCard},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjDeviceHikvisionById" parameterType="Integer">
+        delete from hj_device_hikvision where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjDeviceHikvisionByIds" parameterType="String">
+        delete from hj_device_hikvision where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

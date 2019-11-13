@@ -382,32 +382,34 @@ public class HjSystemUserServiceImpl implements IHjSystemUserService
 			user.setUserId(userId);
 			List<HjCompanyUser> list = hjCompanyUserMapper.selectHjCompanyUserList(user);
 			// 找到公司下是否有公司
-			HjCompanyHierarchy hjCompanyHierarchy = new HjCompanyHierarchy(); // 公司层级表
+//			HjCompanyHierarchy hjCompanyHierarchy = new HjCompanyHierarchy(); // 公司层级表
 			if(list.size()==0){
 				return AjaxResult.error(-1,"没有可以切换的项目！");
 			}
-			hjCompanyHierarchy.setCompanyId(list.get(0).getCompanyId());    // 公司id 查询公司层级表关系
-			List <HjCompanyHierarchy> hjCompanyHierarchyList =  hjCompanyHierarchyMapper.selectHjCompanyHierarchyList(hjCompanyHierarchy);
-			if(hjCompanyHierarchyList.size() > 0){
-				List<ProjectParam> projectParamList = this.selectProjectName(hjCompanyHierarchyList);
-
-				if(projectParamList.size() > 0){
-					for (int i = 0; i < projectParamList.size(); i++) {
-						HjProject project = new HjProject();
-						project.setId(projectParamList.get(i).getProjectId());
-						project.setShowState(0);
-						List<HjProject> hjProjectList = hjProjectMapper.selectHjProjectList(project);
-                        if(hjProjectList.size() > 0){
-							ProjectParam projectParam = new ProjectParam();
-							projectParam.setProjectId(hjProjectList.get(0).getId());
-							projectParam.setProjectName(hjProjectList.get(0).getProjectName());
-							paramList.add(projectParam);
-						}
-					}
-				}
-			}else {
-				return AjaxResult.error(-1,"没有可以切换的项目！");
-			}
+			String companyId=list.get(0).getCompanyId().toString();
+			paramList=	hjSystemUserMapper.getUserProjectList(companyId);
+//			hjCompanyHierarchy.setCompanyId(list.get(0).getCompanyId());    // 公司id 查询公司层级表关系
+//			List <HjCompanyHierarchy> hjCompanyHierarchyList =  hjCompanyHierarchyMapper.selectHjCompanyHierarchyList(hjCompanyHierarchy);
+//			if(hjCompanyHierarchyList.size() > 0){
+//				List<ProjectParam> projectParamList = this.selectProjectName(hjCompanyHierarchyList);
+//
+//				if(projectParamList.size() > 0){
+//					for (int i = 0; i < projectParamList.size(); i++) {
+//						HjProject project = new HjProject();
+//						project.setId(projectParamList.get(i).getProjectId());
+//						project.setShowState(0);
+//						List<HjProject> hjProjectList = hjProjectMapper.selectHjProjectList(project);
+//                        if(hjProjectList.size() > 0){
+//							ProjectParam projectParam = new ProjectParam();
+//							projectParam.setProjectId(hjProjectList.get(0).getId());
+//							projectParam.setProjectName(hjProjectList.get(0).getProjectName());
+//							paramList.add(projectParam);
+//						}
+//					}
+//				}
+//			}else {
+//				return AjaxResult.error(-1,"没有可以切换的项目！");
+//			}
 		}
 		return AjaxResult.success(paramList);
 	}
@@ -430,7 +432,7 @@ public class HjSystemUserServiceImpl implements IHjSystemUserService
 					}
 				}
 				HjCompanyHierarchy hjCompanyId = new HjCompanyHierarchy();
-				hjCompanyId.setParentId(hjCompanyHierarchyList.get(i).getId());
+//				hjCompanyId.setParentId(hjCompanyHierarchyList.get(i).getId());
 				List<HjCompanyHierarchy> hierarchyList = hjCompanyHierarchyMapper.selectHjCompanyHierarchyList(hjCompanyId);
 				if (hierarchyList.size() > 0) {
 					List<ProjectParam> projectParamList1 = this.selectProjectName(hierarchyList);
