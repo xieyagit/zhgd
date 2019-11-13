@@ -441,7 +441,7 @@ and TO_DAYS(curdate())=TO_DAYS(passed_time) ORDER BY passedTime desc  limit 50
 
 select c.construction_name title,count(distinct employee_id) count from hj_attendance_record r join hj_project_workers w on r.employee_id=w.id
 join hj_construction_company c on w.construction_id = c.id
-where w.project_id=#{pid} and TO_DAYS(curdate()) = TO_DAYS(r.passed_time) GROUP BY c.id ORDER BY count desc
+where w.project_id=#{pid} and TO_DAYS(curdate()) = TO_DAYS(r.passed_time)  and w.enter_And_Retreat_Condition=0 GROUP BY c.id ORDER BY count desc
 
     </select>
     <!--该项目各个参建单位在场人数-->
@@ -458,5 +458,13 @@ where w.project_id=#{pid} and enter_And_Retreat_Condition=0 GROUP BY constructio
 from hj_attendance_record where employee_id in (select id from hj_project_workers where project_id=#{pid} and emp_category='00')
 
 and TO_DAYS(curdate())=TO_DAYS(passed_time)  GROUP BY employee_id ORDER BY passedTime desc
+    </select>
+
+    <select id="selectNewHjAttendanceRecord" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
+        <include refid="selectHjAttendanceRecordVo"/>
+        <where>
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+        </where>
+        order by create_date desc limit 1
     </select>
 </mapper>

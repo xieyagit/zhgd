@@ -24,7 +24,13 @@ public interface IHjAttendanceRecordService
      * @return 考勤记录信息
      */
 	public HjAttendanceRecord selectHjAttendanceRecordById(Integer id);
-	
+
+	/**
+	 * 获取最新一条下班考勤记录
+	 * @param hjAttendanceRecord
+	 * @return
+	 */
+	public HjAttendanceRecord selectNewHjAttendanceRecord(HjAttendanceRecord hjAttendanceRecord);
 	/**
      * 查询考勤记录列表
      * 

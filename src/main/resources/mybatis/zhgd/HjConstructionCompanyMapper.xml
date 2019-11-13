@@ -1,166 +1,183 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hujiang.project.zhgd.hjConstructionCompany.mapper.HjConstructionCompanyMapper">
-    
+
     <resultMap type="HjConstructionCompany" id="HjConstructionCompanyResult">
-        <result property="id"    column="id"    />
-        <result property="constructionName"    column="construction_name"    />
-        <result property="shortName"    column="short_name"    />
-        <result property="capital"    column="capital"    />
-        <result property="companyType"    column="company_type"    />
-        <result property="legalPerson"    column="legal_person"    />
-        <result property="suid"    column="suid"    />
-        <result property="organizationCode"    column="organization_code"    />
-        <result property="bankOpen"    column="bank_open"    />
-        <result property="bankNum"    column="bank_num"    />
-        <result property="bankAddress"    column="bank_address"    />
-        <result property="address"    column="address"    />
-        <result property="contacts"    column="contacts"    />
-        <result property="mobilePhone"    column="mobile_phone"    />
-        <result property="email"    column="email"    />
-        <result property="remark"    column="remark"    />
-        <result property="showState"    column="show_state"    />
-        <result property="faceGroup"    column="face_group"    />
-        <result property="createDate"    column="create_date"    />
-        <result property="updateDate"    column="update_date"    />
-        <result property="comId"    column="comId"    />
-        <association property="dictionaries" select="com.hujiang.project.zhgd.hjDictionaries.mapper.HjDictionariesMapper.selectHjDictionariesById"  column="company_type"/>
+        <result property="id" column="id"/>
+        <result property="constructionName" column="construction_name"/>
+        <result property="shortName" column="short_name"/>
+        <result property="capital" column="capital"/>
+        <result property="companyType" column="company_type"/>
+        <result property="legalPerson" column="legal_person"/>
+        <result property="suid" column="suid"/>
+        <result property="organizationCode" column="organization_code"/>
+        <result property="bankOpen" column="bank_open"/>
+        <result property="bankNum" column="bank_num"/>
+        <result property="bankAddress" column="bank_address"/>
+        <result property="address" column="address"/>
+        <result property="contacts" column="contacts"/>
+        <result property="mobilePhone" column="mobile_phone"/>
+        <result property="email" column="email"/>
+        <result property="remark" column="remark"/>
+        <result property="showState" column="show_state"/>
+        <result property="faceGroup" column="face_group"/>
+        <result property="createDate" column="create_date"/>
+        <result property="updateDate" column="update_date"/>
+        <result property="comId" column="comId"/>
+        <association property="dictionaries"
+                     select="com.hujiang.project.zhgd.hjDictionaries.mapper.HjDictionariesMapper.selectHjDictionariesById"
+                     column="company_type"/>
     </resultMap>
-	
-	<sql id="selectHjConstructionCompanyVo">
+
+    <sql id="selectHjConstructionCompanyVo">
         select id, construction_name, short_name, capital, company_type, legal_person, suid, organization_code, bank_open, bank_num, bank_address, address, contacts, mobile_phone, email, remark, show_state, face_group, create_date, update_date,comId from hj_construction_company
     </sql>
-	
-    <select id="selectHjConstructionCompanyList" parameterType="HjConstructionCompany" resultMap="HjConstructionCompanyResult">
+
+    <select id="selectHjConstructionCompanyList" parameterType="HjConstructionCompany"
+            resultMap="HjConstructionCompanyResult">
         <include refid="selectHjConstructionCompanyVo"/>
-        <where>  
-            <if test="id != null "> and id = #{id}</if>
-             <if test="constructionName != null  and constructionName != '' "> and construction_name = #{constructionName}</if>
-             <if test="shortName != null  and shortName != '' "> and short_name = #{shortName}</if>
-             <if test="capital != null "> and capital = #{capital}</if>
-             <if test="companyType != null "> and company_type = #{companyType}</if>
-             <if test="legalPerson != null  and legalPerson != '' "> and legal_person = #{legalPerson}</if>
-             <if test="suid != null  and suid != '' "> and suid = #{suid}</if>
-             <if test="organizationCode != null  and organizationCode != '' "> and organization_code = #{organizationCode}</if>
-             <if test="bankOpen != null  and bankOpen != '' "> and bank_open = #{bankOpen}</if>
-             <if test="bankNum != null  and bankNum != '' "> and bank_num = #{bankNum}</if>
-             <if test="bankAddress != null  and bankAddress != '' "> and bank_address = #{bankAddress}</if>
-             <if test="address != null  and address != '' "> and address = #{address}</if>
-             <if test="contacts != null  and contacts != '' "> and contacts = #{contacts}</if>
-             <if test="mobilePhone != null  and mobilePhone != '' "> and mobile_phone = #{mobilePhone}</if>
-             <if test="email != null  and email != '' "> and email = #{email}</if>
-             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
-             <if test="showState != null "> and show_state = #{showState}</if>
-             <if test="faceGroup != null  and faceGroup != '' "> and face_group = #{faceGroup}</if>
-             <if test="createDate != null "> and create_date = #{createDate}</if>
-             <if test="updateDate != null "> and update_date = #{updateDate}</if>
-             <if test="comId != null "> and comId = #{comId}</if>
-         </where>
+        <where>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="constructionName != null  and constructionName != '' ">and construction_name =
+                #{constructionName}
+            </if>
+            <if test="shortName != null  and shortName != '' ">and short_name = #{shortName}</if>
+            <if test="capital != null ">and capital = #{capital}</if>
+            <if test="companyType != null ">and company_type = #{companyType}</if>
+            <if test="legalPerson != null  and legalPerson != '' ">and legal_person = #{legalPerson}</if>
+            <if test="suid != null  and suid != '' ">and suid = #{suid}</if>
+            <if test="organizationCode != null  and organizationCode != '' ">and organization_code =
+                #{organizationCode}
+            </if>
+            <if test="bankOpen != null  and bankOpen != '' ">and bank_open = #{bankOpen}</if>
+            <if test="bankNum != null  and bankNum != '' ">and bank_num = #{bankNum}</if>
+            <if test="bankAddress != null  and bankAddress != '' ">and bank_address = #{bankAddress}</if>
+            <if test="address != null  and address != '' ">and address = #{address}</if>
+            <if test="contacts != null  and contacts != '' ">and contacts = #{contacts}</if>
+            <if test="mobilePhone != null  and mobilePhone != '' ">and mobile_phone = #{mobilePhone}</if>
+            <if test="email != null  and email != '' ">and email = #{email}</if>
+            <if test="remark != null  and remark != '' ">and remark = #{remark}</if>
+            <if test="showState != null ">and show_state = #{showState}</if>
+            <if test="faceGroup != null  and faceGroup != '' ">and face_group = #{faceGroup}</if>
+            <if test="createDate != null ">and create_date = #{createDate}</if>
+            <if test="updateDate != null ">and update_date = #{updateDate}</if>
+            <if test="comId != null ">and comId = #{comId}</if>
+        </where>
     </select>
     <select id="getConstructionCompany" parameterType="HjConstructionCompany" resultMap="HjConstructionCompanyResult">
         <include refid="selectHjConstructionCompanyVo"/>
         <where>
-            <if test="id != null "> and id = #{id}</if>
-            <if test="constructionName != null  and constructionName != '' "> and construction_name = #{constructionName}</if>
-            <if test="shortName != null  and shortName != '' "> and short_name = #{shortName}</if>
-            <if test="capital != null "> and capital = #{capital}</if>
-            <if test="companyType != null "> and company_type = #{companyType}</if>
-            <if test="legalPerson != null  and legalPerson != '' "> and legal_person = #{legalPerson}</if>
-            <if test="suid != null  and suid != '' "> and suid = #{suid}</if>
-            <if test="organizationCode != null  and organizationCode != '' "> and organization_code = #{organizationCode}</if>
-            <if test="bankOpen != null  and bankOpen != '' "> and bank_open = #{bankOpen}</if>
-            <if test="bankNum != null  and bankNum != '' "> and bank_num = #{bankNum}</if>
-            <if test="bankAddress != null  and bankAddress != '' "> and bank_address = #{bankAddress}</if>
-            <if test="address != null  and address != '' "> and address = #{address}</if>
-            <if test="contacts != null  and contacts != '' "> and contacts = #{contacts}</if>
-            <if test="mobilePhone != null  and mobilePhone != '' "> and mobile_phone = #{mobilePhone}</if>
-            <if test="email != null  and email != '' "> and email = #{email}</if>
-            <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
-            <if test="showState != null "> and show_state = #{showState}</if>
-            <if test="faceGroup != null  and faceGroup != '' "> and face_group = #{faceGroup}</if>
-            <if test="createDate != null "> and create_date = #{createDate}</if>
-            <if test="updateDate != null "> and update_date = #{updateDate}</if>
-            <if test="comId != null "> and comId = #{comId}</if>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="constructionName != null  and constructionName != '' ">and construction_name =
+                #{constructionName}
+            </if>
+            <if test="shortName != null  and shortName != '' ">and short_name = #{shortName}</if>
+            <if test="capital != null ">and capital = #{capital}</if>
+            <if test="companyType != null ">and company_type = #{companyType}</if>
+            <if test="legalPerson != null  and legalPerson != '' ">and legal_person = #{legalPerson}</if>
+            <if test="suid != null  and suid != '' ">and suid = #{suid}</if>
+            <if test="organizationCode != null  and organizationCode != '' ">and organization_code =
+                #{organizationCode}
+            </if>
+            <if test="bankOpen != null  and bankOpen != '' ">and bank_open = #{bankOpen}</if>
+            <if test="bankNum != null  and bankNum != '' ">and bank_num = #{bankNum}</if>
+            <if test="bankAddress != null  and bankAddress != '' ">and bank_address = #{bankAddress}</if>
+            <if test="address != null  and address != '' ">and address = #{address}</if>
+            <if test="contacts != null  and contacts != '' ">and contacts = #{contacts}</if>
+            <if test="mobilePhone != null  and mobilePhone != '' ">and mobile_phone = #{mobilePhone}</if>
+            <if test="email != null  and email != '' ">and email = #{email}</if>
+            <if test="remark != null  and remark != '' ">and remark = #{remark}</if>
+            <if test="showState != null ">and show_state = #{showState}</if>
+            <if test="faceGroup != null  and faceGroup != '' ">and face_group = #{faceGroup}</if>
+            <if test="createDate != null ">and create_date = #{createDate}</if>
+            <if test="updateDate != null ">and update_date = #{updateDate}</if>
+            <if test="comId != null ">and comId = #{comId}</if>
         </where>
     </select>
     <select id="selectHjConstructionCompanyListTwo" parameterType="Map" resultMap="HjConstructionCompanyResult">
         <include refid="selectHjConstructionCompanyVo"/>
-        <where> and show_state=0
-            <if test="projectId != null "> and id  in (select construction_id from hj_construction_project where project_id=#{projectId})</if>
-            <if test="param != null  and param != '' "> and (construction_name like '%${param}%' or short_name like '%${param}%')</if>
-            <if test="suid != null  and suid != '' "> and  suid like '%${suid}%' </if>
+        <where>and show_state=0
+            <if test="projectId != null ">and id in (select construction_id from hj_construction_project where
+                project_id=#{projectId})
+            </if>
+            <if test="param != null  and param != '' ">and (construction_name like '%${param}%' or short_name like
+                '%${param}%')
+            </if>
+            <if test="suid != null  and suid != '' ">and suid like '%${suid}%'</if>
         </where>
     </select>
     <select id="selectHjConstructionCompanyById" parameterType="Integer" resultMap="HjConstructionCompanyResult">
         <include refid="selectHjConstructionCompanyVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertHjConstructionCompany" parameterType="HjConstructionCompany">
         <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
             SELECT LAST_INSERT_ID()
         </selectKey>
         insert into hj_construction_company
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">id,</if>
-			<if test="constructionName != null  and constructionName != ''  ">construction_name,</if>
-			<if test="shortName != null  and shortName != ''  ">short_name,</if>
-			<if test="capital != null  ">capital,</if>
-			<if test="companyType != null  ">company_type,</if>
-			<if test="legalPerson != null  and legalPerson != ''  ">legal_person,</if>
-			<if test="suid != null  and suid != ''  ">suid,</if>
-			<if test="organizationCode != null  and organizationCode != ''  ">organization_code,</if>
-			<if test="bankOpen != null  and bankOpen != ''  ">bank_open,</if>
-			<if test="bankNum != null  and bankNum != ''  ">bank_num,</if>
-			<if test="bankAddress != null  and bankAddress != ''  ">bank_address,</if>
-			<if test="address != null  and address != ''  ">address,</if>
-			<if test="contacts != null  and contacts != ''  ">contacts,</if>
-			<if test="mobilePhone != null  and mobilePhone != ''  ">mobile_phone,</if>
-			<if test="email != null  and email != ''  ">email,</if>
-			<if test="remark != null  and remark != ''  ">remark,</if>
-			<if test="showState != null  ">show_state,</if>
-			<if test="faceGroup != null  and faceGroup != ''  ">face_group,</if>
-			<if test="createDate != null  ">create_date,</if>
-			<if test="updateDate != null  ">update_date,</if>
-			<if test="comId != null  ">comId,</if>
-         </trim>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="constructionName != null  and constructionName != ''  ">construction_name,</if>
+            <if test="shortName != null  and shortName != ''  ">short_name,</if>
+            <if test="capital != null  ">capital,</if>
+            <if test="companyType != null  ">company_type,</if>
+            <if test="legalPerson != null  and legalPerson != ''  ">legal_person,</if>
+            <if test="suid != null  and suid != ''  ">suid,</if>
+            <if test="organizationCode != null  and organizationCode != ''  ">organization_code,</if>
+            <if test="bankOpen != null  and bankOpen != ''  ">bank_open,</if>
+            <if test="bankNum != null  and bankNum != ''  ">bank_num,</if>
+            <if test="bankAddress != null  and bankAddress != ''  ">bank_address,</if>
+            <if test="address != null  and address != ''  ">address,</if>
+            <if test="contacts != null  and contacts != ''  ">contacts,</if>
+            <if test="mobilePhone != null  and mobilePhone != ''  ">mobile_phone,</if>
+            <if test="email != null  and email != ''  ">email,</if>
+            <if test="remark != null  and remark != ''  ">remark,</if>
+            <if test="showState != null  ">show_state,</if>
+            <if test="faceGroup != null  and faceGroup != ''  ">face_group,</if>
+            <if test="createDate != null  ">create_date,</if>
+            <if test="updateDate != null  ">update_date,</if>
+            <if test="comId != null  ">comId,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">#{id},</if>
-			<if test="constructionName != null  and constructionName != ''  ">#{constructionName},</if>
-			<if test="shortName != null  and shortName != ''  ">#{shortName},</if>
-			<if test="capital != null  ">#{capital},</if>
-			<if test="companyType != null  ">#{companyType},</if>
-			<if test="legalPerson != null  and legalPerson != ''  ">#{legalPerson},</if>
-			<if test="suid != null  and suid != ''  ">#{suid},</if>
-			<if test="organizationCode != null  and organizationCode != ''  ">#{organizationCode},</if>
-			<if test="bankOpen != null  and bankOpen != ''  ">#{bankOpen},</if>
-			<if test="bankNum != null  and bankNum != ''  ">#{bankNum},</if>
-			<if test="bankAddress != null  and bankAddress != ''  ">#{bankAddress},</if>
-			<if test="address != null  and address != ''  ">#{address},</if>
-			<if test="contacts != null  and contacts != ''  ">#{contacts},</if>
-			<if test="mobilePhone != null  and mobilePhone != ''  ">#{mobilePhone},</if>
-			<if test="email != null  and email != ''  ">#{email},</if>
-			<if test="remark != null  and remark != ''  ">#{remark},</if>
-			<if test="showState != null  ">#{showState},</if>
-			<if test="faceGroup != null  and faceGroup != ''  ">#{faceGroup},</if>
-			<if test="createDate != null  ">#{createDate},</if>
-			<if test="updateDate != null  ">#{updateDate},</if>
-			<if test="comId != null  ">#{comId},</if>
-         </trim>
+            <if test="id != null  ">#{id},</if>
+            <if test="constructionName != null  and constructionName != ''  ">#{constructionName},</if>
+            <if test="shortName != null  and shortName != ''  ">#{shortName},</if>
+            <if test="capital != null  ">#{capital},</if>
+            <if test="companyType != null  ">#{companyType},</if>
+            <if test="legalPerson != null  and legalPerson != ''  ">#{legalPerson},</if>
+            <if test="suid != null  and suid != ''  ">#{suid},</if>
+            <if test="organizationCode != null  and organizationCode != ''  ">#{organizationCode},</if>
+            <if test="bankOpen != null  and bankOpen != ''  ">#{bankOpen},</if>
+            <if test="bankNum != null  and bankNum != ''  ">#{bankNum},</if>
+            <if test="bankAddress != null  and bankAddress != ''  ">#{bankAddress},</if>
+            <if test="address != null  and address != ''  ">#{address},</if>
+            <if test="contacts != null  and contacts != ''  ">#{contacts},</if>
+            <if test="mobilePhone != null  and mobilePhone != ''  ">#{mobilePhone},</if>
+            <if test="email != null  and email != ''  ">#{email},</if>
+            <if test="remark != null  and remark != ''  ">#{remark},</if>
+            <if test="showState != null  ">#{showState},</if>
+            <if test="faceGroup != null  and faceGroup != ''  ">#{faceGroup},</if>
+            <if test="createDate != null  ">#{createDate},</if>
+            <if test="updateDate != null  ">#{updateDate},</if>
+            <if test="comId != null  ">#{comId},</if>
+        </trim>
     </insert>
-	 
+
     <update id="updateHjConstructionCompany" parameterType="HjConstructionCompany">
         update hj_construction_company
         <trim prefix="SET" suffixOverrides=",">
-            <if test="constructionName != null  and constructionName != ''  ">construction_name = #{constructionName},</if>
+            <if test="constructionName != null  and constructionName != ''  ">construction_name = #{constructionName},
+            </if>
             <if test="shortName != null  and shortName != ''  ">short_name = #{shortName},</if>
             <if test="capital != null  ">capital = #{capital},</if>
             <if test="companyType != null  ">company_type = #{companyType},</if>
             <if test="legalPerson != null  and legalPerson != ''  ">legal_person = #{legalPerson},</if>
             <if test="suid != null  and suid != ''  ">suid = #{suid},</if>
-            <if test="organizationCode != null  and organizationCode != ''  ">organization_code = #{organizationCode},</if>
+            <if test="organizationCode != null  and organizationCode != ''  ">organization_code = #{organizationCode},
+            </if>
             <if test="bankOpen != null  and bankOpen != ''  ">bank_open = #{bankOpen},</if>
             <if test="bankNum != null  and bankNum != ''  ">bank_num = #{bankNum},</if>
             <if test="bankAddress != null  and bankAddress != ''  ">bank_address = #{bankAddress},</if>
@@ -178,30 +195,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-	<delete id="deleteHjConstructionCompanyById" parameterType="Integer">
+    <delete id="deleteHjConstructionCompanyById" parameterType="Integer">
         delete from hj_construction_company where id = #{id}
     </delete>
-	
+
     <delete id="deleteHjConstructionCompanyByIds" parameterType="String">
-        delete from hj_construction_company where id in 
+        delete from hj_construction_company where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
     <update id="deleteHjConstructionCompanyByIdsTwo" parameterType="String">
-        update  hj_construction_company set show_state=1 where id in
+        update hj_construction_company set show_state=1 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </update>
 
-    <resultMap type="com.hujiang.project.zhgd.hjConstructionCompany.domain.ConstructionCompany" id="ConstructionCompanyResult">
-        <result property="id"    column="id"    />
-        <result property="constructionName"    column="construction_name"    />
+    <resultMap type="com.hujiang.project.zhgd.hjConstructionCompany.domain.ConstructionCompany"
+               id="ConstructionCompanyResult">
+        <result property="id" column="id"/>
+        <result property="constructionName" column="construction_name"/>
     </resultMap>
 
 
-    <select id="selectConstructionCompany" parameterType="com.hujiang.project.zhgd.hjConstructionCompany.domain.ConstructionCompany" resultMap="ConstructionCompanyResult">
+    <select id="selectConstructionCompany"
+            parameterType="com.hujiang.project.zhgd.hjConstructionCompany.domain.ConstructionCompany"
+            resultMap="ConstructionCompanyResult">
         SELECT
         cc.id,
         cc.construction_name
@@ -213,5 +233,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             cp.project_id = #{projectId} and cc.show_state=0
         </if>
     </select>
-    
+
+    <select id="selectConstruction" parameterType="Integer" resultMap="ConstructionCompanyResult">
+        select hj_construction_company.construction_name FROM hj_project , hj_construction_company WHERE hj_construction_company.id=hj_project.construction_id and hj_project.id= #{projectId};
+    </select>
+
+    <select id="selectSupervisor" parameterType="Integer" resultMap="ConstructionCompanyResult">
+        select hj_construction_company.construction_name FROM hj_project , hj_construction_company WHERE hj_construction_company.id=hj_project.supervisor_id and hj_project.id= #{projectId};
+    </select>
+
 </mapper>

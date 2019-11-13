@@ -80,6 +80,17 @@ public class HjProject
 	//上传返回唯一编号
 	private Integer itemId;
 
+	//建设单位
+	private String buildUnit;
+
+	public String getBuildUnit() {
+		return buildUnit;
+	}
+
+	public void setBuildUnit(String buildUnit) {
+		this.buildUnit = buildUnit;
+	}
+
 	public Integer getItemId() {
 		return itemId;
 	}
