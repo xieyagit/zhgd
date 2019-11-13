@@ -1,5 +1,6 @@
 package com.hujiang.project.zhgd.hjConstructionCompany.service;
 
+import com.hujiang.project.zhgd.hjConstructionCompany.domain.ConstructionCompany;
 import com.hujiang.project.zhgd.hjConstructionCompany.domain.HjConstructionCompany;
 import java.util.List;
 import java.util.Map;
@@ -79,4 +80,8 @@ public interface IHjConstructionCompanyService
 	 * @return 结果
 	 */
 	public int deleteHjConstructionCompanyByIdsTwo(String ids);
+
+	ConstructionCompany selectConstruction(Integer projectId);
+
+	ConstructionCompany selectSupervisor(Integer projectId);
 }

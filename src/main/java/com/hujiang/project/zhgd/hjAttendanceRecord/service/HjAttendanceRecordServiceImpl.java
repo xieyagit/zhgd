@@ -56,10 +56,22 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
 	@Resource
 	APIClient apiClient;
 	private Logger logger = Logger.getLogger(HjAttendanceRecordServiceImpl.class.getName());
+
 	@Autowired
 	private Queue attendanceRecord;
 	@Autowired
 	private JmsMessagingTemplate jmsMessagingTemplate;
+
+	/**
+	 * 获取最新一条考勤记录
+	 * @param hjAttendanceRecord
+	 * @return
+	 */
+	public HjAttendanceRecord selectNewHjAttendanceRecord(HjAttendanceRecord hjAttendanceRecord){
+		return hjAttendanceRecordMapper.selectNewHjAttendanceRecord(hjAttendanceRecord);
+	}
+
+
 	/**
 	 * 获取最早一条上班考勤记录
 	 * @param hjAttendanceRecord

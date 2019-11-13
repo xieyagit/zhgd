@@ -51,7 +51,6 @@
 		<!--<artifactId>spring-boot-starter-data-rest</artifactId>-->
 		<!--</dependency>-->
 
-
 		<dependency>
 			<groupId>cn.jpush.api</groupId>
 			<artifactId>jsms-client</artifactId>
@@ -167,6 +166,7 @@
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 			<version>2.1.0.RELEASE</version>
 		</dependency>
+
 
 		<!--人脸-->
 		<!--<dependency>-->
