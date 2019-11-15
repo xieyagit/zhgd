@@ -197,4 +197,6 @@ List<DongTai> selectGRKQDongTai(Integer pid);
 
 	public List<HjAttendanceRecord> ite(@Param("projectId") Integer projectId,
 										  @Param("passedTime") String passedTime);
+
+	public HjAttendanceRecord selectNewHjAttendanceRecord(HjAttendanceRecord hjAttendanceRecord);
 }

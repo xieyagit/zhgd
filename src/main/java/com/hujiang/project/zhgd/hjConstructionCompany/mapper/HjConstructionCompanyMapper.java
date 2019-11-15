@@ -91,4 +91,8 @@ public interface HjConstructionCompanyMapper
 	 * @return 结果
 	 */
 	public int deleteHjConstructionCompanyByIdsTwo(String[] ids);
+
+	ConstructionCompany selectConstruction(Integer projectId);
+
+	ConstructionCompany selectSupervisor(Integer projectId);
 }

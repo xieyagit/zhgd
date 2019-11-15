@@ -4,17 +4,17 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hujiang.project.zhgd.hjAttendanceRecord.mapper.HjAttendanceRecordMapper">
     <resultMap type="HjAttendanceRecord" id="HjAttendanceRecordResult">
-        <result property="id"    column="id"    />
-        <result property="projectId"    column="project_id"    />
-        <result property="employeeId"    column="employee_id"    />
-        <result property="passedTime"    column="passed_time"    />
-        <result property="direction"    column="direction"    />
-        <result property="way"    column="way"    />
-        <result property="sitePhoto"    column="site_photo"    />
-        <result property="createDate"    column="create_date"    />
-        <result property="uploadTime"    column="upload_time"    />
-        <result property="deviceType"    column="device_type"    />
-        <result property="deviceSn"    column="device_sn"    />
+        <result property="id" column="id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="employeeId" column="employee_id"/>
+        <result property="passedTime" column="passed_time"/>
+        <result property="direction" column="direction"/>
+        <result property="way" column="way"/>
+        <result property="sitePhoto" column="site_photo"/>
+        <result property="createDate" column="create_date"/>
+        <result property="uploadTime" column="upload_time"/>
+        <result property="deviceType" column="device_type"/>
+        <result property="deviceSn" column="device_sn"/>
 
     </resultMap>
 
@@ -22,7 +22,7 @@
         select id, project_id, employee_id, passed_time, direction, way, site_photo, create_date,upload_time from hj_attendance_record
     </sql>
 
-    <select id="items"  parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
+    <select id="items" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
         SELECT COUNT(r.employee_id) as count
         FROM hj_attendance_record r INNER JOIN hj_project_workers w
         ON  w.id = r.employee_id
@@ -32,7 +32,7 @@
 
     </select>
 
-    <select id="ite"  parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
+    <select id="ite" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
         SELECT COUNT(r.employee_id) as count
         FROM hj_attendance_record r INNER JOIN hj_project_workers w
         ON  w.id = r.employee_id
@@ -113,7 +113,7 @@
     </select>
 
 
-    <select id="item"  parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
+    <select id="item" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
         SELECT construction_name as title,(SELECT COUNT(c.construction_id) FROM hj_project_workers c WHERE c.construction_id=b.id AND c.project_id =  #{projectId}  GROUP BY c.construction_id) count1 ,
         (SELECT COUNT(d.construction_id) FROM (SELECT DISTINCT employee_id FROM hj_attendance_record WHERE project_id =  #{projectId}  and TO_DAYS(passed_time)=TO_DAYS(curdate()) ) a
         INNER JOIN hj_project_workers d ON a.employee_id = d.id
@@ -124,14 +124,14 @@
         WHERE a.project_id = #{projectId}
     </select>
 
-    <select id="its"  parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult" >
+    <select id="its" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
         SELECT COUNT(w.id) as `count`
         FROM hj_construction_company c INNER JOIN hj_project_workers w
         ON c.id = w.construction_id
         WHERE w.construction_id=#{id}
         and enter_And_Retreat_Condition = 0
     </select>
-    <select id="itemin"  parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult" >
+    <select id="itemin" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
         SELECT COUNT(r.id) as count1
         FROM hj_attendance_record r INNER JOIN hj_project_workers w
         ON r.employee_id=w.id
@@ -140,7 +140,7 @@
 				and  r.direction = 'in'
         GROUP BY w.emp_name
     </select>
-    <select id="itemout"  parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult" >
+    <select id="itemout" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
         SELECT COUNT(r.id) as count2
         FROM hj_attendance_record r INNER JOIN hj_project_workers w
         ON r.employee_id=w.id
@@ -148,7 +148,7 @@
         GROUP BY w.emp_name
     </select>
 
-    <select id="turnovers"  parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
+    <select id="turnovers" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
         select (select t.team_name from hj_team t where t.id=w.work_typename_id) as `name`,
         (select count(c.a) from  (select count(r.id) a,p.work_typename_id from hj_attendance_record r left join hj_project_workers p on r.employee_id=p.id where TO_DAYS(passed_time)=TO_DAYS(curdate())  group by r.employee_id ) c where c.work_typename_id=w.work_typename_id) as `count1`
         ,count(emp_name) as `count2` from hj_project_workers w where enter_And_Retreat_Condition=0 and project_id=#{projectId} GROUP BY w.work_typename_id
@@ -190,19 +190,19 @@
     <select id="selectHjAttendanceRecordList" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
         <include refid="selectHjAttendanceRecordVo"/>
         <where>
-            <if test="id != null "> and id = #{id}</if>
-            <if test="projectId != null "> and project_id = #{projectId}</if>
-            <if test="employeeId != null "> and employee_id = #{employeeId}</if>
-            <if test="passedTime != null  and passedTime != '' "> and to_days(passed_time) = to_days(#{passedTime})</if>
-            <if test="direction != null  and direction != '' "> and direction = #{direction}</if>
-            <if test="way != null "> and way = #{way}</if>
-            <if test="sitePhoto != null  and sitePhoto != '' "> and site_photo = #{sitePhoto}</if>
-            <if test="createDate != null "> and create_date = #{createDate}</if>
-            <if test="uploadTime != null  and uploadTime != '' "> and upload_time = #{uploadTime}</if>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="projectId != null ">and project_id = #{projectId}</if>
+            <if test="employeeId != null ">and employee_id = #{employeeId}</if>
+            <if test="passedTime != null  and passedTime != '' ">and to_days(passed_time) = to_days(#{passedTime})</if>
+            <if test="direction != null  and direction != '' ">and direction = #{direction}</if>
+            <if test="way != null ">and way = #{way}</if>
+            <if test="sitePhoto != null  and sitePhoto != '' ">and site_photo = #{sitePhoto}</if>
+            <if test="createDate != null ">and create_date = #{createDate}</if>
+            <if test="uploadTime != null  and uploadTime != '' ">and upload_time = #{uploadTime}</if>
         </where>
         order by passed_time desc
     </select>
-    <select id="selectHjAttendanceRecordInAndOut"  resultMap="HjAttendanceRecordResult">
+    <select id="selectHjAttendanceRecordInAndOut" resultMap="HjAttendanceRecordResult">
        select a.id, a.project_id, a.employee_id, a.passed_time, a.direction, a.way, a.site_photo, a.create_date,a.upload_time from hj_project_workers p
             LEFT JOIN hj_attendance_record a  on p.id=a.employee_id
             where p.id=#{id} and to_days(a.passed_time)=to_days(#{time}) and a.direction="in" and p.id in(select p.id from hj_project_workers p
@@ -212,37 +212,38 @@
             group by p.id
     </select>
 
-    <select id="addTime"  statementType="CALLABLE" >
+    <select id="addTime" statementType="CALLABLE">
        {call mywhile(#{empId,jdbcType=INTEGER,mode=IN},#{empName,jdbcType=VARCHAR,mode=IN},#{projectId,jdbcType=INTEGER,mode=IN})}
     </select>
 
     <select id="selectHjAttendanceRecordListIn" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
         <include refid="selectHjAttendanceRecordVo"/>
         <where>
-            <if test="id != null "> and id = #{id}</if>
-            <if test="projectId != null "> and project_id = #{projectId}</if>
-            <if test="employeeId != null "> and employee_id = #{employeeId}</if>
-            <if test="passedTime != null  and passedTime != '' "> and to_days(passed_time) = to_days(#{passedTime})</if>
-            <if test="direction != null  and direction != '' "> and direction = #{direction}</if>
-            <if test="way != null "> and way = #{way}</if>
-            <if test="sitePhoto != null  and sitePhoto != '' "> and site_photo = #{sitePhoto}</if>
-            <if test="createDate != null "> and create_date = #{createDate}</if>
-            <if test="uploadTime != null  and uploadTime != '' "> and upload_time = #{uploadTime}</if>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="projectId != null ">and project_id = #{projectId}</if>
+            <if test="employeeId != null ">and employee_id = #{employeeId}</if>
+            <if test="passedTime != null  and passedTime != '' ">and to_days(passed_time) = to_days(#{passedTime})</if>
+            <if test="direction != null  and direction != '' ">and direction = #{direction}</if>
+            <if test="way != null ">and way = #{way}</if>
+            <if test="sitePhoto != null  and sitePhoto != '' ">and site_photo = #{sitePhoto}</if>
+            <if test="createDate != null ">and create_date = #{createDate}</if>
+            <if test="uploadTime != null  and uploadTime != '' ">and upload_time = #{uploadTime}</if>
         </where>
         order by passed_time asc limit 1
     </select>
-    <select id="selectHjAttendanceRecordListOut" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
+    <select id="selectHjAttendanceRecordListOut" parameterType="HjAttendanceRecord"
+            resultMap="HjAttendanceRecordResult">
         <include refid="selectHjAttendanceRecordVo"/>
         <where>
-            <if test="id != null "> and id = #{id}</if>
-            <if test="projectId != null "> and project_id = #{projectId}</if>
-            <if test="employeeId != null "> and employee_id = #{employeeId}</if>
-            <if test="passedTime != null  and passedTime != '' "> and to_days(passed_time) = to_days(#{passedTime})</if>
-            <if test="direction != null  and direction != '' "> and direction = #{direction}</if>
-            <if test="way != null "> and way = #{way}</if>
-            <if test="sitePhoto != null  and sitePhoto != '' "> and site_photo = #{sitePhoto}</if>
-            <if test="createDate != null "> and create_date = #{createDate}</if>
-            <if test="uploadTime != null  and uploadTime != '' "> and upload_time = #{uploadTime}</if>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="projectId != null ">and project_id = #{projectId}</if>
+            <if test="employeeId != null ">and employee_id = #{employeeId}</if>
+            <if test="passedTime != null  and passedTime != '' ">and to_days(passed_time) = to_days(#{passedTime})</if>
+            <if test="direction != null  and direction != '' ">and direction = #{direction}</if>
+            <if test="way != null ">and way = #{way}</if>
+            <if test="sitePhoto != null  and sitePhoto != '' ">and site_photo = #{sitePhoto}</if>
+            <if test="createDate != null ">and create_date = #{createDate}</if>
+            <if test="uploadTime != null  and uploadTime != '' ">and upload_time = #{uploadTime}</if>
         </where>
         order by passed_time desc limit 1
     </select>
@@ -346,42 +347,57 @@
     </select>
 
     <resultMap type="Param" id="ParamResult">
-        <result property="id"    column="id"    />
-        <result property="employeeId"    column="employeeId"    />
-        <result property="name"    column="name"    />
-        <result property="projectName"    column="projectName"    />
-        <result property="companyName"    column="companyName"    />
-        <result property="jobName"    column="jobName"    />
-        <result property="direction"    column="direction"    />
-        <result property="passedTime"    column="passedTime"    />
-        <result property="uploadTime"    column="uploadTime"    />
-        <result property="sitePhoto"    column="site_photo"    />
+        <result property="id" column="id"/>
+        <result property="employeeId" column="employeeId"/>
+        <result property="name" column="name"/>
+        <result property="projectName" column="projectName"/>
+        <result property="companyName" column="companyName"/>
+        <result property="jobName" column="jobName"/>
+        <result property="direction" column="direction"/>
+        <result property="passedTime" column="passedTime"/>
+        <result property="uploadTime" column="uploadTime"/>
+        <result property="sitePhoto" column="site_photo"/>
     </resultMap>
 
     <select id="selectAttendanceRecordListTwo" parameterType="Param" resultMap="ParamResult">
-        select  id,
+        select id,
         employee_id employeeId,
         (select w.emp_name from hj_project_workers w where w.id=employee_id) name,
         (select p.project_name from hj_project p where p.id=project_id) projectName,
-        (select c.construction_name from hj_project_workers w join hj_construction_company c on c.id=w.construction_id where w.id=employee_id) companyName,
-        (select d.title from hj_project_workers w join hj_dictionaries d on d.tag=w.job_name where w.id=employee_id ) jobName,
+        (select c.construction_name from hj_project_workers w join hj_construction_company c on c.id=w.construction_id
+        where w.id=employee_id) companyName,
+        (select d.title from hj_project_workers w join hj_dictionaries d on d.tag=w.job_name where w.id=employee_id )
+        jobName,
         direction,
         passed_time passedTime,
         upload_time uploadTime
         ,site_photo
         from hj_attendance_record
         <where>
-            <if test="id != null "> and id = #{id}</if>
-            <if test="projectId != null "> and project_id = #{projectId}</if>
-            <if test="name != null  and name != '' "> and employee_id in (select w.id from hj_project_workers w where w.emp_name like '%${name}%' )</if>
-            <if test="idCode != null  and idCode != '' "> and employee_id in (select w.id from hj_project_workers w where w.id_code like '%${idCode}%' )</if>
-            <if test="jobCode != null  and jobCode != '' "> and employee_id in (select w.id from hj_project_workers w where w.job_name =#{jobCode} )</if>
-            <if test="teamName != null  and teamName != '' "> and employee_id in (select w.id from hj_project_workers w where w.work_typename_id=#{teamName})</if>
-            <if test="companyId != null  and companyId != '' "> and employee_id in (select w.id from hj_project_workers w where w.construction_id =#{companyId} )</if>
-            <if test="startTime != null  and startTime != '' "> and to_days(#{startTime})<![CDATA[ <=]]>to_days(create_date)</if>
-            <if test="endTime != null  and endTime != '' "> and to_days(#{endTime})<![CDATA[ >=]]>to_days(create_date)</if>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="projectId != null ">and project_id = #{projectId}</if>
+            <if test="name != null  and name != '' ">and employee_id in (select w.id from hj_project_workers w where
+                w.emp_name like '%${name}%' )
+            </if>
+            <if test="idCode != null  and idCode != '' ">and employee_id in (select w.id from hj_project_workers w where
+                w.id_code like '%${idCode}%' )
+            </if>
+            <if test="jobCode != null  and jobCode != '' ">and employee_id in (select w.id from hj_project_workers w
+                where w.job_name =#{jobCode} )
+            </if>
+            <if test="teamName != null  and teamName != '' ">and employee_id in (select w.id from hj_project_workers w
+                where w.work_typename_id=#{teamName})
+            </if>
+            <if test="companyId != null  and companyId != '' ">and employee_id in (select w.id from hj_project_workers w
+                where w.construction_id =#{companyId} )
+            </if>
+            <if test="startTime != null  and startTime != '' ">and to_days(#{startTime})<![CDATA[ <=]]>
+                to_days(create_date)
+            </if>
+            <if test="endTime != null  and endTime != '' ">and to_days(#{endTime})<![CDATA[ >=]]>to_days(create_date)
+            </if>
         </where>
-        order by create_date desc
+        order by passed_time desc
     </select>
 
     <select id="selectAttendanceRecordListThree" parameterType="Integer" resultMap="HjAttendanceRecordResult">
@@ -389,8 +405,8 @@
 
         <include refid="selectHjAttendanceRecordVo"/>
         where
-        date_format(passed_time ,'%Y%m') = DATE_FORMAT(CURDATE(),'%Y%m') and employee_id=#{userId} and direction='in' GROUP BY TO_DAYS(passed_time)
-
+        date_format(passed_time ,'%Y%m') = DATE_FORMAT(CURDATE(),'%Y%m') and employee_id=#{userId} and direction='in'
+        GROUP BY TO_DAYS(passed_time)
 
 
     </select>
@@ -398,7 +414,7 @@
     <select id="selectJinRiChuQin" parameterType="Integer" resultMap="HjAttendanceRecordResult">
         <include refid="selectHjAttendanceRecordVo"/>
         where
-        project_id=#{pid} and  TO_DAYS(curdate())=TO_DAYS(passed_time) GROUP BY employee_id
+        project_id=#{pid} and TO_DAYS(curdate())=TO_DAYS(passed_time) GROUP BY employee_id
     </select>
     <!--指定项目关键岗位出勤-->
     <select id="selectGJGWChuQin" parameterType="Integer" resultMap="HjAttendanceRecordResult">
@@ -406,7 +422,11 @@
         where
         project_id=#{pid} and direction ='in' and TO_DAYS(curdate())=TO_DAYS(passed_time) and employee_id in
 
-        (select id from hj_project_workers where (job_name='DD8FE97F3E1FA3B7F71C894F0D7B49A1' or job_name='3BE4F91A3C3E4BF3E3E14E9A143C65C7' or job_name='E303B2F084CCAFA5A32CDC68571CC121' or job_name='764A5294753B5FCE846BD5C64C3874D1' or job_name='4BCE1F084E5E2413384C149B42B0D072' or job_name='6C0A7C1254EB51E1A94CCD318253562B' or job_name='BE86667205808221FAD7ED510E2A8004' ) and project_id =#{pid}) GROUP BY employee_id
+        (select id from hj_project_workers where (job_name='DD8FE97F3E1FA3B7F71C894F0D7B49A1' or
+        job_name='3BE4F91A3C3E4BF3E3E14E9A143C65C7' or job_name='E303B2F084CCAFA5A32CDC68571CC121' or
+        job_name='764A5294753B5FCE846BD5C64C3874D1' or job_name='4BCE1F084E5E2413384C149B42B0D072' or
+        job_name='6C0A7C1254EB51E1A94CCD318253562B' or job_name='BE86667205808221FAD7ED510E2A8004' ) and project_id
+        =#{pid}) GROUP BY employee_id
 
     </select>
     <resultMap type="com.hujiang.project.zhgd.hjAttendanceRecord.domain.DongTai" id="DongTaiResult">
@@ -437,9 +457,11 @@ and TO_DAYS(curdate())=TO_DAYS(passed_time) ORDER BY passedTime desc  limit 50
     </resultMap>
     <!--该项目各个参建单位考勤人数-->
     <select id="getKQCount" resultType="TCount">
-        select c.construction_name title,count(distinct employee_id) count from hj_attendance_record r join hj_project_workers w on r.employee_id=w.id
-        join hj_construction_company c on w.construction_id = c.id
-        where w.project_id=#{pid} and TO_DAYS(curdate()) = TO_DAYS(r.passed_time) and w.enter_And_Retreat_Condition = 0  GROUP BY c.id ORDER BY count desc
+
+select c.construction_name title,count(distinct employee_id) count from hj_attendance_record r join hj_project_workers w on r.employee_id=w.id
+join hj_construction_company c on w.construction_id = c.id
+where w.project_id=#{pid} and TO_DAYS(curdate()) = TO_DAYS(r.passed_time)  and w.enter_And_Retreat_Condition=0 GROUP BY c.id ORDER BY count desc
+
     </select>
     <!--该项目各个参建单位在场人数-->
     <select id="getZCCount" resultType="TCount">
@@ -453,5 +475,13 @@ and TO_DAYS(curdate())=TO_DAYS(passed_time) ORDER BY passedTime desc  limit 50
 from hj_attendance_record where employee_id in (select id from hj_project_workers where project_id=#{pid} and emp_category='00')
 
 and TO_DAYS(curdate())=TO_DAYS(passed_time)  GROUP BY employee_id ORDER BY passedTime desc
+    </select>
+
+    <select id="selectNewHjAttendanceRecord" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
+        <include refid="selectHjAttendanceRecordVo"/>
+        <where>
+            <if test="projectId != null ">and project_id = #{projectId}</if>
+        </where>
+        order by create_date desc limit 1
     </select>
 </mapper>
