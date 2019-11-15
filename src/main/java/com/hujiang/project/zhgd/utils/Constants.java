@@ -74,5 +74,8 @@ public class Constants {
     public static final String RCAJ="http://218.17.11.171:7010";
     public static final String OPEN_YS="https://open.ys7.com/api/component/saas/";
 
+    //中山大学甲方
+    public static final String ZSJF="http://120.79.18.214/sysu-web/";
+
     public static final Integer ACCESSTOKEN_ID=80;
 }
