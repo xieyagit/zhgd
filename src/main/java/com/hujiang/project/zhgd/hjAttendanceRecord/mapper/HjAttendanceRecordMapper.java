@@ -199,4 +199,19 @@ List<DongTai> selectGRKQDongTai(Integer pid);
 										  @Param("passedTime") String passedTime);
 
 	public HjAttendanceRecord selectNewHjAttendanceRecord(HjAttendanceRecord hjAttendanceRecord);
+
+    /**
+     * 电视看板工人考勤动态
+     * @param projectId
+     * @return
+     */
+    List<DongTai> selectWorkerList(Integer projectId);
+
+    /**
+     * 电视看板管理人员考勤动态
+     * @param projectId
+     * @return
+     */
+    List<DongTai> selectManagerList(Integer projectId);
+
 }
