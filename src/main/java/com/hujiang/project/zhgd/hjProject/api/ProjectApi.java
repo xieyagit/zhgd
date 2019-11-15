@@ -403,6 +403,7 @@ public class ProjectApi extends BaseController {
         map.put("constructionUnit", construction.getConstructionName());
         map.put("controlUnit", supervisor.getConstructionName());
         map.put("name", project.getProjectName());
+        map.put("shortName", project.getShortName());
         map.put("designUnit", project.getDesignOrganization());
         map.put("buildUnit", project.getBuildUnit());
         if (map.size() == 0) {
