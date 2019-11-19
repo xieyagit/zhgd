@@ -85,11 +85,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>-->
 
     <select id="selectProjects"  resultMap="HjProjectResult" parameterType="HjProject">
-        SELECT * FROM hj_project a INNER JOIN hj_company_project b ON a.id = b. project_id
-        WHERE
-            a.id in (SELECT id FROM hj_project WHERE project_name LIKE CONCAT('%',#{projectName}, '%'))
-            AND b.project_id in (SELECT id FROM hj_project WHERE project_name LIKE CONCAT('%',#{projectName}, '%'))
-            and b.path like  CONCAT((select concat(path) from hj_company_project where company_id=#{cid} LIMIT 1),',',#{cid},'%')
+    select b.project_name,b.longitude,b.latitude from hj_company_project a
+    INNER JOIN hj_project b on (a.project_id=b.id)
+    where 1=1
+        and a.path like CONCAT((select path from hj_company_project where company_id=#{cid} LIMIT 1), '%')
+        and a.project_id is not null
+        <if test="projectName != null and projectName != '' ">
+          AND b.project_name like CONCAT('%',#{projectName},'%')
+        </if>
     </select>
 
     <select id="selectProjectRegion"  resultMap="HjProjectResult" parameterType="HjProject">
