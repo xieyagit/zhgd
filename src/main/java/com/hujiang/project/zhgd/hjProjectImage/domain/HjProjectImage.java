@@ -19,6 +19,7 @@ public class HjProjectImage
 	private Integer projectId;
 	/** 素材地址 */
 	private String url;
+
 	/** 类型，1，图片，2，视频，3，视频流地址 */
 	private String type;
 	/** 位置 */
@@ -26,7 +27,7 @@ public class HjProjectImage
 	/** 所属模块  1看板轮播图， 2进度管理轮播图 */
 	private String module;
 
-	public void setId(Integer id) 
+	public void setId(Integer id)
 	{
 		this.id = id;
 	}

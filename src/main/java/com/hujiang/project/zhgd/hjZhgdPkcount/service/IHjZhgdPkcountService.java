@@ -84,4 +84,7 @@ public interface IHjZhgdPkcountService
 	 * 查询项目Id
 	 * */
 	public HjZhgdPkcount selectProjectId(Integer deptID);
+
+	/**查询sn*/
+	public HjZhgdPkcount selectSN(HjZhgdPkcount hjZhgdPkcount);
 }
