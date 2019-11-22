@@ -79,5 +79,10 @@ public class HjProjectImageServiceImpl implements IHjProjectImageService
 	{
 		return hjProjectImageMapper.deleteHjProjectImageByIds(Convert.toStrArray(ids));
 	}
-	
+
+	@Override
+	public int deleteHjProjectImageById(Integer id) {
+		return hjProjectImageMapper.deleteHjProjectImageById(id);
+	}
+
 }

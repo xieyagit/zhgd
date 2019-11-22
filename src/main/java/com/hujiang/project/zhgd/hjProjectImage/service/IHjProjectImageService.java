@@ -50,5 +50,12 @@ public interface IHjProjectImageService
      * @return 结果
      */
 	public int deleteHjProjectImageByIds(String ids);
-	
+
+	/**
+	 * 删除项目效果图
+	 *
+	 * @param id 项目效果图ID
+	 * @return 结果
+	 */
+	public int deleteHjProjectImageById(Integer id);
 }
