@@ -123,4 +123,10 @@ public class HjZhgdPkcountServiceImpl implements IHjZhgdPkcountService
 	public HjZhgdPkcount selectProjectId(Integer deptID){
 		return hjZhgdPkcountMapper.selectProjectId(deptID);
 	}
+
+
+	/**查询sn*/
+	public HjZhgdPkcount selectSN(HjZhgdPkcount hjZhgdPkcount){
+		return hjZhgdPkcountMapper.selectSN(hjZhgdPkcount);
+	}
 }
