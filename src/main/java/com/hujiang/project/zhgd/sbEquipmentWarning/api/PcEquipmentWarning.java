@@ -86,14 +86,14 @@ public class PcEquipmentWarning extends BaseController {
                     if (equipmentWarningList != null && equipmentWarningList.size() > 0) {
                         jsonObject.put("msg", "查询成功");
                         jsonObject.put("code", 0);
-                        jsonObject.put("total", dataTable.getTotal());//总记录数
+                        jsonObject.put("total", rows.size());//总记录数
                         jsonObject.put("data", rows);
                     }
                 }
             } else {
                 jsonObject.put("msg", "查询成功");
                 jsonObject.put("code", 0);
-                jsonObject.put("total", dataTable.getTotal());//总记录数
+                jsonObject.put("total", rows.size());//总记录数
                 jsonObject.put("data", Collections.emptyList());
             }
         } else {
@@ -101,7 +101,7 @@ public class PcEquipmentWarning extends BaseController {
                     if(equipmentWarningList != null && equipmentWarningList.size()>0){
                         jsonObject.put("msg","查询成功");
                         jsonObject.put("code",0);
-                        jsonObject.put("total",dataTable.getTotal());//总记录数
+                        jsonObject.put("total",rows.size());//总记录数
                         jsonObject.put("data",rows);
                     }
                 }

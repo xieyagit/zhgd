@@ -161,9 +161,9 @@ public class inOutKanBan {
             map.put("attendanceNumber", attendanceNumber);
             map.put("sceneNumber", sceneNumber);
             //工人动态
-            List<DongTai> workerList = hjAttendanceRecordService.selectGRKQDongTai(pid);
+            List<DongTai> workerList = hjAttendanceRecordService.selectWorkerList(pid);
             //管理人员动态
-            List<DongTai> managerList = hjAttendanceRecordService.selectGLKQDongTai(pid);
+            List<DongTai> managerList = hjAttendanceRecordService.selectManagerList(pid);
             map.put("workerList", workerList);
             map.put("managerList", managerList);
 
