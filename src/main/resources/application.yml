@@ -108,7 +108,7 @@ eureka:
     lease-expiration-duration-in-seconds: 2
 
     #    ip-address: 120.79.129.65
-    ip-address: 120.79.129.65
+    ip-address: localhost
 
 
 
@@ -120,8 +120,8 @@ eureka:
       enabled: false
     serviceUrl:
 
-      defaultZone: http://47.112.23.241:9001/eureka/,http://47.112.23.241:9002/eureka/  # 注册中心访问地址
-      #defaultZone: http://localhost:9006/eureka/  # 注册中心访问地址
+      #defaultZone: http://47.112.23.241:9001/eureka/,http://47.112.23.241:9002/eureka/  # 注册中心访问地址
+      defaultZone: http://localhost:9006/eureka/  # 注册中心访问地址
 
 
 

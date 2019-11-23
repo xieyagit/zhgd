@@ -444,7 +444,6 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
 
         } catch (Exception e) {
             e.printStackTrace();
-            FaceMatchUtil.deleteUrl(nameUel); // 删除阿里云图片
             return AjaxResult.error(-1, "考勤失败！");
         }
         return null;

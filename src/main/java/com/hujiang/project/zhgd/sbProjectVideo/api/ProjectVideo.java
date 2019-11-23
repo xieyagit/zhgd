@@ -6,13 +6,19 @@ import com.hujiang.framework.aspectj.lang.enums.BusinessType;
 import com.hujiang.framework.web.controller.BaseController;
 import com.hujiang.framework.web.domain.AjaxResult;
 import com.hujiang.framework.web.page.TableDataInfo;
+import com.hujiang.project.ys.util.YsUtil;
 import com.hujiang.project.zhgd.sbProjectVideo.domain.SbProjectVideo;
 import com.hujiang.project.zhgd.sbProjectVideo.service.ISbProjectVideoService;
+import com.hujiang.project.zhgd.utils.Constants;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +33,8 @@ public class ProjectVideo extends BaseController {
 
     @Autowired
     private ISbProjectVideoService videoService;
-
+    @Resource
+    private YsUtil ysUtil;
 
     /**
      * 根据项目视频区id获取视频信息
@@ -109,4 +116,22 @@ public class ProjectVideo extends BaseController {
         return toAjax(videoService.updateSbProjectVideo(sbProjectVideo));
     }
 
+    /**
+     * 云端控制
+     * @param pid
+     * @param deviceSerial
+     * @param direction
+     */
+    @PostMapping("/ysCloudControldirection")
+    public void ysCloudControldirection(@RequestParam(value = "pid") Integer pid,@RequestParam(value = "deviceSerial") String deviceSerial,@RequestParam(value = "direction") Integer direction) throws  Exception{
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("accessToken",ysUtil.getAccessToken2(pid) ));
+        params.add(new BasicNameValuePair("deviceSerial",deviceSerial));
+        params.add(new BasicNameValuePair("channelNo","1"));
+        params.add(new BasicNameValuePair("speed","0"));
+        params.add(new BasicNameValuePair("direction",direction.toString()));
+        ysUtil.httpPostWithJSON(Constants.OPEN_YS_LAPP +"lapp/device/ptz/start",params);
+
+        ysUtil.httpPostWithJSON(Constants.OPEN_YS_LAPP +"lapp/device/ptz/stop",params);
+    }
 }
