@@ -86,4 +86,7 @@ public interface HjZhgdPkcountMapper
 	 * */
 	public HjZhgdPkcount selectProjectId(@Param("deptID")Integer deptID);
 
+	/**查询sn*/
+	public HjZhgdPkcount selectSN(HjZhgdPkcount hjZhgdPkcount);
+
 }

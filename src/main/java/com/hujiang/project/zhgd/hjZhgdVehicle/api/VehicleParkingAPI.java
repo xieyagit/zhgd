@@ -194,6 +194,25 @@ public class VehicleParkingAPI {
         }
         return result;
     }
+    /**
+     * 对接建筑废弃物监管平台（出场）
+     * */
+    private void outsc(UploadCarout uploadCarout){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("RecordId",uploadCarout.getOrder_id());//记录标识
+        jsonObject.put("VehicleNo",uploadCarout.getCar_number());//车牌号
+        jsonObject.put("PlateColor","");//车牌颜色
+        HjZhgdPkcount hjZhgdPkcount = new HjZhgdPkcount();
+        hjZhgdPkcount.setDeptID(Integer.valueOf(uploadCarout.getParkid()));
+        hjZhgdPkcount.setSnName(uploadCarout.getGateoutname());
+        HjZhgdPkcount pkcount = iHjZhgdPkcountService.selectSN(hjZhgdPkcount);
+        jsonObject.put("GateNo",pkcount.getSn());//闸机编号
+        jsonObject.put("LiftType","");//抬杠方式
+        jsonObject.put("LiftTime",uploadCarout.getOut_time());//抬杠时间
+        JSONObject object = new JSONObject();
+        object.put("BaseInfo",jsonObject);
+    }
+
 
     /**
      * 车辆进场
@@ -285,6 +304,25 @@ public class VehicleParkingAPI {
     }
 
     /**
+     * 对接建筑废弃物监管平台（进场）
+     * */
+    public void insc(UploadCarin uploadCarin){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("RecordId",uploadCarin.getOrder_id());//记录标识
+        jsonObject.put("VehicleNo",uploadCarin.getCar_number());//车牌号
+        jsonObject.put("PlateColor","");//车牌颜色(可为空)
+        HjZhgdPkcount hjZhgdPkcount = new HjZhgdPkcount();
+        hjZhgdPkcount.setDeptID(Integer.valueOf(uploadCarin.getParkid()));
+        hjZhgdPkcount.setSnName(uploadCarin.getGateinname());
+        HjZhgdPkcount pkcount = iHjZhgdPkcountService.selectSN(hjZhgdPkcount);
+        jsonObject.put("GateNo",pkcount.getSn());//闸机编号
+        jsonObject.put("LiftType","");//抬杆方式：1-自动抬杆，2- 手动抬杆（可为空）
+        jsonObject.put("LiftTime",uploadCarin.getIn_time());//抬杆时间
+        JSONObject object = new JSONObject();
+        object.put("BaseInfo",jsonObject);
+    }
+
+    /**
      * 车牌图片
      * @param uploadFile
      * @return
@@ -371,6 +409,21 @@ public class VehicleParkingAPI {
         }
         return result;
     }
+
+    /**
+     * 对接建筑废弃物监管平台（图片）
+     * */
+    private void filesc(UploadFile uploadFile){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("ImgName",uploadFile.getRecordid()+".jpeg");//图片名称
+        jsonObject.put("ImgType",uploadFile.getPic_source());//图片类型：
+        jsonObject.put("ImgData",uploadFile.getContent());//图 片 内 容
+        jsonObject.put("TakeTime",new Date());//拍照时间
+        jsonObject.put("RecordId",uploadFile.getRecordid());//车牌识别记录标识
+        JSONObject object = new JSONObject();
+        object.put("BaseInfo",jsonObject);
+    }
+
 
     /**
      * 修改车位数
