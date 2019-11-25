@@ -216,4 +216,5 @@ public interface HjProjectWorkersMapper
 	public HjProjectWorkers jc(@Param("projectId") Integer projectId,@Param("contract") Integer contract);
 	public HjProjectWorkers tc(@Param("projectId") Integer projectId,@Param("contract") Integer contract);
 	public HjProjectWorkers lzqrs(@Param("projectId") Integer projectId,@Param("contract") Integer contract);
+	public HjProjectWorkers easyContract(@Param("projectId") Integer projectId);
 }

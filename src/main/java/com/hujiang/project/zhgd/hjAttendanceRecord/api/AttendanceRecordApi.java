@@ -286,8 +286,9 @@ public class AttendanceRecordApi {
         }else {
             jsonObject.put("today", a.size());
             Integer contract = null;
-            HjProjectWorkers projectWorkers = hjProjectWorkersService.easyContract(projectId);
-            String tatol = Util.accuracy(a.size(),projectWorkers.getCount(),0);
+            HjProjectWorkers projectWorkers = hjProjectWorkersService.jyht(projectId,contract);
+            HjProjectWorkers projectWorkers6 = hjProjectWorkersService.tc(projectId,contract);
+            String tatol = Util.accuracy(a.size(),(projectWorkers.getCount()-projectWorkers6.getCount()),0);
             jsonObject.put("bfb",tatol+"% ");
         }
         //获取昨天的日期

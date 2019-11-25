@@ -176,4 +176,6 @@ public interface IHjProjectWorkersService
 	public HjProjectWorkers jc(Integer projectId, Integer contract);
 	public HjProjectWorkers tc(Integer projectId, Integer contract);
 	public HjProjectWorkers lzqrs(Integer projectId,Integer contract);
+
+	public HjProjectWorkers easyContract(Integer projectId);
 }

@@ -135,7 +135,7 @@ public interface IHjAttendanceRecordService {
      * @param userId
      * @return
      */
-    List<HjAttendanceRecord> selectAttendanceRecordListThree(Integer userId,Integer projectId);
+    List<HjAttendanceRecord> selectAttendanceRecordListThree(Integer userId);
 
     /**
      * 今日出勤情况

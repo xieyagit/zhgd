@@ -115,7 +115,7 @@ public interface HjAttendanceRecordMapper
 	 * @param userId
 	 * @return
 	 */
-	List<HjAttendanceRecord> selectAttendanceRecordListThree(@Param(value = "userId") Integer userId , @Param(value = "projectId") Integer projectId);
+	List<HjAttendanceRecord> selectAttendanceRecordListThree(@Param(value = "userId") Integer userId);
 
 	/**
 	 * 今日出勤情况

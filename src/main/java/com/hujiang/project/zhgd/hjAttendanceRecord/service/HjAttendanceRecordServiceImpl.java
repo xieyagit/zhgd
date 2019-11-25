@@ -457,8 +457,8 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
     }
 
     @Override
-    public List<HjAttendanceRecord> selectAttendanceRecordListThree(Integer userId,Integer projectId) {
-        return hjAttendanceRecordMapper.selectAttendanceRecordListThree(userId,projectId);
+    public List<HjAttendanceRecord> selectAttendanceRecordListThree(Integer userId) {
+        return hjAttendanceRecordMapper.selectAttendanceRecordListThree(userId);
     }
 
     /**
