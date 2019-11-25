@@ -215,7 +215,7 @@ ribbon:
   ConnectTimeout: 5000 #ribbon请求连接的超时时间，默认值2000
   MaxAutoRetries: 0     #对当前实例的重试次数，默认0
   MaxAutoRetriesNextServer: 1 #对切换实例的重试次数，默认1
- 
+
 feign:
   httpclient:
     connection-timeout: 60000

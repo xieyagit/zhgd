@@ -72,8 +72,10 @@ public class Constants {
 
     //人才安居
     public static final String RCAJ="http://218.17.11.171:7010";
+    //萤石组件
     public static final String OPEN_YS="https://open.ys7.com/api/component/saas/";
-
+    //萤石开放接口
+    public static final String OPEN_YS_LAPP="https://open.ys7.com/api/";
     //中山大学甲方
     public static final String ZSJF="http://120.79.18.214/sysu-web/";
 

@@ -143,7 +143,7 @@ public interface IHjAttendanceRecordService {
      * @param pid
      * @return
      */
-    List<HjAttendanceRecord> selectJinRiChuQin(Integer pid);
+    Integer selectJinRiChuQin(Integer pid);
 
     /**
      * 指定项目关键岗位出勤
@@ -151,7 +151,7 @@ public interface IHjAttendanceRecordService {
      * @param pid
      * @return
      */
-    List<HjAttendanceRecord> selectGJGWChuQin(Integer pid);
+    Integer selectGJGWChuQin(Integer pid);
 
     /**
      * 工人考勤动态

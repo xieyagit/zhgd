@@ -411,22 +411,22 @@
 
     </select>
     <!--指定项目今日出勤-->
-    <select id="selectJinRiChuQin" parameterType="Integer" resultMap="HjAttendanceRecordResult">
-        <include refid="selectHjAttendanceRecordVo"/>
-        where
-        project_id=#{pid} and TO_DAYS(curdate())=TO_DAYS(passed_time) GROUP BY employee_id
+    <select id="selectJinRiChuQin" parameterType="Integer" resultType="Integer">
+         select count(*) from (
+ select id
+ FROM hj_attendance_record
+ WHERE TO_DAYS(curdate())=TO_DAYS(passed_time) and  project_id=#{pid} GROUP BY employee_id
+ ) a
     </select>
     <!--指定项目关键岗位出勤-->
-    <select id="selectGJGWChuQin" parameterType="Integer" resultMap="HjAttendanceRecordResult">
-        <include refid="selectHjAttendanceRecordVo"/>
-        where
-        project_id=#{pid} and direction ='in' and TO_DAYS(curdate())=TO_DAYS(passed_time) and employee_id in
-
-        (select id from hj_project_workers where (job_name='DD8FE97F3E1FA3B7F71C894F0D7B49A1' or
-        job_name='3BE4F91A3C3E4BF3E3E14E9A143C65C7' or job_name='E303B2F084CCAFA5A32CDC68571CC121' or
-        job_name='764A5294753B5FCE846BD5C64C3874D1' or job_name='4BCE1F084E5E2413384C149B42B0D072' or
-        job_name='6C0A7C1254EB51E1A94CCD318253562B' or job_name='BE86667205808221FAD7ED510E2A8004' ) and project_id
-        =#{pid}) GROUP BY employee_id
+    <select id="selectGJGWChuQin" parameterType="Integer" resultType="Integer">
+         select count(*) from (
+ select id
+ FROM hj_attendance_record
+ WHERE project_id=#{pid} and direction ='in' and TO_DAYS(curdate())=TO_DAYS(passed_time) and employee_id in (select id
+ FROM hj_project_workers
+ WHERE (job_name='DD8FE97F3E1FA3B7F71C894F0D7B49A1' or job_name='3BE4F91A3C3E4BF3E3E14E9A143C65C7' or job_name='E303B2F084CCAFA5A32CDC68571CC121' or job_name='764A5294753B5FCE846BD5C64C3874D1' or job_name='4BCE1F084E5E2413384C149B42B0D072' or job_name='6C0A7C1254EB51E1A94CCD318253562B' or job_name='BE86667205808221FAD7ED510E2A8004' ) and project_id =21) GROUP BY employee_id
+  ) a
 
     </select>
     <resultMap type="com.hujiang.project.zhgd.hjAttendanceRecord.domain.DongTai" id="DongTaiResult">

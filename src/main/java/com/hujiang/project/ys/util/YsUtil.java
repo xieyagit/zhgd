@@ -32,6 +32,13 @@ import java.util.List;
 public  class YsUtil {
     @Autowired
     private IHjSynchronizationInformationService hjSynchronizationInformationService;
+
+    /**
+     * 海康人脸机专用
+     * @return
+     * @throws URISyntaxException
+     * @throws IOException
+     */
     public   String  getAccessToken()throws  URISyntaxException,IOException{
         HjSynchronizationInformation hs=hjSynchronizationInformationService.selectHjSynchronizationInformationById(Constants.ACCESSTOKEN_ID);
         Long time= new Date().getTime();
@@ -53,6 +60,40 @@ public  class YsUtil {
         }
     }
 
+    /**
+     * 其余使用
+     * @return
+     * @throws URISyntaxException
+     * @throws IOException
+     */
+    public   String  getAccessToken2(Integer pid)throws  URISyntaxException,IOException{
+        HjSynchronizationInformation hs2=new HjSynchronizationInformation();
+        hs2.setProjectId(pid);
+        hs2.setPlatformName("YSGETACCESSTOKEN");
+        List<HjSynchronizationInformation> hsList=hjSynchronizationInformationService.selectHjSynchronizationInformationList(hs2);
+        if(hsList.size()>0) {
+            HjSynchronizationInformation   hs = hsList.get(0);
+            Long time = new Date().getTime();
+            Long expireTime = Long.valueOf(hs.getProjectNumber());
+            //是否过期
+            if (time >= expireTime) {
+                //过期重新获取
+                List<NameValuePair> params = new ArrayList<NameValuePair>();
+                params.add(new BasicNameValuePair("appKey", hs.getApiKey()));
+                params.add(new BasicNameValuePair("appSecret", hs.getApiSecret()));
+                String result = httpPostWithJSON("https://open.ys7.com/api/lapp/token/get", params);
+                JSONObject data = JSONObject.parseObject(result).getJSONObject("data");
+                hs.setProjectNumber(data.getString("expireTime"));
+                hs.setClientSerial(data.getString("accessToken"));
+                hjSynchronizationInformationService.updateHjSynchronizationInformation(hs);
+                return data.getString("accessToken");
+            } else {
+                return hs.getClientSerial();
+            }
+        }else{
+            return "";
+        }
+    }
     /**
      * 通信
      */

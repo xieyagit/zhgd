@@ -55,8 +55,8 @@ public class inOutKanBan {
             map.put("xmzxrs", a);
             //今日出勤人数
             if (a > 0) {
-                List<HjAttendanceRecord> rList1 = hjAttendanceRecordService.selectJinRiChuQin(pid);
-                int b = rList1.size();
+                Integer b = hjAttendanceRecordService.selectJinRiChuQin(pid);
+
                 map.put("jrcqrs", b);
                 map.put("cql", new DecimalFormat("0.00").format(((float) b / a) * 100));
             } else {
@@ -67,8 +67,8 @@ public class inOutKanBan {
             Integer d = hjProjectWorkersService.selectOnLineCountGj(pid);
             //关键人员出勤数
             if (d > 0) {
-                List<HjAttendanceRecord> rList2 = hjAttendanceRecordService.selectGJGWChuQin(pid);
-                int d2 = rList2.size();
+                Integer d2 = hjAttendanceRecordService.selectGJGWChuQin(pid);
+
                 map.put("gjgwcqrs", d2);
                 //关键岗位出勤率
                 map.put("gjgwcql", new DecimalFormat("0.00").format(((float) d2 / d) * 100));
