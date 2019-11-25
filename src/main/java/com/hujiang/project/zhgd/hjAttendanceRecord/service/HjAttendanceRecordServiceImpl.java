@@ -467,7 +467,7 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
      * @return
      */
     @Override
-    public List<HjAttendanceRecord> selectJinRiChuQin(Integer pid) {
+    public Integer selectJinRiChuQin(Integer pid) {
         return hjAttendanceRecordMapper.selectJinRiChuQin(pid);
     }
 
@@ -478,7 +478,7 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
      * @return
      */
     @Override
-    public List<HjAttendanceRecord> selectGJGWChuQin(Integer pid) {
+    public Integer selectGJGWChuQin(Integer pid) {
         return hjAttendanceRecordMapper.selectGJGWChuQin(pid);
     }
 
