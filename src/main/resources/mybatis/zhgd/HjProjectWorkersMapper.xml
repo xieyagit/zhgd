@@ -150,7 +150,6 @@
         <where>
             <if test="contract != null"> and  contract = #{contract} </if>
             <if test="projectId != null"> AND project_id = #{projectId}</if>
-            AND enter_And_Retreat_Condition = 0
         </where>
     </select>
 
