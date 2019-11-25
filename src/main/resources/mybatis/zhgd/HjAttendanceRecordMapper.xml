@@ -26,7 +26,7 @@
         SELECT COUNT(r.employee_id) as count
         FROM hj_attendance_record r INNER JOIN hj_project_workers w
         ON  w.id = r.employee_id
-        where w.project_id = #{projectId}
+        where w.project_id = #{projectId} and r.project_id = #{projectId}
         and r.passed_time LIKE CONCAT(#{passedTime},'%')
         and direction = 'in'
 
