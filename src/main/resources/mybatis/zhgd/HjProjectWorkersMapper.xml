@@ -145,6 +145,14 @@
     </resultMap>
 
 
+    <select id="easyContract" parameterType="HjProjectWorkers" resultMap="HjProjectWorkersResult">
+        SELECT COUNT(emp_name) as `count` from hj_project_workers
+        <where>
+            <if test="projectId != null"> AND project_id = #{projectId}</if>
+            and enter_And_Retreat_Condition = 0
+        </where>
+    </select>
+
     <select id="jyht" parameterType="HjProjectWorkers" resultMap="HjProjectWorkersResult">
         SELECT COUNT(emp_name) as `count` from hj_project_workers
         <where>
@@ -299,8 +307,7 @@
 
     <sql id="selectHjProjectWorkersVo">
         select id,isUpload, emp_name, id_code, emp_phon, emp_sex, emp_nation, id_address, id_agency, id_validdate, date_of_birth, native_place, start_time, end_time, work_typename_id, is_team, cwr_iskeypsn, information,job_typename, job_name, emp_category, if_contract, emp_dept, ob_dept, emp_bankname, emp_cardnum, account_type, account_address, credential, remark, contract, entrance, exeunt, workConfirm, iDCardPDF, isTrain, face_url, emp_naticeplace, idphoto_scan, idphoto_scan2, bank_card_url, project_id, enter_And_Retreat_Condition, faceToken, create_date, update_date,construction_id from hj_project_workers
-
-</sql>
+    </sql>
 
     <select id="selectHjProjectWorkersList" parameterType="HjProjectWorkers" resultMap="HjProjectWorkersResult">
         <include refid="selectHjProjectWorkersVo"/>
