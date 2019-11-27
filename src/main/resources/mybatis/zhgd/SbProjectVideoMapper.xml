@@ -18,10 +18,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="department"    column="department"    />
         <result property="position"    column="position"    />
         <result property="photograph"    column="photograph"    />
+        <result property="isControl"    column="is_control"    />
+        <result property="videoSn"    column="video_sn"    />
     </resultMap>
 	
 	<sql id="selectSbProjectVideoVo">
-        select id, area_id, url, account, video_name, video_type, video_address, video_way, contacts, contacts_way, department, `position`, photograph from sb_project_video
+        select is_control,video_sn,id, area_id, url, account, video_name, video_type, video_address, video_way, contacts, contacts_way, department, `position`, photograph from sb_project_video
     </sql>
 	
     <select id="selectSbProjectVideoList" parameterType="SbProjectVideo" resultMap="SbProjectVideoResult">
@@ -40,6 +42,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="department != null  and department != '' "> and department = #{department}</if>
              <if test="position != null  and position != '' "> and `position` = #{position}</if>
              <if test="photograph != null  and photograph != '' "> and photograph = #{photograph}</if>
+             <if test="videoSn != null  and videoSn != '' "> and video_sn = #{videoSn}</if>
+             <if test="isControl != null  and isControl != '' "> and is_control = #{isControl}</if>
          </where>
         order by id desc
     </select>

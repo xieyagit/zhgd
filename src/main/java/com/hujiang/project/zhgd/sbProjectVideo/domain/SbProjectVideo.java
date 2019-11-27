@@ -39,8 +39,26 @@ public class SbProjectVideo
 	private String position;
 	/** 所在位置照片 */
 	private String photograph;
+	private String videoSn;
+	private String isControl;
 
-	public void setId(Integer id) 
+	public String getVideoSn() {
+		return videoSn;
+	}
+
+	public void setVideoSn(String videoSn) {
+		this.videoSn = videoSn;
+	}
+
+	public String getIsControl() {
+		return isControl;
+	}
+
+	public void setIsControl(String isControl) {
+		this.isControl = isControl;
+	}
+
+	public void setId(Integer id)
 	{
 		this.id = id;
 	}
