@@ -216,54 +216,6 @@
             <if test="updateDate != null  ">#{updateDate},</if>
             <if test="comId != null  ">#{comId},</if>
         </trim>
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">id,</if>
-			<if test="constructionName != null  and constructionName != ''  ">construction_name,</if>
-			<if test="shortName != null  and shortName != ''  ">short_name,</if>
-			<if test="capital != null  ">capital,</if>
-			<if test="companyType != null  ">company_type,</if>
-			<if test="legalPerson != null  and legalPerson != ''  ">legal_person,</if>
-			<if test="suid != null  and suid != ''  ">suid,</if>
-			<if test="organizationCode != null  and organizationCode != ''  ">organization_code,</if>
-			<if test="bankOpen != null  and bankOpen != ''  ">bank_open,</if>
-			<if test="bankNum != null  and bankNum != ''  ">bank_num,</if>
-			<if test="bankAddress != null  and bankAddress != ''  ">bank_address,</if>
-			<if test="address != null  and address != ''  ">address,</if>
-			<if test="contacts != null  and contacts != ''  ">contacts,</if>
-			<if test="mobilePhone != null  and mobilePhone != ''  ">mobile_phone,</if>
-			<if test="email != null  and email != ''  ">email,</if>
-			<if test="remark != null  and remark != ''  ">remark,</if>
-			<if test="showState != null  ">show_state,</if>
-			<if test="faceGroup != null  and faceGroup != ''  ">face_group,</if>
-			<if test="isUpload != null  and isUpload != ''  ">isUpload,</if>
-			<if test="createDate != null  ">create_date,</if>
-			<if test="updateDate != null  ">update_date,</if>
-			<if test="comId != null  ">comId,</if>
-         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">#{id},</if>
-			<if test="constructionName != null  and constructionName != ''  ">#{constructionName},</if>
-			<if test="shortName != null  and shortName != ''  ">#{shortName},</if>
-			<if test="capital != null  ">#{capital},</if>
-			<if test="companyType != null  ">#{companyType},</if>
-			<if test="legalPerson != null  and legalPerson != ''  ">#{legalPerson},</if>
-			<if test="suid != null  and suid != ''  ">#{suid},</if>
-			<if test="organizationCode != null  and organizationCode != ''  ">#{organizationCode},</if>
-			<if test="bankOpen != null  and bankOpen != ''  ">#{bankOpen},</if>
-			<if test="bankNum != null  and bankNum != ''  ">#{bankNum},</if>
-			<if test="bankAddress != null  and bankAddress != ''  ">#{bankAddress},</if>
-			<if test="address != null  and address != ''  ">#{address},</if>
-			<if test="contacts != null  and contacts != ''  ">#{contacts},</if>
-			<if test="mobilePhone != null  and mobilePhone != ''  ">#{mobilePhone},</if>
-			<if test="email != null  and email != ''  ">#{email},</if>
-			<if test="remark != null  and remark != ''  ">#{remark},</if>
-			<if test="showState != null  ">#{showState},</if>
-			<if test="faceGroup != null  and faceGroup != ''  ">#{faceGroup},</if>
-			<if test="isUpload != null  and isUpload != ''  ">#{isUpload},</if>
-			<if test="createDate != null  ">#{createDate},</if>
-			<if test="updateDate != null  ">#{updateDate},</if>
-			<if test="comId != null  ">#{comId},</if>
-         </trim>
     </insert>
 
     <update id="updateHjConstructionCompany" parameterType="HjConstructionCompany">

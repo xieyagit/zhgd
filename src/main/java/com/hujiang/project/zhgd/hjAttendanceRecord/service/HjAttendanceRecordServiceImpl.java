@@ -444,7 +444,6 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
 
         } catch (Exception e) {
             e.printStackTrace();
-            FaceMatchUtil.deleteUrl(nameUel); // 删除阿里云图片
             return AjaxResult.error(-1, "考勤失败！");
         }
         return null;
@@ -468,7 +467,7 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
      * @return
      */
     @Override
-    public List<HjAttendanceRecord> selectJinRiChuQin(Integer pid) {
+    public Integer selectJinRiChuQin(Integer pid) {
         return hjAttendanceRecordMapper.selectJinRiChuQin(pid);
     }
 
@@ -479,7 +478,7 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
      * @return
      */
     @Override
-    public List<HjAttendanceRecord> selectGJGWChuQin(Integer pid) {
+    public Integer selectGJGWChuQin(Integer pid) {
         return hjAttendanceRecordMapper.selectGJGWChuQin(pid);
     }
 

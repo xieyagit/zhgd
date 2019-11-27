@@ -652,4 +652,7 @@ public class HjProjectWorkersServiceImpl implements IHjProjectWorkersService {
     public HjProjectWorkers lzqrs(Integer projectId,Integer contract){
         return hjProjectWorkersMapper.lzqrs(projectId, contract);
     }
+    public HjProjectWorkers easyContract(Integer projectId){
+        return hjProjectWorkersMapper.easyContract(projectId);
+    }
 }
