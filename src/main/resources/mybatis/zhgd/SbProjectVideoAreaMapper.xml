@@ -72,5 +72,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
-    
+    <resultMap type="SbJTArea" id="getVideoListJTResult">
+
+        <result property="areaName"    column="area_name"    />
+        <collection property="projectList" ofType="ProjectVideoJT"  >
+            <result property="pid"    column="pid"    />
+            <result property="projectName"    column="project_name"    />
+            <collection property="videoList" ofType="Video"  >
+                <result property="isControl"    column="is_control"    />
+                <result property="videoSn"    column="video_sn"    />
+                <result property="videoName"    column="video_name"    />
+                <result property="url"    column="url"    />
+            </collection>
+        </collection>
+    </resultMap>
+    <select id="getVideoListJT" parameterType="Integer" resultMap="getVideoListJTResult">
+       select a.area_name,p.id pid,p.project_name,v.url,v.is_control,v.video_sn,v.video_name  from  sb_project_video_area a  join hj_project p on p.id=a.projectid join sb_project_video v on v.area_id=a.id where a.projectid in (select b.id from hj_company_project a
+    INNER JOIN hj_project b on (a.project_id=b.id)
+    where 1=1
+        and a.path like CONCAT((select path from hj_company_project where company_id=#{cid} LIMIT 1), '%')
+        and a.project_id is not null)
+    </select>
+
 </mapper>
