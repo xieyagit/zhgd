@@ -52,5 +52,13 @@ public interface ISbVersionService
      * @return 结果
      */
 	public int deleteSbVersionByIds(String ids);
+
+	/**
+	 * 删除版本信息
+	 *
+	 * @param id 需要删除的数据ID
+	 * @return 结果
+	 */
+	public int deleteSbVersionById(Integer id);
 	
 }

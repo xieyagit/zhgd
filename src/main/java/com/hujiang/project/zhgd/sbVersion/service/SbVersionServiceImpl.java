@@ -84,5 +84,17 @@ public class SbVersionServiceImpl implements ISbVersionService
 	{
 		return sbVersionMapper.deleteSbVersionByIds(Convert.toStrArray(ids));
 	}
-	
+
+	/**
+	 * 删除版本对象
+	 *
+	 * @param id 需要删除的数据ID
+	 * @return 结果
+	 */
+	@Override
+	public int deleteSbVersionById(Integer id)
+	{
+		return sbVersionMapper.deleteSbVersionById(id);
+	}
+
 }
