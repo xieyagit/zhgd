@@ -108,7 +108,7 @@ eureka:
     lease-expiration-duration-in-seconds: 2
 
     #    ip-address: 120.79.129.65
-    ip-address: 120.79.129.65
+    ip-address: localhost
 
 
 
@@ -120,8 +120,8 @@ eureka:
       enabled: false
     serviceUrl:
 
-      defaultZone: http://47.112.23.241:9001/eureka/,http://47.112.23.241:9002/eureka/  # 注册中心访问地址
-      #defaultZone: http://localhost:9006/eureka/  # 注册中心访问地址
+      #      defaultZone: http://47.112.23.241:9001/eureka/,http://47.112.23.241:9002/eureka/  # 注册中心访问地址
+      defaultZone: http://localhost:9005/eureka/  # 注册中心访问地址
 
 
 
@@ -215,7 +215,7 @@ ribbon:
   ConnectTimeout: 5000 #ribbon请求连接的超时时间，默认值2000
   MaxAutoRetries: 0     #对当前实例的重试次数，默认0
   MaxAutoRetriesNextServer: 1 #对切换实例的重试次数，默认1
- 
+
 feign:
   httpclient:
     connection-timeout: 60000
