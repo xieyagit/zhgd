@@ -101,6 +101,18 @@ public class ZhNode {
      * 状态 0:正常开始 1:未开始 2:延期未开始 3:延期开始 4:延期完成 5:正常完成 6:提前开始 7：提前完成
      */
     private Integer status;
+    /**
+     * 能否在计划中导入
+     */
+    private boolean addAble;
+
+    public boolean isAddAble() {
+        return addAble;
+    }
+
+    public void setAddAble(boolean addAble) {
+        this.addAble = addAble;
+    }
 
     public void setStatus(Integer status) {
         this.status = status;

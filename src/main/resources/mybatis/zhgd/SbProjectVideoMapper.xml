@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hujiang.project.zhgd.sbProjectVideo.mapper.SbProjectVideoMapper">
-    
+
     <resultMap type="SbProjectVideo" id="SbProjectVideoResult">
-        <result property="id"    column="id"    />
-        <result property="areaId"    column="area_id"    />
-        <result property="url"    column="url"    />
-        <result property="account"    column="account"    />
-        <result property="videoName"    column="video_name"    />
-        <result property="videoType"    column="video_type"    />
-        <result property="videoAddress"    column="video_address"    />
-        <result property="videoWay"    column="video_way"    />
-        <result property="contacts"    column="contacts"    />
-        <result property="contactsWay"    column="contacts_way"    />
-        <result property="department"    column="department"    />
-        <result property="position"    column="position"    />
-        <result property="photograph"    column="photograph"    />
-        <result property="isControl"    column="is_control"    />
-        <result property="videoSn"    column="video_sn"    />
+        <result property="id" column="id"/>
+        <result property="areaId" column="area_id"/>
+        <result property="url" column="url"/>
+        <result property="account" column="account"/>
+        <result property="videoName" column="video_name"/>
+        <result property="videoType" column="video_type"/>
+        <result property="videoAddress" column="video_address"/>
+        <result property="videoWay" column="video_way"/>
+        <result property="contacts" column="contacts"/>
+        <result property="contactsWay" column="contacts_way"/>
+        <result property="department" column="department"/>
+        <result property="position" column="position"/>
+        <result property="photograph" column="photograph"/>
+        <result property="videoSn" column="video_sn"/>
+        <result property="isControl" column="is_control"/>
     </resultMap>
-	
-	<sql id="selectSbProjectVideoVo">
-        select is_control,video_sn,id, area_id, url, account, video_name, video_type, video_address, video_way, contacts, contacts_way, department, `position`, photograph from sb_project_video
+
+    <sql id="selectSbProjectVideoVo">
+        select id, area_id, url, account, video_name, video_type, video_address, video_way, contacts, contacts_way, department, `position`, photograph, video_sn, is_control from sb_project_video
     </sql>
-	
+
     <select id="selectSbProjectVideoList" parameterType="SbProjectVideo" resultMap="SbProjectVideoResult">
         <include refid="selectSbProjectVideoVo"/>
         <where>  
@@ -47,52 +47,56 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </where>
         order by id desc
     </select>
-    
+
     <select id="selectSbProjectVideoById" parameterType="Integer" resultMap="SbProjectVideoResult">
         <include refid="selectSbProjectVideoVo"/>
         where id = #{id}
     </select>
     <select id="selectSbProjectVideoByProjectId" parameterType="Integer" resultMap="SbProjectVideoResult">
-        select v.id, v.area_id, v.url, v.account, v.video_name, v.video_type, v.video_address, v.video_way, v.contacts, v.contacts_way, v.department, v.`position`,v.photograph
+        select v.id, v.area_id, v.url, v.account, v.video_name, v.video_type, v.video_address, v.video_way, v.contacts, v.contacts_way, v.department, v.`position`,v.photograph, v.video_sn, v.is_control
         from sb_project_video v left join  sb_project_video_area a  on a.id = v.area_id
         where a.projectid =#{projectId}
        order by v.id desc
     </select>
-        
+
     <insert id="insertSbProjectVideo" parameterType="SbProjectVideo">
         insert into sb_project_video
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">id,</if>
-			<if test="areaId != null  ">area_id,</if>
-			<if test="url != null  and url != ''  ">url,</if>
-			<if test="account != null  and account != ''  ">account,</if>
-			<if test="videoName != null  and videoName != ''  ">video_name,</if>
-			<if test="videoType != null  and videoType != ''  ">video_type,</if>
-			<if test="videoAddress != null  and videoAddress != ''  ">video_address,</if>
-			<if test="videoWay != null  and videoWay != ''  ">video_way,</if>
-			<if test="contacts != null  and contacts != ''  ">contacts,</if>
-			<if test="contactsWay != null  and contactsWay != ''  ">contacts_way,</if>
-			<if test="department != null  and department != ''  ">department,</if>
-			<if test="position != null  and position != ''  ">`position`,</if>
-			<if test="photograph != null  and photograph != ''  ">photograph,</if>
-         </trim>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="areaId != null  ">area_id,</if>
+            <if test="url != null  and url != ''  ">url,</if>
+            <if test="account != null  and account != ''  ">account,</if>
+            <if test="videoName != null  and videoName != ''  ">video_name,</if>
+            <if test="videoType != null  and videoType != ''  ">video_type,</if>
+            <if test="videoAddress != null  and videoAddress != ''  ">video_address,</if>
+            <if test="videoWay != null  and videoWay != ''  ">video_way,</if>
+            <if test="contacts != null  and contacts != ''  ">contacts,</if>
+            <if test="contactsWay != null  and contactsWay != ''  ">contacts_way,</if>
+            <if test="department != null  and department != ''  ">department,</if>
+            <if test="position != null  and position != ''  ">`position`,</if>
+            <if test="photograph != null  and photograph != ''  ">photograph,</if>
+            <if test="videoSn != null  and videoSn != ''  ">video_sn,</if>
+            <if test="isControl != null  and isControl != ''  ">is_control,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">#{id},</if>
-			<if test="areaId != null  ">#{areaId},</if>
-			<if test="url != null  and url != ''  ">#{url},</if>
-			<if test="account != null  and account != ''  ">#{account},</if>
-			<if test="videoName != null  and videoName != ''  ">#{videoName},</if>
-			<if test="videoType != null  and videoType != ''  ">#{videoType},</if>
-			<if test="videoAddress != null  and videoAddress != ''  ">#{videoAddress},</if>
-			<if test="videoWay != null  and videoWay != ''  ">#{videoWay},</if>
-			<if test="contacts != null  and contacts != ''  ">#{contacts},</if>
-			<if test="contactsWay != null  and contactsWay != ''  ">#{contactsWay},</if>
-			<if test="department != null  and department != ''  ">#{department},</if>
-			<if test="position != null  and position != ''  ">#{position},</if>
-			<if test="photograph != null  and photograph != ''  ">#{photograph},</if>
-         </trim>
+            <if test="id != null  ">#{id},</if>
+            <if test="areaId != null  ">#{areaId},</if>
+            <if test="url != null  and url != ''  ">#{url},</if>
+            <if test="account != null  and account != ''  ">#{account},</if>
+            <if test="videoName != null  and videoName != ''  ">#{videoName},</if>
+            <if test="videoType != null  and videoType != ''  ">#{videoType},</if>
+            <if test="videoAddress != null  and videoAddress != ''  ">#{videoAddress},</if>
+            <if test="videoWay != null  and videoWay != ''  ">#{videoWay},</if>
+            <if test="contacts != null  and contacts != ''  ">#{contacts},</if>
+            <if test="contactsWay != null  and contactsWay != ''  ">#{contactsWay},</if>
+            <if test="department != null  and department != ''  ">#{department},</if>
+            <if test="position != null  and position != ''  ">#{position},</if>
+            <if test="photograph != null  and photograph != ''  ">#{photograph},</if>
+            <if test="videoSn != null  and videoSn != ''  ">#{videoSn},</if>
+            <if test="isControl != null  and isControl != ''  ">#{isControl},</if>
+        </trim>
     </insert>
-	 
+
     <update id="updateSbProjectVideo" parameterType="SbProjectVideo">
         update sb_project_video
         <trim prefix="SET" suffixOverrides=",">
@@ -108,19 +112,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="department != null  and department != ''  ">department = #{department},</if>
             <if test="position != null  and position != ''  ">`position` = #{position},</if>
             <if test="photograph != null  and photograph != ''  ">photograph = #{photograph},</if>
+            <if test="videoSn != null  and videoSn != ''  ">video_sn= #{videoSn},</if>
+            <if test="isControl != null  and isControl != ''  ">is_control= #{isControl},</if>
         </trim>
         where id = #{id}
     </update>
 
-	<delete id="deleteSbProjectVideoById" parameterType="Integer">
+    <delete id="deleteSbProjectVideoById" parameterType="Integer">
         delete from sb_project_video where id = #{id}
     </delete>
-	
+
     <delete id="deleteSbProjectVideoByIds" parameterType="String">
-        delete from sb_project_video where id in 
+        delete from sb_project_video where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

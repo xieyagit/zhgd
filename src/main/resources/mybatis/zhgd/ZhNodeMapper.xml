@@ -264,7 +264,7 @@
         update zh_node
         <trim prefix="SET" suffixOverrides=",">
             <if test="number != null  ">number = #{number},</if>
-            <if test="parentId != null and parentId != '' ">parent_id = #{parentId},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
             <if test="name != null  and name != ''  ">name = #{name},</if>
             <if test="state != null  ">state = #{state},</if>
             <if test="predictStart != null  ">predict_start = #{predictStart},</if>

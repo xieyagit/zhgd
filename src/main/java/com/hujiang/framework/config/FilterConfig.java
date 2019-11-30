@@ -55,9 +55,9 @@ public class FilterConfig
     public MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
         //  单个数据大小
-        factory.setMaxFileSize("10240KB"); // KB,MB
+        factory.setMaxFileSize("100MB"); // KB,MB
         /// 总上传数据大小
-        factory.setMaxRequestSize("102400KB");
+        factory.setMaxRequestSize("100MB");
         return factory.createMultipartConfig();
     }
 
