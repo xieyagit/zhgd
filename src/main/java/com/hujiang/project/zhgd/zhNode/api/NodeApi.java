@@ -593,6 +593,44 @@ public class NodeApi extends BaseController {
     }
 
     /**
+     * 查询可以导入的节点列表
+     *
+     * @return
+     */
+    @PostMapping("selectAddZhNodeList")
+    public JSONObject selectAddZhNodeList(@RequestParam(value = "projectId") int projectId) {
+        JSONObject result = new JSONObject();
+        ZhNode node = new ZhNode();
+        node.setProjectId(projectId);
+        List<ZhNode> nodeList = nodeService.selectZhNodeList(node);
+        ZhProgressNode zhProgressNode = new ZhProgressNode();
+        int progress;
+        for (int i = 0; i < nodeList.size(); i++) {
+            zhProgressNode.setNodeId(nodeList.get(i).getId());
+            List<ZhNodeWithProgress> zhNodeProgressList = progressNodeService.selectZhNodeProgressList(zhProgressNode);
+            progress = 0;
+            for (ZhNodeWithProgress zhNodeWithProgress : zhNodeProgressList) {
+                progress += zhNodeWithProgress.getNodeProgressRatio();
+            }
+            if (progress >= 100) {
+                nodeList.get(i).setAddAble(false);
+            } else{
+                nodeList.get(i).setAddAble(true);
+            }
+        }
+        logger.info("com.hujiang.project.zhgd.zhNode.api.NodeApi.selectEndZhNode" + "查询计划可以导入的节点：" + nodeList.toString());
+        if (node != null) {
+            result.put("msg", "查询计划可以导入的节点");
+            result.put("code", 0);
+            result.put("data", nodeList);
+        } else {
+            result.put("msg", "无可以导入的节点");
+            result.put("code", -1);
+        }
+        return result;
+    }
+
+    /**
      * 更新节点进度
      *
      * @param nodeId
@@ -611,7 +649,7 @@ public class NodeApi extends BaseController {
             node.setEnd(DateUtils.getDate());
         }
         node.setId(nodeId);
-        node.setProgress(progress/100);
+        node.setProgress(progress / 100);
         nodeService.updateZhNode(node);
     }
 
@@ -626,7 +664,7 @@ public class NodeApi extends BaseController {
         List<ZhNodeWithProgress> node = progressNodeService.selectZhNodeProgressList(pNode);
         float progresss = 0;
         int number = 1;
-        if (node !=null && node.size() > 0) {
+        if (node != null && node.size() > 0) {
             number = node.size();
             for (ZhNodeWithProgress zhNode : node) {
                 progresss += zhNode.getProgress();

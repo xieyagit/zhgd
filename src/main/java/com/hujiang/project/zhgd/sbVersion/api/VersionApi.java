@@ -61,8 +61,13 @@ public class VersionApi {
     @PostMapping(value = "/deleteSbVersion")
     public AjaxResult deleteSbVersionById(Integer id) {
         SbVersion sbVersion = versionService.selectSbVersionById(id);
-        if (sbVersion != null) {
-            AliyunOSSClientUtil.deleteFile(AliyunOSSClientUtil.getOSSClient(), "hujiang", sbVersion.getUrl());
+        if (sbVersion != null && sbVersion.getUrl() != null) {
+            String[] files = sbVersion.getUrl().split("/");
+            String file = null;
+            for (int i = 0; i < files.length; i++) {
+                file = files[i];
+            }
+            AliyunOSSClientUtil.deleteFile(AliyunOSSClientUtil.getOSSClient(), "hujiang", file);
             versionService.deleteSbVersionById(id);
             return AjaxResult.success();
         } else {

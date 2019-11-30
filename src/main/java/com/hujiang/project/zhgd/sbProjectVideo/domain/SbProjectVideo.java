@@ -39,8 +39,28 @@ public class SbProjectVideo
 	private String position;
 	/** 所在位置照片 */
 	private String photograph;
+	/** 序列号 */
+	private String videoSn;
+	/** 是否支持云端控制 1支持 0不支持 */
+	private String isControl;
 
-	public void setId(Integer id) 
+	public String getVideoSn() {
+		return videoSn;
+	}
+
+	public void setVideoSn(String videoSn) {
+		this.videoSn = videoSn;
+	}
+
+	public String getIsControl() {
+		return isControl;
+	}
+
+	public void setIsControl(String isControl) {
+		this.isControl = isControl;
+	}
+
+	public void setId(Integer id)
 	{
 		this.id = id;
 	}
