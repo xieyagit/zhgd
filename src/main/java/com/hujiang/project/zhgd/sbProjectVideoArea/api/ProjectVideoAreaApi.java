@@ -6,6 +6,7 @@ import com.hujiang.framework.aspectj.lang.enums.BusinessType;
 import com.hujiang.framework.web.controller.BaseController;
 import com.hujiang.framework.web.domain.AjaxResult;
 import com.hujiang.framework.web.page.TableDataInfo;
+import com.hujiang.project.zhgd.sbProjectVideoArea.domain.SbJTArea;
 import com.hujiang.project.zhgd.sbProjectVideoArea.domain.SbProjectVideoArea;
 import com.hujiang.project.zhgd.sbProjectVideoArea.service.ISbProjectVideoAreaService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -108,7 +109,12 @@ public class ProjectVideoAreaApi extends BaseController {
         return error(-1,"删除失败");
     }
 
-
-
+/**
+ * 集团获取项目列表
+ */
+    @PostMapping("/getVideoListJT")
+    public List<SbJTArea> getVideoListJT(Integer cid){
+return areaService.getVideoListJT(cid);
+    }
 
 }

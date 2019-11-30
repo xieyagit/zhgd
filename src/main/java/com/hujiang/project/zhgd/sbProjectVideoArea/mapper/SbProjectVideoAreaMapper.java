@@ -1,5 +1,6 @@
 package com.hujiang.project.zhgd.sbProjectVideoArea.mapper;
 
+import com.hujiang.project.zhgd.sbProjectVideoArea.domain.SbJTArea;
 import com.hujiang.project.zhgd.sbProjectVideoArea.domain.SbProjectVideoArea;
 import java.util.List;	
 
@@ -58,5 +59,9 @@ public interface SbProjectVideoAreaMapper
      * @return 结果
      */
 	public int deleteSbProjectVideoAreaByIds(String[] ids);
-	
+
+	/**
+	 * 集团获取摄像头列表
+	 */
+	public List<SbJTArea> getVideoListJT(Integer cid);
 }

@@ -28,23 +28,23 @@
 
     <select id="selectSbProjectVideoList" parameterType="SbProjectVideo" resultMap="SbProjectVideoResult">
         <include refid="selectSbProjectVideoVo"/>
-        <where>
-            <if test="id != null ">and id = #{id}</if>
-            <if test="areaId != null ">and area_id = #{areaId}</if>
-            <if test="url != null  and url != '' ">and url = #{url}</if>
-            <if test="account != null  and account != '' ">and account = #{account}</if>
-            <if test="videoName != null  and videoName != '' ">and video_name = #{videoName}</if>
-            <if test="videoType != null  and videoType != '' ">and video_type = #{videoType}</if>
-            <if test="videoAddress != null  and videoAddress != '' ">and video_address = #{videoAddress}</if>
-            <if test="videoWay != null  and videoWay != '' ">and video_way = #{videoWay}</if>
-            <if test="contacts != null  and contacts != '' ">and contacts = #{contacts}</if>
-            <if test="contactsWay != null  and contactsWay != '' ">and contacts_way = #{contactsWay}</if>
-            <if test="department != null  and department != '' ">and department = #{department}</if>
-            <if test="position != null  and position != '' ">and `position` = #{position}</if>
-            <if test="photograph != null  and photograph != '' ">and photograph = #{photograph}</if>
-            <if test="videoSn != null  and videoSn != '' ">and video_sn = #{videoSn}</if>
-            <if test="isControl != null  and isControl != '' ">and is_control = #{isControl}</if>
-        </where>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="areaId != null "> and area_id = #{areaId}</if>
+             <if test="url != null  and url != '' "> and url = #{url}</if>
+             <if test="account != null  and account != '' "> and account = #{account}</if>
+             <if test="videoName != null  and videoName != '' "> and video_name = #{videoName}</if>
+             <if test="videoType != null  and videoType != '' "> and video_type = #{videoType}</if>
+             <if test="videoAddress != null  and videoAddress != '' "> and video_address = #{videoAddress}</if>
+             <if test="videoWay != null  and videoWay != '' "> and video_way = #{videoWay}</if>
+             <if test="contacts != null  and contacts != '' "> and contacts = #{contacts}</if>
+             <if test="contactsWay != null  and contactsWay != '' "> and contacts_way = #{contactsWay}</if>
+             <if test="department != null  and department != '' "> and department = #{department}</if>
+             <if test="position != null  and position != '' "> and `position` = #{position}</if>
+             <if test="photograph != null  and photograph != '' "> and photograph = #{photograph}</if>
+             <if test="videoSn != null  and videoSn != '' "> and video_sn = #{videoSn}</if>
+             <if test="isControl != null  and isControl != '' "> and is_control = #{isControl}</if>
+         </where>
         order by id desc
     </select>
 
