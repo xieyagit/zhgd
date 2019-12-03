@@ -667,7 +667,7 @@ public class NodeApi extends BaseController {
         if (node != null && node.size() > 0) {
             number = node.size();
             for (ZhNodeWithProgress zhNode : node) {
-                progresss += zhNode.getProgress();
+                progresss += zhNode.getNodeProgress();
             }
         }
         float progress = progresss / number;
