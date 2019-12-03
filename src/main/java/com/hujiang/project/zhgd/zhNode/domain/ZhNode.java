@@ -3,9 +3,7 @@ package com.hujiang.project.zhgd.zhNode.domain;
 import com.hujiang.common.utils.DateUtils;
 import com.hujiang.common.utils.StringUtils;
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+
 
 import java.util.Date;
 
@@ -105,6 +103,40 @@ public class ZhNode {
      * 能否在计划中导入
      */
     private boolean addAble;
+
+    private boolean hasNode;
+    /**
+     * 是否前置节点
+     */
+    private boolean prepose;
+    /**
+     * 是否可以作为父级节点
+     */
+    private boolean befather;
+
+    public boolean isBefather() {
+        return befather;
+    }
+
+    public void setBefather(boolean befather) {
+        this.befather = befather;
+    }
+
+    public boolean isPrepose() {
+        return prepose;
+    }
+
+    public void setPrepose(boolean prepose) {
+        this.prepose = prepose;
+    }
+
+    public boolean isHasNode() {
+        return hasNode;
+    }
+
+    public void setHasNode(boolean hasNode) {
+        this.hasNode = hasNode;
+    }
 
     public boolean isAddAble() {
         return addAble;

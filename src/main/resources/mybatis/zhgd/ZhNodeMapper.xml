@@ -24,10 +24,18 @@
         <result property="comment" column="comment"/>
         <result property="projectId" column="project_id"/>
         <result property="crux" column="crux"/>
+        <result property="hasNode" column="hasNode"/>
+        <result property="prepose" column="prepose"/>
+        <result property="befather" column="befather"/>
     </resultMap>
 
     <sql id="selectZhNodeVo">
-        select id, number, parent_id, name, state, predict_start, predict_end, start, end, progress, content, found, creator_id, control_rank, principal, pipelining_segment, comment,project_id,crux from zh_node
+   select id, number, parent_id, name, state, predict_start, predict_end, start, end, progress, content, found, creator_id, control_rank, principal, pipelining_segment, comment,project_id,crux,
+   case 1 when (select count(*) FROM zh_progress_node where node_id=zh_node.id limit 1) THEN TRUE
+   when (select count(*) FROM zh_prepose where main_plan=zh_node.id limit 1) THEN TRUE ELSE FALSE END hasNode,
+   case 1 when (select count(*) FROM zh_prepose where prepose_pian=zh_node.id limit 1) THEN TRUE ELSE FALSE END prepose,
+   case 1 when (select count(*) FROM zh_progress_node where node_id=zh_node.id limit 1) THEN TRUE ELSE FALSE END befather
+   from zh_node
     </sql>
 
     <select id="selectZhNodeList" parameterType="ZhNode" resultMap="ZhNodeResult">
