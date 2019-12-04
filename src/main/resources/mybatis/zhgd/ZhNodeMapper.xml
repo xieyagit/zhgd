@@ -156,7 +156,7 @@
             <if test="controlRank != null ">and control_rank = #{controlRank}</if>
             <if test="predictStart != null and predictStart != '' ">and predict_start &gt; #{predictStart}</if>
             <if test="predictEnd != null and predictEnd != '' ">and predict_end &lt; #{predictEnd}</if>
-            and predict_end  &lt; end
+            and predict_end &lt; end
         </where>
     </select>
 
@@ -297,4 +297,8 @@
         delete from zh_node where id = #{id}
     </delete>
 
+    <select id="selectZhNodeByParentId" parameterType="Integer" resultMap="ZhNodeResult">
+        <include refid="selectZhNodeVo"/>
+        where parent_id = #{parentId}
+    </select>
 </mapper>

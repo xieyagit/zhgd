@@ -39,6 +39,11 @@ public class ZhNodeServiceImpl implements IZhNodeService {
         return zhNodeMapper.selectZhNodeById(id);
     }
 
+    @Override
+    public List<ZhNode> selectZhNodeByParentId(Integer parentId) {
+        return zhNodeMapper.selectZhNodeByParentId(parentId);
+    }
+
     /**
      * 查询关键节点计划详情信息
      *

@@ -208,5 +208,95 @@ public class inOutKanBan {
         logger.info("实名制电视看板----/provider/inOutKanBan/selectTV");
         return AjaxResult.success(map);
     }
-
+    /**
+     * 电视看板考勤统计
+     */
+    @PostMapping(value = "/selectAttendance", produces = "application/json;charset=UTF-8")
+    public AjaxResult selectAttendance(Integer pid) {
+        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> worker = hjAttendanceRecordService.selectWorkerAttendance(pid);
+        Map<String, Object> manager = hjAttendanceRecordService.selectAdministration(pid);
+        //今日出勤人数
+        Map<String, Object> workerData = (Map<String, Object>) worker.get("data");
+        Map<String, Object> managerData = (Map<String, Object>) manager.get("data");
+        Integer attendanceWorker = (Integer) workerData.get("attendanceNumber");
+        Integer attendanceManager = (Integer) managerData.get("attendanceNumber");
+        Integer sceneWorker = (Integer) workerData.get("sceneNumber");
+        Integer sceneManager = (Integer) managerData.get("sceneNumber");
+        Integer attendanceNumber = attendanceWorker + attendanceManager;
+        Integer sceneNumber = sceneWorker + sceneManager;
+        map.put("attendanceWorker", attendanceWorker);
+        map.put("attendanceManager", attendanceManager);
+        map.put("sceneWorker", sceneWorker);
+        map.put("sceneManager", sceneManager);
+        map.put("attendanceNumber", attendanceNumber);
+        map.put("sceneNumber", sceneNumber);
+        return AjaxResult.success(map);
+    }
+    /**
+     * 实名制电视看板工人动态
+     */
+    @PostMapping(value = "/selectWorkerList", produces = "application/json;charset=UTF-8")
+    public AjaxResult selectWorkerList(Integer pid) {
+        //工人动态
+        List<DongTai> workerList = hjAttendanceRecordService.selectWorkerList(pid);
+        return AjaxResult.success(workerList);
+    }
+    /**
+     * 实名制电视看板管理人员动态
+     */
+    @PostMapping(value = "/selectManagerList", produces = "application/json;charset=UTF-8")
+    public AjaxResult selectManagerList(Integer pid) {
+        //管理人员动态
+        List<DongTai> managerList = hjAttendanceRecordService.selectManagerList(pid);
+        return AjaxResult.success(managerList);
+    }
+    /**
+     * 实名制电视看板施工企业考勤情况
+     */
+    @PostMapping(value = "/selectCompanyList", produces = "application/json;charset=UTF-8")
+    public AjaxResult selectCompanyList(Integer pid) {
+        //施工企业考勤情况
+        List<TCount> sceneList = hjAttendanceRecordService.getZCCount(pid);
+        List<TCount> attendanceList = hjAttendanceRecordService.getKQCount(pid);
+        JSONArray jsonArray = new JSONArray();
+        for (TCount scene : sceneList) {
+            System.out.println(sceneList.get(0).getTitle());
+            JSONObject object = new JSONObject();
+            object.put("name", scene.getTitle());//参建单位名称
+            object.put("sceneNumber", scene.getCount());//参建单位在场人数
+            for (TCount attendance : attendanceList) {
+                if (scene.getTitle().equals(attendance.getTitle())) {
+                    object.put("attendanceNumber", attendance.getCount());//参建单位考勤人数
+                    object.put("percent", Util.accuracy(attendance.getCount(), scene.getCount(), 2));//考勤百分比
+                }
+            }
+            if (attendanceList.size() == 0) {
+                object.put("attendanceNumber", 0);//参建单位考勤人数
+                object.put("percent", 0);//考勤百分比
+            }
+            jsonArray.add(object);
+        }
+        return AjaxResult.success(jsonArray);
+    }
+    /**
+     * 实名制电视看板实时抓拍
+     */
+    @PostMapping(value = "/selectPicture", produces = "application/json;charset=UTF-8")
+    public AjaxResult selectPicture(Integer pid) {
+        Map<String, Object> map = new HashMap<>();
+        HjAttendanceRecord hdr = new HjAttendanceRecord();
+        hdr.setProjectId(pid);
+        HjAttendanceRecord adr = hjAttendanceRecordService.selectNewHjAttendanceRecord(hdr);
+        if (adr != null) {
+            Integer workId = adr.getEmployeeId();
+            map.put("har", adr);
+            InOROut inOrOut = hjProjectWorkersService.selectInOrOutKB(workId);
+            map.put("inOrOut", inOrOut);
+        } else {
+            map.put("har", "");
+            map.put("inOrOut", "");
+        }
+        return AjaxResult.success(map);
+    }
 }
