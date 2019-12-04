@@ -209,7 +209,23 @@ public class NodeApi extends BaseController {
         } else {
             zhNode = nodeService.selectZhNodeList(node);
         }
-
+        ZhProgressNode zhProgressNode = new ZhProgressNode();
+        int progress;
+        if (zhNode != null && zhNode.size() > 0) {
+            for (int i = 0; i < zhNode.size(); i++) {
+                zhProgressNode.setNodeId(zhNode.get(i).getId());
+                List<ZhNodeWithProgress> zhNodeProgressList = progressNodeService.selectZhNodeProgressList(zhProgressNode);
+                progress = 0;
+                for (ZhNodeWithProgress zhNodeWithProgress : zhNodeProgressList) {
+                    progress += zhNodeWithProgress.getNodeProgressRatio();
+                }
+                if (progress >= 100) {
+                    zhNode.get(i).setAddAble(false);
+                } else {
+                    zhNode.get(i).setAddAble(true);
+                }
+            }
+        }
         logger.info("com.hujiang.project.zhgd.zhNode.api.NodeApi.selectZhNodeList" + "查询项目设备数：" + zhNode);
         if (zhNode != null) {
             result.put("msg", "查询节点列表成功");
@@ -241,7 +257,6 @@ public class NodeApi extends BaseController {
             result.put("msg", "无节点");
             result.put("code", -1);
         }
-
         return result;
     }
 
@@ -480,7 +495,11 @@ public class NodeApi extends BaseController {
      */
     @PostMapping("addNode")
     public AjaxResult addNode(@RequestBody ZhNode zhNode) {
-        return toAjax(nodeService.insertZhNode(zhNode));
+        int result = nodeService.insertZhNode(zhNode);
+        if (result > 0 && zhNode.getParentId() != null) {
+            updateFatherNode(zhNode.getId());
+        }
+        return toAjax(result);
     }
 
     /**
@@ -488,7 +507,6 @@ public class NodeApi extends BaseController {
      */
     @PostMapping("addProgressPlan")
     public AjaxResult addProgressPlan(@RequestBody ZhProgressPlan zhProgressPlan) {
-
         return toAjax(progressPlanService.insertZhProgressPlan(zhProgressPlan));
     }
 
@@ -501,6 +519,7 @@ public class NodeApi extends BaseController {
         int result = nodeService.deleteZhNodeById(id);
         if (result > 0) {
             progressNodeService.deleteZhProgressNodeByNodeId(id);
+            updateFatherNode(id);
         }
         return toAjax(result);
     }
@@ -518,7 +537,11 @@ public class NodeApi extends BaseController {
      */
     @PostMapping("editNode")
     public AjaxResult editNode(@RequestBody ZhNode zhNode) {
-        return toAjax(nodeService.updateZhNode(zhNode));
+        int result = nodeService.updateZhNode(zhNode);
+        if (result > 0 && zhNode.getParentId() != null) {
+            updateFatherNode(zhNode.getId());
+        }
+        return toAjax(result);
     }
 
     /**
@@ -614,9 +637,10 @@ public class NodeApi extends BaseController {
             }
             if (progress >= 100) {
                 nodeList.get(i).setAddAble(false);
-            } else{
+            } else {
                 nodeList.get(i).setAddAble(true);
             }
+            nodeList.get(i).setProgressRatio(progress);
         }
         logger.info("com.hujiang.project.zhgd.zhNode.api.NodeApi.selectEndZhNode" + "查询计划可以导入的节点：" + nodeList.toString());
         if (node != null) {
@@ -628,6 +652,48 @@ public class NodeApi extends BaseController {
             result.put("code", -1);
         }
         return result;
+    }
+
+    private void updateFatherNode(int nodeId) {
+        ZhNode node = nodeService.selectZhNodeById(nodeId);
+        int parentId = node.getParentId();
+        if (parentId == 0) {
+            return;
+        }
+        ZhNode parentNode = nodeService.selectZhNodeById(parentId);
+        List<ZhNode> zhNodeList = nodeService.selectZhNodeByParentId(parentId);
+        int zhNodeProgress = 0;
+        String startTime = null;
+        String endTime = null;
+        for (ZhNode zhNode : zhNodeList) {
+            if (zhNode.getProgress() != null) {
+                zhNodeProgress += zhNode.getProgress();
+            }
+            if (startTime == null) {
+                startTime = zhNode.getStart();
+            } else if (zhNode.getStart() != null && Util.getTime(startTime, zhNode.getStart()) < 0) {
+                startTime = zhNode.getStart();
+            }
+            if (endTime == null) {
+                endTime = zhNode.getEnd();
+            } else if (zhNode.getEnd() != null && Util.getTime(endTime, zhNode.getEnd()) > 0) {
+                endTime = zhNode.getEnd();
+            }
+        }
+        if (startTime != null) {
+            parentNode.setStart(startTime);
+        } else {
+            parentNode.setStart("");
+        }
+        if (endTime != null) {
+            parentNode.setEnd(endTime);
+        } else {
+            parentNode.setEnd("");
+        }
+        if (zhNodeProgress > 0 && zhNodeList.size() > 0) {
+            parentNode.setProgress(zhNodeProgress / zhNodeList.size());
+        }
+        nodeService.updateZhNode(parentNode);
     }
 
     /**
@@ -642,7 +708,9 @@ public class NodeApi extends BaseController {
         pNode.setNodeId(nodeId);
         List<ZhNodeWithProgress> dataList = progressNodeService.selectZhNodeProgressList(pNode);
         for (ZhNodeWithProgress zhNWP : dataList) {
-            progress += zhNWP.getNodeProgress() * zhNWP.getNodeProgressRatio();
+            if (zhNWP.getNodeProgress() != null) {
+                progress += zhNWP.getNodeProgress() * zhNWP.getNodeProgressRatio();
+            }
         }
         if (progress / 100 == 100) {
             node.setState(2);

@@ -321,7 +321,7 @@
         <if test="projectId != null  ">
             ar.project_id = #{projectId}
         </if>
-        AND to_days(ar.create_date) = to_days(now())
+        AND to_days(ar.passed_time) = to_days(now())
         AND hw.emp_category = 00
         GROUP BY
         ar.employee_id
@@ -339,7 +339,7 @@
         <if test="projectId != null  ">
             ar.project_id = #{projectId}
         </if>
-        AND to_days(ar.create_date) = to_days(now())
+        AND to_days(ar.passed_time) = to_days(now())
         AND hw.emp_category != 00
         GROUP BY
         ar.employee_id

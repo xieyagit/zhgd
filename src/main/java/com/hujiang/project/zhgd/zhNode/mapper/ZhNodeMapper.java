@@ -41,9 +41,17 @@ public interface ZhNodeMapper {
     public ZhNode selectZhNodeById(Integer id);
 
     /**
+     * 查询节点计划详情信息
+     *
+     * @param parentId 父节点ID
+     * @return 节点计划详情列表
+     */
+    public List<ZhNode> selectZhNodeByParentId(Integer parentId);
+
+    /**
      * 查询所有关键节点计划详情信息
      *
-     * @return 节点计划详情信息
+     * @return 节点计划详情列表
      */
     public List<ZhNode> selectCruxZhNode(ZhNode zhNode);
 

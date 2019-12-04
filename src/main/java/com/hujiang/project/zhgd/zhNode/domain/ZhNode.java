@@ -113,6 +113,18 @@ public class ZhNode {
      * 是否可以作为父级节点
      */
     private boolean befather;
+    /**
+     * 导入进度的百分比
+     */
+    private Integer progressRatio;
+
+    public Integer getProgressRatio() {
+        return progressRatio;
+    }
+
+    public void setProgressRatio(Integer progressRatio) {
+        this.progressRatio = progressRatio;
+    }
 
     public boolean isBefather() {
         return befather;

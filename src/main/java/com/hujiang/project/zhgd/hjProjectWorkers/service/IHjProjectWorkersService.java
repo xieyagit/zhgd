@@ -147,6 +147,7 @@ public interface IHjProjectWorkersService
 	 * 查询指定项目的在场人数
 	 */
 	public Integer selectOnLineCount(Integer pid);
+
 	/**
 	 * 在场关键人员
 	 * @param pid

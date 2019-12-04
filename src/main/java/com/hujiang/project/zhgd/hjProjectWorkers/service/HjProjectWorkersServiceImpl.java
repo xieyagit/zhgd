@@ -601,6 +601,7 @@ public class HjProjectWorkersServiceImpl implements IHjProjectWorkersService {
     public Integer selectOnLineCount(Integer pid){
         return hjProjectWorkersMapper.selectOnLineCount(pid);
     }
+
     /**
      * 在场关键人员
      * @param pid

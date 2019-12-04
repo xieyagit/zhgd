@@ -19,6 +19,13 @@ public interface IZhNodeService
      */
 	public ZhNode selectZhNodeById(Integer id);
 
+	/**
+	 * 查询节点计划详情信息
+	 *
+	 * @param parentId 父级节点ID
+	 * @return 节点计划详情列表
+	 */
+	public List<ZhNode> selectZhNodeByParentId(Integer parentId);
 
 	/**
 	 * 查询节点计划详情信息
