@@ -31,10 +31,9 @@
 
     <sql id="selectZhNodeVo">
    select id, number, parent_id, name, state, predict_start, predict_end, start, end, progress, content, found, creator_id, control_rank, principal, pipelining_segment, comment,project_id,crux,
-   case 1 when (select count(*) FROM zh_progress_node where node_id=zh_node.id limit 1) THEN TRUE
-   when (select count(*) FROM zh_prepose where main_plan=zh_node.id limit 1) THEN TRUE ELSE FALSE END hasNode,
-   case 1 when (select count(*) FROM zh_prepose where prepose_pian=zh_node.id limit 1) THEN TRUE ELSE FALSE END prepose,
-   case 1 when (select count(*) FROM zh_progress_node where node_id=zh_node.id limit 1) THEN TRUE ELSE FALSE END befather
+   case when (select count(*) FROM zh_progress_node n,zh_prepose e where n.node_id=zh_node.id OR e.main_plan= zh_node.id  limit 1)>=1 THEN TRUE ELSE FALSE END hasNode,
+   case when (select count(*) FROM zh_prepose where prepose_pian=zh_node.id limit 1)>=1 THEN TRUE ELSE FALSE END prepose,
+   case when (select count(*) FROM zh_progress_node where node_id=zh_node.id limit 1)>=1 THEN TRUE ELSE FALSE END befather
    from zh_node
     </sql>
 
