@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbAccountTalkback.mapper.SbAccountTalkbackMapper">
+    
+    <resultMap type="SbAccountTalkback" id="SbAccountTalkbackResult">
+        <result property="id"    column="id"    />
+        <result property="gtid"    column="gtid"    />
+        <result property="atName"    column="at_name"    />
+        <result property="atAccount"    column="at_account"    />
+        <result property="pid"    column="pid"    />
+    </resultMap>
+	
+	<sql id="selectSbAccountTalkbackVo">
+        select id, gtid, at_name, at_account,pid from sb_account_talkback
+    </sql>
+	
+    <select id="selectSbAccountTalkbackList" parameterType="SbAccountTalkback" resultMap="SbAccountTalkbackResult">
+        <include refid="selectSbAccountTalkbackVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="gtid != null "> and gtid = #{gtid}</if>
+             <if test="pid != null "> and pid = #{pid}</if>
+             <if test="atName != null  and atName != '' "> and at_name = #{atName}</if>
+             <if test="atAccount != null  and atAccount != '' "> and at_account = #{atAccount}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbAccountTalkbackById" parameterType="Integer" resultMap="SbAccountTalkbackResult">
+        <include refid="selectSbAccountTalkbackVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbAccountTalkback" parameterType="SbAccountTalkback">
+        insert into sb_account_talkback
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="gtid != null  ">gtid,</if>
+			<if test="pid != null  ">pid,</if>
+			<if test="atName != null  and atName != ''  ">at_name,</if>
+			<if test="atAccount != null  and atAccount != ''  ">at_account,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="gtid != null  ">#{gtid},</if>
+			<if test="pid != null  ">#{pid},</if>
+			<if test="atName != null  and atName != ''  ">#{atName},</if>
+			<if test="atAccount != null  and atAccount != ''  ">#{atAccount},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbAccountTalkback" parameterType="SbAccountTalkback">
+        update sb_account_talkback
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gtid != null  ">gtid = #{gtid},</if>
+            <if test="pid != null  ">pid = #{pid},</if>
+            <if test="atName != null  and atName != ''  ">at_name = #{atName},</if>
+            <if test="atAccount != null  and atAccount != ''  ">at_account = #{atAccount},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbAccountTalkbackById" parameterType="Integer">
+        delete from sb_account_talkback where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbAccountTalkbackByIds" parameterType="String">
+        delete from sb_account_talkback where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

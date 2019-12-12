@@ -78,6 +78,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <collection property="projectList" ofType="ProjectVideoJT"  >
             <result property="pid"    column="pid"    />
             <result property="projectName"    column="project_name"    />
+            <result property="projectAddress"    column="project_address"    />
+            <result property="remark"    column="remark"    />
+            <result property="projectDept"    column="project_dept"    />
+            <result property="phone"    column="phone"    />
+            <result property="projectPrincipal"    column="project_principal"    />
+            <collection property="cList" ofType="Construction"  >
+                <result property="constructionName"    column="construction_name"    />
+                <result property="constructionType"    column="title"    />
+                <result property="contacts"    column="contacts"    />
+                <result property="mobilePhone"    column="mobile_phone"    />
+            </collection>
             <collection property="videoList" ofType="Video"  >
                 <result property="isControl"    column="is_control"    />
                 <result property="videoSn"    column="video_sn"    />
@@ -87,7 +98,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </collection>
     </resultMap>
     <select id="getVideoListJT" parameterType="Integer" resultMap="getVideoListJTResult">
-       select a.area_name,p.id pid,p.project_name,v.url,v.is_control,v.video_sn,v.video_name  from  sb_project_video_area a  join hj_project p on p.id=a.projectid join sb_project_video v on v.area_id=a.id where a.projectid in (select b.id from hj_company_project a
+
+        		select cc.mobile_phone,cc.contacts,a.area_name,p.id pid,p.project_name,p.project_address,p.project_dept,p.phone,p.project_principal,p.remark,v.url,v.is_control,v.video_sn,v.video_name,cc.construction_name,d.title  from
+				sb_project_video_area a left  join hj_project p on p.id=a.projectid left join sb_project_video v on v.area_id=a.id
+			left	join hj_construction_project c on c.project_id=p.id left join hj_construction_company cc on c.construction_id=cc.id left join hj_dictionaries d on cc.company_type=d.id
+				where a.projectid in (select b.id from hj_company_project a
     INNER JOIN hj_project b on (a.project_id=b.id)
     where 1=1
         and a.path like CONCAT((select path from hj_company_project where company_id=#{cid} LIMIT 1), '%')

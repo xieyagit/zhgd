@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbProjectVideoPreset.mapper.SbProjectVideoPresetMapper">
+    
+    <resultMap type="SbProjectVideoPreset" id="SbProjectVideoPresetResult">
+        <result property="id"    column="id"    />
+        <result property="videoSn"    column="video_sn"    />
+        <result property="presetIndex"    column="preset_index"    />
+        <result property="presetName"    column="preset_name"    />
+    </resultMap>
+	
+	<sql id="selectSbProjectVideoPresetVo">
+        select id, video_sn, preset_index, preset_name from sb_project_video_preset
+    </sql>
+	
+    <select id="selectSbProjectVideoPresetList" parameterType="SbProjectVideoPreset" resultMap="SbProjectVideoPresetResult">
+        <include refid="selectSbProjectVideoPresetVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="videoSn != null  and videoSn != '' "> and video_sn = #{videoSn}</if>
+             <if test="presetIndex != null "> and preset_index = #{presetIndex}</if>
+             <if test="presetName != null  and presetName != '' "> and preset_name = #{presetName}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbProjectVideoPresetById" parameterType="Integer" resultMap="SbProjectVideoPresetResult">
+        <include refid="selectSbProjectVideoPresetVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbProjectVideoPreset" parameterType="SbProjectVideoPreset">
+        insert into sb_project_video_preset
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="videoSn != null  and videoSn != ''  ">video_sn,</if>
+			<if test="presetIndex != null  ">preset_index,</if>
+			<if test="presetName != null  and presetName != ''  ">preset_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="videoSn != null  and videoSn != ''  ">#{videoSn},</if>
+			<if test="presetIndex != null  ">#{presetIndex},</if>
+			<if test="presetName != null  and presetName != ''  ">#{presetName},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbProjectVideoPreset" parameterType="SbProjectVideoPreset">
+        update sb_project_video_preset
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="videoSn != null  and videoSn != ''  ">video_sn = #{videoSn},</if>
+            <if test="presetIndex != null  ">preset_index = #{presetIndex},</if>
+            <if test="presetName != null  and presetName != ''  ">preset_name = #{presetName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbProjectVideoPresetById" parameterType="Integer">
+        delete from sb_project_video_preset where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbProjectVideoPresetByIds" parameterType="String">
+        delete from sb_project_video_preset where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteSbProjectVideoPreset" parameterType="SbProjectVideoPreset">
+        delete from sb_project_video_preset where video_sn=#{videoSn} and preset_index=#{presetIndex}
+    </delete>
+</mapper>
