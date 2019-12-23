@@ -83,6 +83,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <result property="projectDept"    column="project_dept"    />
             <result property="phone"    column="phone"    />
             <result property="projectPrincipal"    column="project_principal"    />
+            <result property="djorzcb"    column="djorzcb"    />
+            <result property="djorzcbType"    column="djorzcb_type"    />
             <collection property="cList" ofType="Construction"  >
                 <result property="constructionName"    column="construction_name"    />
                 <result property="constructionType"    column="title"    />
@@ -94,12 +96,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 <result property="videoSn"    column="video_sn"    />
                 <result property="videoName"    column="video_name"    />
                 <result property="url"    column="url"    />
+                <result property="hdUrl"    column="hdurl"    />
+                <result property="longitude"    column="longitude"    />
+                <result property="latitude"    column="latitude"    />
+                <result property="factory"    column="factory"    />
             </collection>
         </collection>
     </resultMap>
     <select id="getVideoListJT" parameterType="Integer" resultMap="getVideoListJTResult">
 
-        		select cc.mobile_phone,cc.contacts,a.area_name,p.id pid,p.project_name,p.project_address,p.project_dept,p.phone,p.project_principal,p.remark,v.url,v.is_control,v.video_sn,v.video_name,cc.construction_name,d.title  from
+        		select p.djorzcb,p.djorzcb_type,v.hdurl,v.longitude,v.latitude,v.factory,cc.mobile_phone,cc.contacts,a.area_name,p.id pid,p.project_name,p.project_address,p.project_dept,p.phone,p.project_principal,p.remark,v.url,v.is_control,v.video_sn,v.video_name,cc.construction_name,d.title  from
 				sb_project_video_area a left  join hj_project p on p.id=a.projectid left join sb_project_video v on v.area_id=a.id
 			left	join hj_construction_project c on c.project_id=p.id left join hj_construction_company cc on c.construction_id=cc.id left join hj_dictionaries d on cc.company_type=d.id
 				where a.projectid in (select b.id from hj_company_project a
