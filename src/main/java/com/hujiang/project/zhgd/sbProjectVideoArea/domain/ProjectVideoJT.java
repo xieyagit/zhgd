@@ -16,6 +16,33 @@ public class ProjectVideoJT {
     private String projectDept;//所属部门
     private String phone;//项目经理电话
     private String projectPrincipal;//项目经理
+    private String token;
+    private String djorzcb;//代建或总承包名称
+    private String djorzcbType;//
+
+    public String getDjorzcb() {
+        return djorzcb;
+    }
+
+    public void setDjorzcb(String djorzcb) {
+        this.djorzcb = djorzcb;
+    }
+
+    public String getDjorzcbType() {
+        return djorzcbType;
+    }
+
+    public void setDjorzcbType(String djorzcbType) {
+        this.djorzcbType = djorzcbType;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     public String getProjectDept() {
         return projectDept;

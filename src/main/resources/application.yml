@@ -106,8 +106,6 @@ eureka:
     lease-renewal-interval-in-seconds: 1
     #续约到期时间（默认90秒）
     lease-expiration-duration-in-seconds: 2
-
-    #    ip-address: 120.79.129.65
     ip-address: localhost
 
 
@@ -120,8 +118,7 @@ eureka:
       enabled: false
     serviceUrl:
 
-      #      defaultZone: http://47.112.23.241:9001/eureka/,http://47.112.23.241:9002/eureka/  # 注册中心访问地址
-      defaultZone: http://localhost:9005/eureka/  # 注册中心访问地址
+        defaultZone: http://localhost:9006/eureka/  # 注册中心访问地址
 
 
 
@@ -225,3 +222,10 @@ feign:
     max-connections: 3000
   hystrix:
     enabled: false
+#FTP连接
+#地址
+ftpHost: 124.160.11.21
+ftpPort: 21218
+ftpUsername: ftp-user-)rg
+ftpPassword: chatsure
+ftpBasepath: home

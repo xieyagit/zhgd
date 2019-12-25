@@ -19,6 +19,8 @@ import com.hujiang.project.zhgd.hjProjectWorkers.domain.HjProjectWorkers;
 import com.hujiang.project.zhgd.hjProjectWorkers.service.IHjProjectWorkersService;
 import com.hujiang.project.zhgd.hjTeam.domain.HjTeam;
 import com.hujiang.project.zhgd.hjTeam.service.IHjTeamService;
+import com.hujiang.project.zhgd.utils.FTPUtil;
+import org.apache.xmlbeans.impl.xb.ltgfmt.TestCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -122,4 +124,5 @@ public class AreaApi extends BaseController {
 
         }
     }
+
 }

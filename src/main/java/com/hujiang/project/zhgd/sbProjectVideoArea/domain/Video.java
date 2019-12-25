@@ -5,6 +5,60 @@ public class Video {
     private String isControl;
     private String url;
     private String videoName;
+    private String isStatus;//是否在线 0不在线，1，在线
+    private String picUrl;//监控抓拍图
+    private String hdUrl;
+    private String longitude;//经度
+    private String latitude;//纬度
+    private String factory;
+
+    public String getHdUrl() {
+        return hdUrl;
+    }
+
+    public void setHdUrl(String hdUrl) {
+        this.hdUrl = hdUrl;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getFactory() {
+        return factory;
+    }
+
+    public void setFactory(String factory) {
+        this.factory = factory;
+    }
+
+    public String getPicUrl() {
+        return picUrl;
+    }
+
+    public void setPicUrl(String picUrl) {
+        this.picUrl = picUrl;
+    }
+
+    public String getIsStatus() {
+        return isStatus;
+    }
+
+    public void setIsStatus(String isStatus) {
+        this.isStatus = isStatus;
+    }
 
     public String getVideoName() {
         return videoName;
