@@ -36,6 +36,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="faceGroup"    column="face_group"    />
         <result property="itemId"    column="itemId"    />
         <result property="buildUnit"    column="build_unit"    />
+        <result property="projectDept"    column="project_dept"    />
     </resultMap>
 	
 	<sql id="selectHjProjectVo">
@@ -273,6 +274,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="updateDate != null  and updateDate != ''  ">update_date,</if>
 			<if test="faceGroup != null  and faceGroup != ''  ">face_group,</if>
             <if test="buildUnit != null  and buildUnit != ''  ">build_unit,</if>
+            <if test="projectDept != null  and projectDept != ''  ">project_dept,</if>
 
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -307,6 +309,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="updateDate != null  and updateDate != ''  ">#{updateDate},</if>
 			<if test="faceGroup != null  and faceGroup != ''  ">#{faceGroup},</if>
             <if test="buildUnit != null  and buildUnit != ''  ">#{buildUnit},</if>
+            <if test="projectDept != null  and projectDept != ''  ">#{projectDept},</if>
          </trim>
     </insert>
 	 
@@ -343,6 +346,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateDate != null  and updateDate != ''  ">update_date = #{updateDate},</if>
             <if test="faceGroup != null  and faceGroup != ''  ">face_group = #{faceGroup},</if>
             <if test="buildUnit != null  and buildUnit != ''  ">build_unit = #{buildUnit},</if>
+            <if test="projectDept != null  and projectDept != ''  ">project_dept = #{projectDept},</if>
 
         </trim>
         where id = #{id}

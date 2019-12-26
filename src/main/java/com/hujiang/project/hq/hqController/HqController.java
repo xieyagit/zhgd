@@ -161,16 +161,19 @@ public class HqController {
                 }
             }
 //            System.out.println(s.getString("SanpPic").substring(s.getString("SanpPic").indexOf(",")+));
-            MultipartFile file = BASE64DecodedMultipartFile.base64ToMultipartOnt(log.getString("photoes"));
-            String FileImgurl=AliyunOSSClientUtil.uploadFileImg(file, "hujiang", hpw.getIdCode()+ System.currentTimeMillis() + ".jpg");
-            String name = FileImgurl.substring(0,FileImgurl.lastIndexOf("?"));
             HjAttendanceRecord har=new HjAttendanceRecord();
+            if (flag) {
+                MultipartFile file = BASE64DecodedMultipartFile.base64ToMultipartOnt(log.getString("photoes"));
+                String FileImgurl = AliyunOSSClientUtil.uploadFileImg(file, "hujiang", hpw.getIdCode() + System.currentTimeMillis() + ".jpg");
+                String name = FileImgurl.substring(0, FileImgurl.lastIndexOf("?"));
+                har.setSitePhoto(name);
+            }
             har.setProjectId(had2.getProjectId());
             har.setEmployeeId(hpw.getId());
             har.setPassedTime(passedTime);
             har.setDirection(had2.getDirection());
             har.setWay(1);
-            har.setSitePhoto(name);
+
             if(flag2){
                 har.setUploadTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
             }

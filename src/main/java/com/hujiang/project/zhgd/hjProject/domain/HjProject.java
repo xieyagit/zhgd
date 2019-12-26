@@ -81,6 +81,16 @@ public class HjProject
 	private Integer itemId;
 	/** 集团ID */
 	private String cid;
+/** 所属部门 */
+	private String projectDept;
+
+	public String getProjectDept() {
+		return projectDept;
+	}
+
+	public void setProjectDept(String projectDept) {
+		this.projectDept = projectDept;
+	}
 
 	public String getCid() {
 		return cid;

@@ -1,5 +1,6 @@
 package com.hujiang.project.zhgd.hjArea.api;
 
+import com.hujiang.common.support.Convert;
 import com.hujiang.framework.web.controller.BaseController;
 import com.hujiang.framework.web.domain.AjaxResult;
 import com.hujiang.project.zhgd.hjArea.domain.HjArea;
@@ -12,8 +13,14 @@ import com.hujiang.project.zhgd.hjCompanyProject.domain.HjCompanyProject;
 import com.hujiang.project.zhgd.hjCompanyProject.service.IHjCompanyProjectService;
 import com.hujiang.project.zhgd.hjDeviceProjectworkers.domain.HjDeviceProjectworkers;
 import com.hujiang.project.zhgd.hjDeviceProjectworkers.service.IHjDeviceProjectworkersService;
+import com.hujiang.project.zhgd.hjProjectPersonnelSynchronization.domain.HjProjectPersonnelSynchronization;
+import com.hujiang.project.zhgd.hjProjectPersonnelSynchronization.service.IHjProjectPersonnelSynchronizationService;
 import com.hujiang.project.zhgd.hjProjectWorkers.domain.HjProjectWorkers;
 import com.hujiang.project.zhgd.hjProjectWorkers.service.IHjProjectWorkersService;
+import com.hujiang.project.zhgd.hjTeam.domain.HjTeam;
+import com.hujiang.project.zhgd.hjTeam.service.IHjTeamService;
+import com.hujiang.project.zhgd.utils.FTPUtil;
+import org.apache.xmlbeans.impl.xb.ltgfmt.TestCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -93,4 +101,28 @@ public class AreaApi extends BaseController {
             hjCompanyProjectService.updateHjCompanyProject(hp);
         }
     }
+    @Autowired
+    private IHjTeamService hjTeamService;
+    @Autowired
+    private IHjProjectPersonnelSynchronizationService hjProjectPersonnelSynchronizationService;
+    @PostMapping("/aa")
+    public void aa(){
+        HjProjectWorkers hpw=new HjProjectWorkers();
+        hpw.setProjectId(24);
+        hpw.setEnterAndRetreatCondition(2);
+        List<HjProjectWorkers> hpList=hjProjectWorkersService.selectHjProjectWorkersList(hpw);
+        System.out.println(hpList.size());
+        HjProjectWorkers hp;
+        HjTeam ht;
+        HjProjectPersonnelSynchronization hps=new HjProjectPersonnelSynchronization();
+        hps.setProjectId(24);
+
+        for(int i=0;i<hpList.size();i++){
+            hp=hpList.get(i);
+            Map<String, Object> map = hjProjectWorkersService.updateHjProjectWorkersOutOrIn(Convert.toStrArray(hp.getId().toString()), 0);
+
+
+        }
+    }
+
 }

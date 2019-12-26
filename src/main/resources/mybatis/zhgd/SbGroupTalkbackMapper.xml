@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbGroupTalkback.mapper.SbGroupTalkbackMapper">
+    
+    <resultMap type="SbGroupTalkback" id="SbGroupTalkbackResult">
+        <result property="id"    column="id"    />
+        <result property="cpid"    column="cpid"    />
+        <result property="gtAccount"    column="gt_account"    />
+        <result property="gtPassword"    column="gt_password"    />
+        <result property="isIdType"    column="isid_type"    />
+    </resultMap>
+	
+	<sql id="selectSbGroupTalkbackVo">
+        select id, cpid, gt_account, gt_password,isid_type from sb_group_talkback
+    </sql>
+	
+    <select id="selectSbGroupTalkbackList" parameterType="SbGroupTalkback" resultMap="SbGroupTalkbackResult">
+        <include refid="selectSbGroupTalkbackVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="cpid != null "> and cpid = #{cpid}</if>
+             <if test="gtAccount != null  and gtAccount != '' "> and gt_account = #{gtAccount}</if>
+             <if test="gtPassword != null  and gtPassword != '' "> and gt_password = #{gtPassword}</if>
+             <if test="isIdType != null  and isIdType != '' "> and isid_type = #{isIdType}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbGroupTalkbackById" parameterType="Integer" resultMap="SbGroupTalkbackResult">
+        <include refid="selectSbGroupTalkbackVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbGroupTalkback" parameterType="SbGroupTalkback">
+        insert into sb_group_talkback
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="cpid != null  ">cpid,</if>
+			<if test="gtAccount != null  and gtAccount != ''  ">gt_account,</if>
+			<if test="gtPassword != null  and gtPassword != ''  ">gt_password,</if>
+			<if test="isIdType != null  and isIdType != ''  ">isid_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="cpid != null  ">#{cpid},</if>
+			<if test="gtAccount != null  and gtAccount != ''  ">#{gtAccount},</if>
+			<if test="gtPassword != null  and gtPassword != ''  ">#{gtPassword},</if>
+			<if test="isIdType != null  and isIdType != ''  ">#{isIdType},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbGroupTalkback" parameterType="SbGroupTalkback">
+        update sb_group_talkback
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cpid != null  ">cpid = #{cpid},</if>
+            <if test="gtAccount != null  and gtAccount != ''  ">gt_account = #{gtAccount},</if>
+            <if test="gtPassword != null  and gtPassword != ''  ">gt_password = #{gtPassword},</if>
+            <if test="isIdType != null  and isIdType != ''  ">isid_type = #{isIdType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbGroupTalkbackById" parameterType="Integer">
+        delete from sb_group_talkback where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbGroupTalkbackByIds" parameterType="String">
+        delete from sb_group_talkback where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <resultMap type="SbGroupTalkback" id="getAccountList">
+        <result property="id"    column="gid"    />
+        <result property="gtAccount"    column="gt_account"    />
+        <result property="gtPassword"    column="gt_password"    />
+        <collection property="atList" ofType="SbAccountTalkback"  >
+            <result property="id"    column="aid"    />
+            <result property="pid"    column="pid"    />
+            <result property="atName"    column="at_name"    />
+            <result property="atAccount"    column="at_account"    />
+
+        </collection>
+    </resultMap>
+    <select id="getAccountList" parameterType="SbGroupTalkback" resultMap="getAccountList">
+       select g.id gid,a.id aid,g.gt_account,g.gt_password,a.at_name,a.at_account,a.pid from sb_group_talkback g join sb_account_talkback a on g.id=a.gtid
+       where g.cpid=#{cpid} and g.isid_type=#{isIdType}
+    </select>
+</mapper>

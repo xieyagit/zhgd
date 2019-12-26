@@ -46,12 +46,12 @@ public class appCurrentTemperatureApi extends BaseController {
         //获取设备最新数据
 
         SbCurrentTemperature sbCurrentTemperature = sbCurrentTemperatureService.getSbCurrentTemperatureToOne(electricityBoxId);
-        logger.info("sbCurrentTemperature start-------------------------------->");
+//        logger.info("sbCurrentTemperature start-------------------------------->");
         JSONObject result =new JSONObject();
         JSONObject o =null;
         JSONObject r = new JSONObject();
         if(sbCurrentTemperature!=null){
-            logger.info("sbCurrentTemperature not null-------------------------------->");
+//            logger.info("sbCurrentTemperature not null-------------------------------->");
             //电箱漏电（kwh）,电箱温度
             o = (JSONObject)JSONObject.toJSON(sbCurrentTemperature);
             //时间转毫秒
@@ -64,7 +64,7 @@ public class appCurrentTemperatureApi extends BaseController {
             }else{
                 o.put("runningStatus",false);//设备异常
             }
-            logger.info("sbCurrentTemperature getDoorType-------------------------------->" + sbCurrentTemperature.getDoorType());
+//            logger.info("sbCurrentTemperature getDoorType-------------------------------->" + sbCurrentTemperature.getDoorType());
             o.put("doorLock", "关");//门锁状态
 
             if (sbCurrentTemperature.getDoorType()!= null && !"".equals(sbCurrentTemperature.getDoorType())) {

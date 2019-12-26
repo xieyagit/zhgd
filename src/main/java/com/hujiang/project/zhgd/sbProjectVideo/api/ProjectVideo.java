@@ -128,7 +128,7 @@ public class ProjectVideo extends BaseController {
         params.add(new BasicNameValuePair("accessToken",ysUtil.getAccessToken2(pid) ));
         params.add(new BasicNameValuePair("deviceSerial",deviceSerial));
         params.add(new BasicNameValuePair("channelNo","1"));
-        params.add(new BasicNameValuePair("speed","0"));
+        params.add(new BasicNameValuePair("speed","1"));
         params.add(new BasicNameValuePair("direction",direction.toString()));
         ysUtil.httpPostWithJSON(Constants.OPEN_YS_LAPP +"lapp/device/ptz/start",params);
 

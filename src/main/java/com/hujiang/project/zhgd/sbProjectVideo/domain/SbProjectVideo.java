@@ -72,6 +72,36 @@ public class SbProjectVideo {
      * 是否支持云端控制 1支持 0不支持
      */
     private String isControl;
+    /** 虎匠编号	 */
+    private String hjCode;
+    /** 流量卡号	 */
+    private String flowCard;
+    /** 出库日期	 */
+    private String shipmentDate;
+
+    public String getHjCode() {
+        return hjCode;
+    }
+
+    public void setHjCode(String hjCode) {
+        this.hjCode = hjCode;
+    }
+
+    public String getFlowCard() {
+        return flowCard;
+    }
+
+    public void setFlowCard(String flowCard) {
+        this.flowCard = flowCard;
+    }
+
+    public String getShipmentDate() {
+        return shipmentDate;
+    }
+
+    public void setShipmentDate(String shipmentDate) {
+        this.shipmentDate = shipmentDate;
+    }
 
     public String getVideoSn() {
         return videoSn;

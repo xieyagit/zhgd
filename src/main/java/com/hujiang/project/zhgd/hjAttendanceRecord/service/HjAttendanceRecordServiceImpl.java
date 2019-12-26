@@ -9,10 +9,8 @@ import java.util.logging.Logger;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.exception.BusinessException;
+import com.hujiang.common.utils.*;
 import com.hujiang.common.utils.AliyunOSSClientUtil;
-import com.hujiang.common.utils.FaceMatchUtil;
-import com.hujiang.common.utils.JsonUtils;
-import com.hujiang.common.utils.StringUtil;
 import com.hujiang.framework.jms.JmsMessageInfo;
 import com.hujiang.framework.jms.JmsMessageType;
 import com.hujiang.framework.web.domain.AjaxResult;
@@ -24,6 +22,7 @@ import com.hujiang.project.zhgd.hjProjectWorkers.domain.HjProjectWorkers;
 import com.hujiang.project.zhgd.hjProjectWorkers.domain.TCount;
 import com.hujiang.project.zhgd.hjProjectWorkers.mapper.HjProjectWorkersMapper;
 import com.hujiang.project.zhgd.utils.*;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -413,16 +412,47 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
                         HjProjectWorkers hjProjectWorkers = hjProjectWorkersMapper.selectHjProjectWorkersById(Integer.parseInt(userId));
                         if (hjProjectWorkers != null) {
                             if (hjProjectWorkers.getEnterAndRetreatCondition() == 0) {
-                                JSONObject map = new JSONObject();
-                                map.put("hjProjectWorkers", hjProjectWorkers);
-                                map.put("hjAttendanceRecord", hjAttendanceRecord);
-                                map.put("imgBase", imgBase);
+//                                JSONObject map = new JSONObject();
+//                                map.put("hjProjectWorkers", hjProjectWorkers);
+//                                map.put("hjAttendanceRecord", hjAttendanceRecord);
+//                                map.put("imgBase", imgBase);
+//                                JmsMessageInfo<String> messageInfo = new JmsMessageInfo<String>();
+//                                messageInfo.setBody(map.toJSONString());
+//                                messageInfo.setType(JmsMessageType.INSERT_ATTENDANCE);
+//                                jmsMessagingTemplate.convertAndSend(attendanceRecord, JsonUtils.toJson(messageInfo));
+                                ThreadUtils.async(new Runnable() {
 
-                                JmsMessageInfo<String> messageInfo = new JmsMessageInfo<String>();
-                                messageInfo.setBody(map.toJSONString());
-                                messageInfo.setType(JmsMessageType.INSERT_ATTENDANCE);
-                                jmsMessagingTemplate.convertAndSend(attendanceRecord, JsonUtils.toJson(messageInfo));
+                                                      @Override
+                                                      public void run() {
+                                                          try {
 
+//                                                              HjProjectWorkers hjProjectWorkers=JSONObject.parseObject(s.getString("hjProjectWorkers"),HjProjectWorkers.class);
+//                                                              HjAttendanceRecord hjAttendanceRecord=JSONObject.parseObject(s.getString("hjAttendanceRecord"),HjAttendanceRecord.class);
+//                                                              String d=hjAttendanceRecord.getDirection();
+//                                                              String imgbase=s.getString("imgBase");
+                                                              MultipartFile file=  BASE64DecodedMultipartFile.base64ToMultipartOnt(imgBase);
+                                                              boolean re = apiClient.uploadPassedLogTest(hjProjectWorkers,hjAttendanceRecord.getDirection(),imgBase);
+                                                              String folder = AliyunOSSClientUtil.createFolder(AliyunOSSClientUtil.getOSSClient(), "hujiang", hjAttendanceRecord.getDirection()+"/");  // 文件夹名称
+                                                              String filename= hjProjectWorkers.getId()+new Date().getTime()+".jpg";
+                                                              String fileUrl = AliyunOSSClientUtil.uploadFileImg(file, folder,filename);
+                                                              String nameUel = fileUrl.substring(0,fileUrl.lastIndexOf("?"));
+
+                                                              hjAttendanceRecord.setCreateDate(new Date());  // 保存到考勤记录
+                                                              hjAttendanceRecord.setWay(1);
+                                                              hjAttendanceRecord.setPassedTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+                                                              hjAttendanceRecord.setEmployeeId(hjProjectWorkers.getId());
+                                                              hjAttendanceRecord.setSitePhoto(nameUel);
+                                                              if(re) {
+                                                                  hjAttendanceRecord.setUploadTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+                                                              }
+                                                              int i1 = hjAttendanceRecordMapper.insertHjAttendanceRecord(hjAttendanceRecord);
+
+                                                              System.out.println(hjProjectWorkers.getEmpName()+":考勤异步执行完毕");
+                                                          }catch (Exception e) {
+                                                              logger.info("上传失败: "+e.getMessage());
+                                                          }
+                                                      }
+                                                  });
 
                                 logger.info("考勤成功！添加考勤记录：" + hjProjectWorkers.getEmpName());
                                 //上传和插入由消息队列执行

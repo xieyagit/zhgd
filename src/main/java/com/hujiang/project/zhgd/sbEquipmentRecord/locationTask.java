@@ -192,8 +192,9 @@ public class locationTask extends AutoTaskBase {
                         sbEquipmentWarning.setAdminId(pushItem.getUserId());
                         jPushSMS.JPushAndJSMS(sbEquipmentWarning,areaProjects.get(0).getProjectId());
                     }
+                    equipmentWarningService.insertSbEquipmentWarning(equipmentWarningList);
                 }
-                equipmentWarningService.insertSbEquipmentWarning(equipmentWarningList);
+
             }
         }
     }
