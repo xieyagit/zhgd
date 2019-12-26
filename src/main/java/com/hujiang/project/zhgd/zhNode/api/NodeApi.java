@@ -113,13 +113,15 @@ public class NodeApi extends BaseController {
      */
     @PostMapping("/exportZhProgressPlan")
     public List<ZhNodePc> exportZhProgressPlan(@RequestParam(value = "progressId") int progressId) {
-        ZhNodePc zhNodePc = new ZhNodePc();
         List<ZhNodePc> list = new ArrayList<>();
         ZhProgressNode zpn = new ZhProgressNode();
         zpn.setProgressId(progressId);
         List<ZhProgressNode> pNode = progressNodeService.selectZhProgressNodeList(zpn);
+        ZhNodePc zhNodePc;
+        ZhNode z;
         for (ZhProgressNode pn : pNode) {
-            ZhNode z = nodeService.selectZhNodeById(pn.getNodeId());
+            zhNodePc = new ZhNodePc();
+            z = nodeService.selectZhNodeById(pn.getNodeId());
             BeanUtils.copyProperties(z, zhNodePc);
             System.out.println(zhNodePc);
             list.add(zhNodePc);
@@ -497,7 +499,8 @@ public class NodeApi extends BaseController {
     public AjaxResult addNode(@RequestBody ZhNode zhNode) {
         int result = nodeService.insertZhNode(zhNode);
         if (result > 0 && zhNode.getParentId() != null) {
-            updateFatherNode(zhNode.getId());
+            updateFatherNode(zhNode);
+
         }
         return toAjax(result);
     }
@@ -516,10 +519,11 @@ public class NodeApi extends BaseController {
      */
     @PostMapping("removeNode")
     public AjaxResult removeNode(@RequestParam(value = "id") int id) {
+        ZhNode node = nodeService.selectZhNodeById(id);
         int result = nodeService.deleteZhNodeById(id);
         if (result > 0) {
             progressNodeService.deleteZhProgressNodeByNodeId(id);
-            updateFatherNode(id);
+            updateFatherNode(node);
         }
         return toAjax(result);
     }
@@ -539,7 +543,7 @@ public class NodeApi extends BaseController {
     public AjaxResult editNode(@RequestBody ZhNode zhNode) {
         int result = nodeService.updateZhNode(zhNode);
         if (result > 0 && zhNode.getParentId() != null) {
-            updateFatherNode(zhNode.getId());
+            updateFatherNode(zhNode);
         }
         return toAjax(result);
     }
@@ -553,6 +557,8 @@ public class NodeApi extends BaseController {
         if (result > 0) {
             updateNodeProgress(progressNode.getNodeId());
             updateProgressPlan(progressNode.getProgressId());
+            ZhNode node = nodeService.selectZhNodeById(progressNode.getNodeId());
+            updateFatherNode(node);
         }
         return toAjax(result);
     }
@@ -654,8 +660,7 @@ public class NodeApi extends BaseController {
         return result;
     }
 
-    private void updateFatherNode(int nodeId) {
-        ZhNode node = nodeService.selectZhNodeById(nodeId);
+    private void updateFatherNode(ZhNode node) {
         int parentId = node.getParentId();
         if (parentId == 0) {
             return;
@@ -683,12 +688,12 @@ public class NodeApi extends BaseController {
         if (startTime != null) {
             parentNode.setStart(startTime);
         } else {
-            parentNode.setStart("");
+            parentNode.setStart(null);
         }
         if (endTime != null) {
             parentNode.setEnd(endTime);
         } else {
-            parentNode.setEnd("");
+            parentNode.setEnd(null);
         }
         if (zhNodeProgress > 0 && zhNodeList.size() > 0) {
             parentNode.setProgress(zhNodeProgress / zhNodeList.size());
