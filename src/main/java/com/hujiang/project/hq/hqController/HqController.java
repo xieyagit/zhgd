@@ -2,10 +2,13 @@ package com.hujiang.project.hq.hqController;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hujiang.project.jianshishimingzhi.JiAnShiUtil;
 import com.hujiang.project.zhgd.hjAttendanceDevice.domain.HjAttendanceDevice;
 import com.hujiang.project.zhgd.hjAttendanceDevice.service.IHjAttendanceDeviceService;
 import com.hujiang.project.zhgd.hjAttendanceRecord.domain.HjAttendanceRecord;
 import com.hujiang.project.zhgd.hjAttendanceRecord.service.IHjAttendanceRecordService;
+import com.hujiang.project.zhgd.hjLogging.domain.HjLogging;
+import com.hujiang.project.zhgd.hjLogging.service.IHjLoggingService;
 import com.hujiang.project.zhgd.hjProject.domain.HjProject;
 import com.hujiang.project.zhgd.hjProject.service.IHjProjectService;
 import com.hujiang.project.zhgd.hjProjectWorkers.domain.HjProjectWorkers;
@@ -54,6 +57,8 @@ public class HqController {
     private IHjProjectWorkersService hjProjectWorkersService;
     @Autowired
     private IHjProjectService hjProjectService;
+    @Autowired
+    private IHjLoggingService hjLoggingService;
     @RequestMapping("/Verify")
     public void zp(@RequestBody String json)throws Exception{
 //        System.out.println(json);
@@ -152,6 +157,42 @@ public class HqController {
 
                                 String url = APIClient.getUrlDG(h.getApiKey(), jsonObject.toString(), Constants.DG_HOUS + "/UploadAttendance");
                                 String result = APIClient.httpPostWithJSONDG(url, jsonObject);
+
+
+                            }else if(h.getPlatformName().equals("JIANSHI")){
+                                jsonData.clear();
+                                String time=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+                                String time2=new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
+                                jsonData.put("keyId",h.getClientSerial());
+                                jsonData.put("projectKeyId",h.getApiKey());
+                                jsonData.put("projectCode",h.getProjectNumber());
+                                jsonData.put("systemTime",time2);
+                                jsonData.put("signature", JiAnShiUtil.getSignature(h.getEngineeringCode(),h.getProjectNumber(),time2,h.getApiSecret()));
+                                jsonData.put("idCard",hpw.getIdCode());
+                                jsonData.put("serialNo",had2.getDeviceNo());
+                                jsonData.put("name",hpw.getEmpName());
+                                jsonData.put("recordTime",time);
+                                jsonData.put("inOrOut","in".equals(had2.getDirection())?0:1);
+                                jsonData.put("atteTime",passedTime);
+                                jsonData.put("atteType",0);
+//                                System.out.println(jsonData);
+                                jsonData.put("photo",log.getString("photoes"));
+                               String result= ZCAPIClientTwo.httpPostWithJSON(Constants.JIANSHI_SHIMINGZHI+"/attendance.rest/attendance",jsonData);
+                               JSONObject s=JSONObject.parseObject(result);
+
+                                if(!"0".equals(s.getString("code"))){
+                                    flag2=false;
+                                    HjLogging hl=new HjLogging();
+                                    hl.setProjectId(hpw.getProjectId());
+                                    hl.setLoggingMessage(s.getString("message"));
+                                    hl.setLoggingData(result);
+                                    hl.setInOut("向人脸机下发人脸失败！");
+                                    hl.setUserName(hpw.getEmpName());
+                                    hl.setLoggingTag("RecordDevice");
+                                    hl.setLoggingTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+                                    hjLoggingService.insertHjLogging(hl);
+
+                                }
 
 
                             }
