@@ -78,6 +78,10 @@ public class Constants {
     public static final String OPEN_YS_LAPP="https://open.ys7.com/api/";
     //中山大学甲方
     public static final String ZSJF="http://120.79.18.214/sysu-web/";
-
+    //海康人脸机秘钥ID
     public static final Integer ACCESSTOKEN_ID=80;
+    //江西省吉安市实名制
+    public static final String JIANSHI_SHIMINGZHI="http://220.177.172.55:8004/3HDataSmart";
+
+
 }

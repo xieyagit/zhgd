@@ -40,7 +40,7 @@ public class SbGroupTalkbackApi extends BaseController{
         private FTPUtil ftpUtil;
         @GetMapping("/ftpDownload")
         public String ftpDownload(String ftpPath, String user, String date, String name, HttpServletResponse response)throws  Exception{
-                ftpPath=ftpPath.replaceFirst("0","");
+//                ftpPath=ftpPath.replaceFirst("0","");
                 Map<String, Object> result = ftpUtil.downLoadTableFile(ftpPath, Util.getPath(),user,date,name);
                 List<String> tableFileNameList=(List)result.get("fileNameList");
                 String newResPath=Util.getPath()+"/"+ name+date;
