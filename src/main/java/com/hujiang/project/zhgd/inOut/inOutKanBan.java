@@ -43,7 +43,7 @@ public class inOutKanBan {
      */
     @PostMapping("/selectIndex")
     public AjaxResult selectIndex(Integer pid) {
-        logger.info("实名制进出看板接口开始----/provider/inOutKanBan/selectIndex");
+        logger.info("实名制进出看板接口开始----/provider/inOutKanBan/selectIndex===="+pid);
         //时间
         String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         HjProject hjProject = projectService.selectHjProjectById(pid);
