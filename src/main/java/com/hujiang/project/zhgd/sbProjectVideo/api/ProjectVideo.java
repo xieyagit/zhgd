@@ -134,4 +134,18 @@ public class ProjectVideo extends BaseController {
 
         ysUtil.httpPostWithJSON(Constants.OPEN_YS_LAPP +"lapp/device/ptz/stop",params);
     }
+
+    /**
+     * 更新摄像头坐标
+     * @param sbProjectVideo
+     * @return
+     */
+    @PostMapping("/updateVideoCoordinate")
+    public AjaxResult updateVideoCoordinate(@RequestBody SbProjectVideo sbProjectVideo){
+        int i=videoService.updateVideoCoordinate(sbProjectVideo);
+        if(i>0){
+            return  AjaxResult.success("坐标更新成功");
+        }
+        return  AjaxResult.error("坐标更新失败");
+    }
 }

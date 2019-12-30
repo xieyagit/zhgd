@@ -155,15 +155,15 @@ public class ProjectVideoAreaApi extends BaseController {
                     params = new ArrayList<NameValuePair>();
                     params.add(new BasicNameValuePair("accessToken",token ));
                     params.add(new BasicNameValuePair("deviceSerial",videoList.get(n).getVideoSn() ));
-                    params.add(new BasicNameValuePair("channelNo","1"));
-                    String result=      ysUtil.httpPostWithJSON(Constants.OPEN_YS_LAPP +"lapp/device/capture",params);
+//                    params.add(new BasicNameValuePair("channelNo","1"));
+                    String result=      ysUtil.httpPostWithJSON(Constants.OPEN_YS_LAPP +"lapp/device/info",params);
                     JSONObject s=JSONObject.parseObject(result);
                     if("200".equals(s.getString("code"))){
                         JSONObject data=s.getJSONObject("data");
-                        videoList.get(n).setIsStatus("1");
-                        videoList.get(n).setPicUrl(data.getString("picUrl"));
+                        videoList.get(n).setIsStatus(data.getString("status"));
+//                        videoList.get(n).setPicUrl(data.getString("picUrl"));
                     }else{
-                        videoList.get(n).setPicUrl("");
+//                        videoList.get(n).setPicUrl("");
                         videoList.get(n).setIsStatus("0");
                     }
                     vList.add(videoList.get(n));

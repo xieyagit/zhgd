@@ -1,6 +1,8 @@
 package com.hujiang.project.zhgd.sbAccountTalkback.service;
 
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;import org.springframework.transaction.annotation.Transactional;
 import com.hujiang.project.zhgd.sbAccountTalkback.mapper.SbAccountTalkbackMapper;
@@ -79,5 +81,9 @@ public class SbAccountTalkbackServiceImpl implements ISbAccountTalkbackService
 	{
 		return sbAccountTalkbackMapper.deleteSbAccountTalkbackByIds(Convert.toStrArray(ids));
 	}
-	
+
+	@Override
+	public List<SbAccountTalkback> getAccountListPage(Map<String,String> map){
+		return sbAccountTalkbackMapper.getAccountListPage(map);
+	}
 }

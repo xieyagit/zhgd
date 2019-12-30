@@ -143,5 +143,10 @@
             #{id}
         </foreach>
     </delete>
-
+    <update id="updateSbProjectVideoPicUrl" parameterType="SbProjectVideo">
+       update sb_project_video set picUrl=#{picUrl} where id = #{id}
+    </update>
+    <update id="updateVideoCoordinate" parameterType="SbProjectVideo">
+       update sb_project_video set longitude=#{longitude},latitude=#{latitude} where video_sn = #{videoSn}
+    </update>
 </mapper>
