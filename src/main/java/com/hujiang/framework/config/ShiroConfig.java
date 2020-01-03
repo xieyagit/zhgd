@@ -29,7 +29,7 @@ import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 
 /**
  * 权限配置加载
- * 
+ *
  * @author ruoyi
  */
 @Configuration
@@ -266,7 +266,7 @@ public class ShiroConfig
         filterChainDefinitionMap.put("/api/**", "anon,captchaValidate");
         filterChainDefinitionMap.put("/provider/area/**", "anon,captchaValidate");
         filterChainDefinitionMap.put("/unloader/zhgd/**", "anon,captchaValidate");
-        
+
         // 系统权限列表
         // filterChainDefinitionMap.putAll(SpringUtils.getBean(IMenuService.class).selectPermsAll());
 

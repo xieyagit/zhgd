@@ -167,7 +167,7 @@ public class ZhNode {
         if (state != null) {
             switch (state) {
                 case 0:
-                    if (!StringUtils.isEmpty(predictStart)&&!StringUtils.isEmpty(start)) {
+                    if (!StringUtils.isEmpty(predictStart) && !StringUtils.isEmpty(start)) {
                         if (DateUtils.getDate(predictStart).getTime() == DateUtils.getDate(start).getTime()) {
                             status = 0;
                         } else if (DateUtils.getDate(predictStart).getTime() > DateUtils.getDate(start).getTime()) {
@@ -189,7 +189,7 @@ public class ZhNode {
                     }
                     break;
                 case 2:
-                    if (!StringUtils.isEmpty(predictEnd)&&!StringUtils.isEmpty(end)){
+                    if (!StringUtils.isEmpty(predictEnd) && !StringUtils.isEmpty(end)) {
                         if (DateUtils.getDate(predictEnd).getTime() == DateUtils.getDate(end).getTime()) {
                             status = 5;
                         } else if (DateUtils.getDate(predictEnd).getTime() > DateUtils.getDate(end).getTime()) {

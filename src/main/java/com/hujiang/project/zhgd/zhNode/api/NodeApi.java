@@ -117,10 +117,10 @@ public class NodeApi extends BaseController {
         ZhProgressNode zpn = new ZhProgressNode();
         zpn.setProgressId(progressId);
         List<ZhProgressNode> pNode = progressNodeService.selectZhProgressNodeList(zpn);
-        ZhNodePc zhNodePc;
+//        ZhNodePc zhNodePc;
         ZhNode z;
         for (ZhProgressNode pn : pNode) {
-            zhNodePc = new ZhNodePc();
+            ZhNodePc zhNodePc = new ZhNodePc();
             z = nodeService.selectZhNodeById(pn.getNodeId());
             BeanUtils.copyProperties(z, zhNodePc);
             System.out.println(zhNodePc);
@@ -687,16 +687,21 @@ public class NodeApi extends BaseController {
         }
         if (startTime != null) {
             parentNode.setStart(startTime);
+            parentNode.setState(0);
         } else {
             parentNode.setStart(null);
+            parentNode.setState(1);
         }
-        if (endTime != null) {
+
+        if (zhNodeProgress > 0 && zhNodeList.size() > 0) {
+            parentNode.setProgress(zhNodeProgress / zhNodeList.size());
+        }
+
+        if (endTime != null && parentNode.getProgress() >= 100) {
+            parentNode.setState(2);
             parentNode.setEnd(endTime);
         } else {
             parentNode.setEnd(null);
-        }
-        if (zhNodeProgress > 0 && zhNodeList.size() > 0) {
-            parentNode.setProgress(zhNodeProgress / zhNodeList.size());
         }
         nodeService.updateZhNode(parentNode);
     }
@@ -717,7 +722,7 @@ public class NodeApi extends BaseController {
                 progress += zhNWP.getNodeProgress() * zhNWP.getNodeProgressRatio();
             }
         }
-        if (progress / 100 == 100) {
+        if (progress / 100 >= 100) {
             node.setState(2);
             node.setEnd(DateUtils.getDate());
         }
