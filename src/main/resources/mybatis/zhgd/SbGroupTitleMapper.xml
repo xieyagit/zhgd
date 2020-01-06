@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbGroupTitle.mapper.SbGroupTitleMapper">
+    
+    <resultMap type="SbGroupTitle" id="SbGroupTitleResult">
+        <result property="id"    column="id"    />
+        <result property="cid"    column="cid"    />
+        <result property="cTitle"    column="cTitle"    />
+    </resultMap>
+	
+	<sql id="selectSbGroupTitleVo">
+        select id, cid, cTitle from sb_group_title
+    </sql>
+	
+    <select id="selectSbGroupTitleList" parameterType="SbGroupTitle" resultMap="SbGroupTitleResult">
+        <include refid="selectSbGroupTitleVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="cid != null "> and cid = #{cid}</if>
+             <if test="cTitle != null  and cTitle != '' "> and cTitle = #{cTitle}</if>
+         </where>
+    </select>
+    
+    <select id="selectSbGroupTitleById" parameterType="Integer" resultMap="SbGroupTitleResult">
+        <include refid="selectSbGroupTitleVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSbGroupTitle" parameterType="SbGroupTitle">
+        insert into sb_group_title
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="cid != null  ">cid,</if>
+			<if test="cTitle != null  and cTitle != ''  ">cTitle,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="cid != null  ">#{cid},</if>
+			<if test="cTitle != null  and cTitle != ''  ">#{cTitle},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSbGroupTitle" parameterType="SbGroupTitle">
+        update sb_group_title
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cid != null  ">cid = #{cid},</if>
+            <if test="cTitle != null  and cTitle != ''  ">cTitle = #{cTitle},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSbGroupTitleById" parameterType="Integer">
+        delete from sb_group_title where id = #{id}
+    </delete>
+	
+    <delete id="deleteSbGroupTitleByIds" parameterType="String">
+        delete from sb_group_title where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

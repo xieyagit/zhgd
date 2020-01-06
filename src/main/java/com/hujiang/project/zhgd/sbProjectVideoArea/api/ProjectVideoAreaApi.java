@@ -6,13 +6,18 @@ import com.hujiang.framework.aspectj.lang.enums.BusinessType;
 import com.hujiang.framework.web.controller.BaseController;
 import com.hujiang.framework.web.domain.AjaxResult;
 import com.hujiang.framework.web.page.TableDataInfo;
+import com.hujiang.project.lc.util.LcUtil;
 import com.hujiang.project.ys.util.YsUtil;
+import com.hujiang.project.zhgd.hjSynchronizationInformation.domain.HjSynchronizationInformation;
+import com.hujiang.project.zhgd.hjSynchronizationInformation.service.IHjSynchronizationInformationService;
 import com.hujiang.project.zhgd.sbProjectVideoArea.domain.ProjectVideoJT;
 import com.hujiang.project.zhgd.sbProjectVideoArea.domain.SbJTArea;
 import com.hujiang.project.zhgd.sbProjectVideoArea.domain.SbProjectVideoArea;
 import com.hujiang.project.zhgd.sbProjectVideoArea.domain.Video;
 import com.hujiang.project.zhgd.sbProjectVideoArea.service.ISbProjectVideoAreaService;
 import com.hujiang.project.zhgd.utils.Constants;
+import com.hujiang.project.zhgd.utils.Tools;
+import com.hujiang.project.zhgd.utils.ZCAPIClientTwo;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -22,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,6 +43,11 @@ public class ProjectVideoAreaApi extends BaseController {
     private ISbProjectVideoAreaService areaService;
     @Resource
     private YsUtil ysUtil;
+    @Resource
+    private LcUtil lcUtil;
+    @Autowired
+    private IHjSynchronizationInformationService hjSynchronizationInformationService;
+
     /**
      * 根据项目id获取项目视频区
      * @param projectId
@@ -143,34 +154,72 @@ public class ProjectVideoAreaApi extends BaseController {
     @PostMapping("/getVideoListImgUrl")
     public List<Video> getVideoListImgUrl(Integer cid) throws  Exception{
         List<SbJTArea> saList=areaService.getVideoListJT(cid);
-        String token=ysUtil.getAccessToken2(saList.get(0).getProjectList().get(0).getPid());
+
         List<NameValuePair> params;
         List<Video> vList=new ArrayList<Video>();
-        for(int i=0;i<saList.size();i++){
-            List<ProjectVideoJT> projectList=saList.get(i).getProjectList();
-            for(int j=0;j<projectList.size();j++){
+        for(int i=0;i<saList.size();i++) {
+            List<ProjectVideoJT> projectList = saList.get(i).getProjectList();
+            for (int j = 0; j < projectList.size(); j++) {
+                Integer pid = projectList.get(j).getPid();
+                String token = ysUtil.getAccessToken2(pid);
                 projectList.get(j).setToken(token);
-                List<Video> videoList=projectList.get(j).getVideoList();
-                for(int n=0;n<videoList.size();n++){
-                    params = new ArrayList<NameValuePair>();
-                    params.add(new BasicNameValuePair("accessToken",token ));
-                    params.add(new BasicNameValuePair("deviceSerial",videoList.get(n).getVideoSn() ));
+                List<Video> videoList = projectList.get(j).getVideoList();
+                for (int n = 0; n < videoList.size(); n++) {
+                    String sn = videoList.get(n).getVideoSn();
+                    if ("HIK".equals(videoList.get(n).getFactory())) {
+                        params = new ArrayList<NameValuePair>();
+                        params.add(new BasicNameValuePair("accessToken", token));
+                        params.add(new BasicNameValuePair("deviceSerial", sn));
 //                    params.add(new BasicNameValuePair("channelNo","1"));
-                    String result=      ysUtil.httpPostWithJSON(Constants.OPEN_YS_LAPP +"lapp/device/info",params);
-                    JSONObject s=JSONObject.parseObject(result);
-                    if("200".equals(s.getString("code"))){
-                        JSONObject data=s.getJSONObject("data");
-                        videoList.get(n).setIsStatus(data.getString("status"));
+                        String result = ysUtil.httpPostWithJSON(Constants.OPEN_YS_LAPP + "lapp/device/info", params);
+                        JSONObject s = JSONObject.parseObject(result);
+                        if ("200".equals(s.getString("code"))) {
+                            JSONObject data = s.getJSONObject("data");
+                            videoList.get(n).setIsStatus(data.getString("status"));
 //                        videoList.get(n).setPicUrl(data.getString("picUrl"));
-                    }else{
+                        } else {
 //                        videoList.get(n).setPicUrl("");
-                        videoList.get(n).setIsStatus("0");
+                            videoList.get(n).setIsStatus("0");
+                        }
+                        vList.add(videoList.get(n));
+                    } else {
+                        HjSynchronizationInformation hs = new HjSynchronizationInformation();
+                        hs.setProjectId(pid);
+                        hs.setPlatformName("LCGETACCESSTOKEN");
+                        List<HjSynchronizationInformation> hsList = hjSynchronizationInformationService.selectHjSynchronizationInformationList(hs);
+                        if (hsList.size() > 0) {
+                            HjSynchronizationInformation h = hsList.get(0);
+                            Long time = (long) (new Date().getTime() / 1000);
+                            String nonce = Tools.encodeToMD5(time.toString());
+                            JSONObject d = new JSONObject();
+                            JSONObject json = new JSONObject();
+                            json.put("ver", "1.0");
+                            json.put("sign", lcUtil.getSign(h, time, nonce));
+                            json.put("appId", h.getApiKey());
+                            json.put("time", time.toString());
+                            json.put("nonce", nonce);
+                            JSONObject param = new JSONObject();
+                            param.put("deviceId", sn);
+                            param.put("token", lcUtil.getToken(h, time, Tools.encodeToMD5(sn + time)));
+                            param.put("channelId", "0");
+                            d.put("system", json);
+                            d.put("params", param);
+                            d.put("id", nonce);
+                            System.out.println(d.toString());
+                            String s = ZCAPIClientTwo.httpPostWithJSON(Constants.OPEN_LC + "deviceOnline", d);
+                            JSONObject result=JSONObject.parseObject(s).getJSONObject("result");
+                            if("0".equals(result.getString("code"))){
+                                videoList.get(n).setIsStatus(result.getJSONObject("data").getString("onLine"));
+                            }else{
+                                videoList.get(n).setIsStatus("0");
+                            }
+                            vList.add(videoList.get(n));
+                        }
                     }
-                    vList.add(videoList.get(n));
+
                 }
 
             }
-
         }
         return vList;
     }

@@ -82,6 +82,15 @@ public class SbProjectVideo {
     private String picUrl;
     private String longitude;//经度
     private String latitude;//纬度
+    private String factory;
+
+    public String getFactory() {
+        return factory;
+    }
+
+    public void setFactory(String factory) {
+        this.factory = factory;
+    }
 
     public String getLongitude() {
         return longitude;

@@ -23,10 +23,12 @@
         <result property="hjCode" column="hj_code"/>
         <result property="flowCard" column="flow_card"/>
         <result property="shipmentDate" column="shipment_Date"/>
+        <result property="factory" column="factory"/>
+
     </resultMap>
 
     <sql id="selectSbProjectVideoVo">
-        select hj_code,flow_card,shipment_Date,id, area_id, url, account, video_name, video_type, video_address, video_way, contacts, contacts_way, department, `position`, photograph, video_sn, is_control from sb_project_video
+        select factory,hj_code,flow_card,shipment_Date,id, area_id, url, account, video_name, video_type, video_address, video_way, contacts, contacts_way, department, `position`, photograph, video_sn, is_control from sb_project_video
     </sql>
 
     <select id="selectSbProjectVideoList" parameterType="SbProjectVideo" resultMap="SbProjectVideoResult">
