@@ -79,6 +79,43 @@ public class SbProjectVideo {
     /** 出库日期	 */
     private String shipmentDate;
 
+    private String picUrl;
+    private String longitude;//经度
+    private String latitude;//纬度
+    private String factory;
+
+    public String getFactory() {
+        return factory;
+    }
+
+    public void setFactory(String factory) {
+        this.factory = factory;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getPicUrl() {
+        return picUrl;
+    }
+
+    public void setPicUrl(String picUrl) {
+        this.picUrl = picUrl;
+    }
+
     public String getHjCode() {
         return hjCode;
     }

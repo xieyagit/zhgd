@@ -39,11 +39,11 @@ public class SbGroupTalkbackApi extends BaseController{
         @Autowired
         private FTPUtil ftpUtil;
         @GetMapping("/ftpDownload")
-        public String ftpDownload(String ftpPath, String user, String date, String name, HttpServletResponse response)throws  Exception{
+        public String ftpDownload(String ftpPath, String user, String startTime, String name,String endTime )throws  Exception{
 //                ftpPath=ftpPath.replaceFirst("0","");
-                Map<String, Object> result = ftpUtil.downLoadTableFile(ftpPath, Util.getPath(),user,date,name);
+                Map<String, Object> result = ftpUtil.downLoadTableFile(ftpPath, Util.getPath(),user,startTime,endTime);
                 List<String> tableFileNameList=(List)result.get("fileNameList");
-                String newResPath=Util.getPath()+"/"+ name+date;
+                String newResPath=Util.getPath()+"/"+ name+startTime+"_"+endTime;
                 String zipPath =newResPath+ ".zip";                  // 压缩文件夹名
                 ZipUtil.copyResource(tableFileNameList, newResPath);                  // 把pdf拷贝到同个文件目录下
                 ZipUtil.createZip(newResPath, zipPath);                        // 打包改目录成.zip包
