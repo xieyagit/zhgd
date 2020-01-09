@@ -11,10 +11,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * FTP下载工具
@@ -93,6 +91,8 @@ public class FTPUtil {
      * FTPClient对象
      **/
     private static FTPClient ftpClient = null;
+
+    private static final SimpleDateFormat simpleDateFormat =new SimpleDateFormat("yyyy-MM-dd");
 
 
     /**
@@ -245,7 +245,7 @@ public class FTPUtil {
      * @param savePath 保存文件到本地的路径，例如：D:/test
      * @return 成功返回true，否则返回false
      */
-    public Map<String, Object> downLoadTableFile(String ftpPath, String savePath,String user,String date,String name) {
+    public Map<String, Object> downLoadTableFile(String ftpPath, String savePath,String user,String startTime,String endTime) throws Exception{
         System.out.println(ftpAddress+","+ ftpPort+","+  ftpUsername+","+  ftpPassword);
         // 登录
         login(ftpAddress, ftpPort, ftpUsername, ftpPassword);
@@ -279,7 +279,10 @@ public class FTPUtil {
                     String ftpName = new String(ff.getBytes(serverCharset), localCharset);
                     File file = new File(tableDirName + "/" + ftpName);
                     System.out.println(ftpName);
-                    if(ftpName.contains(user)&&ftpName.contains(date)) {
+                    String name=ftpName.substring(0,ftpName.indexOf("-"));
+                    String result=ftpName.substring(ftpName.indexOf("-")+1);
+                    String time=result.substring(result.indexOf("-")+1,result.indexOf("_"));
+                    if(user.contains(name)&&isDate(startTime,endTime,time)) {
                         System.out.println(tableDirName + "/" + ftpName);
                         //存储文件名导入时使用
                         tableFileNameList.add(tableDirName + "/" + ftpName);
@@ -301,5 +304,14 @@ public class FTPUtil {
         }
         resultMap.put("result", false);
         return resultMap;
+    }
+    public boolean isDate(String startTime,String endTime,String time)throws Exception {
+        Date startDate=simpleDateFormat.parse(startTime);
+        Date endDate=simpleDateFormat.parse(endTime);
+        Date date=simpleDateFormat.parse(time);
+        if(date.getTime()>=startDate.getTime()&&date.getTime()<=endDate.getTime()){
+            return true;
+        }
+        return false;
     }
 }

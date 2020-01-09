@@ -3,6 +3,7 @@ package com.hujiang.project.zhgd.sbProjectVideoArea.service;
 import java.util.List;
 
 import com.hujiang.project.zhgd.sbProjectVideoArea.domain.SbJTArea;
+import com.hujiang.project.zhgd.sbProjectVideoArea.domain.VideoPicUrl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;import org.springframework.transaction.annotation.Transactional;
 import com.hujiang.project.zhgd.sbProjectVideoArea.mapper.SbProjectVideoAreaMapper;
@@ -86,5 +87,9 @@ public class SbProjectVideoAreaServiceImpl implements ISbProjectVideoAreaService
 	 */
 	public List<SbJTArea> getVideoListJT(Integer cid){
 		return sbProjectVideoAreaMapper.getVideoListJT(cid);
+	}
+
+	public List<VideoPicUrl> getVideoPicUrl(){
+		return sbProjectVideoAreaMapper.getVideoPicUrl();
 	}
 }

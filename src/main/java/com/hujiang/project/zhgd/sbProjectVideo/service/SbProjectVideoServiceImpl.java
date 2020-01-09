@@ -74,6 +74,16 @@ public class SbProjectVideoServiceImpl implements ISbProjectVideoService
 	{
 	    return sbProjectVideoMapper.updateSbProjectVideo(sbProjectVideo);
 	}
+	@Override
+	public int updateSbProjectVideoPicUrl(SbProjectVideo sbProjectVideo)
+	{
+	    return sbProjectVideoMapper.updateSbProjectVideoPicUrl(sbProjectVideo);
+	}
+	@Override
+	public int updateVideoCoordinate(SbProjectVideo sbProjectVideo)
+	{
+	    return sbProjectVideoMapper.updateVideoCoordinate(sbProjectVideo);
+	}
 
 	/**
      * 删除项目视频对象
