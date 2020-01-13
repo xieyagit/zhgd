@@ -13,6 +13,7 @@ import com.hujiang.project.zhgd.hjSynchronizationInformation.service.HjSynchroni
 import com.hujiang.project.zhgd.hjSynchronizationInformation.service.IHjSynchronizationInformationService;
 import com.hujiang.project.zhgd.sbProjectVideo.domain.SbProjectVideo;
 import com.hujiang.project.zhgd.sbProjectVideo.service.ISbProjectVideoService;
+import com.hujiang.project.zhgd.sbProjectVideoArea.domain.Video;
 import com.hujiang.project.zhgd.utils.Constants;
 import com.hujiang.project.zhgd.utils.Tools;
 import com.hujiang.project.zhgd.utils.ZCAPIClientTwo;
@@ -133,7 +134,7 @@ public class ProjectVideo extends BaseController {
      * @param direction
      */
     @PostMapping("/ysCloudControldirection")
-    public void ysCloudControldirection(@RequestParam(value = "pid") Integer pid,@RequestParam(value = "deviceSerial") String deviceSerial,@RequestParam(value = "direction") Integer direction) throws  Exception{
+    public void ysCloudControldirection(@RequestParam(value = "pid") Integer pid, @RequestParam(value = "deviceSerial") String deviceSerial, @RequestParam(value = "direction") Integer direction, @RequestBody Video video) throws  Exception{
         SbProjectVideo sbProjectVideo=new SbProjectVideo();
         sbProjectVideo.setVideoSn(deviceSerial);
         List<SbProjectVideo> spvList=videoService.selectSbProjectVideoList(sbProjectVideo);
@@ -142,7 +143,12 @@ public class ProjectVideo extends BaseController {
                 List<NameValuePair> params = new ArrayList<NameValuePair>();
                 params.add(new BasicNameValuePair("accessToken", ysUtil.getAccessToken2(pid)));
                 params.add(new BasicNameValuePair("deviceSerial", deviceSerial));
-                params.add(new BasicNameValuePair("channelNo", "1"));
+                if(!"".equals(video.getChannelNo())&&video.getChannelNo()!=null){
+                    params.add(new BasicNameValuePair("channelNo", video.getChannelNo()));
+                }else{
+                    params.add(new BasicNameValuePair("channelNo", "1"));
+                }
+
                 params.add(new BasicNameValuePair("speed", "1"));
                 params.add(new BasicNameValuePair("direction", direction.toString()));
                 ysUtil.httpPostWithJSON(Constants.OPEN_YS_LAPP + "lapp/device/ptz/start", params);
@@ -167,7 +173,11 @@ public class ProjectVideo extends BaseController {
                     JSONObject params=new JSONObject();
                     params.put("deviceId",deviceSerial);
                     params.put("token",lcUtil.getToken(h,time, Tools.encodeToMD5(deviceSerial+time)));
-                    params.put("channelId","0");
+                    if(!"".equals(video.getChannelNo())&&video.getChannelNo()!=null) {
+                        params.put("channelId", video.getChannelNo());
+                    }else{
+                        params.put("channelId", "0");
+                    }
                     params.put("operation",direction.toString());
                     params.put("duration",300);
                     d.put("system",json);

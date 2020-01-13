@@ -82,7 +82,16 @@ public class SbProjectVideo {
     private String picUrl;
     private String longitude;//经度
     private String latitude;//纬度
-    private String factory;
+    private String factory;//厂家
+    private String channelNo;//通道号
+
+    public String getChannelNo() {
+        return channelNo;
+    }
+
+    public void setChannelNo(String channelNo) {
+        this.channelNo = channelNo;
+    }
 
     public String getFactory() {
         return factory;

@@ -149,7 +149,7 @@ public class ProjectVideoAreaApi extends BaseController {
         return saList;
     }
     /**
-     * 集团获取项目列表
+     * 集团获取项目摄像头是否在线状态
      */
     @PostMapping("/getVideoListImgUrl")
     public List<Video> getVideoListImgUrl(Integer cid) throws  Exception{
@@ -166,6 +166,7 @@ public class ProjectVideoAreaApi extends BaseController {
                 List<Video> videoList = projectList.get(j).getVideoList();
                 for (int n = 0; n < videoList.size(); n++) {
                     String sn = videoList.get(n).getVideoSn();
+//                    String channelNo=videoList.get(n).getChannelNo();
                     if ("HIK".equals(videoList.get(n).getFactory())) {
                         params = new ArrayList<NameValuePair>();
                         params.add(new BasicNameValuePair("accessToken", token));
@@ -201,7 +202,7 @@ public class ProjectVideoAreaApi extends BaseController {
                             JSONObject param = new JSONObject();
                             param.put("deviceId", sn);
                             param.put("token", lcUtil.getToken(h, time, Tools.encodeToMD5(sn + time)));
-                            param.put("channelId", "0");
+//                            param.put("channelId", channelNo);
                             d.put("system", json);
                             d.put("params", param);
                             d.put("id", nonce);

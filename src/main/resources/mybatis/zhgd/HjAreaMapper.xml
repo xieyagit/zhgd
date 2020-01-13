@@ -9,10 +9,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="title"    column="title"    />
         <result property="type"    column="type"    />
         <result property="parentId"    column="parent_id"    />
+        <result property="isid"    column="isid"    />
     </resultMap>
 	
 	<sql id="selectHjAreaVo">
-        select id, title, type, parent_id from hj_area
+        select id, title, type, parent_id,isid from hj_area
     </sql>
 	
     <select id="selectHjAreaList" parameterType="HjArea" resultMap="HjAreaResult">
