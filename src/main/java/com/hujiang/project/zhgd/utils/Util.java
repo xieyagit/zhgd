@@ -5,6 +5,7 @@ import com.baidu.aip.face.AipFace;
 import com.hujiang.common.utils.RSAUtil;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -251,8 +252,9 @@ public class Util {
         String result = "";
         BufferedReader in = null;
         try {
-            String urlNameString = url + "?" + param;
+            String urlNameString = url + "?" + param; System.out.println(urlNameString);
             URL realUrl = new URL(urlNameString);
+
             // 打开和URL之间的连接
             URLConnection connection = realUrl.openConnection();
             // 设置通用的请求属性
@@ -276,7 +278,7 @@ public class Util {
 
                 result += line;
             }
-            System.out.println(result);
+            System.out.println("结果："+result);
         } catch (Exception e) {
             System.out.println("发送GET请求出现异常！" + e);
             e.printStackTrace();
@@ -294,7 +296,33 @@ public class Util {
         return result;
     }
 
+    public static String httpGet(String url1) throws URISyntaxException, IOException
+    {
+        CloseableHttpClient client;
+        URL url = new URL(url1);
+        URI uri = new URI(url.getProtocol(), url.getHost() + ":"
+                + url.getPort(), url.getPath(), url.getQuery(), null);
 
+        HttpGet http= new HttpGet(uri);
+
+
+        client = HttpClients.createDefault();
+        String respContent = null;
+        // 设置报文实体编码为UTF-8，否则会出现中文乱码以及无法正确调用服务。
+//        StringEntity entity = new StringEntity(param,"UTF-8");
+//        entity.setContentType("application/json");
+//        http.setEntity(entity);
+        HttpResponse resp = client.execute(http);
+        if (resp.getStatusLine().getStatusCode() == 200) {
+            HttpEntity rspEntity = resp.getEntity();
+            respContent = EntityUtils.toString(rspEntity, "UTF-8");
+        }
+        client.close();
+        // 如需要重发机制，可在此部分编写重发代码
+        System.out.println("请求服务:" + url1);
+        System.out.println(respContent);
+        return respContent;
+    }
     /**
      * 异常返回
      *
