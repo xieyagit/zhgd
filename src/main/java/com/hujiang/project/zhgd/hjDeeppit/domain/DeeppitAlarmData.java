@@ -45,6 +45,15 @@ public class DeeppitAlarmData extends BaseEntity
 	private String startTime;
 	/** 告警更新时间 */
 	private String endTime;
+	private String endTime2;
+
+	public String getEndTime2() {
+		return endTime2;
+	}
+
+	public void setEndTime2(String endTime2) {
+		this.endTime2 = endTime2;
+	}
 
 	public void setId(String id)
 	{

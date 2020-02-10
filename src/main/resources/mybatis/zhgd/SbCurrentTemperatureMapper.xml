@@ -124,13 +124,20 @@
         order by id desc
     </select>
     <select id="selectSbCurrentTemperatureByTimes" parameterType="Map" resultMap="SbCurrentTemperatureResult">
-    <include refid="selectSbCurrentTemperatureVo"/>
-    <where>
-        <if test="dateTime != null" >and tm like "${dateTime}%"</if>
-        <if test="sn != null ">and electricity_box_id=#{sn}</if>
-    </where>
+        <include refid="selectSbCurrentTemperatureVo"/>
+        <where>
+            <choose>
+                <when test="endTime != null and endTime != ''">
+                    and to_days(tm) BETWEEN to_days(#{dateTime}) and to_days(#{endTime})
+                </when>
+                <otherwise>
+                    and to_days(tm)=to_days(#{dateTime})
+                </otherwise>
+            </choose>
+            <if test="sn != null ">and electricity_box_id=#{sn}</if>
+        </where>
         order by id desc
-</select>
+    </select>
 
 
 

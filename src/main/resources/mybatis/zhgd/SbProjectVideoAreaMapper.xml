@@ -131,4 +131,40 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 select a.projectId , v.id vid,v.video_sn,v.picUrl,v.channelNo from sb_project_video_area a left join sb_project_video v on a.id=v.area_id
 
     </select>
+    <resultMap type="ProjectVideoJT" id="getVideoListResult">
+        <result property="pid"    column="pid"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="projectAddress"    column="project_address"    />
+        <result property="remark"    column="remark"    />
+        <result property="projectDept"    column="project_dept"    />
+        <result property="phone"    column="phone"    />
+        <result property="projectPrincipal"    column="project_principal"    />
+        <result property="djorzcb"    column="djorzcb"    />
+        <result property="djorzcbType"    column="djorzcb_type"    />
+        <collection property="cList" ofType="Construction"  >
+            <result property="constructionName"    column="construction_name"    />
+            <result property="constructionType"    column="title"    />
+            <result property="contacts"    column="contacts"    />
+            <result property="mobilePhone"    column="mobile_phone"    />
+        </collection>
+        <collection property="videoList" ofType="Video"  >
+            <result property="isControl"    column="is_control"    />
+            <result property="videoSn"    column="video_sn"    />
+            <result property="videoName"    column="video_name"    />
+            <result property="url"    column="url"    />
+            <result property="picUrl"    column="picUrl"    />
+            <result property="hdUrl"    column="hdurl"    />
+            <result property="longitude"    column="longitude"    />
+            <result property="latitude"    column="latitude"    />
+            <result property="factory"    column="factory"    />
+        </collection>
+
+    </resultMap>
+    <select id="getVideoList" parameterType="Integer" resultMap="getVideoListResult">
+
+        		select p.djorzcb,p.djorzcb_type,v.hdurl,v.picUrl,v.longitude,v.latitude,v.factory,cc.mobile_phone,cc.contacts,p.id pid,p.project_name,p.project_address,p.project_dept,p.phone,p.project_principal,p.remark,v.url,v.is_control,v.video_sn,v.video_name,cc.construction_name,d.title  from
+				sb_project_video_area a left  join hj_project p on p.id=a.projectid left join sb_project_video v on v.area_id=a.id
+			left	join hj_construction_project c on c.project_id=p.id left join hj_construction_company cc on c.construction_id=cc.id left join hj_dictionaries d on cc.company_type=d.id
+				where a.projectid =#{pid}
+    </select>
 </mapper>

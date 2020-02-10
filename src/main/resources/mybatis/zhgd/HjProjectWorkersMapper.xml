@@ -119,6 +119,8 @@
         <result property="teamName" column="team_name"/>
         <result property="constructionName" column="construction_name"/>
         <result property="projectName" column="project_name"/>
+        <result property="quarantine" column="quarantine"/>
+        <result property="idAddress" column="id_address"/>
     </resultMap>
 
     <resultMap type="com.hujiang.project.zhgd.hjProjectWorkers.domain.PdfWorkers" id="PdfWorkersResult">
@@ -232,7 +234,7 @@
     </select>
 
     <select id="selectProjectWorkersListPC" parameterType="com.hujiang.project.zhgd.hjProjectWorkers.domain.HjProjectWorkers" resultMap="ProjectWorkerPCResult">
-        select pw.id,pw.emp_name,pw.is_team,pw.enter_And_Retreat_Condition,d.title,t.team_name,cc.construction_name,p.project_name,pw.id_address as idAddress,pw.id_code as idCode,pw.emp_phon from hj_project_workers pw
+        select pw.quarantine,pw.id_address,pw.id,pw.emp_name,pw.is_team,pw.enter_And_Retreat_Condition,d.title,t.team_name,cc.construction_name,p.project_name,pw.id_address as idAddress,pw.id_code as idCode,pw.emp_phon from hj_project_workers pw
         LEFT JOIN hj_dictionaries d ON pw.job_name= d.tag
           LEFT JOIN hj_team t ON pw.work_typename_id=t.id
           LEFT JOIN hj_construction_company cc ON cc.id = pw.construction_id
@@ -246,6 +248,8 @@
             <if test="enterAndRetreatCondition != null ">and pw.enter_And_Retreat_Condition = #{enterAndRetreatCondition}</if>
             <if test="constructionId != null">and pw.construction_id = #{constructionId}</if>
             <if test="projectId != null">and pw.project_id = #{projectId}</if>
+            <if test="quarantine != null and quarantine != ''">and pw.quarantine = #{quarantine}</if>
+            <if test="idAddress != null and idAddress != ''">and pw.id_address like '%${idAddress}%'</if>
             <if test="startTime != null  and startTime != '' ">	and pw.id not in (select employee_id from hj_attendance_record where project_id=21 and TO_DAYS(passed_time)>=TO_DAYS(#{startTime}) and TO_DAYS(passed_time)<![CDATA[ <=]]>TO_DAYS(#{endTime}))
                 and pw.enter_And_Retreat_Condition=0
             </if>
@@ -483,7 +487,9 @@
             <if test="information != null">#{information},</if>
         </trim>
     </insert>
-
+<update id="updateQuarantine" parameterType="ProjectWorkerPC">
+    update hj_project_workers set quarantine = #{quarantine} where id in (${ids})
+</update>
     <update id="updateHjProjectWorkers" parameterType="HjProjectWorkers">
         update hj_project_workers
         <trim prefix="SET" suffixOverrides=",">

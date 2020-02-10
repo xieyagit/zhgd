@@ -153,7 +153,7 @@ public class PcApi  extends BaseController {
      */
     @RequestMapping("/historyRecord")
     @ResponseBody
-    public AjaxResult historyRecord(String time, String hxzid, String status){
+    public AjaxResult historyRecord(String time,String endTime, String hxzid, String status){
         startPage();
         Map<String,Object> paramMap=new HashMap<String,Object>();
         if(StringUtils.isBlank(time)){
@@ -161,6 +161,8 @@ public class PcApi  extends BaseController {
         }
         paramMap.put("time",time);
         paramMap.put("hxzid",hxzid);
+        paramMap.put("endTime",endTime);
+
         if(StringUtils.isNotBlank(status)){
             if("0".equals(status)){
                 status=">1";
@@ -176,7 +178,7 @@ public class PcApi  extends BaseController {
 
     @RequestMapping("/historyRecordExcel")
     @ResponseBody
-    public  List<SbCraneAddrecord> historyRecordExcel(String time, String hxzid){
+    public  List<SbCraneAddrecord> historyRecordExcel(String time,String endTime, String hxzid){
 
         Map<String,Object> paramMap=new HashMap<String,Object>();
         if(StringUtils.isBlank(time)){
@@ -184,7 +186,7 @@ public class PcApi  extends BaseController {
         }
         paramMap.put("time",time);
         paramMap.put("hxzid",hxzid);
-
+        paramMap.put("endTime",endTime);
         return sbCraneAddrecordService.selectSbCraneAddrecordListThree(paramMap);
     }
 
@@ -197,6 +199,6 @@ public class PcApi  extends BaseController {
     @ResponseBody
     public AjaxResult switchDevice(@RequestBody SbCraneBinding scb){
 
-     return AjaxResult.success(sbCraneBindingService.selectByHxzId(scb.getPid()));
+        return AjaxResult.success(sbCraneBindingService.selectByHxzId(scb.getPid()));
     }
 }

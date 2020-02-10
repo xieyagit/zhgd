@@ -32,7 +32,7 @@ public class AppUnloader extends BaseController {
 
     @PostMapping(value = "/getUnloader")
     public JSONObject getUnloader(@RequestParam("projectId")Integer projectId){
-       JSONObject jsonObject = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
         SbUnloaderBinding sbUnloaderBinding = new SbUnloaderBinding();
         sbUnloaderBinding.setPid(projectId);
         List<SbUnloaderBinding> unloaderBindingList = bindingService.selectSbUnloaderBindingList(sbUnloaderBinding);
@@ -54,7 +54,7 @@ public class AppUnloader extends BaseController {
             jsonObject.put("data",Collections.emptyList());
         }
 
-       return jsonObject;
+        return jsonObject;
     }
 
     /**
@@ -106,12 +106,14 @@ public class AppUnloader extends BaseController {
     public JSONObject getSbUnloaderHistory(@RequestParam("projectId")Integer projectId,
                                            @RequestParam("deviceId") String deviceId,
                                            @RequestParam(value = "time",required = false)String time,
+                                           @RequestParam(value = "endTime",required = false)String endTime,
                                            PageDomain pageDomain){
         JSONObject jsonObject = new JSONObject();
         SbUnloaderRealtime sbUnloaderRealtime = new SbUnloaderRealtime();
         sbUnloaderRealtime.setProjectId(projectId);
         sbUnloaderRealtime.setHxzId(deviceId);
         sbUnloaderRealtime.setRTime(time);
+        sbUnloaderRealtime.setEndTime(endTime);
         startPage();
         List<SbUnloaderRealtime> sbUnloaderRealtimeList = realtimeService.getSbUnloaderHistory(sbUnloaderRealtime);
         TableDataInfo dataTable = getDataTable(sbUnloaderRealtimeList);
@@ -151,6 +153,7 @@ public class AppUnloader extends BaseController {
     public JSONObject getSbUnloaderAlarmtimeList(@RequestParam("projectId")Integer projectId,
                                                  @RequestParam("deviceId") String deviceId,
                                                  @RequestParam(value = "time",required = false)String time,
+                                                 @RequestParam(value = "endTime",required = false)String endTime,
                                                  PageDomain pageDomain){
         JSONObject jsonObject = new JSONObject();
         JSONObject re = new JSONObject();
@@ -158,6 +161,7 @@ public class AppUnloader extends BaseController {
         sbUnloaderAlarmtime.setProjectId(projectId);
         sbUnloaderAlarmtime.setHxzId(deviceId);
         sbUnloaderAlarmtime.setStartTime(time);
+        sbUnloaderAlarmtime.setEndTime(endTime);
         int load = alarmtimeService.count(projectId,deviceId,1,time);
         int dipX = alarmtimeService.count(projectId,deviceId,2,time);
         int dipY = alarmtimeService.count(projectId,deviceId,3,time);

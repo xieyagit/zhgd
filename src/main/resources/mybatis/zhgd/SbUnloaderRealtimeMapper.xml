@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hujiang.project.zhgd.sbUnloaderRealtime.mapper.SbUnloaderRealtimeMapper">
-    
+
     <resultMap type="SbUnloaderRealtime" id="SbUnloaderRealtimeResult">
         <result property="id"    column="id"    />
         <result property="deviceNo"    column="DeviceNo"    />
@@ -29,8 +29,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="startTime"    column="StartTime"    />
         <result property="alarmValue"    column="AlarmValue"    />
     </resultMap>
-	
-	<sql id="selectSbUnloaderRealtimeVo">
+
+    <sql id="selectSbUnloaderRealtimeVo">
         select id, DeviceNo, HxzId, RTime, Weight, WeightPercent, ObliguityX, ObliguityY, Obliguity, BatteryPercent, WeightStatus, ObliguityXStatus, ObliguityYStatus, BatteryStatus from sb_unloader_realtime
     </sql>
 
@@ -55,6 +55,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                     #{id}
                 </foreach>
             </if>
+            <choose>
+                <when test="endTime != null and endTime != ''">
+                    and to_days(RTime) BETWEEN to_days(#{startTime}) and to_days(#{endTime})
+                </when>
+                <otherwise>
+                    and to_days(RTime)=to_days(#{startTime})
+                </otherwise>
+            </choose>
             <if test="deviceId != null and deviceId != ''">
                 and r.HxzId = #{deviceId}
             </if>
@@ -67,72 +75,79 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>
             <if test="projectId != null "> and b.Pid = #{projectId}</if>
             <if test="hxzId != null  and hxzId != '' "> and b.HxzId = #{hxzId}</if>
-            <if test="rTime != null and rTime != '' ">AND RTime like "${rTime}%"</if>
+            <choose>
+                <when test="endTime != null and endTime != ''">
+                    and to_days(RTime) BETWEEN to_days(#{rTime}) and to_days(#{endTime})
+                </when>
+                <otherwise>
+                    and to_days(RTime)=to_days(#{rTime})
+                </otherwise>
+            </choose>
         </where>
         ORDER BY RTime DESC
     </select>
-	
+
     <select id="selectSbUnloaderRealtimeList" parameterType="SbUnloaderRealtime" resultMap="SbUnloaderRealtimeResult">
         <include refid="selectSbUnloaderRealtimeVo"/>
-        <where>  
+        <where>
             <if test="id != null "> and id = #{id}</if>
-             <if test="deviceNo != null  and deviceNo != '' "> and DeviceNo = #{deviceNo}</if>
-             <if test="hxzId != null  and hxzId != '' "> and HxzId = #{hxzId}</if>
-             <if test="rTime != null  and rTime != '' "> and RTime = #{rTime}</if>
-             <if test="weight != null "> and Weight = #{weight}</if>
-             <if test="weightPercent != null "> and WeightPercent = #{weightPercent}</if>
-             <if test="obliguityX != null "> and ObliguityX = #{obliguityX}</if>
-             <if test="obliguityY != null "> and ObliguityY = #{obliguityY}</if>
-             <if test="obliguity != null "> and Obliguity = #{obliguity}</if>
-             <if test="batteryPercent != null "> and BatteryPercent = #{batteryPercent}</if>
-             <if test="weightStatus != null "> and WeightStatus = #{weightStatus}</if>
-             <if test="obliguityXStatus != null "> and ObliguityXStatus = #{obliguityXStatus}</if>
-             <if test="obliguityYStatus != null "> and ObliguityYStatus = #{obliguityYStatus}</if>
-             <if test="batteryStatus != null "> and BatteryStatus = #{batteryStatus}</if>
-         </where>
+            <if test="deviceNo != null  and deviceNo != '' "> and DeviceNo = #{deviceNo}</if>
+            <if test="hxzId != null  and hxzId != '' "> and HxzId = #{hxzId}</if>
+            <if test="rTime != null  and rTime != '' "> and RTime = #{rTime}</if>
+            <if test="weight != null "> and Weight = #{weight}</if>
+            <if test="weightPercent != null "> and WeightPercent = #{weightPercent}</if>
+            <if test="obliguityX != null "> and ObliguityX = #{obliguityX}</if>
+            <if test="obliguityY != null "> and ObliguityY = #{obliguityY}</if>
+            <if test="obliguity != null "> and Obliguity = #{obliguity}</if>
+            <if test="batteryPercent != null "> and BatteryPercent = #{batteryPercent}</if>
+            <if test="weightStatus != null "> and WeightStatus = #{weightStatus}</if>
+            <if test="obliguityXStatus != null "> and ObliguityXStatus = #{obliguityXStatus}</if>
+            <if test="obliguityYStatus != null "> and ObliguityYStatus = #{obliguityYStatus}</if>
+            <if test="batteryStatus != null "> and BatteryStatus = #{batteryStatus}</if>
+        </where>
     </select>
-    
+
     <select id="selectSbUnloaderRealtimeById" parameterType="Integer" resultMap="SbUnloaderRealtimeResult">
         <include refid="selectSbUnloaderRealtimeVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertSbUnloaderRealtime" parameterType="SbUnloaderRealtime">
         insert into sb_unloader_realtime
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">id,</if>
-			<if test="deviceNo != null  and deviceNo != ''  ">DeviceNo,</if>
-			<if test="hxzId != null  and hxzId != ''  ">HxzId,</if>
-			<if test="rTime != null  and rTime != ''  ">RTime,</if>
-			<if test="weight != null  ">Weight,</if>
-			<if test="weightPercent != null  ">WeightPercent,</if>
-			<if test="obliguityX != null  ">ObliguityX,</if>
-			<if test="obliguityY != null  ">ObliguityY,</if>
-			<if test="obliguity != null  ">Obliguity,</if>
-			<if test="batteryPercent != null  ">BatteryPercent,</if>
-			<if test="weightStatus != null  ">WeightStatus,</if>
-			<if test="obliguityXStatus != null  ">ObliguityXStatus,</if>
-			<if test="obliguityYStatus != null  ">ObliguityYStatus,</if>
-			<if test="batteryStatus != null  ">BatteryStatus,</if>
-         </trim>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="deviceNo != null  and deviceNo != ''  ">DeviceNo,</if>
+            <if test="hxzId != null  and hxzId != ''  ">HxzId,</if>
+            <if test="rTime != null  and rTime != ''  ">RTime,</if>
+            <if test="weight != null  ">Weight,</if>
+            <if test="weightPercent != null  ">WeightPercent,</if>
+            <if test="obliguityX != null  ">ObliguityX,</if>
+            <if test="obliguityY != null  ">ObliguityY,</if>
+            <if test="obliguity != null  ">Obliguity,</if>
+            <if test="batteryPercent != null  ">BatteryPercent,</if>
+            <if test="weightStatus != null  ">WeightStatus,</if>
+            <if test="obliguityXStatus != null  ">ObliguityXStatus,</if>
+            <if test="obliguityYStatus != null  ">ObliguityYStatus,</if>
+            <if test="batteryStatus != null  ">BatteryStatus,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">#{id},</if>
-			<if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
-			<if test="hxzId != null  and hxzId != ''  ">#{hxzId},</if>
-			<if test="rTime != null  and rTime != ''  ">#{rTime},</if>
-			<if test="weight != null  ">#{weight},</if>
-			<if test="weightPercent != null  ">#{weightPercent},</if>
-			<if test="obliguityX != null  ">#{obliguityX},</if>
-			<if test="obliguityY != null  ">#{obliguityY},</if>
-			<if test="obliguity != null  ">#{obliguity},</if>
-			<if test="batteryPercent != null  ">#{batteryPercent},</if>
-			<if test="weightStatus != null  ">#{weightStatus},</if>
-			<if test="obliguityXStatus != null  ">#{obliguityXStatus},</if>
-			<if test="obliguityYStatus != null  ">#{obliguityYStatus},</if>
-			<if test="batteryStatus != null  ">#{batteryStatus},</if>
-         </trim>
+            <if test="id != null  ">#{id},</if>
+            <if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+            <if test="hxzId != null  and hxzId != ''  ">#{hxzId},</if>
+            <if test="rTime != null  and rTime != ''  ">#{rTime},</if>
+            <if test="weight != null  ">#{weight},</if>
+            <if test="weightPercent != null  ">#{weightPercent},</if>
+            <if test="obliguityX != null  ">#{obliguityX},</if>
+            <if test="obliguityY != null  ">#{obliguityY},</if>
+            <if test="obliguity != null  ">#{obliguity},</if>
+            <if test="batteryPercent != null  ">#{batteryPercent},</if>
+            <if test="weightStatus != null  ">#{weightStatus},</if>
+            <if test="obliguityXStatus != null  ">#{obliguityXStatus},</if>
+            <if test="obliguityYStatus != null  ">#{obliguityYStatus},</if>
+            <if test="batteryStatus != null  ">#{batteryStatus},</if>
+        </trim>
     </insert>
-	 
+
     <update id="updateSbUnloaderRealtime" parameterType="SbUnloaderRealtime">
         update sb_unloader_realtime
         <trim prefix="SET" suffixOverrides=",">
@@ -153,15 +168,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-	<delete id="deleteSbUnloaderRealtimeById" parameterType="Integer">
+    <delete id="deleteSbUnloaderRealtimeById" parameterType="Integer">
         delete from sb_unloader_realtime where id = #{id}
     </delete>
-	
+
     <delete id="deleteSbUnloaderRealtimeByIds" parameterType="String">
-        delete from sb_unloader_realtime where id in 
+        delete from sb_unloader_realtime where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

@@ -134,7 +134,10 @@ public class HjGhformworktApi extends BaseController {
      * @return
      */
     @PostMapping(value = "getFactorData" )
-    public AjaxResult getFactorData(@RequestParam(value = "factorId") Integer factorId,@RequestParam(value = "date") String date, PageDomain pageDomain){
+    public AjaxResult getFactorData(@RequestParam(value = "factorId") Integer factorId,
+                                    @RequestParam(value = "date") String date,
+                                    @RequestParam(value = "endTime") String endTime,
+                                    PageDomain pageDomain){
         AjaxResult jb = new AjaxResult();
         if (factorId == null){
             jb.put("msg", "参数不能为空");
@@ -143,16 +146,16 @@ public class HjGhformworktApi extends BaseController {
         HighformworkData hjDeeppitData = new HighformworkData();
         hjDeeppitData.setFactorId(factorId);
         hjDeeppitData.setCreation(date);
-
+        hjDeeppitData.setEndTime(endTime);
         List<HighformworkData> hjDeeppitDataList = highformworkDataService.selectHighformworkDataList(hjDeeppitData);
         TableDataInfo dataTable = getDataTable(hjDeeppitDataList);
 
         int count = Integer.parseInt(String.valueOf(dataTable.getTotal()));
-       if ((pageDomain.getPageNum()) <= Math.ceil(count / (double) pageDomain.getPageSize())) {
+        if ((pageDomain.getPageNum()) <= Math.ceil(count / (double) pageDomain.getPageSize())) {
             jb.put("msg", "查询成功");
             jb.put("code", 0);
             jb.put("data", hjDeeppitDataList);
-       }else {
+        }else {
             jb.put("msg", "查询成功");
             jb.put("code", 0);
             jb.put("data", Collections.emptyList());
@@ -166,7 +169,10 @@ public class HjGhformworktApi extends BaseController {
      * @return
      */
     @PostMapping(value = "selectUserAlarms" )
-    public AjaxResult selectUserAlarms(@RequestParam(value = "structureId")Integer structureId,@RequestParam(value = "date") String date, PageDomain pageDomain){
+    public AjaxResult selectUserAlarms(@RequestParam(value = "structureId")Integer structureId,
+                                       @RequestParam(value = "date") String date,
+                                       @RequestParam(value = "endTime") String endTime,
+                                       PageDomain pageDomain){
         AjaxResult ajaxResult = new AjaxResult();
         if (structureId == null){
             return AjaxResult.error("未添加参数");
@@ -180,6 +186,7 @@ public class HjGhformworktApi extends BaseController {
         HighformworkAlarmData aData = new HighformworkAlarmData();
         aData.setStructuresId(structureId);
         aData.setEndTime(date);
+        aData.setEndTime2(endTime);
         List<HighformworkAlarmData> lf = highformworkAlarmDataService.selectHighformworkAlarmDataList(aData);
         TableDataInfo dataTable = getDataTable(lf);
         int count = Integer.parseInt(String.valueOf(dataTable.getTotal()));
