@@ -8,14 +8,14 @@ import java.util.Date;
 
 /**
  * 深基坑数据记录表 hj_deeppit_data
- * 
+ *
  * @author hujiang
  * @date 2019-09-04
  */
 public class HjDeeppitData
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** ID */
 	private Integer id;
 	/** 结构件id */
@@ -50,148 +50,149 @@ public class HjDeeppitData
 	private String reservedT;
 	/** 创建时间 */
 	private String creation;
+	private String endTime;
 
-	public void setId(Integer id) 
+	public void setId(Integer id)
 	{
 		this.id = id;
 	}
 
-	public Integer getId() 
+	public Integer getId()
 	{
 		return id;
 	}
-	public void setStructuresId(Integer structuresId) 
+	public void setStructuresId(Integer structuresId)
 	{
 		this.structuresId = structuresId;
 	}
 
-	public Integer getStructuresId() 
+	public Integer getStructuresId()
 	{
 		return structuresId;
 	}
-	public void setDisplayId(Integer displayId) 
+	public void setDisplayId(Integer displayId)
 	{
 		this.displayId = displayId;
 	}
 
-	public Integer getDisplayId() 
+	public Integer getDisplayId()
 	{
 		return displayId;
 	}
-	public void setFactorId(Integer factorId) 
+	public void setFactorId(Integer factorId)
 	{
 		this.factorId = factorId;
 	}
 
-	public Integer getFactorId() 
+	public Integer getFactorId()
 	{
 		return factorId;
 	}
-	public void setLevelX(String levelX) 
+	public void setLevelX(String levelX)
 	{
 		this.levelX = levelX;
 	}
 
-	public String getLevelX() 
+	public String getLevelX()
 	{
 		return levelX;
 	}
-	public void setLevelY(String levelY) 
+	public void setLevelY(String levelY)
 	{
 		this.levelY = levelY;
 	}
 
-	public String getLevelY() 
+	public String getLevelY()
 	{
 		return levelY;
 	}
-	public void setLevelAccumulateX(String levelAccumulateX) 
+	public void setLevelAccumulateX(String levelAccumulateX)
 	{
 		this.levelAccumulateX = levelAccumulateX;
 	}
 
-	public String getLevelAccumulateX() 
+	public String getLevelAccumulateX()
 	{
 		return levelAccumulateX;
 	}
-	public void setLevelAccumulateY(String levelAccumulateY) 
+	public void setLevelAccumulateY(String levelAccumulateY)
 	{
 		this.levelAccumulateY = levelAccumulateY;
 	}
 
-	public String getLevelAccumulateY() 
+	public String getLevelAccumulateY()
 	{
 		return levelAccumulateY;
 	}
-	public void setWaterLevel(String waterLevel) 
+	public void setWaterLevel(String waterLevel)
 	{
 		this.waterLevel = waterLevel;
 	}
 
-	public String getWaterLevel() 
+	public String getWaterLevel()
 	{
 		return waterLevel;
 	}
-	public void setStrainFrequency(String strainFrequency) 
+	public void setStrainFrequency(String strainFrequency)
 	{
 		this.strainFrequency = strainFrequency;
 	}
 
-	public String getStrainFrequency() 
+	public String getStrainFrequency()
 	{
 		return strainFrequency;
 	}
-	public void setStrainTemperature(String strainTemperature) 
+	public void setStrainTemperature(String strainTemperature)
 	{
 		this.strainTemperature = strainTemperature;
 	}
 
-	public String getStrainTemperature() 
+	public String getStrainTemperature()
 	{
 		return strainTemperature;
 	}
-	public void setSubside(String subside) 
+	public void setSubside(String subside)
 	{
 		this.subside = subside;
 	}
 
-	public String getSubside() 
+	public String getSubside()
 	{
 		return subside;
 	}
-	public void setTiltX(String tiltX) 
+	public void setTiltX(String tiltX)
 	{
 		this.tiltX = tiltX;
 	}
 
-	public String getTiltX() 
+	public String getTiltX()
 	{
 		return tiltX;
 	}
-	public void setTiltY(String tiltY) 
+	public void setTiltY(String tiltY)
 	{
 		this.tiltY = tiltY;
 	}
 
-	public String getTiltY() 
+	public String getTiltY()
 	{
 		return tiltY;
 	}
-	public void setReservedO(String reservedO) 
+	public void setReservedO(String reservedO)
 	{
 		this.reservedO = reservedO;
 	}
 
-	public String getReservedO() 
+	public String getReservedO()
 	{
 		return reservedO;
 	}
-	public void setReservedT(String reservedT) 
+	public void setReservedT(String reservedT)
 	{
 		this.reservedT = reservedT;
 	}
 
-	public String getReservedT() 
+	public String getReservedT()
 	{
 		return reservedT;
 	}
@@ -204,26 +205,35 @@ public class HjDeeppitData
 	{
 		return creation;
 	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
 	@Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("structuresId", getStructuresId())
-            .append("displayId", getDisplayId())
-            .append("factorId", getFactorId())
-            .append("levelX", getLevelX())
-            .append("levelY", getLevelY())
-            .append("levelAccumulateX", getLevelAccumulateX())
-            .append("levelAccumulateY", getLevelAccumulateY())
-            .append("waterLevel", getWaterLevel())
-            .append("strainFrequency", getStrainFrequency())
-            .append("strainTemperature", getStrainTemperature())
-            .append("subside", getSubside())
-            .append("tiltX", getTiltX())
-            .append("tiltY", getTiltY())
-            .append("reservedO", getReservedO())
-            .append("reservedT", getReservedT())
-            .append("creation", getCreation())
-            .toString();
-    }
+	public String toString() {
+		return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+				.append("id", getId())
+				.append("structuresId", getStructuresId())
+				.append("displayId", getDisplayId())
+				.append("factorId", getFactorId())
+				.append("levelX", getLevelX())
+				.append("levelY", getLevelY())
+				.append("levelAccumulateX", getLevelAccumulateX())
+				.append("levelAccumulateY", getLevelAccumulateY())
+				.append("waterLevel", getWaterLevel())
+				.append("strainFrequency", getStrainFrequency())
+				.append("strainTemperature", getStrainTemperature())
+				.append("subside", getSubside())
+				.append("tiltX", getTiltX())
+				.append("tiltY", getTiltY())
+				.append("reservedO", getReservedO())
+				.append("reservedT", getReservedT())
+				.append("creation", getCreation())
+				.toString();
+	}
 }

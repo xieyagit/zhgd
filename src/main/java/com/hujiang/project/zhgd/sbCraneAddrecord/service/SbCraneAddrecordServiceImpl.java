@@ -13,12 +13,12 @@ import com.hujiang.common.support.Convert;
 
 /**
  * 塔式起重机实时数据 服务层实现
- * 
+ *
  * @author hujiang
  * @date 2019-06-21
  */
 @Service@Transactional
-public class SbCraneAddrecordServiceImpl implements ISbCraneAddrecordService 
+public class SbCraneAddrecordServiceImpl implements ISbCraneAddrecordService
 {
 	@Autowired
 	private SbCraneAddrecordMapper sbCraneAddrecordMapper;
@@ -34,74 +34,74 @@ public class SbCraneAddrecordServiceImpl implements ISbCraneAddrecordService
 	}
 
 	@Override
-	public List<SbCraneAddrecord> selectSbCraneAddRecordHistory(String deviceId, String dateTime) {
-		return sbCraneAddrecordMapper.selectSbCraneAddRecordHistory(deviceId, dateTime);
+	public List<SbCraneAddrecord> selectSbCraneAddRecordHistory(String deviceId, String dateTime,String endTime) {
+		return sbCraneAddrecordMapper.selectSbCraneAddRecordHistory(deviceId, dateTime,endTime);
 	}
 
 	/**
-     * 查询塔式起重机实时数据信息
-     * 
-     * @param id 塔式起重机实时数据ID
-     * @return 塔式起重机实时数据信息
-     */
-    @Override
+	 * 查询塔式起重机实时数据信息
+	 *
+	 * @param id 塔式起重机实时数据ID
+	 * @return 塔式起重机实时数据信息
+	 */
+	@Override
 	public SbCraneAddrecord selectSbCraneAddrecordById(Long id)
 	{
-	    return sbCraneAddrecordMapper.selectSbCraneAddrecordById(id);
+		return sbCraneAddrecordMapper.selectSbCraneAddrecordById(id);
 	}
-	
+
 	/**
-     * 查询塔式起重机实时数据列表
-     * 
-     * @param sbCraneAddrecord 塔式起重机实时数据信息
-     * @return 塔式起重机实时数据集合
-     */
+	 * 查询塔式起重机实时数据列表
+	 *
+	 * @param sbCraneAddrecord 塔式起重机实时数据信息
+	 * @return 塔式起重机实时数据集合
+	 */
 	@Override
 	public List<SbCraneAddrecord> selectSbCraneAddrecordList(SbCraneAddrecord sbCraneAddrecord)
 	{
-	    return sbCraneAddrecordMapper.selectSbCraneAddrecordList(sbCraneAddrecord);
+		return sbCraneAddrecordMapper.selectSbCraneAddrecordList(sbCraneAddrecord);
 	}
 	@Override
 	public List<SbCraneAddrecord> selectSbCraneAddrecordListTwo(SbCraneAddrecord sbCraneAddrecord)
 	{
-	    return sbCraneAddrecordMapper.selectSbCraneAddrecordListTwo(sbCraneAddrecord);
+		return sbCraneAddrecordMapper.selectSbCraneAddrecordListTwo(sbCraneAddrecord);
 	}
 	@Override
 	public List<SbCraneAddrecord> selectSbCraneAddrecordListThree(Map<String,Object> map)
 	{
-	    return sbCraneAddrecordMapper.selectSbCraneAddrecordListThree(map);
-	}
-	
-    /**
-     * 新增塔式起重机实时数据
-     * 
-     * @param sbCraneAddrecord 塔式起重机实时数据信息
-     * @return 结果
-     */
-	@Override
-	public int insertSbCraneAddrecord(SbCraneAddrecord sbCraneAddrecord)
-	{
-	    return sbCraneAddrecordMapper.insertSbCraneAddrecord(sbCraneAddrecord);
-	}
-	
-	/**
-     * 修改塔式起重机实时数据
-     * 
-     * @param sbCraneAddrecord 塔式起重机实时数据信息
-     * @return 结果
-     */
-	@Override
-	public int updateSbCraneAddrecord(SbCraneAddrecord sbCraneAddrecord)
-	{
-	    return sbCraneAddrecordMapper.updateSbCraneAddrecord(sbCraneAddrecord);
+		return sbCraneAddrecordMapper.selectSbCraneAddrecordListThree(map);
 	}
 
 	/**
-     * 删除塔式起重机实时数据对象
-     * 
-     * @param ids 需要删除的数据ID
-     * @return 结果
-     */
+	 * 新增塔式起重机实时数据
+	 *
+	 * @param sbCraneAddrecord 塔式起重机实时数据信息
+	 * @return 结果
+	 */
+	@Override
+	public int insertSbCraneAddrecord(SbCraneAddrecord sbCraneAddrecord)
+	{
+		return sbCraneAddrecordMapper.insertSbCraneAddrecord(sbCraneAddrecord);
+	}
+
+	/**
+	 * 修改塔式起重机实时数据
+	 *
+	 * @param sbCraneAddrecord 塔式起重机实时数据信息
+	 * @return 结果
+	 */
+	@Override
+	public int updateSbCraneAddrecord(SbCraneAddrecord sbCraneAddrecord)
+	{
+		return sbCraneAddrecordMapper.updateSbCraneAddrecord(sbCraneAddrecord);
+	}
+
+	/**
+	 * 删除塔式起重机实时数据对象
+	 *
+	 * @param ids 需要删除的数据ID
+	 * @return 结果
+	 */
 	@Override
 	public int deleteSbCraneAddrecordByIds(String ids)
 	{

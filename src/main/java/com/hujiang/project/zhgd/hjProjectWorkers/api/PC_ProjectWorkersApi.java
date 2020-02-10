@@ -79,7 +79,15 @@ public class PC_ProjectWorkersApi extends BaseController {
         List<ProjectWorkerPC> list = hjProjectWorkersService.selectProjectWorkersListPC(hjProjectWorkers);
         return getDataTable(list);
     }
-
+    /**
+     * 查询项目工人疫情列表
+     */
+    @PostMapping("/quarantineList")
+    public TableDataInfo quarantineList(HjProjectWorkers hjProjectWorkers) {
+        startPage();
+        List<ProjectWorkerPC> list = hjProjectWorkersService.selectProjectWorkersListPC(hjProjectWorkers);
+        return getDataTable(list);
+    }
     /**
      * pdf导出查询
      * @param ids
@@ -134,6 +142,20 @@ public class PC_ProjectWorkersApi extends BaseController {
         Map<String, Object> map = hjProjectWorkersService.updateHjProjectWorkersOutOrIn(Convert.toStrArray(ids), tag);
         logger.info(ids+"同步人员 进出或退场"+tag+"结束");
         return map;
+    }
+    @PostMapping(value = "updateQuarantine")
+    public  AjaxResult updateQuarantine(Integer tag,String ids){
+        ProjectWorkerPC pw=new ProjectWorkerPC();
+        pw.setQuarantine(tag.toString());
+        pw.setIds(ids);
+     int i  = hjProjectWorkersService.updateQuarantine(pw);
+
+    Map<String, Object> map = hjProjectWorkersService.updateHjProjectWorkersOutOrIn(Convert.toStrArray(ids), tag);
+
+if(i>0){
+  return  AjaxResult.success();
+}
+        return AjaxResult.error();
     }
 
     /**

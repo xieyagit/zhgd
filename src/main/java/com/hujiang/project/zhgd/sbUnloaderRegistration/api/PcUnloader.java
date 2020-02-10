@@ -69,7 +69,7 @@ public class PcUnloader extends BaseController {
                 bMap.put("deviceName",binding.getDName());
                 bMap.put("status",equipment.getOperation());
                 jsonArray.add(bMap);
-        }
+            }
             re.put("projectName",project.getProjectName());
             re.put("deviceList",jsonArray);
             re.put("offLine",offLine);
@@ -125,13 +125,15 @@ public class PcUnloader extends BaseController {
     public JSONObject getRealtimeHistory(@RequestParam("projectId")Integer projectId,
                                          @RequestParam(value = "deviceId") String deviceId,
                                          @RequestParam(value = "time",required = false)String time,
+                                         @RequestParam(value = "endTime",required = false)String endTime,
                                          @RequestParam(value = "alarmType")Integer alarmType
-                                         ){
+    ){
         JSONObject jsonObject = new JSONObject();
         SbUnloaderAlarmtime sbUnloaderAlarmtime = new SbUnloaderAlarmtime();
         sbUnloaderAlarmtime.setProjectId(projectId);
         sbUnloaderAlarmtime.setHxzId(deviceId);
         sbUnloaderAlarmtime.setStartTime(time);
+        sbUnloaderAlarmtime.setEndTime(endTime);
         sbUnloaderAlarmtime.setAlarmType(alarmType);
         startPage();
         List<SbUnloaderAlarmtime> sbUnloaderAlarmtimeList =  alarmtimeService.getSbUnloaderAlarmtimeList(sbUnloaderAlarmtime);
@@ -155,13 +157,15 @@ public class PcUnloader extends BaseController {
     @PostMapping(value = "/getSbUnloaderHistory")
     public JSONObject getSbUnloaderHistory(@RequestParam(value = "projectId")Integer projectId,
                                            @RequestParam(value = "deviceId") String deviceId,
-                                           @RequestParam(value = "time",required = false)String time){
+                                           @RequestParam(value = "time",required = false)String time,
+                                           @RequestParam(value = "endTime",required = false)String endTime){
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray = new JSONArray();
         SbUnloaderRealtime sbUnloaderRealtime = new SbUnloaderRealtime();
         sbUnloaderRealtime.setProjectId(projectId);
         sbUnloaderRealtime.setHxzId(deviceId);
         sbUnloaderRealtime.setRTime(time);
+        sbUnloaderRealtime.setEndTime(endTime);
         startPage();
         List<SbUnloaderRealtime> sbUnloaderRealtimeList = realtimeService.getSbUnloaderHistory(sbUnloaderRealtime);
         TableDataInfo dataTable = getDataTable(sbUnloaderRealtimeList);
@@ -192,19 +196,23 @@ public class PcUnloader extends BaseController {
     }
     @PostMapping("/exportUnloaderAlarmtime")
     public List<ExportUnloaderAlarmtime> exportUnloaderAlarmtime(@RequestParam(value = "ids",required = false)String[] ids,
+                                                                 @RequestParam(value = "startTime",required = false)String startTime,
+                                                                 @RequestParam(value = "endTime",required = false)String endTime,
                                                                  @RequestParam(value = "deviceId",required = false)String deviceId,
                                                                  @RequestParam(value = "alarmType",required = false)Integer alarmType)
     {
-        List<ExportUnloaderAlarmtime> exportUnloaderAlarmtimeList =  alarmtimeService.getSbUnloaderAlarmtimeListById(ids,deviceId,alarmType);
+        List<ExportUnloaderAlarmtime> exportUnloaderAlarmtimeList =  alarmtimeService.getSbUnloaderAlarmtimeListById(ids,startTime,endTime,deviceId,alarmType);
 
 
         return exportUnloaderAlarmtimeList;
     }
     @PostMapping("/exportUnloaderRealtime")
     public List<ExportUnloaderRealtime> exportUnloaderRealtime(@RequestParam(value = "ids",required = false)String[] ids,
+                                                               @RequestParam(value = "startTime",required = false)String startTime,
+                                                               @RequestParam(value = "endTime",required = false)String endTime,
                                                                @RequestParam(value = "deviceId",required = false)String deviceId)
     {
-        List<ExportUnloaderRealtime> exportUnloaderRealtimeList =  realtimeService.getSbUnloaderRealtimeListByIds(ids,deviceId);
+        List<ExportUnloaderRealtime> exportUnloaderRealtimeList =  realtimeService.getSbUnloaderRealtimeListByIds(ids,startTime,endTime,deviceId);
 
         return exportUnloaderRealtimeList;
     }

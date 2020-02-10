@@ -110,6 +110,15 @@ public class HjProjectWorkers
 	private String workTypenameName;
 
 	private Integer count;
+private  String quarantine;
+
+	public String getQuarantine() {
+		return quarantine;
+	}
+
+	public void setQuarantine(String quarantine) {
+		this.quarantine = quarantine;
+	}
 
 	/**
 	 * 东莞劳务工花名册id

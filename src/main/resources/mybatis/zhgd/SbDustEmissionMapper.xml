@@ -117,7 +117,14 @@
     <select id="selectSbDustEmissionByTimes" parameterType="Map" resultMap="SbDustEmissionResult">
         <include refid="selectSbDustEmissionVo"/>
         <where>
-            <if test="dateTime != null "> and `date` like "${dateTime}%"</if>
+            <choose>
+                <when test="endTime != null and endTime != ''">
+                    and to_days(`date`) BETWEEN to_days(#{dateTime}) and to_days(#{endTime})
+                </when>
+                <otherwise>
+                    and to_days(`date`)=to_days(#{dateTime})
+                </otherwise>
+            </choose>
             <if test="sn != null "> and sn=#{sn}</if>
         </where>
         order by id desc

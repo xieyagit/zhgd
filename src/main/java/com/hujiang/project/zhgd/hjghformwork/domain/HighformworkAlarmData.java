@@ -9,14 +9,14 @@ import java.util.Date;
 
 /**
  * 高支模报警记录表 hj_highformwork_alarm_data
- * 
+ *
  * @author hujiang
  * @date 2019-09-09
  */
 public class HighformworkAlarmData extends BaseEntity
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** id */
 	private String id;
 	/** 结构件id */
@@ -47,6 +47,15 @@ public class HighformworkAlarmData extends BaseEntity
 	private String startTime;
 	/** 告警更新时间 */
 	private String endTime;
+	private String endTime2;
+
+	public String getEndTime2() {
+		return endTime2;
+	}
+
+	public void setEndTime2(String endTime2) {
+		this.endTime2 = endTime2;
+	}
 
 	public void setId(String id)
 	{
@@ -57,12 +66,12 @@ public class HighformworkAlarmData extends BaseEntity
 	{
 		return id;
 	}
-	public void setStructuresId(Integer structuresId) 
+	public void setStructuresId(Integer structuresId)
 	{
 		this.structuresId = structuresId;
 	}
 
-	public Integer getStructuresId() 
+	public Integer getStructuresId()
 	{
 		return structuresId;
 	}
@@ -80,88 +89,88 @@ public class HighformworkAlarmData extends BaseEntity
 		this.alarmId = alarmId;
 	}
 
-	public String getAlarmId() 
+	public String getAlarmId()
 	{
 		return alarmId;
 	}
-	public void setSourceId(String sourceId) 
+	public void setSourceId(String sourceId)
 	{
 		this.sourceId = sourceId;
 	}
 
-	public String getSourceId() 
+	public String getSourceId()
 	{
 		return sourceId;
 	}
-	public void setSourceName(String sourceName) 
+	public void setSourceName(String sourceName)
 	{
 		this.sourceName = sourceName;
 	}
 
-	public String getSourceName() 
+	public String getSourceName()
 	{
 		return sourceName;
 	}
-	public void setSourceTypeId(Integer sourceTypeId) 
+	public void setSourceTypeId(Integer sourceTypeId)
 	{
 		this.sourceTypeId = sourceTypeId;
 	}
 
-	public Integer getSourceTypeId() 
+	public Integer getSourceTypeId()
 	{
 		return sourceTypeId;
 	}
-	public void setSourceTypeName(String sourceTypeName) 
+	public void setSourceTypeName(String sourceTypeName)
 	{
 		this.sourceTypeName = sourceTypeName;
 	}
 
-	public String getSourceTypeName() 
+	public String getSourceTypeName()
 	{
 		return sourceTypeName;
 	}
-	public void setAlarmTypeCode(String alarmTypeCode) 
+	public void setAlarmTypeCode(String alarmTypeCode)
 	{
 		this.alarmTypeCode = alarmTypeCode;
 	}
 
-	public String getAlarmTypeCode() 
+	public String getAlarmTypeCode()
 	{
 		return alarmTypeCode;
 	}
-	public void setLevel(Integer level) 
+	public void setLevel(Integer level)
 	{
 		this.level = level;
 	}
 
-	public Integer getLevel() 
+	public Integer getLevel()
 	{
 		return level;
 	}
-	public void setContent(String content) 
+	public void setContent(String content)
 	{
 		this.content = content;
 	}
 
-	public String getContent() 
+	public String getContent()
 	{
 		return content;
 	}
-	public void setCount(Integer count) 
+	public void setCount(Integer count)
 	{
 		this.count = count;
 	}
 
-	public Integer getCount() 
+	public Integer getCount()
 	{
 		return count;
 	}
-	public void setState(Integer state) 
+	public void setState(Integer state)
 	{
 		this.state = state;
 	}
 
-	public Integer getState() 
+	public Integer getState()
 	{
 		return state;
 	}

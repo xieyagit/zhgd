@@ -130,7 +130,10 @@ public class HjDeeppitApi extends BaseController {
      * @return
      */
     @PostMapping(value = "getFactorData" )
-    public JSONObject getFactorData(@RequestParam(value = "factorId") Integer factorId,@RequestParam(value = "date") String date, PageDomain pageDomain){
+    public JSONObject getFactorData(@RequestParam(value = "factorId") Integer factorId,
+                                    @RequestParam(value = "date") String date,
+                                    @RequestParam(value = "endTime") String endTime,
+                                    PageDomain pageDomain){
 
         JSONObject jsonObject = new JSONObject();
         if (factorId == null){
@@ -140,6 +143,7 @@ public class HjDeeppitApi extends BaseController {
         HjDeeppitData hjDeeppitData = new HjDeeppitData();
         hjDeeppitData.setFactorId(factorId);
         hjDeeppitData.setCreation(date);
+        hjDeeppitData.setEndTime(endTime);
 
         List<HjDeeppitData> hjDeeppitDataList = hjDeeppitDataService.selectHjDeeppitDataList(hjDeeppitData);
         TableDataInfo dataTable = getDataTable(hjDeeppitDataList);
@@ -203,9 +207,9 @@ public class HjDeeppitApi extends BaseController {
                 map.put("min",minR);
                 map.put("max",maxR);
                 break;
-                
+
             default:
-                    map.put("msg","没有这个检测类型");
+                map.put("msg","没有这个检测类型");
         }
         return AjaxResult.success(map);
     }
@@ -216,7 +220,10 @@ public class HjDeeppitApi extends BaseController {
      * @return
      */
     @PostMapping(value = "selectUserAlarms" )
-    public AjaxResult selectUserAlarms(@RequestParam(value = "structureId")Integer structureId,@RequestParam(value = "date")String date, PageDomain pageDomain){
+    public AjaxResult selectUserAlarms(@RequestParam(value = "structureId")Integer structureId,
+                                       @RequestParam(value = "date")String date,
+                                       @RequestParam(value = "endTime")String endTime,
+                                       PageDomain pageDomain){
         AjaxResult jsonObject = new AjaxResult();
         if (structureId == null){
             jsonObject.put("msg", "参数不能为空");
@@ -225,6 +232,7 @@ public class HjDeeppitApi extends BaseController {
         DeeppitAlarmData deeppitAlarmData = new DeeppitAlarmData();
         deeppitAlarmData.setStructuresId(structureId);
         deeppitAlarmData.setEndTime(date);
+        deeppitAlarmData.setEndTime2(endTime);
         List<DeeppitAlarmData> hjDeeppitDataList = deeppitAlarmDataService.selectDeeppitAlarmDataList(deeppitAlarmData);
         TableDataInfo dataTable = getDataTable(hjDeeppitDataList);
         int count = Integer.parseInt(String.valueOf(dataTable.getTotal()));
@@ -371,8 +379,8 @@ public class HjDeeppitApi extends BaseController {
                     array.add(array1);
                 }
                 break;
-                default:
-                    array.add("参数错误");
+            default:
+                array.add("参数错误");
         }
 
         return array;

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hujiang.project.zhgd.hjghformwork.mapper.HighformworkAlarmDataMapper">
-    
+
     <resultMap type="HighformworkAlarmData" id="HighformworkAlarmDataResult">
         <result property="id"    column="id"    />
         <result property="structuresId"    column="structures_id"    />
@@ -27,76 +27,83 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="cnt"    column="cnt"    />
         <result property="r"    column="r"/>
     </resultMap>
-	
-	<sql id="selectHighformworkAlarmDataVo">
+
+    <sql id="selectHighformworkAlarmDataVo">
         select id, structures_id,structures_name, alarm_id, source_id, source_name, source_type_id, source_type_name, alarm_type_code, level, content, count, state, startTime, endTime from hj_highformwork_alarm_data
     </sql>
-	
+
     <select id="selectHighformworkAlarmDataList" parameterType="HighformworkAlarmData" resultMap="HighformworkAlarmDataResult">
         <include refid="selectHighformworkAlarmDataVo"/>
-        <where>  
+        <where>
             <if test="id != null "> and id = #{id}</if>
             <if test="structuresId != null "> and structures_id = #{structuresId}</if>
             <if test="structuresName != null "> and structures_name = #{structuresName}</if>
-             <if test="alarmId != null  and alarmId != '' "> and alarm_id = #{alarmId}</if>
-             <if test="sourceId != null  and sourceId != '' "> and source_id = #{sourceId}</if>
-             <if test="sourceName != null  and sourceName != '' "> and source_name = #{sourceName}</if>
-             <if test="sourceTypeId != null "> and source_type_id = #{sourceTypeId}</if>
-             <if test="sourceTypeName != null  and sourceTypeName != '' "> and source_type_name = #{sourceTypeName}</if>
-             <if test="alarmTypeCode != null  and alarmTypeCode != '' "> and alarm_type_code = #{alarmTypeCode}</if>
-             <if test="level != null "> and level = #{level}</if>
-             <if test="content != null  and content != '' "> and content = #{content}</if>
-             <if test="count != null "> and count = #{count}</if>
-             <if test="state != null "> and state = #{state}</if>
-             <if test="startTime != null "> and startTime = #{startTime}</if>
-            <if test="endTime != null "> and endTime LIKE CONCAT(CONCAT(#{endTime}), '%')</if>
+            <if test="alarmId != null  and alarmId != '' "> and alarm_id = #{alarmId}</if>
+            <if test="sourceId != null  and sourceId != '' "> and source_id = #{sourceId}</if>
+            <if test="sourceName != null  and sourceName != '' "> and source_name = #{sourceName}</if>
+            <if test="sourceTypeId != null "> and source_type_id = #{sourceTypeId}</if>
+            <if test="sourceTypeName != null  and sourceTypeName != '' "> and source_type_name = #{sourceTypeName}</if>
+            <if test="alarmTypeCode != null  and alarmTypeCode != '' "> and alarm_type_code = #{alarmTypeCode}</if>
+            <if test="level != null "> and level = #{level}</if>
+            <if test="content != null  and content != '' "> and content = #{content}</if>
+            <if test="count != null "> and count = #{count}</if>
+            <if test="state != null "> and state = #{state}</if>
+            <if test="startTime != null "> and startTime = #{startTime}</if>
+            <choose>
+                <when test="endTime2 != null and endTime2 != ''">
+                    and to_days(endTime) BETWEEN to_days(#{endTime}) and to_days(#{endTime2})
+                </when>
+                <otherwise>
+                    and to_days(endTime)=to_days(#{endTime})
+                </otherwise>
+            </choose>
 
-         </where>
+        </where>
     </select>
-    
+
     <select id="selectHighformworkAlarmDataById" parameterType="Integer" resultMap="HighformworkAlarmDataResult">
         <include refid="selectHighformworkAlarmDataVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertHighformworkAlarmData" parameterType="HighformworkAlarmData">
         insert into hj_highformwork_alarm_data
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">id,</if>
-			<if test="structuresId != null  ">structures_id,</if>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="structuresId != null  ">structures_id,</if>
             <if test="structuresName != null ">structures_name</if>
-			<if test="alarmId != null  and alarmId != ''  ">alarm_id,</if>
-			<if test="sourceId != null  and sourceId != ''  ">source_id,</if>
-			<if test="sourceName != null  and sourceName != ''  ">source_name,</if>
-			<if test="sourceTypeId != null  ">source_type_id,</if>
-			<if test="sourceTypeName != null  and sourceTypeName != ''  ">source_type_name,</if>
-			<if test="alarmTypeCode != null  and alarmTypeCode != ''  ">alarm_type_code,</if>
-			<if test="level != null  ">level,</if>
-			<if test="content != null  and content != ''  ">content,</if>
-			<if test="count != null  ">count,</if>
-			<if test="state != null  ">state,</if>
-			<if test="startTime != null  ">startTime,</if>
-			<if test="endTime != null  ">endTime,</if>
-         </trim>
+            <if test="alarmId != null  and alarmId != ''  ">alarm_id,</if>
+            <if test="sourceId != null  and sourceId != ''  ">source_id,</if>
+            <if test="sourceName != null  and sourceName != ''  ">source_name,</if>
+            <if test="sourceTypeId != null  ">source_type_id,</if>
+            <if test="sourceTypeName != null  and sourceTypeName != ''  ">source_type_name,</if>
+            <if test="alarmTypeCode != null  and alarmTypeCode != ''  ">alarm_type_code,</if>
+            <if test="level != null  ">level,</if>
+            <if test="content != null  and content != ''  ">content,</if>
+            <if test="count != null  ">count,</if>
+            <if test="state != null  ">state,</if>
+            <if test="startTime != null  ">startTime,</if>
+            <if test="endTime != null  ">endTime,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">#{id},</if>
-			<if test="structuresId != null  ">#{structuresId},</if>
+            <if test="id != null  ">#{id},</if>
+            <if test="structuresId != null  ">#{structuresId},</if>
             <if test="structuresName != null ">#{structuresName}</if>
-			<if test="alarmId != null  and alarmId != ''  ">#{alarmId},</if>
-			<if test="sourceId != null  and sourceId != ''  ">#{sourceId},</if>
-			<if test="sourceName != null  and sourceName != ''  ">#{sourceName},</if>
-			<if test="sourceTypeId != null  ">#{sourceTypeId},</if>
-			<if test="sourceTypeName != null  and sourceTypeName != ''  ">#{sourceTypeName},</if>
-			<if test="alarmTypeCode != null  and alarmTypeCode != ''  ">#{alarmTypeCode},</if>
-			<if test="level != null  ">#{level},</if>
-			<if test="content != null  and content != ''  ">#{content},</if>
-			<if test="count != null  ">#{count},</if>
-			<if test="state != null  ">#{state},</if>
-			<if test="startTime != null  ">#{startTime},</if>
-			<if test="endTime != null  ">#{endTime},</if>
-         </trim>
+            <if test="alarmId != null  and alarmId != ''  ">#{alarmId},</if>
+            <if test="sourceId != null  and sourceId != ''  ">#{sourceId},</if>
+            <if test="sourceName != null  and sourceName != ''  ">#{sourceName},</if>
+            <if test="sourceTypeId != null  ">#{sourceTypeId},</if>
+            <if test="sourceTypeName != null  and sourceTypeName != ''  ">#{sourceTypeName},</if>
+            <if test="alarmTypeCode != null  and alarmTypeCode != ''  ">#{alarmTypeCode},</if>
+            <if test="level != null  ">#{level},</if>
+            <if test="content != null  and content != ''  ">#{content},</if>
+            <if test="count != null  ">#{count},</if>
+            <if test="state != null  ">#{state},</if>
+            <if test="startTime != null  ">#{startTime},</if>
+            <if test="endTime != null  ">#{endTime},</if>
+        </trim>
     </insert>
-	 
+
     <update id="updateHighformworkAlarmData" parameterType="HighformworkAlarmData">
         update hj_highformwork_alarm_data
         <trim prefix="SET" suffixOverrides=",">
@@ -118,12 +125,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-	<delete id="deleteHighformworkAlarmDataById" parameterType="Integer">
+    <delete id="deleteHighformworkAlarmDataById" parameterType="Integer">
         delete from hj_highformwork_alarm_data where id = #{id}
     </delete>
-	
+
     <delete id="deleteHighformworkAlarmDataByIds" parameterType="String">
-        delete from hj_highformwork_alarm_data where id in 
+        delete from hj_highformwork_alarm_data where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -151,5 +158,5 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                     structures_id = #{structuresId}
             ) AS b;
     </select>
-    
+
 </mapper>

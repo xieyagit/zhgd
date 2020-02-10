@@ -134,11 +134,13 @@ public class AppCraneAddRecordApi extends BaseController {
 
     @PostMapping(value = "/getCraneAddRecordHistory")
     public JSONObject getCraneAddRecordHistory(@RequestParam(value = "deviceId")String deviceId,
-                                               @RequestParam(value = "dateTime",required = false)String dateTime){
+                                               @RequestParam(value = "dateTime",required = false)String dateTime,
+                                               @RequestParam(value = "endTime",required = false)String endTime
+    ){
         startPage();
         JSONObject jsonObject = new JSONObject();
         JSONArray array = new JSONArray();
-        List<SbCraneAddrecord> craneAddrecords = craneAddrecordService.selectSbCraneAddRecordHistory(deviceId,dateTime);
+        List<SbCraneAddrecord> craneAddrecords = craneAddrecordService.selectSbCraneAddRecordHistory(deviceId,dateTime,endTime);
         if(craneAddrecords!=null && craneAddrecords.size()>0){
             for (SbCraneAddrecord craneAddrecord:craneAddrecords){
                 JSONObject temp = new JSONObject();
