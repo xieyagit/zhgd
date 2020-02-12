@@ -2,6 +2,7 @@ package com.hujiang.project.zhgd.sbCraneAddrecord.service;
 
 import com.hujiang.project.zhgd.sbCraneAddrecord.domain.CraneAddRecord;
 import com.hujiang.project.zhgd.sbCraneAddrecord.domain.SbCraneAddrecord;
+import com.hujiang.project.zhgd.sbgroup.domain.CraneKB;
 
 import java.util.List;
 import java.util.Map;
@@ -14,15 +15,19 @@ import java.util.Map;
  */
 public interface ISbCraneAddrecordService 
 {
+	public List<SbCraneAddrecord> selectCraneAddrecordList(Map<String, Object> map);
+	public CraneKB selectCount(Map<String, Object> map);
 
-	public SbCraneAddrecord selectSbCraneAddRecord(String hxzId,String runtime);
-	public CraneAddRecord selectCraneAddRecordName(String hxzId,String runtime,Integer projectId);
+
+
+	public SbCraneAddrecord selectSbCraneAddRecord(String hxzId, String runtime);
+	public CraneAddRecord selectCraneAddRecordName(String hxzId, String runtime, Integer projectId);
 	/**
 	 * 查询塔吊历史记录
 	 * 移动端
 	 * @return
 	 */
-	public List<SbCraneAddrecord> selectSbCraneAddRecordHistory(String hxzId,String dateTime);
+	public List<SbCraneAddrecord> selectSbCraneAddRecordHistory(String hxzId, String dateTime, String endTime);
 	/**
      * 查询塔式起重机实时数据信息
      * 
@@ -39,7 +44,7 @@ public interface ISbCraneAddrecordService
      */
 	public List<SbCraneAddrecord> selectSbCraneAddrecordList(SbCraneAddrecord sbCraneAddrecord);
 	public List<SbCraneAddrecord> selectSbCraneAddrecordListTwo(SbCraneAddrecord sbCraneAddrecord);
-	public List<SbCraneAddrecord> selectSbCraneAddrecordListThree(Map<String,Object> map);
+	public List<SbCraneAddrecord> selectSbCraneAddrecordListThree(Map<String, Object> map);
 
 
 	/**
@@ -67,9 +72,9 @@ public interface ISbCraneAddrecordService
 	public int deleteSbCraneAddrecordByIds(String ids);
 
 
-	public List<SbCraneAddrecord> selectCraneCount(Map<String,Object> map);
-	public Integer selectCraneCountTwo(Map<String,Object> map);
-	public Integer selectCraneCountThree(Map<String,Object> map);
+	public List<SbCraneAddrecord> selectCraneCount(Map<String, Object> map);
+	public Integer selectCraneCountTwo(Map<String, Object> map);
+	public Integer selectCraneCountThree(Map<String, Object> map);
 
 	/** 智慧工地1.0看板塔吊*/
 	public SbCraneAddrecord kanban(String hxzid);

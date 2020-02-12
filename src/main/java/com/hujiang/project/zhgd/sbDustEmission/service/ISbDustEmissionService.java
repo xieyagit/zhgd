@@ -17,13 +17,14 @@ import java.util.Map;
  */
 public interface ISbDustEmissionService 
 {
+	List<SbDustEmission> selectSbDustEmissionListKB(Map<String, Object> map);
 	/**
 	 * 根据设备id和记录时间查询
 	 * @param id
 	 * @param time
 	 * @return
 	 */
-	public SbDustEmission getDustEmissionByDateAndID(Long id,String time);
+	public SbDustEmission getDustEmissionByDateAndID(Long id, String time);
 	/**
 	 * 根据项目id和时间获取PM数据平均值
 	 * @param pid
@@ -49,20 +50,20 @@ public interface ISbDustEmissionService
 	 * @param map
 	 * @return
 	 */
-	List<SbDustEmission> selectSbDustEmissionByTime(Map<String,Object> map);
+	List<SbDustEmission> selectSbDustEmissionByTime(Map<String, Object> map);
 	/**
  * 根据时间和sn查询扬尘数据信息
  * @param map
  * @return
  */
-public  List<SbDustEmission> selectSbDustEmissionByTimes(Map<String,Object> map);
+public  List<SbDustEmission> selectSbDustEmissionByTimes(Map<String, Object> map);
 
 	/**
 	 * 根据设备sn查询最新的一条记录
 	 * @param sn
 	 * @return
 	 */
-	SbDustEmission selectSbDustEmissionToOne(String sn );
+	SbDustEmission selectSbDustEmissionToOne(String sn);
 	/**
      * 查询扬尘数据信息
      * 
@@ -109,7 +110,7 @@ public  List<SbDustEmission> selectSbDustEmissionByTimes(Map<String,Object> map)
 	 * @param time
 	 * @return
 	 */
-	public SbDustEmission selectToday(@Param("sn") String sn, @Param("time")String time);
+	public SbDustEmission selectToday(@Param("sn") String sn, @Param("time") String time);
 
 	/** 看板1.0扬尘tsp数据*/
 	public List<SbDustEmission> selectTsp(String sn);

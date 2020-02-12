@@ -2,6 +2,7 @@ package com.hujiang.project.zhgd.sbCraneAddrecord.mapper;
 
 import com.hujiang.project.zhgd.sbCraneAddrecord.domain.CraneAddRecord;
 import com.hujiang.project.zhgd.sbCraneAddrecord.domain.SbCraneAddrecord;
+import com.hujiang.project.zhgd.sbgroup.domain.CraneKB;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -15,25 +16,29 @@ import java.util.Map;
      */
     public interface SbCraneAddrecordMapper
     {
+        public List<SbCraneAddrecord> selectCraneAddrecordList(Map<String, Object> map);
+        public CraneKB selectCount(Map<String, Object> map);
         /**
          * 塔吊界面
          * @param hxzId
          * @param runtime
          * @return
          */
-        public SbCraneAddrecord selectSbCraneAddRecord(@Param(value = "hxzId")String hxzId,
-                                                       @Param(value = "runtime")String runtime);
+        public SbCraneAddrecord selectSbCraneAddRecord(@Param(value = "hxzId") String hxzId,
+                                                       @Param(value = "runtime") String runtime);
 
-        public CraneAddRecord selectCraneAddRecordName(@Param(value = "hxzId")String hxzId,
-                                                       @Param(value = "runtime")String runtime,
-                                                       @Param(value = "projectId")Integer projectId);
+        public CraneAddRecord selectCraneAddRecordName(@Param(value = "hxzId") String hxzId,
+                                                       @Param(value = "runtime") String runtime,
+                                                       @Param(value = "projectId") Integer projectId);
         /**
          * 查询塔吊历史记录
          * 移动端
          * @return
          */
-        public List<SbCraneAddrecord> selectSbCraneAddRecordHistory(@Param(value = "hxzId")String hxzId,
-                                                                    @Param(value = "dateTime")String dateTime);
+        public List<SbCraneAddrecord> selectSbCraneAddRecordHistory(@Param(value = "hxzId") String hxzId,
+                                                                    @Param(value = "dateTime") String dateTime,
+                                                                    @Param(value = "endTime") String endTime
+        );
         /**
          * 查询塔式起重机实时数据信息
          *
@@ -50,7 +55,7 @@ import java.util.Map;
          */
         public List<SbCraneAddrecord> selectSbCraneAddrecordList(SbCraneAddrecord sbCraneAddrecord);
         public List<SbCraneAddrecord> selectSbCraneAddrecordListTwo(SbCraneAddrecord sbCraneAddrecord);
-        public List<SbCraneAddrecord> selectSbCraneAddrecordListThree(Map<String,Object> map);
+        public List<SbCraneAddrecord> selectSbCraneAddrecordListThree(Map<String, Object> map);
 
         /**
          * 新增塔式起重机实时数据
@@ -84,9 +89,9 @@ import java.util.Map;
          */
         public int deleteSbCraneAddrecordByIds(String[] ids);
 
-        public List<SbCraneAddrecord> selectCraneCount(Map<String,Object> map);
-        public Integer selectCraneCountTwo(Map<String,Object> map);
-        public Integer selectCraneCountThree(Map<String,Object> map);
+        public List<SbCraneAddrecord> selectCraneCount(Map<String, Object> map);
+        public Integer selectCraneCountTwo(Map<String, Object> map);
+        public Integer selectCraneCountThree(Map<String, Object> map);
 
         /** 智慧工地1.0看板塔吊*/
         public SbCraneAddrecord kanban(@Param("hxzid") String hxzid);

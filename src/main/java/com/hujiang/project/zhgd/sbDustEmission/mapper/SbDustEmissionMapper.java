@@ -16,20 +16,21 @@ import java.util.Map;
  */
 public interface SbDustEmissionMapper 
 {
+	public  List<SbDustEmission> selectSbDustEmissionListKB(Map<String, Object> map);
 	/**
 	 * 根据设备id和记录时间查询
 	 * @param id
 	 * @param time
 	 * @return
 	 */
-	public SbDustEmission getDustEmissionByDateAndID(@Param("id") Long id,@Param("time") String time);
+	public SbDustEmission getDustEmissionByDateAndID(@Param("id") Long id, @Param("time") String time);
 	/**
 	 * 根据项目id和时间获取PM数据平均值
 	 * @param pid
 	 * @param time
 	 * @return
 	 */
-	public Map<String,Float> getPMAVG(@Param("pid") Long pid,@Param("time") String time);
+	public Map<String,Float> getPMAVG(@Param("pid") Long pid, @Param("time") String time);
 	/**
 	 * 查询扬尘数据列表
 	 * @param sn
@@ -42,19 +43,19 @@ public interface SbDustEmissionMapper
 	 * @param time
 	 * @return
 	 */
-	Pm25_Pm10 getPm25_Pm10BySnAndTime(@Param("sn") String sn, @Param("time")String time);
+	Pm25_Pm10 getPm25_Pm10BySnAndTime(@Param("sn") String sn, @Param("time") String time);
 	/**
 	 * 根据时间和sn查询扬尘数据信息
 	 * @param map
 	 * @return
 	 */
-	public  List<SbDustEmission> selectSbDustEmissionByTime(Map<String,Object> map);
+	public  List<SbDustEmission> selectSbDustEmissionByTime(Map<String, Object> map);
 	/**
  	* 根据时间和sn查询扬尘数据信息
  	* @param map
  	* @return
  	*/
-	public  List<SbDustEmission> selectSbDustEmissionByTimes(Map<String,Object> map);
+	public  List<SbDustEmission> selectSbDustEmissionByTimes(Map<String, Object> map);
 
 	/**
      * 查询扬尘数据信息
@@ -69,7 +70,7 @@ public interface SbDustEmissionMapper
 	 * @param sn
 	 * @return
 	 */
-	SbDustEmission selectSbDustEmissionToOne(@Param("sn")String sn );
+	SbDustEmission selectSbDustEmissionToOne(@Param("sn") String sn);
 
 	/**
      * 查询扬尘数据列表
@@ -117,7 +118,7 @@ public interface SbDustEmissionMapper
 	 * @param time
 	 * @return
 	 */
-	public SbDustEmission selectToday(@Param("sn") String sn, @Param("time")String time);
+	public SbDustEmission selectToday(@Param("sn") String sn, @Param("time") String time);
 
 	/** 看板1.0扬尘tsp数据*/
 	public List<SbDustEmission> selectTsp(@Param("sn") String sn);

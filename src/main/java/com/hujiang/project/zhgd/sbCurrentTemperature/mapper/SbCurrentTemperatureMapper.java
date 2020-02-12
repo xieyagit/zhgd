@@ -14,6 +14,7 @@ import java.util.Map;
  */
 public interface SbCurrentTemperatureMapper 
 {
+	public List<SbCurrentTemperature> SbCurrentTemperatureListKB(Map<String, Object> map);
 	/**
 	 * 查询温度及漏电流记录列表
 	 *
@@ -62,13 +63,13 @@ public interface SbCurrentTemperatureMapper
 	 * @param map
 	 * @return
 	 */
-	public List<SbCurrentTemperature> selectSbCurrentTemperatureByTime(Map<String,Object> map);
+	public List<SbCurrentTemperature> selectSbCurrentTemperatureByTime(Map<String, Object> map);
 	/**
 	 * 根据时间和电箱编号查询
 	 * @param map
 	 * @return
 	 */
-	public List<SbCurrentTemperature> selectSbCurrentTemperatureByTimes(Map<String,Object> map);
+	public List<SbCurrentTemperature> selectSbCurrentTemperatureByTimes(Map<String, Object> map);
 
 
 	/**

@@ -197,4 +197,24 @@ public class DateUtils extends org.apache.commons.lang.time.DateUtils {
         // long sec = diff % nd % nh % nm / ns;
         return day ;
     }
+    /**
+     * 毫秒级时间戳转化成日期和时间
+     *
+     * @param timestamp
+     * @return
+     */
+    public static String timstamp2DateTime(Long timestamp) {
+        return new SimpleDateFormat(YYYY_MM_DD).format(timestamp);
+    }
+    /**
+     * 计算两个时间差
+     */
+    public static long getDateToDay(Long endDate, Long nowDate) {
+        long nd = 1000 * 24 * 60 * 60;
+        // 获得两个时间的毫秒时间差异
+        long diff = endDate - nowDate;
+        // 计算差多少天
+        long day = diff / nd;
+        return day ;
+    }
 }

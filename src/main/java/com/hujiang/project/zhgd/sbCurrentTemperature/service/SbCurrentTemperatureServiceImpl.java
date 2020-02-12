@@ -22,6 +22,11 @@ public class SbCurrentTemperatureServiceImpl implements ISbCurrentTemperatureSer
 	private SbCurrentTemperatureMapper sbCurrentTemperatureMapper;
 
 	@Override
+	public List<SbCurrentTemperature> SbCurrentTemperatureListKB(Map<String, Object> map) {
+		return sbCurrentTemperatureMapper.SbCurrentTemperatureListKB(map);
+	}
+
+	@Override
 	public SbCurrentTemperature getSbCurrentTemperatureToOne(String electricityBoxId) {
 		return sbCurrentTemperatureMapper.getSbCurrentTemperatureToOne(electricityBoxId);
 	}

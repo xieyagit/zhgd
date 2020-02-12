@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.hujiang.project.zhgd.sbCraneAddrecord.domain.CraneAddRecord;
+
+import com.hujiang.project.zhgd.sbgroup.domain.CraneKB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;import org.springframework.transaction.annotation.Transactional;
 import com.hujiang.project.zhgd.sbCraneAddrecord.mapper.SbCraneAddrecordMapper;
@@ -24,6 +26,16 @@ public class SbCraneAddrecordServiceImpl implements ISbCraneAddrecordService
 	private SbCraneAddrecordMapper sbCraneAddrecordMapper;
 
 	@Override
+	public List<SbCraneAddrecord> selectCraneAddrecordList(Map<String, Object> map) {
+		return sbCraneAddrecordMapper.selectCraneAddrecordList(map);
+	}
+
+	@Override
+	public CraneKB selectCount(Map<String, Object> map) {
+		return sbCraneAddrecordMapper.selectCount(map);
+	}
+
+	@Override
 	public SbCraneAddrecord selectSbCraneAddRecord(String hxzId, String runtime) {
 		return sbCraneAddrecordMapper.selectSbCraneAddRecord(hxzId, runtime);
 	}
@@ -34,8 +46,8 @@ public class SbCraneAddrecordServiceImpl implements ISbCraneAddrecordService
 	}
 
 	@Override
-	public List<SbCraneAddrecord> selectSbCraneAddRecordHistory(String deviceId, String dateTime) {
-		return sbCraneAddrecordMapper.selectSbCraneAddRecordHistory(deviceId, dateTime);
+	public List<SbCraneAddrecord> selectSbCraneAddRecordHistory(String deviceId, String dateTime,String endTime) {
+		return sbCraneAddrecordMapper.selectSbCraneAddRecordHistory(deviceId, dateTime,endTime);
 	}
 
 	/**
