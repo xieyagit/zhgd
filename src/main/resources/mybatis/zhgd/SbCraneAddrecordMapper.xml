@@ -36,6 +36,16 @@
         <result property="runtime" column="runtime"/>
         <result property="face_url" column="face_url"/>
     </resultMap>
+    <resultMap id="CraneKBResult" type="CraneKB">
+        <result property="llimit" column="llimit"/>
+        <result property="rlimit" column="rlimit"/>
+        <result property="flimit" column="flimit"/>
+        <result property="blimit" column="blimit"/>
+        <result property="incline" column="incline"/>
+        <result property="hoisting" column="hoisting"/>
+        <result property="windSpeed" column="windSpeed"/>
+    </resultMap>
+	
 
     <sql id="selectSbCraneAddrecordVo">
         select id, device_no, runtime, `load`, load_ratio, moment, moment_ratio, slewing_speed,
@@ -278,5 +288,24 @@
             and load_ratio ${status}
         </if>
         order by runtime desc
+    </select>
+    <select id="selectCraneAddrecordList" parameterType="Map" resultMap="SbCraneAddrecordResult">
+     SELECT MAX(a.runtime) as runtime,a.hxzid,b.pid FROM sb_crane_addrecord a
+     LEFT JOIN sb_crane_binding b ON(a.hxzid=b.hxzid)
+     WHERE a.hxzid IS NOT NULL AND b.pid = #{pid} GROUP BY a.hxzid
+    </select>
+    <select id="selectCount" parameterType="Map" resultMap="CraneKBResult">
+    SELECT
+    COUNT(IF(is_left_warning=1,is_left_warning,NULL)) `llimit` ,
+    COUNT(IF(is_right_warning=1,is_right_warning,NULL)) `rlimit` ,
+    COUNT(IF(is_forward_warning=1,is_forward_warning,NULL)) `flimit` ,
+    COUNT(IF(is_backward_warning=1,is_backward_warning,NULL)) `blimit` ,
+    COUNT(IF(obliguity>40,obliguity,NULL)) `incline` ,
+    COUNT(IF(`load`>80,`load`,NULL)) `hoisting` ,
+    COUNT(IF(wind_speed>100,wind_speed,NULL)) `windSpeed`
+    FROM sb_crane_addrecord a
+    LEFT JOIN sb_crane_binding  b ON(a.hxzid=b.hxzid)
+    where b.pid = #{pid}
+
     </select>
 </mapper>

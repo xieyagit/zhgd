@@ -166,11 +166,11 @@ public class ProjectApi extends BaseController {
         map.put("numWing", numWorking);
         map.put("totalMoney", bd1);
 
-        map.put("numC",numC);
-        map.put("numW",numW);
-        map.put("numWing",numWorking.size());
-        map.put("totalMoney",bd1);
-        map.put("code","0");
+        map.put("numC", numC);
+        map.put("numW", numW);
+        map.put("numWing", numWorking.size());
+        map.put("totalMoney", bd1);
+        map.put("code", "0");
         return map;
     }
 
@@ -213,8 +213,8 @@ public class ProjectApi extends BaseController {
     public AjaxResult addSave(HjProject hjProject, Integer cid, MultipartFile file, String remark1, String shortName1) throws Exception {
         out.println(cid);
         String a = hjProject.getProjectRegion();
-        String b = a.substring(0,7);
-        if (b.equals("19,1207")){
+        String b = a.substring(0, 7);
+        if (b.equals("19,1207")) {
             out.println("对接惠州住建局");
         }
 
@@ -240,14 +240,14 @@ public class ProjectApi extends BaseController {
 //            hjProject.setConstructionId(cid);//总包单位
 //            hjProject.setSupervisorId(hjConstructionCompany.getId());//监理企业
         int s = hjProjectService.insertHjProject(hjProject);
-        HjCompanyHierarchy hjh2=new HjCompanyHierarchy();
+        HjCompanyHierarchy hjh2 = new HjCompanyHierarchy();
         hjh2.setCompanyId(cid);
-        List<HjCompanyHierarchy> list=hjCompanyHierarchyService.selectHjCompanyHierarchyList(hjh2);
-        HjCompanyHierarchy hjh3=list.get(0);
+        List<HjCompanyHierarchy> list = hjCompanyHierarchyService.selectHjCompanyHierarchyList(hjh2);
+        HjCompanyHierarchy hjh3 = list.get(0);
         HjCompanyProject hjCompanyProject = new HjCompanyProject();
         hjCompanyProject.setCompanyId(cid);
         hjCompanyProject.setProjectId(hjProject.getId());
-        hjCompanyProject.setPath(hjh3.getParentId()+","+hjh3.getCompanyId());
+        hjCompanyProject.setPath(hjh3.getParentId() + "," + hjh3.getCompanyId());
         hjCompanyProjectService.insertHjCompanyProject(hjCompanyProject);
         return toAjax(s);
     }
@@ -372,19 +372,21 @@ public class ProjectApi extends BaseController {
         return jsonObject;
     }
 
-    /** 搜索项目 */
+    /**
+     * 搜索项目
+     */
     @PostMapping(value = "/selectProjects")
-    public com.alibaba.fastjson.JSONObject selectProject(@RequestBody HjProject hjProject){
+    public com.alibaba.fastjson.JSONObject selectProject(@RequestBody HjProject hjProject) {
         com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
         List<HjProject> projects = hjProjectService.selectProjects(hjProject);
-        if (projects.size() !=0){
-            jsonObject.put("code",0);
-            jsonObject.put("name",hjProject.getProjectName());
-            jsonObject.put("data",projects);
-        }else {
-            jsonObject.put("code",1);
-            jsonObject.put("name",hjProject.getProjectName());
-            jsonObject.put("data","抱歉，您底下没有该项目！");
+        if (projects.size() != 0) {
+            jsonObject.put("code", 0);
+            jsonObject.put("name", hjProject.getProjectName());
+            jsonObject.put("data", projects);
+        } else {
+            jsonObject.put("code", 1);
+            jsonObject.put("name", hjProject.getProjectName());
+            jsonObject.put("data", "抱歉，您底下没有该项目！");
         }
         return jsonObject;
     }
@@ -400,62 +402,74 @@ public class ProjectApi extends BaseController {
         HjProject project = hjProjectService.selectHjProjectById(projectId);
         ConstructionCompany construction = hjConstructionCompanyService.selectConstruction(projectId);
         ConstructionCompany supervisor = hjConstructionCompanyService.selectSupervisor(projectId);
-        map.put("constructionUnit", construction.getConstructionName());
-        map.put("controlUnit", supervisor.getConstructionName());
-        map.put("name", project.getProjectName());
-        map.put("shortName", project.getShortName());
-        map.put("designUnit", project.getDesignOrganization());
-        map.put("buildUnit", project.getBuildUnit());
-        if (map.size() == 0) {
+        if (construction == null) {
+            map.put("constructionUnit", "");
+        } else {
+            map.put("constructionUnit", construction.getConstructionName());
+        }
+        if (supervisor == null) {
+            map.put("controlUnit", "");
+        } else {
+            map.put("controlUnit", supervisor.getConstructionName());
+        }
+        if (project == null) {
             result.put("code", -1);
             result.put("msg", "公司在该地区没有项目！");
             return result;
         }
+        map.put("name", project.getProjectName());
+        map.put("shortName", project.getShortName());
+        map.put("designUnit", project.getDesignOrganization());
+        map.put("buildUnit", project.getBuildUnit());
         result.put("code", 0);
         result.put("msg", "查询成功！");
         result.put("data", map);
         return result;
     }
 
-    /** 搜索项目 */
+    /**
+     * 搜索项目
+     */
     @PostMapping(value = "/selectProjectRegion")
-    public com.alibaba.fastjson.JSONObject selectProjectRegion(@RequestBody HjProject hjProject){
+    public com.alibaba.fastjson.JSONObject selectProjectRegion(@RequestBody HjProject hjProject) {
         com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
-        if (hjProject.getProjectRegion().equals("1")){
-            jsonObject.put("code",1);
-            jsonObject.put("name",hjProject.getConstructionName());
-            jsonObject.put("data","抱歉，sorry！");
+        if (hjProject.getProjectRegion().equals("1")) {
+            jsonObject.put("code", 1);
+            jsonObject.put("name", hjProject.getConstructionName());
+            jsonObject.put("data", "抱歉，sorry！");
             return jsonObject;
         }
         List<HjProject> projects = hjProjectService.selectProjectRegion(hjProject);
-        if (projects.size() !=0){
-            jsonObject.put("code",0);
-            jsonObject.put("name",hjProject.getConstructionName());
-            jsonObject.put("data",projects);
-        }else {
-            jsonObject.put("code",1);
-            jsonObject.put("name",hjProject.getConstructionName());
-            jsonObject.put("data","抱歉，sorry！");
+        if (projects.size() != 0) {
+            jsonObject.put("code", 0);
+            jsonObject.put("name", hjProject.getConstructionName());
+            jsonObject.put("data", projects);
+        } else {
+            jsonObject.put("code", 1);
+            jsonObject.put("name", hjProject.getConstructionName());
+            jsonObject.put("data", "抱歉，sorry！");
         }
         return jsonObject;
     }
 
-    /** 搜索项目信息 */
+    /**
+     * 搜索项目信息
+     */
     @PostMapping(value = "/selectHjProject")
-    public com.alibaba.fastjson.JSONObject projectSelect(@RequestBody HjProject hjProject){
+    public com.alibaba.fastjson.JSONObject projectSelect(@RequestBody HjProject hjProject) {
         com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
-        List<HjProjectWorkers> records = hjProjectWorkersService.listcount(hjProject.getId(),null);//在场工人
-        if (records.size()==0){
+        List<HjProjectWorkers> records = hjProjectWorkersService.listcount(hjProject.getId(), null);//在场工人
+        if (records.size() == 0) {
             jsonObject.put("numW", "0");          //项目在场人员
-        }else {
+        } else {
             jsonObject.put("numW", records.get(0).getCount());          //项目在场人员
         }
         Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String dateNowStr = sdf.format(d);
         String passedTime = dateNowStr;
-        List<HjProjectWorkers> record = hjProjectWorkersService.listcounts(hjProject.getId(),passedTime,null);
-        int s= record.size();
+        List<HjProjectWorkers> record = hjProjectWorkersService.listcounts(hjProject.getId(), passedTime, null);
+        int s = record.size();
         jsonObject.put("numWing", s);
         HjProject hjProject1 = hjProjectService.selectHjProjectById(hjProject.getId());
         if (hjProject1 != null) {
@@ -464,26 +478,26 @@ public class ProjectApi extends BaseController {
             } else {
                 jsonObject.put("totalMoney", hjProject1.getProjectCost());
             }
-        }else {
+        } else {
             jsonObject.put("totalMoney", 0);
         }
         List<HjConstructionProject> hjConstructionProject = hjConstructionProjectService.hj(hjProject.getId());
-        if (hjConstructionProject.size()>0) {
+        if (hjConstructionProject.size() > 0) {
             jsonObject.put("numC", hjConstructionProject.size());
-            jsonObject.put("code",0);
-        }else {
+            jsonObject.put("code", 0);
+        } else {
             jsonObject.put("numC", 0);
-            jsonObject.put("code",1);
+            jsonObject.put("code", 1);
         }
         return jsonObject;
     }
 
     @RequestMapping(value = "selectProjectAreaS")
-    public Map<String,Object> selectProjectAreas(@RequestParam(value = "companyId") Integer companyId) {
-        Map<String,Object> map = new HashMap<>();
+    public Map<String, Object> selectProjectAreas(@RequestParam(value = "companyId") Integer companyId) {
+        Map<String, Object> map = new HashMap<>();
         List<HjProject> listP;
-        if (companyId == null){
-            map.put("error","参数不能为空");
+        if (companyId == null) {
+            map.put("error", "参数不能为空");
             return map;
         }
         Map mapTemp = new HashMap();
@@ -494,13 +508,13 @@ public class ProjectApi extends BaseController {
         //上工总人数
         List<HjProject> numWorking = hjProjectService.infoPWorkingRS(companyId);
         //投资总金额
-        double totalMoney = hjProjectService.infoHjProjectRS("project_cost",companyId);
+        double totalMoney = hjProjectService.infoHjProjectRS("project_cost", companyId);
         BigDecimal bd1 = new BigDecimal(totalMoney);
-        map.put("numC",numC);
-        map.put("numW",numW);
-        map.put("numWing",numWorking.size());
-        map.put("totalMoney",bd1);
-        map.put("code","0");
+        map.put("numC", numC);
+        map.put("numW", numW);
+        map.put("numWing", numWorking.size());
+        map.put("totalMoney", bd1);
+        map.put("code", "0");
         return map;
     }
 }

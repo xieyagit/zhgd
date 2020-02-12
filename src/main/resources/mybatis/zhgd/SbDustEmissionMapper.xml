@@ -215,5 +215,10 @@
             #{id}
         </foreach>
     </delete>
+    <select id="selectSbDustEmissionListKB" parameterType="Map" resultMap="SbDustEmissionResult">
+     SELECT MAX(a.date) as date,a.sn,b.project_id FROM sb_dust_emission a
+    LEFT JOIN sb_project_dust_emission b ON(a.sn=b.sn)
+    WHERE a.sn IS NOT NULL AND b.project_id = #{pid} GROUP BY a.sn
 
+    </select>
 </mapper>
