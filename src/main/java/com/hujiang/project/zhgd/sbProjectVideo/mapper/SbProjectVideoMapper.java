@@ -47,7 +47,10 @@ public interface SbProjectVideoMapper
      * @return 结果
      */
 	public int updateSbProjectVideo(SbProjectVideo sbProjectVideo);
-	
+
+	public int updateSbProjectVideoPicUrl(SbProjectVideo sbProjectVideo);
+	public int updateVideoCoordinate(SbProjectVideo sbProjectVideo);
+
 	/**
      * 删除项目视频
      * 

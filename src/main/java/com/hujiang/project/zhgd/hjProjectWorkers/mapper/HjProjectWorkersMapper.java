@@ -153,7 +153,7 @@ public interface HjProjectWorkersMapper
 	 * @return
 	 */
 	List<ProjectWorkerPC> selectProjectWorkersListPC(HjProjectWorkers projectWorkers);
-
+	int updateQuarantine(ProjectWorkerPC pw);
 	/**
 	 * 人员同步进出或退场
 	 * @param

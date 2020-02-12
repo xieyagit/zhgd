@@ -82,6 +82,7 @@ public class Constants {
     public static final Integer ACCESSTOKEN_ID=80;
     //江西省吉安市实名制
     public static final String JIANSHI_SHIMINGZHI="http://220.177.172.55:8004/3HDataSmart";
-
+    //乐橙云接口
+    public static final String OPEN_LC="https://openapi.lechange.cn:443/openapi/";
 
 }

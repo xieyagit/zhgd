@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hujiang.project.zhgd.hjZhgdVehicle.mapper.VehicleMapper">
-    
+
     <resultMap type="Vehicle" id="VehicleResult">
         <result property="id"    column="id"    />
         <result property="recordId"    column="RecordId"    />
@@ -28,8 +28,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
 
-	
-	<sql id="selectVehicleVo">
+
+    <sql id="selectVehicleVo">
         select id , RecordId , VehicleNo, PlateColor, DeptID, Camera_Mac, LiftType, LiftTime, `InOut`, img, CardType,color,orderId,`name`,gateinname,operatorin
         from hj_zhgd_vehicle
     </sql>
@@ -49,9 +49,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectscenes"  parameterType="Vehicle" resultMap="VehicleResult">
         SELECT MAX(LiftTime),id, RecordId , VehicleNo, PlateColor, DeptID, Camera_Mac, LiftType, LiftTime, `InOut`, CardType,color,orderId,`name`,gateinname,operatorin FROM hj_zhgd_vehicle
         <where>
-                and DeptID = #{deptID}
-                and RecordId = #{recordId}
-                and `InOut` = #{inOut}
+            and DeptID = #{deptID}
+            and RecordId = #{recordId}
+            and `InOut` = #{inOut}
         </where>
         order by `id` desc
     </select>
@@ -60,7 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT MAX(LiftTime),id, RecordId , VehicleNo, PlateColor, DeptID, Camera_Mac, LiftType, LiftTime, `InOut`, img, CardType,color,orderId,`name`,gateinname,operatorin FROM hj_zhgd_vehicle
         <where>
             <if test="deptID != null and deptID != ''">
-               and DeptID = #{deptID}
+                and DeptID = #{deptID}
             </if>
             <if test="cardType != null ">
                 and CardType = #{cardType}
@@ -89,13 +89,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         `InOut`, img, CardType,color,orderId,`name`,gateinname,operatorin
         from hj_zhgd_vehicle v INNER JOIN hj_zhgd_pkcount p ON v.gateinname = p.snName
         <where>
-                and v.DeptID = #{deptID}
+            and v.DeptID = #{deptID}
             <if test="sn != null and sn != '' " >
                 and p.sn=#{sn}
             </if>
-            <if test="liftTime != null ">
-                and LiftTime LIKE "${liftTime}%"
-            </if>
+            <choose>
+                <when test="liftTime != null and liftTime != '' and endTime != null and endTime != ''">
+                    and to_days(LiftTime) BETWEEN to_days(#{liftTime}) and to_days(#{endTime})
+                </when>
+                <otherwise>x
+                    and to_days(LiftTime)=to_days(#{liftTime})
+                </otherwise>
+            </choose>
+
             <if test="inOut != null and inOut != '' and inOut != 0">
                 and `inOut` = #{inOut}
             </if>
@@ -109,76 +115,76 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectVehicleList" parameterType="Vehicle" resultMap="VehicleResult">
         <include refid="selectVehicleVo"/>
-        <where>  
+        <where>
             <if test="id !=0"> and id = #{id}</if>
-             <if test="recordId != null  and recordId != '' "> and RecordId = #{recordId}</if>
-             <if test="vehicleNo != null  and vehicleNo != '' "> and VehicleNo = #{vehicleNo}</if>
-             <if test="plateColor != null  and plateColor != '' "> and PlateColor = #{plateColor}</if>
-             <if test="deptID != 0 "> and DeptID = #{deptID}</if>
-             <if test="cameraMac != null  and cameraMac != '' "> and Camera_Mac = #{cameraMac}</if>
-             <if test="liftType != null  and liftType != '' "> and LiftType = #{liftType}</if>
-             <if test="liftTime != null "> and LiftTime = #{liftTime}</if>
-             <if test="inOut != 0 "> and InOut = #{inOut}</if>
-             <if test="img != null  and img != '' "> and img = #{img}</if>
-             <if test="cardType != 0 "> and CardType = #{cardType}</if>
-             <if test="color != null  and color != '' ">
+            <if test="recordId != null  and recordId != '' "> and RecordId = #{recordId}</if>
+            <if test="vehicleNo != null  and vehicleNo != '' "> and VehicleNo = #{vehicleNo}</if>
+            <if test="plateColor != null  and plateColor != '' "> and PlateColor = #{plateColor}</if>
+            <if test="deptID != 0 "> and DeptID = #{deptID}</if>
+            <if test="cameraMac != null  and cameraMac != '' "> and Camera_Mac = #{cameraMac}</if>
+            <if test="liftType != null  and liftType != '' "> and LiftType = #{liftType}</if>
+            <if test="liftTime != null "> and LiftTime = #{liftTime}</if>
+            <if test="inOut != 0 "> and InOut = #{inOut}</if>
+            <if test="img != null  and img != '' "> and img = #{img}</if>
+            <if test="cardType != 0 "> and CardType = #{cardType}</if>
+            <if test="color != null  and color != '' ">
                 <if test="color == '黄色'">
                     and color = #{color}
                 </if>
                 <if test="color != '黄色'">
                     and color != '黄色'
                 </if>
-             </if>
+            </if>
             <if test="orderId != null  and orderId != '' "> and orderId = #{orderId}</if>
             <if test="carType != null  "> and carType = #{carType}</if>
-         </where>
+        </where>
     </select>
-    
+
     <select id="selectVehicleById" parameterType="Integer" resultMap="VehicleResult">
         <include refid="selectVehicleVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertVehicle" parameterType="Vehicle">
         insert into hj_zhgd_vehicle
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">id,</if>
-			<if test="recordId != null  and recordId != ''  ">RecordId,</if>
-			<if test="vehicleNo != null  and vehicleNo != ''  ">VehicleNo,</if>
-			<if test="plateColor != null  and plateColor != ''  ">PlateColor,</if>
-			<if test="deptID != null  ">DeptID,</if>
-			<if test="cameraMac != null  and cameraMac != ''  ">Camera_Mac,</if>
-			<if test="liftType != null  and liftType != ''  ">LiftType,</if>
-			<if test="liftTime != null  ">LiftTime,</if>
-			<if test="inOut != null  ">`InOut`,</if>
-			<if test="img != null  and img != ''  ">img,</if>
-			<if test="cardType != null  ">CardType,</if>
-			<if test="color != null  and color != ''  ">color,</if>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="recordId != null  and recordId != ''  ">RecordId,</if>
+            <if test="vehicleNo != null  and vehicleNo != ''  ">VehicleNo,</if>
+            <if test="plateColor != null  and plateColor != ''  ">PlateColor,</if>
+            <if test="deptID != null  ">DeptID,</if>
+            <if test="cameraMac != null  and cameraMac != ''  ">Camera_Mac,</if>
+            <if test="liftType != null  and liftType != ''  ">LiftType,</if>
+            <if test="liftTime != null  ">LiftTime,</if>
+            <if test="inOut != null  ">`InOut`,</if>
+            <if test="img != null  and img != ''  ">img,</if>
+            <if test="cardType != null  ">CardType,</if>
+            <if test="color != null  and color != ''  ">color,</if>
             <if test="orderId != null  and orderId != ''  ">orderId,</if>
             <if test="gateinname != null  and gateinname != ''  ">gateinname,</if>
             <if test="carType != null  ">carType,</if>
             <if test="name != null  ">`name`,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">#{id},</if>
-			<if test="recordId != null  and recordId != ''  ">#{recordId},</if>
-			<if test="vehicleNo != null  and vehicleNo != ''  ">#{vehicleNo},</if>
-			<if test="plateColor != null  and plateColor != ''  ">#{plateColor},</if>
-			<if test="deptID != null  ">#{deptID},</if>
-			<if test="cameraMac != null  and cameraMac != ''  ">#{cameraMac},</if>
-			<if test="liftType != null  and liftType != ''  ">#{liftType},</if>
-			<if test="liftTime != null  ">#{liftTime},</if>
-			<if test="inOut != null  ">#{inOut},</if>
-			<if test="img != null  and img != ''  ">#{img},</if>
-			<if test="cardType != null  ">#{cardType},</if>
-			<if test="color != null  and color != ''  ">#{color},</if>
+            <if test="id != null  ">#{id},</if>
+            <if test="recordId != null  and recordId != ''  ">#{recordId},</if>
+            <if test="vehicleNo != null  and vehicleNo != ''  ">#{vehicleNo},</if>
+            <if test="plateColor != null  and plateColor != ''  ">#{plateColor},</if>
+            <if test="deptID != null  ">#{deptID},</if>
+            <if test="cameraMac != null  and cameraMac != ''  ">#{cameraMac},</if>
+            <if test="liftType != null  and liftType != ''  ">#{liftType},</if>
+            <if test="liftTime != null  ">#{liftTime},</if>
+            <if test="inOut != null  ">#{inOut},</if>
+            <if test="img != null  and img != ''  ">#{img},</if>
+            <if test="cardType != null  ">#{cardType},</if>
+            <if test="color != null  and color != ''  ">#{color},</if>
             <if test="orderId != null  and orderId != ''  ">#{orderId},</if>
             <if test="gateinname != null  and gateinname != ''  ">#{gateinname},</if>
             <if test="carType != null  ">#{carType},</if>
             <if test="name != null  ">#{name},</if>
-         </trim>
+        </trim>
     </insert>
-	 
+
     <update id="updateVehicle" parameterType="Vehicle">
         update hj_zhgd_vehicle
         <trim prefix="SET" suffixOverrides=",">
@@ -219,10 +225,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where  RecordId = #{recordId} and  DeptID = #{deptID}
     </update>
 
-	<delete id="deleteVehicleById" parameterType="Integer">
+    <delete id="deleteVehicleById" parameterType="Integer">
         delete from hj_zhgd_vehicle where id = #{id}
     </delete>
-	
+
     <delete id="deleteVehicleByIds" parameterType="String">
         delete from hj_zhgd_vehicle where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">

@@ -21,8 +21,17 @@ public class HjArea
 	private String type;
 	/** 上级id */
 	private Long parentId;
+private  String isid;
 
-	public void setId(Long id) 
+	public String getIsid() {
+		return isid;
+	}
+
+	public void setIsid(String isid) {
+		this.isid = isid;
+	}
+
+	public void setId(Long id)
 	{
 		this.id = id;
 	}

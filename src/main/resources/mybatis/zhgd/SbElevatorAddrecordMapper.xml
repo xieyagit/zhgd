@@ -39,18 +39,20 @@
         <result property="obliguityY"    column="ObliguityY"    />
     </resultMap>
 
-	<resultMap id="ElevatorAddRecordResult" type="ElevatorAddRecord">
+    <resultMap id="ElevatorAddRecordResult" type="ElevatorAddRecord">
         <result property="emp_name" column="emp_name"/>
         <result property="runtime" column="runtime"/>
         <result property="face_url" column="face_url"/>
     </resultMap>
+
     <resultMap id="ElevatorKBResult" type="ElevatorKB">
         <result property="load" column="load"/>
         <result property="people" column="people"/>
         <result property="Xincline" column="Xincline"/>
         <result property="Yincline" column="Yincline"/>
     </resultMap>
-	<sql id="selectSbElevatorAddrecordVo">
+
+    <sql id="selectSbElevatorAddrecordVo">
         select id, device_no, runtime, laod, load_ratio, sign, loading_capacity, operator_name, ic_num, direction, height, real_time_flag, status, braking_distance, is_up_warning, is_down_warning, is_safety_device_warn, is_over_warning, is_forward_warning, is_backward_warning, hxzid
         ,PeopleCntAlarm,WeightAlarm,SpeedAlarm,ObliguityXAlarm,ObliguityYAlarm,Speed,WindSpeed,WindLevel,Floor,ObliguityX,ObliguityY
         from sb_elevator_addrecord
@@ -79,7 +81,7 @@
         GROUP BY a.device_no
     </select>
 
-	<select id="selectSbElevatorAddRecord" parameterType="SbElevatorAddrecord" resultMap="SbElevatorAddrecordResult">
+    <select id="selectSbElevatorAddRecord" parameterType="SbElevatorAddrecord" resultMap="SbElevatorAddrecordResult">
         SELECT a.id, a.device_no, runtime, laod, load_ratio, sign, loading_capacity, operator_name, ic_num,
         direction, a.height, real_time_flag, status, braking_distance, is_up_warning, is_down_warning, is_safety_device_warn, is_over_warning, is_forward_warning, is_backward_warning,a.hxzid
         ,PeopleCntAlarm,WeightAlarm,SpeedAlarm,ObliguityXAlarm,ObliguityYAlarm,Speed,WindSpeed,WindLevel,Floor,ObliguityX,ObliguityY

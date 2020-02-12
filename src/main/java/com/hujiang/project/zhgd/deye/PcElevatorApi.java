@@ -72,7 +72,7 @@ public class PcElevatorApi extends BaseController {
         seb.setPid(pid);
         List<SbElevatorBinding> sebList=sbElevatorBindingService.selectSbElevatorBindingList(seb);
         if(sebList.size()>0){
-             //升降机设备总数
+            //升降机设备总数
             int number = sebList.size();
             //离线塔吊设备
             int lxElevator = number - zxElevator;
@@ -166,7 +166,7 @@ public class PcElevatorApi extends BaseController {
      */
     @RequestMapping("/historyRecord")
     @ResponseBody
-    public AjaxResult historyRecord(String time, String hxzid, String status){
+    public AjaxResult historyRecord(String time, String endTime,String hxzid, String status){
         startPage();
         Map<String,Object> paramMap=new HashMap<String,Object>();
         if(StringUtils.isBlank(time)){
@@ -174,6 +174,7 @@ public class PcElevatorApi extends BaseController {
         }
         paramMap.put("time",time);
         paramMap.put("hxzid",hxzid);
+        paramMap.put("endTime",endTime);
         if(StringUtils.isNotBlank(status)){
             paramMap.put("status",status);
         }
@@ -183,7 +184,7 @@ public class PcElevatorApi extends BaseController {
     }
     @RequestMapping("/historyRecordExcel")
     @ResponseBody
-    public  List<SbElevatorAddrecord> historyRecordExcel(String time, String hxzid, String status){
+    public  List<SbElevatorAddrecord> historyRecordExcel(String time,String endTime, String hxzid, String status){
         startPage();
         Map<String,Object> paramMap=new HashMap<String,Object>();
         if(StringUtils.isBlank(time)){

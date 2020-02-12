@@ -267,6 +267,9 @@ public class HjProjectWorkersServiceImpl implements IHjProjectWorkersService {
     public List<HjProjectWorkers> selectHjProjectWorkersNotMoreDianByprojectId( Integer projectId){
         return hjProjectWorkersMapper.selectHjProjectWorkersNotMoreDianByprojectId(projectId);
     }
+    public int updateQuarantine(ProjectWorkerPC pw){
+        return hjProjectWorkersMapper.updateQuarantine(pw);
+    }
     /**
      * 人员同步进出或退场
      *

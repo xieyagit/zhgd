@@ -37,12 +37,14 @@ public class AppDustEmissionApi extends BaseController {
     @PostMapping("/getDustEmission")
     public JSONObject getDustEmission(@RequestParam(value = "sn")String sn,
                                       @RequestParam(value = "dateTime",required = false)String dateTime,
+                                      @RequestParam(value = "endTime",required = false)String endTime,
                                       PageDomain pageDomain){
         startPage();
         JSONObject result = new JSONObject();
         Map<String,Object> map = new HashMap<>();
         map.put("sn",sn);
         map.put("dateTime",dateTime);
+        map.put("endTime",endTime);
         //获取分页数据
         List<SbDustEmission> sbDustEmissions = dustEmissionService.selectSbDustEmissionByTimes(map);
         TableDataInfo dataTable = getDataTable(sbDustEmissions);

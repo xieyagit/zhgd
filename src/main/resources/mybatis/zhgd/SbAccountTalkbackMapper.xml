@@ -71,5 +71,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
-    
+    <select id="getAccountListPage" parameterType="Map" resultMap="SbAccountTalkbackResult">
+       select a.id ,a.at_name,a.at_account,a.pid from sb_group_talkback g join sb_account_talkback a on g.id=a.gtid
+       where g.cpid=#{cpid} and g.isid_type=#{isIdType}
+        <if test="name != null  and name != ''  ">and a.at_name like '%${name}%'</if>
+    </select>
 </mapper>

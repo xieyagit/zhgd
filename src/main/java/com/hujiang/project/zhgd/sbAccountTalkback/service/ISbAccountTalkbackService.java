@@ -2,6 +2,7 @@ package com.hujiang.project.zhgd.sbAccountTalkback.service;
 
 import com.hujiang.project.zhgd.sbAccountTalkback.domain.SbAccountTalkback;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 集团对讲机列 服务层
@@ -50,5 +51,6 @@ public interface ISbAccountTalkbackService
      * @return 结果
      */
 	public int deleteSbAccountTalkbackByIds(String ids);
-	
+
+	public List<SbAccountTalkback> getAccountListPage(Map<String,String> map);
 }

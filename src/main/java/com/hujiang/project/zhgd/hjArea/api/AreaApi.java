@@ -108,20 +108,23 @@ public class AreaApi extends BaseController {
     @PostMapping("/aa")
     public void aa(){
         HjProjectWorkers hpw=new HjProjectWorkers();
-        hpw.setProjectId(24);
-        hpw.setEnterAndRetreatCondition(2);
+        hpw.setProjectId(28);
+        hpw.setEnterAndRetreatCondition(0);
         List<HjProjectWorkers> hpList=hjProjectWorkersService.selectHjProjectWorkersList(hpw);
         System.out.println(hpList.size());
         HjProjectWorkers hp;
         HjTeam ht;
-        HjProjectPersonnelSynchronization hps=new HjProjectPersonnelSynchronization();
-        hps.setProjectId(24);
+        HjProjectPersonnelSynchronization hps;
+//        hps.setProjectId(24);
 
         for(int i=0;i<hpList.size();i++){
             hp=hpList.get(i);
-            Map<String, Object> map = hjProjectWorkersService.updateHjProjectWorkersOutOrIn(Convert.toStrArray(hp.getId().toString()), 0);
-
-
+            hps =new HjProjectPersonnelSynchronization();
+//            Map<String, Object> map = hjProjectWorkersService.updateHjProjectWorkersOutOrIn(Convert.toStrArray(hp.getId().toString()), 0);
+            hps.setProjectId(28);
+            hps.setSynchronizationInformationId(19);
+            hps.setProjectWorkerId(hp.getId());
+            hjProjectPersonnelSynchronizationService.insertHjProjectPersonnelSynchronization(hps);
         }
     }
 

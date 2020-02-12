@@ -1,7 +1,10 @@
 package com.hujiang.project.zhgd.sbProjectVideoArea.service;
 
+import com.hujiang.project.zhgd.sbProjectVideoArea.domain.ProjectVideoJT;
 import com.hujiang.project.zhgd.sbProjectVideoArea.domain.SbJTArea;
 import com.hujiang.project.zhgd.sbProjectVideoArea.domain.SbProjectVideoArea;
+import com.hujiang.project.zhgd.sbProjectVideoArea.domain.VideoPicUrl;
+
 import java.util.List;
 
 /**
@@ -55,4 +58,11 @@ public interface ISbProjectVideoAreaService
 	 * 集团获取摄像头列表
 	 */
 	public List<SbJTArea> getVideoListJT(Integer cid);
+
+	public List<VideoPicUrl> getVideoPicUrl();
+	/**
+	 * 项目获取摄像头列表
+	 */
+	public ProjectVideoJT getVideoList(Integer pid);
+
 }

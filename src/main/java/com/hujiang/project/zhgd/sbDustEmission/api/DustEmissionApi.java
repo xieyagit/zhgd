@@ -230,7 +230,7 @@ public class DustEmissionApi extends BaseController {
      * @return
      */
     @PostMapping("getPM25AndPN10")
-    public JSONObject getPM25AndPN10(@RequestParam(value = "sn") String sn,@RequestParam(value = "projectId")Integer projectId){
+    public JSONObject getPM25AndPN10(@RequestParam(value = "sn") String sn,@RequestParam(value = "projectId")Integer projectId) throws  Exception{
         SimpleDateFormat sDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //加上时间
         logger.info("com.hujiang.project.zhgd.sbDustEmission.api.DustEmissionApi.getPM25AndPN10获取TSP界面数据开始");
         JSONObject jsonObject = new JSONObject();
@@ -319,8 +319,16 @@ public class DustEmissionApi extends BaseController {
         HjArea area = hjAreaService.selectHjAreaById(Long.parseLong(split[2]));
         HjArea shi = hjAreaService.selectHjAreaById(Long.parseLong(split[1]));
         //天气
-        String weather = Util.sendGet("https://www.tianqiapi.com/api/", "version=v1&appsecret=PDsIqZt7&appid=74243526&city="+area.getTitle().replaceAll("新区","").replaceAll("区","").replaceAll("市",""));
-        String weatherShi = Util.sendGet("https://www.tianqiapi.com/api/", "version=v6&appsecret=PDsIqZt7&appid=74243526&city="+area.getTitle().replaceAll("新区","").replaceAll("区","").replaceAll("市",""));
+        String weather;
+        String weatherShi;
+        if(!"1".equals(area.getIsid())) {
+            weather = Util.httpGet("https://www.tianqiapi.com/api?version=v1&appsecret=PDsIqZt7&appid=74243526&city=" + area.getTitle().replaceAll("新区", "").replaceAll("区", "").replaceAll("市", ""));
+            weatherShi = Util.httpGet("https://www.tianqiapi.com/api?version=v6&appsecret=PDsIqZt7&appid=74243526&city=" + area.getTitle().replaceAll("新区", "").replaceAll("区", "").replaceAll("市", ""));
+        }else{
+            weather = Util.httpGet("https://www.tianqiapi.com/api?version=v1&appsecret=PDsIqZt7&appid=74243526&cityid=" + area.getId());
+            weatherShi = Util.httpGet("https://www.tianqiapi.com/api?version=v6&appsecret=PDsIqZt7&appid=74243526&cityid=" + area.getId());
+
+        }
         jsonObject.put("weather", JSONObject.parse(StringEscapeUtils.unescapeJava(weather) ));//天气
         JSONObject parse = (JSONObject)JSONObject.parse(StringEscapeUtils.unescapeJava(weatherShi));
         jsonObject.put("air_pm25", parse.getFloat("air_pm25"));//天气

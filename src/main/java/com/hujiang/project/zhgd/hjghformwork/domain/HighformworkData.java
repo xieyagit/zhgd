@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * 高支模数据记录表 hj_highformwork_data
- * 
+ *
  * @author hujiang
  * @date 2019-09-09
  */
@@ -39,6 +39,7 @@ public class HighformworkData extends BaseEntity
 	private String reservedT;
 	/** 创建时间 */
 	private String creation;
+	private String endTime;
 
 	public static long getSerialVersionUID() {
 		return serialVersionUID;
@@ -138,6 +139,14 @@ public class HighformworkData extends BaseEntity
 
 	public void setCreation(String creation) {
 		this.creation = creation;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
 	}
 
 	@Override
