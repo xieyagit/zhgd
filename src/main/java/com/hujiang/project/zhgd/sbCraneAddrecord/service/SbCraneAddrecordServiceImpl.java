@@ -5,12 +5,11 @@ import java.util.Map;
 
 import com.hujiang.project.zhgd.sbCraneAddrecord.domain.CraneAddRecord;
 
-import com.hujiang.project.zhgd.sbgroup.domain.CraneKB;
+import com.hujiang.project.zhgd.sbGroup.domain.CraneKB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;import org.springframework.transaction.annotation.Transactional;
 import com.hujiang.project.zhgd.sbCraneAddrecord.mapper.SbCraneAddrecordMapper;
 import com.hujiang.project.zhgd.sbCraneAddrecord.domain.SbCraneAddrecord;
-import com.hujiang.project.zhgd.sbCraneAddrecord.service.ISbCraneAddrecordService;
 import com.hujiang.common.support.Convert;
 
 /**

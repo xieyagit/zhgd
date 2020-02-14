@@ -2,7 +2,7 @@ package com.hujiang.project.zhgd.sbCraneAddrecord.service;
 
 import com.hujiang.project.zhgd.sbCraneAddrecord.domain.CraneAddRecord;
 import com.hujiang.project.zhgd.sbCraneAddrecord.domain.SbCraneAddrecord;
-import com.hujiang.project.zhgd.sbgroup.domain.CraneKB;
+import com.hujiang.project.zhgd.sbGroup.domain.CraneKB;
 
 import java.util.List;
 import java.util.Map;

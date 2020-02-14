@@ -1,4 +1,4 @@
-package com.hujiang.project.zhgd.sbgroup.domain;
+package com.hujiang.project.zhgd.sbGroup.domain;
 
 public class ElevatorKB {
     private int load;
