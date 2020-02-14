@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hujiang.project.zhgd.sbCraneAddrecord.mapper.SbCraneAddrecordMapper">
-    
+
     <resultMap type="SbCraneAddrecord" id="SbCraneAddrecordResult">
         <result property="id"    column="id"    />
         <result property="deviceNo"    column="device_no"    />
@@ -36,8 +36,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="runtime" column="runtime"/>
         <result property="face_url" column="face_url"/>
     </resultMap>
+    <resultMap id="CraneKBResult" type="CraneKB">
+        <result property="llimit" column="llimit"/>
+        <result property="rlimit" column="rlimit"/>
+        <result property="flimit" column="flimit"/>
+        <result property="blimit" column="blimit"/>
+        <result property="incline" column="incline"/>
+        <result property="hoisting" column="hoisting"/>
+        <result property="windSpeed" column="windSpeed"/>
+    </resultMap>
 	
-	<sql id="selectSbCraneAddrecordVo">
+
+    <sql id="selectSbCraneAddrecordVo">
         select id, device_no, runtime, `load`, load_ratio, moment, moment_ratio, slewing_speed,
         is_left_warning, is_right_warning, `range`, is_forward_warning, is_backward_warning, height,
         is_up_warning, work_environment, real_time_flag, installation_method, wind_speed, card_num,
@@ -97,104 +107,111 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         LEFT JOIN sb_crane_binding b ON(b.hxzid=a.hxzid)
         WHERE 1=1
         <if test="hxzId != null and hxzId != ''">AND a.hxzid = #{hxzId}</if>
-        <if test="dateTime != null and dateTime != ''">AND `runtime` like "${dateTime}%"</if>
+        <choose>
+            <when test="endTime != null and endTime != ''">
+                and to_days(runtime) BETWEEN to_days(#{dateTime}) and to_days(#{endTime})
+            </when>
+            <otherwise>
+                and to_days(runtime)=to_days(#{dateTime})
+            </otherwise>
+        </choose>
         ORDER BY runtime desc
     </select>
 
     <select id="selectSbCraneAddrecordList" parameterType="SbCraneAddrecord" resultMap="SbCraneAddrecordResult">
         <include refid="selectSbCraneAddrecordVo"/>
-        <where>  
+        <where>
             <if test="id != null "> and id = #{id}</if>
-             <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
-             <if test="runtime != null  and runtime != '' "> and runtime = #{runtime}</if>
-             <if test="load != null "> and `load` = #{load}</if>
-             <if test="loadRatio != null "> and load_ratio = #{loadRatio}</if>
-             <if test="moment != null "> and moment = #{moment}</if>
-             <if test="momentRatio != null "> and moment_ratio = #{momentRatio}</if>
-             <if test="slewingSpeed != null "> and slewing_speed = #{slewingSpeed}</if>
-             <if test="isLeftWarning != null "> and is_left_warning = #{isLeftWarning}</if>
-             <if test="isRightWarning != null "> and is_right_warning = #{isRightWarning}</if>
-             <if test="range != null "> and `range` = #{range}</if>
-             <if test="isForwardWarning != null "> and is_forward_warning = #{isForwardWarning}</if>
-             <if test="isBackwardWarning != null "> and is_backward_warning = #{isBackwardWarning}</if>
-             <if test="height != null "> and height = #{height}</if>
-             <if test="isUpWarning != null "> and is_up_warning = #{isUpWarning}</if>
-             <if test="workEnvironment != null "> and work_environment = #{workEnvironment}</if>
-             <if test="realTimeFlag != null "> and real_time_flag = #{realTimeFlag}</if>
-             <if test="installationMethod != null "> and installation_method = #{installationMethod}</if>
-             <if test="windSpeed != null "> and wind_speed = #{windSpeed}</if>
-             <if test="cardNum != null  and cardNum != '' "> and card_num = #{cardNum}</if>
-             <if test="operatorName != null  and operatorName != '' "> and operator_name = #{operatorName}</if>
-             <if test="hxzid != null  and hxzid != '' "> and hxzid = #{hxzid}</if>
-             <if test="magnification != null "> and magnification = #{magnification}</if>
-             <if test="ratedWeight != null "> and ratedWeight = #{ratedWeight}</if>
-         </where>
+            <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
+            <if test="runtime != null  and runtime != '' "> and runtime = #{runtime}</if>
+            <if test="load != null "> and `load` = #{load}</if>
+            <if test="loadRatio != null "> and load_ratio = #{loadRatio}</if>
+            <if test="moment != null "> and moment = #{moment}</if>
+            <if test="momentRatio != null "> and moment_ratio = #{momentRatio}</if>
+            <if test="slewingSpeed != null "> and slewing_speed = #{slewingSpeed}</if>
+            <if test="isLeftWarning != null "> and is_left_warning = #{isLeftWarning}</if>
+            <if test="isRightWarning != null "> and is_right_warning = #{isRightWarning}</if>
+            <if test="range != null "> and `range` = #{range}</if>
+            <if test="isForwardWarning != null "> and is_forward_warning = #{isForwardWarning}</if>
+            <if test="isBackwardWarning != null "> and is_backward_warning = #{isBackwardWarning}</if>
+            <if test="height != null "> and height = #{height}</if>
+            <if test="isUpWarning != null "> and is_up_warning = #{isUpWarning}</if>
+            <if test="workEnvironment != null "> and work_environment = #{workEnvironment}</if>
+            <if test="realTimeFlag != null "> and real_time_flag = #{realTimeFlag}</if>
+            <if test="installationMethod != null "> and installation_method = #{installationMethod}</if>
+            <if test="windSpeed != null "> and wind_speed = #{windSpeed}</if>
+            <if test="cardNum != null  and cardNum != '' "> and card_num = #{cardNum}</if>
+            <if test="operatorName != null  and operatorName != '' "> and operator_name = #{operatorName}</if>
+            <if test="hxzid != null  and hxzid != '' "> and hxzid = #{hxzid}</if>
+            <if test="magnification != null "> and magnification = #{magnification}</if>
+            <if test="ratedWeight != null "> and ratedWeight = #{ratedWeight}</if>
+        </where>
         order by runtime desc
     </select>
-    
+
     <select id="selectSbCraneAddrecordById" parameterType="Long" resultMap="SbCraneAddrecordResult">
         <include refid="selectSbCraneAddrecordVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertSbCraneAddrecord" parameterType="SbCraneAddrecord">
         insert into sb_crane_addrecord
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">id,</if>
-			<if test="deviceNo != null  and deviceNo != ''  ">device_no,</if>
-			<if test="runtime != null  and runtime != ''  ">runtime,</if>
-			<if test="load != null  ">`load`,</if>
-			<if test="loadRatio != null  ">load_ratio,</if>
-			<if test="moment != null  ">moment,</if>
-			<if test="momentRatio != null  ">moment_ratio,</if>
-			<if test="slewingSpeed != null  ">slewing_speed,</if>
-			<if test="isLeftWarning != null  ">is_left_warning,</if>
-			<if test="isRightWarning != null  ">is_right_warning,</if>
-			<if test="range != null  ">`range`,</if>
-			<if test="isForwardWarning != null  ">is_forward_warning,</if>
-			<if test="isBackwardWarning != null  ">is_backward_warning,</if>
-			<if test="height != null  ">height,</if>
-			<if test="isUpWarning != null  ">is_up_warning,</if>
-			<if test="workEnvironment != null  ">work_environment,</if>
-			<if test="realTimeFlag != null  ">real_time_flag,</if>
-			<if test="installationMethod != null  ">installation_method,</if>
-			<if test="windSpeed != null  ">wind_speed,</if>
-			<if test="cardNum != null  and cardNum != ''  ">card_num,</if>
-			<if test="operatorName != null  and operatorName != ''  ">operator_name,</if>
-			<if test="hxzid != null  and hxzid != ''  ">hxzid,</if>
-			<if test="magnification != null  ">magnification,</if>
-			<if test="ratedWeight != null  ">ratedWeight,</if>
-			<if test="obliguity != null  ">obliguity,</if>
-         </trim>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="deviceNo != null  and deviceNo != ''  ">device_no,</if>
+            <if test="runtime != null  and runtime != ''  ">runtime,</if>
+            <if test="load != null  ">`load`,</if>
+            <if test="loadRatio != null  ">load_ratio,</if>
+            <if test="moment != null  ">moment,</if>
+            <if test="momentRatio != null  ">moment_ratio,</if>
+            <if test="slewingSpeed != null  ">slewing_speed,</if>
+            <if test="isLeftWarning != null  ">is_left_warning,</if>
+            <if test="isRightWarning != null  ">is_right_warning,</if>
+            <if test="range != null  ">`range`,</if>
+            <if test="isForwardWarning != null  ">is_forward_warning,</if>
+            <if test="isBackwardWarning != null  ">is_backward_warning,</if>
+            <if test="height != null  ">height,</if>
+            <if test="isUpWarning != null  ">is_up_warning,</if>
+            <if test="workEnvironment != null  ">work_environment,</if>
+            <if test="realTimeFlag != null  ">real_time_flag,</if>
+            <if test="installationMethod != null  ">installation_method,</if>
+            <if test="windSpeed != null  ">wind_speed,</if>
+            <if test="cardNum != null  and cardNum != ''  ">card_num,</if>
+            <if test="operatorName != null  and operatorName != ''  ">operator_name,</if>
+            <if test="hxzid != null  and hxzid != ''  ">hxzid,</if>
+            <if test="magnification != null  ">magnification,</if>
+            <if test="ratedWeight != null  ">ratedWeight,</if>
+            <if test="obliguity != null  ">obliguity,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">#{id},</if>
-			<if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
-			<if test="runtime != null  and runtime != ''  ">#{runtime},</if>
-			<if test="load != null  ">#{load},</if>
-			<if test="loadRatio != null  ">#{loadRatio},</if>
-			<if test="moment != null  ">#{moment},</if>
-			<if test="momentRatio != null  ">#{momentRatio},</if>
-			<if test="slewingSpeed != null  ">#{slewingSpeed},</if>
-			<if test="isLeftWarning != null  ">#{isLeftWarning},</if>
-			<if test="isRightWarning != null  ">#{isRightWarning},</if>
-			<if test="range != null  ">#{range},</if>
-			<if test="isForwardWarning != null  ">#{isForwardWarning},</if>
-			<if test="isBackwardWarning != null  ">#{isBackwardWarning},</if>
-			<if test="height != null  ">#{height},</if>
-			<if test="isUpWarning != null  ">#{isUpWarning},</if>
-			<if test="workEnvironment != null  ">#{workEnvironment},</if>
-			<if test="realTimeFlag != null  ">#{realTimeFlag},</if>
-			<if test="installationMethod != null  ">#{installationMethod},</if>
-			<if test="windSpeed != null  ">#{windSpeed},</if>
-			<if test="cardNum != null  and cardNum != ''  ">#{cardNum},</if>
-			<if test="operatorName != null  and operatorName != ''  ">#{operatorName},</if>
-			<if test="hxzid != null  and hxzid != ''  ">#{hxzid},</if>
-			<if test="magnification != null  ">#{magnification},</if>
-			<if test="ratedWeight != null  ">#{ratedWeight},</if>
-			<if test="obliguity != null  ">#{obliguity},</if>
-         </trim>
+            <if test="id != null  ">#{id},</if>
+            <if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+            <if test="runtime != null  and runtime != ''  ">#{runtime},</if>
+            <if test="load != null  ">#{load},</if>
+            <if test="loadRatio != null  ">#{loadRatio},</if>
+            <if test="moment != null  ">#{moment},</if>
+            <if test="momentRatio != null  ">#{momentRatio},</if>
+            <if test="slewingSpeed != null  ">#{slewingSpeed},</if>
+            <if test="isLeftWarning != null  ">#{isLeftWarning},</if>
+            <if test="isRightWarning != null  ">#{isRightWarning},</if>
+            <if test="range != null  ">#{range},</if>
+            <if test="isForwardWarning != null  ">#{isForwardWarning},</if>
+            <if test="isBackwardWarning != null  ">#{isBackwardWarning},</if>
+            <if test="height != null  ">#{height},</if>
+            <if test="isUpWarning != null  ">#{isUpWarning},</if>
+            <if test="workEnvironment != null  ">#{workEnvironment},</if>
+            <if test="realTimeFlag != null  ">#{realTimeFlag},</if>
+            <if test="installationMethod != null  ">#{installationMethod},</if>
+            <if test="windSpeed != null  ">#{windSpeed},</if>
+            <if test="cardNum != null  and cardNum != ''  ">#{cardNum},</if>
+            <if test="operatorName != null  and operatorName != ''  ">#{operatorName},</if>
+            <if test="hxzid != null  and hxzid != ''  ">#{hxzid},</if>
+            <if test="magnification != null  ">#{magnification},</if>
+            <if test="ratedWeight != null  ">#{ratedWeight},</if>
+            <if test="obliguity != null  ">#{obliguity},</if>
+        </trim>
     </insert>
-	 
+
     <update id="updateSbCraneAddrecord" parameterType="SbCraneAddrecord">
         update sb_crane_addrecord
         <trim prefix="SET" suffixOverrides=",">
@@ -225,12 +242,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-	<delete id="deleteSbCraneAddrecordById" parameterType="Long">
+    <delete id="deleteSbCraneAddrecordById" parameterType="Long">
         delete from sb_crane_addrecord where id = #{id}
     </delete>
-	
+
     <delete id="deleteSbCraneAddrecordByIds" parameterType="String">
-        delete from sb_crane_addrecord where id in 
+        delete from sb_crane_addrecord where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -252,18 +269,43 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="hxzid != null  and hxzid != '' "> and hxzid =#{hxzid}</if>
     </select>
     <select id="selectSbCraneAddrecordListTwo" parameterType="SbCraneAddrecord" resultMap="SbCraneAddrecordResult">
-    <include refid="selectSbCraneAddrecordVo"/>
+        <include refid="selectSbCraneAddrecordVo"/>
         where hxzid=#{hxzid} and STR_TO_DATE(runtime,'%Y-%m-%d %H:%i:%s') > STR_TO_DATE(#{runtime},'%Y-%m-%d %H:%i:%s')    order by runtime desc limit 0,1
     </select>
+
     <select id="selectSbCraneAddrecordListThree" parameterType="Map" resultMap="SbCraneAddrecordResult">
         <include refid="selectSbCraneAddrecordVo"/>
         where hxzid=#{hxzid}
-        <if test="time != null  and time != '' ">
-        and to_days(runtime)=to_days(#{time})
-        </if>
+        <choose>
+            <when test="endTime != null and endTime != ''">
+                and to_days(runtime) BETWEEN to_days(#{time}) and to_days(#{endTime})
+            </when>
+            <otherwise>
+                and to_days(runtime)=to_days(#{time})
+            </otherwise>
+        </choose>
         <if test="status != null  and status != '' ">
-        and load_ratio ${status}
+            and load_ratio ${status}
         </if>
         order by runtime desc
+    </select>
+    <select id="selectCraneAddrecordList" parameterType="Map" resultMap="SbCraneAddrecordResult">
+     SELECT MAX(a.runtime) as runtime,a.hxzid,b.pid FROM sb_crane_addrecord a
+     LEFT JOIN sb_crane_binding b ON(a.hxzid=b.hxzid)
+     WHERE a.hxzid IS NOT NULL AND b.pid = #{pid} GROUP BY a.hxzid
+    </select>
+    <select id="selectCount" parameterType="Map" resultMap="CraneKBResult">
+    SELECT
+    COUNT(IF(is_left_warning=1,is_left_warning,NULL)) `llimit` ,
+    COUNT(IF(is_right_warning=1,is_right_warning,NULL)) `rlimit` ,
+    COUNT(IF(is_forward_warning=1,is_forward_warning,NULL)) `flimit` ,
+    COUNT(IF(is_backward_warning=1,is_backward_warning,NULL)) `blimit` ,
+    COUNT(IF(obliguity>40,obliguity,NULL)) `incline` ,
+    COUNT(IF(`load`>80,`load`,NULL)) `hoisting` ,
+    COUNT(IF(wind_speed>100,wind_speed,NULL)) `windSpeed`
+    FROM sb_crane_addrecord a
+    LEFT JOIN sb_crane_binding  b ON(a.hxzid=b.hxzid)
+    where b.pid = #{pid}
+
     </select>
 </mapper>

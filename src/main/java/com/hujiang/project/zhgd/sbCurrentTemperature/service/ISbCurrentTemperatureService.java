@@ -15,6 +15,9 @@ import java.util.Map;
  */
 public interface ISbCurrentTemperatureService 
 {
+
+	public List<SbCurrentTemperature> SbCurrentTemperatureListKB(Map<String, Object> map);
+
 	/**
 	 * 查询最新的一条数据
 	 * @param electricityBoxId
@@ -33,14 +36,14 @@ public interface ISbCurrentTemperatureService
 	 * @param map
 	 * @return
 	 */
-	public List<SbCurrentTemperature> selectSbCurrentTemperatureByTime(Map<String,Object> map);
+	public List<SbCurrentTemperature> selectSbCurrentTemperatureByTime(Map<String, Object> map);
 
 	/**
 	 * 根据时间和电箱编号查询
 	 * @param map
 	 * @return
 	 */
-	public List<SbCurrentTemperature> selectSbCurrentTemperatureByTimes(Map<String,Object> map);
+	public List<SbCurrentTemperature> selectSbCurrentTemperatureByTimes(Map<String, Object> map);
 	/**
 	 * 查询最新的一条数据
 	 * @param electricityBoxId

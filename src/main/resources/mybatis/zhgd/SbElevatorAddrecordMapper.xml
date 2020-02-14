@@ -39,12 +39,20 @@
         <result property="obliguityY"    column="ObliguityY"    />
     </resultMap>
 
-	<resultMap id="ElevatorAddRecordResult" type="ElevatorAddRecord">
+    <resultMap id="ElevatorAddRecordResult" type="ElevatorAddRecord">
         <result property="emp_name" column="emp_name"/>
         <result property="runtime" column="runtime"/>
         <result property="face_url" column="face_url"/>
     </resultMap>
-	<sql id="selectSbElevatorAddrecordVo">
+
+    <resultMap id="ElevatorKBResult" type="ElevatorKB">
+        <result property="load" column="load"/>
+        <result property="people" column="people"/>
+        <result property="Xincline" column="Xincline"/>
+        <result property="Yincline" column="Yincline"/>
+    </resultMap>
+
+    <sql id="selectSbElevatorAddrecordVo">
         select id, device_no, runtime, laod, load_ratio, sign, loading_capacity, operator_name, ic_num, direction, height, real_time_flag, status, braking_distance, is_up_warning, is_down_warning, is_safety_device_warn, is_over_warning, is_forward_warning, is_backward_warning, hxzid
         ,PeopleCntAlarm,WeightAlarm,SpeedAlarm,ObliguityXAlarm,ObliguityYAlarm,Speed,WindSpeed,WindLevel,Floor,ObliguityX,ObliguityY
         from sb_elevator_addrecord
@@ -73,7 +81,7 @@
         GROUP BY a.device_no
     </select>
 
-	<select id="selectSbElevatorAddRecord" parameterType="SbElevatorAddrecord" resultMap="SbElevatorAddrecordResult">
+    <select id="selectSbElevatorAddRecord" parameterType="SbElevatorAddrecord" resultMap="SbElevatorAddrecordResult">
         SELECT a.id, a.device_no, runtime, laod, load_ratio, sign, loading_capacity, operator_name, ic_num,
         direction, a.height, real_time_flag, status, braking_distance, is_up_warning, is_down_warning, is_safety_device_warn, is_over_warning, is_forward_warning, is_backward_warning,a.hxzid
         ,PeopleCntAlarm,WeightAlarm,SpeedAlarm,ObliguityXAlarm,ObliguityYAlarm,Speed,WindSpeed,WindLevel,Floor,ObliguityX,ObliguityY
@@ -320,13 +328,33 @@
     <select id="selectSbElevatorAddrecordListThree" parameterType="Map" resultMap="SbElevatorAddrecordResult">
         <include refid="selectSbElevatorAddrecordVo"/>
         where hxzid=#{hxzid}
-        <if test="time != null  and time != '' ">
-            and to_days(runtime)=to_days(#{time})
-        </if>
+        <choose>
+            <when test="endTime != null and endTime != ''">
+                and to_days(runtime) BETWEEN to_days(#{time}) and to_days(#{endTime})
+            </when>
+            <otherwise>
+                and to_days(runtime)=to_days(#{time})
+            </otherwise>
+        </choose>
+
         <if test="status != null  and status != '' ">
             and WeightAlarm= ${status}
         </if>
         order by runtime desc
     </select>
-
+    <select id="selectSbElevatorAddrecordListKB" parameterType="Map" resultMap="SbElevatorAddrecordResult">
+     SELECT MAX(a.runtime) as runtime,a.hxzid,b.pid FROM sb_elevator_addrecord a
+     LEFT JOIN sb_elevator_binding b ON(a.hxzid=b.hxzid)
+     WHERE a.hxzid IS NOT NULL AND b.pid = #{pid} GROUP BY a.hxzid
+    </select>
+    <select id="selectCount" parameterType="Map" resultMap="ElevatorKBResult">
+    SELECT
+    COUNT(IF(PeopleCntAlarm=1,PeopleCntAlarm,NULL)) `load` ,
+    COUNT(IF(WeightAlarm=1,WeightAlarm,NULL)) `people` ,
+    COUNT(IF(ObliguityXAlarm=1,ObliguityXAlarm,NULL)) `Xincline` ,
+    COUNT(IF(ObliguityYAlarm=1,ObliguityYAlarm,NULL)) `Yincline`
+    FROM sb_elevator_addrecord a
+    LEFT JOIN sb_elevator_binding  b ON(a.hxzid=b.hxzid)
+    where b.pid = #{pid}
+    </select>
 </mapper>

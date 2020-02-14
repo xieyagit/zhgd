@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.hujiang.project.zhgd.sbElevatorAddrecord.domain.ElevatorAddRecord;
+import com.hujiang.project.zhgd.sbgroup.domain.ElevatorKB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;import org.springframework.transaction.annotation.Transactional;
 import com.hujiang.project.zhgd.sbElevatorAddrecord.mapper.SbElevatorAddrecordMapper;
@@ -22,6 +23,16 @@ public class SbElevatorAddrecordServiceImpl implements ISbElevatorAddrecordServi
 {
 	@Autowired
 	private SbElevatorAddrecordMapper sbElevatorAddrecordMapper;
+
+	@Override
+	public ElevatorKB selectCount(Map<String, Object> map) {
+		return sbElevatorAddrecordMapper.selectCount(map);
+	}
+
+	@Override
+	public List<SbElevatorAddrecord> selectSbElevatorAddrecordListKB(Map<String, Object> map) {
+		return sbElevatorAddrecordMapper.selectSbElevatorAddrecordListKB(map);
+	}
 
 	@Override
 	public SbElevatorAddrecord selectSbElevatorAddRecord(String hxzId, String runtime) {

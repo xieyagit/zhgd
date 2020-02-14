@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hujiang.project.zhgd.sbUnloaderAlarmtime.mapper.SbUnloaderAlarmtimeMapper">
-    
+
     <resultMap type="SbUnloaderAlarmtime" id="SbUnloaderAlarmtimeResult">
         <result property="id"    column="id"    />
         <result property="deviceNo"    column="DeviceNo"    />
@@ -16,8 +16,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="startTime"    column="StartTime"    />
         <result property="alarmValue"    column="AlarmValue"    />
     </resultMap>
-	
-	<sql id="selectSbUnloaderAlarmtimeVo">
+
+    <sql id="selectSbUnloaderAlarmtimeVo">
         select id, DeviceNo, HxzId, StartTime, AlarmType, AlarmValue from sb_unloader_alarmtime
     </sql>
 
@@ -28,7 +28,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="projectId != null "> and b.Pid = #{projectId}</if>
             <if test="hxzId != null  and hxzId != '' "> and b.HxzId = #{hxzId}</if>
             <if test="alarmType != null">and AlarmType=#{alarmType}</if>
-            <if test="startTime != null  and startTime != '' "> and StartTime like "${startTime}%"</if>
+            <choose>
+                <when test="endTime != null and endTime != ''">
+                    and to_days(StartTime) BETWEEN to_days(#{startTime}) and to_days(#{endTime})
+                </when>
+                <otherwise>
+                    and to_days(StartTime)=to_days(#{startTime})
+                </otherwise>
+            </choose>
         </where>
         ORDER BY StartTime DESC
     </select>
@@ -43,6 +50,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                     #{id}
                 </foreach>
             </if>
+            <choose>
+                <when test="endTime != null and endTime != ''">
+                    and to_days(StartTime) BETWEEN to_days(#{startTime}) and to_days(#{endTime})
+                </when>
+                <otherwise>
+                    and to_days(StartTime)=to_days(#{startTime})
+                </otherwise>
+            </choose>
             <if test="deviceId != null and deviceId != ''">
                 and a.HxzId = #{deviceId}
             </if>
@@ -67,39 +82,39 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectSbUnloaderAlarmtimeVo"/>
         <where>
             <if test="id != null "> and id = #{id}</if>
-             <if test="deviceNo != null  and deviceNo != '' "> and DeviceNo = #{deviceNo}</if>
-             <if test="hxzId != null  and hxzId != '' "> and HxzId = #{hxzId}</if>
-             <if test="startTime != null  and startTime != '' "> and StartTime = #{startTime}</if>
-             <if test="alarmType != null "> and AlarmType = #{alarmType}</if>
-             <if test="alarmValue != null "> and AlarmValue = #{alarmValue}</if>
-         </where>
+            <if test="deviceNo != null  and deviceNo != '' "> and DeviceNo = #{deviceNo}</if>
+            <if test="hxzId != null  and hxzId != '' "> and HxzId = #{hxzId}</if>
+            <if test="startTime != null  and startTime != '' "> and StartTime = #{startTime}</if>
+            <if test="alarmType != null "> and AlarmType = #{alarmType}</if>
+            <if test="alarmValue != null "> and AlarmValue = #{alarmValue}</if>
+        </where>
     </select>
-    
+
     <select id="selectSbUnloaderAlarmtimeById" parameterType="Integer" resultMap="SbUnloaderAlarmtimeResult">
         <include refid="selectSbUnloaderAlarmtimeVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertSbUnloaderAlarmtime" parameterType="SbUnloaderAlarmtime">
         insert into sb_unloader_alarmtime
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">id,</if>
-			<if test="deviceNo != null  and deviceNo != ''  ">DeviceNo,</if>
-			<if test="hxzId != null  and hxzId != ''  ">HxzId,</if>
-			<if test="startTime != null  and startTime != ''  ">StartTime,</if>
-			<if test="alarmType != null  ">AlarmType,</if>
-			<if test="alarmValue != null  ">AlarmValue,</if>
-         </trim>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="deviceNo != null  and deviceNo != ''  ">DeviceNo,</if>
+            <if test="hxzId != null  and hxzId != ''  ">HxzId,</if>
+            <if test="startTime != null  and startTime != ''  ">StartTime,</if>
+            <if test="alarmType != null  ">AlarmType,</if>
+            <if test="alarmValue != null  ">AlarmValue,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">#{id},</if>
-			<if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
-			<if test="hxzId != null  and hxzId != ''  ">#{hxzId},</if>
-			<if test="startTime != null  and startTime != ''  ">#{startTime},</if>
-			<if test="alarmType != null  ">#{alarmType},</if>
-			<if test="alarmValue != null  ">#{alarmValue},</if>
-         </trim>
+            <if test="id != null  ">#{id},</if>
+            <if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+            <if test="hxzId != null  and hxzId != ''  ">#{hxzId},</if>
+            <if test="startTime != null  and startTime != ''  ">#{startTime},</if>
+            <if test="alarmType != null  ">#{alarmType},</if>
+            <if test="alarmValue != null  ">#{alarmValue},</if>
+        </trim>
     </insert>
-	 
+
     <update id="updateSbUnloaderAlarmtime" parameterType="SbUnloaderAlarmtime">
         update sb_unloader_alarmtime
         <trim prefix="SET" suffixOverrides=",">
@@ -112,15 +127,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-	<delete id="deleteSbUnloaderAlarmtimeById" parameterType="Integer">
+    <delete id="deleteSbUnloaderAlarmtimeById" parameterType="Integer">
         delete from sb_unloader_alarmtime where id = #{id}
     </delete>
-	
+
     <delete id="deleteSbUnloaderAlarmtimeByIds" parameterType="String">
-        delete from sb_unloader_alarmtime where id in 
+        delete from sb_unloader_alarmtime where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

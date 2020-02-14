@@ -5,14 +5,14 @@ import java.util.Date;
 
 /**
  * 车牌数据表 hujiang_vehicle
- * 
+ *
  * @author hujiang
  * @date 2019-06-19
  */
 public class Vehicle
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** id */
 	private Integer id;
 	/** 记录唯一标识 */
@@ -29,6 +29,7 @@ public class Vehicle
 	private String liftType;
 	/** 抬杆时间 */
 	private String liftTime;
+	private String endTime;
 	/** 进出方向 1-进 2-出 */
 	private Integer inOut;
 	/** 图片 */
@@ -298,6 +299,14 @@ public class Vehicle
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
 	}
 
 	@Override

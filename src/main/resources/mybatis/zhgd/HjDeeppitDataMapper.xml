@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hujiang.project.zhgd.hjDeeppit.mapper.HjDeeppitDataMapper">
-    
+
     <resultMap type="HjDeeppitData" id="HjDeeppitDataResult">
         <result property="id"    column="id"    />
         <result property="structuresId"    column="structures_id"    />
@@ -23,32 +23,39 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="reservedT"    column="reserved_t"    />
         <result property="creation"    column="creation"    />
     </resultMap>
-	
-	<sql id="selectHjDeeppitDataVo">
+
+    <sql id="selectHjDeeppitDataVo">
         select id, structures_id, display_id, factor_id, level_x, level_y, level_accumulate_x, level_accumulate_y, water_level, strain_frequency, strain_temperature, subside, tilt_x, tilt_y, reserved_o, reserved_t, creation from hj_deeppit_data
     </sql>
-	
+
     <select id="selectHjDeeppitDataList" parameterType="HjDeeppitData" resultMap="HjDeeppitDataResult">
         <include refid="selectHjDeeppitDataVo"/>
-        <where>  
+        <where>
             <if test="id != null "> and id = #{id}</if>
-             <if test="structuresId != null "> and structures_id = #{structuresId}</if>
-             <if test="displayId != null "> and display_id = #{displayId}</if>
-             <if test="factorId != null "> and factor_id = #{factorId}</if>
-             <if test="levelX != null  and levelX != '' "> and level_x = #{levelX}</if>
-             <if test="levelY != null  and levelY != '' "> and level_y = #{levelY}</if>
-             <if test="levelAccumulateX != null  and levelAccumulateX != '' "> and level_accumulate_x = #{levelAccumulateX}</if>
-             <if test="levelAccumulateY != null  and levelAccumulateY != '' "> and level_accumulate_y = #{levelAccumulateY}</if>
-             <if test="waterLevel != null  and waterLevel != '' "> and water_level = #{waterLevel}</if>
-             <if test="strainFrequency != null  and strainFrequency != '' "> and strain_frequency = #{strainFrequency}</if>
-             <if test="strainTemperature != null  and strainTemperature != '' "> and strain_temperature = #{strainTemperature}</if>
-             <if test="subside != null  and subside != '' "> and subside = #{subside}</if>
-             <if test="tiltX != null  and tiltX != '' "> and tilt_x = #{tiltX}</if>
-             <if test="tiltY != null  and tiltY != '' "> and tilt_y = #{tiltY}</if>
-             <if test="reservedO != null  and reservedO != '' "> and reserved_o = #{reservedO}</if>
-             <if test="reservedT != null  and reservedT != '' "> and reserved_t = #{reservedT}</if>
-             <if test="creation != null "> and creation LIKE CONCAT(CONCAT(#{creation}), '%')</if>
-         </where>
+            <if test="structuresId != null "> and structures_id = #{structuresId}</if>
+            <if test="displayId != null "> and display_id = #{displayId}</if>
+            <if test="factorId != null "> and factor_id = #{factorId}</if>
+            <if test="levelX != null  and levelX != '' "> and level_x = #{levelX}</if>
+            <if test="levelY != null  and levelY != '' "> and level_y = #{levelY}</if>
+            <if test="levelAccumulateX != null  and levelAccumulateX != '' "> and level_accumulate_x = #{levelAccumulateX}</if>
+            <if test="levelAccumulateY != null  and levelAccumulateY != '' "> and level_accumulate_y = #{levelAccumulateY}</if>
+            <if test="waterLevel != null  and waterLevel != '' "> and water_level = #{waterLevel}</if>
+            <if test="strainFrequency != null  and strainFrequency != '' "> and strain_frequency = #{strainFrequency}</if>
+            <if test="strainTemperature != null  and strainTemperature != '' "> and strain_temperature = #{strainTemperature}</if>
+            <if test="subside != null  and subside != '' "> and subside = #{subside}</if>
+            <if test="tiltX != null  and tiltX != '' "> and tilt_x = #{tiltX}</if>
+            <if test="tiltY != null  and tiltY != '' "> and tilt_y = #{tiltY}</if>
+            <if test="reservedO != null  and reservedO != '' "> and reserved_o = #{reservedO}</if>
+            <if test="reservedT != null  and reservedT != '' "> and reserved_t = #{reservedT}</if>
+            <choose>
+                <when test="endTime != null and endTime != ''">
+                    and to_days(creation) BETWEEN to_days(#{creation}) and to_days(#{endTime})
+                </when>
+                <otherwise>
+                    and to_days(creation)=to_days(#{creation})
+                </otherwise>
+            </choose>
+        </where>
     </select>
 
     <!--最大值-->
@@ -98,46 +105,46 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <insert id="insertHjDeeppitData" parameterType="HjDeeppitData">
         insert into hj_deeppit_data
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">id,</if>
-			<if test="structuresId != null  ">structures_id,</if>
-			<if test="displayId != null  ">display_id,</if>
-			<if test="factorId != null  ">factor_id,</if>
-			<if test="levelX != null  and levelX != ''  ">level_x,</if>
-			<if test="levelY != null  and levelY != ''  ">level_y,</if>
-			<if test="levelAccumulateX != null  and levelAccumulateX != ''  ">level_accumulate_x,</if>
-			<if test="levelAccumulateY != null  and levelAccumulateY != ''  ">level_accumulate_y,</if>
-			<if test="waterLevel != null  and waterLevel != ''  ">water_level,</if>
-			<if test="strainFrequency != null  and strainFrequency != ''  ">strain_frequency,</if>
-			<if test="strainTemperature != null  and strainTemperature != ''  ">strain_temperature,</if>
-			<if test="subside != null  and subside != ''  ">subside,</if>
-			<if test="tiltX != null  and tiltX != ''  ">tilt_x,</if>
-			<if test="tiltY != null  and tiltY != ''  ">tilt_y,</if>
-			<if test="reservedO != null  and reservedO != ''  ">reserved_o,</if>
-			<if test="reservedT != null  and reservedT != ''  ">reserved_t,</if>
-			<if test="creation != null  ">creation,</if>
-         </trim>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="structuresId != null  ">structures_id,</if>
+            <if test="displayId != null  ">display_id,</if>
+            <if test="factorId != null  ">factor_id,</if>
+            <if test="levelX != null  and levelX != ''  ">level_x,</if>
+            <if test="levelY != null  and levelY != ''  ">level_y,</if>
+            <if test="levelAccumulateX != null  and levelAccumulateX != ''  ">level_accumulate_x,</if>
+            <if test="levelAccumulateY != null  and levelAccumulateY != ''  ">level_accumulate_y,</if>
+            <if test="waterLevel != null  and waterLevel != ''  ">water_level,</if>
+            <if test="strainFrequency != null  and strainFrequency != ''  ">strain_frequency,</if>
+            <if test="strainTemperature != null  and strainTemperature != ''  ">strain_temperature,</if>
+            <if test="subside != null  and subside != ''  ">subside,</if>
+            <if test="tiltX != null  and tiltX != ''  ">tilt_x,</if>
+            <if test="tiltY != null  and tiltY != ''  ">tilt_y,</if>
+            <if test="reservedO != null  and reservedO != ''  ">reserved_o,</if>
+            <if test="reservedT != null  and reservedT != ''  ">reserved_t,</if>
+            <if test="creation != null  ">creation,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">#{id},</if>
-			<if test="structuresId != null  ">#{structuresId},</if>
-			<if test="displayId != null  ">#{displayId},</if>
-			<if test="factorId != null  ">#{factorId},</if>
-			<if test="levelX != null  and levelX != ''  ">#{levelX},</if>
-			<if test="levelY != null  and levelY != ''  ">#{levelY},</if>
-			<if test="levelAccumulateX != null  and levelAccumulateX != ''  ">#{levelAccumulateX},</if>
-			<if test="levelAccumulateY != null  and levelAccumulateY != ''  ">#{levelAccumulateY},</if>
-			<if test="waterLevel != null  and waterLevel != ''  ">#{waterLevel},</if>
-			<if test="strainFrequency != null  and strainFrequency != ''  ">#{strainFrequency},</if>
-			<if test="strainTemperature != null  and strainTemperature != ''  ">#{strainTemperature},</if>
-			<if test="subside != null  and subside != ''  ">#{subside},</if>
-			<if test="tiltX != null  and tiltX != ''  ">#{tiltX},</if>
-			<if test="tiltY != null  and tiltY != ''  ">#{tiltY},</if>
-			<if test="reservedO != null  and reservedO != ''  ">#{reservedO},</if>
-			<if test="reservedT != null  and reservedT != ''  ">#{reservedT},</if>
-			<if test="creation != null  ">#{creation},</if>
-         </trim>
+            <if test="id != null  ">#{id},</if>
+            <if test="structuresId != null  ">#{structuresId},</if>
+            <if test="displayId != null  ">#{displayId},</if>
+            <if test="factorId != null  ">#{factorId},</if>
+            <if test="levelX != null  and levelX != ''  ">#{levelX},</if>
+            <if test="levelY != null  and levelY != ''  ">#{levelY},</if>
+            <if test="levelAccumulateX != null  and levelAccumulateX != ''  ">#{levelAccumulateX},</if>
+            <if test="levelAccumulateY != null  and levelAccumulateY != ''  ">#{levelAccumulateY},</if>
+            <if test="waterLevel != null  and waterLevel != ''  ">#{waterLevel},</if>
+            <if test="strainFrequency != null  and strainFrequency != ''  ">#{strainFrequency},</if>
+            <if test="strainTemperature != null  and strainTemperature != ''  ">#{strainTemperature},</if>
+            <if test="subside != null  and subside != ''  ">#{subside},</if>
+            <if test="tiltX != null  and tiltX != ''  ">#{tiltX},</if>
+            <if test="tiltY != null  and tiltY != ''  ">#{tiltY},</if>
+            <if test="reservedO != null  and reservedO != ''  ">#{reservedO},</if>
+            <if test="reservedT != null  and reservedT != ''  ">#{reservedT},</if>
+            <if test="creation != null  ">#{creation},</if>
+        </trim>
     </insert>
-	 
+
     <update id="updateHjDeeppitData" parameterType="HjDeeppitData">
         update hj_deeppit_data
         <trim prefix="SET" suffixOverrides=",">
@@ -161,15 +168,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-	<delete id="deleteHjDeeppitDataById" parameterType="Integer">
+    <delete id="deleteHjDeeppitDataById" parameterType="Integer">
         delete from hj_deeppit_data where id = #{id}
     </delete>
-	
+
     <delete id="deleteHjDeeppitDataByIds" parameterType="String">
-        delete from hj_deeppit_data where id in 
+        delete from hj_deeppit_data where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

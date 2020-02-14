@@ -2,6 +2,7 @@ package com.hujiang.project.zhgd.sbElevatorAddrecord.service;
 
 import com.hujiang.project.zhgd.sbElevatorAddrecord.domain.ElevatorAddRecord;
 import com.hujiang.project.zhgd.sbElevatorAddrecord.domain.SbElevatorAddrecord;
+import com.hujiang.project.zhgd.sbgroup.domain.ElevatorKB;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -15,8 +16,10 @@ import java.util.Map;
  */
 public interface ISbElevatorAddrecordService 
 {
-	public SbElevatorAddrecord selectSbElevatorAddRecord(String hxzId,String runtime);
-	public ElevatorAddRecord selectElevatorAddRecordName(String hxzId,String runtime,Integer projectId);
+	public ElevatorKB selectCount(Map<String, Object> map);
+	public List<SbElevatorAddrecord> selectSbElevatorAddrecordListKB(Map<String, Object> map);
+	public SbElevatorAddrecord selectSbElevatorAddRecord(String hxzId, String runtime);
+	public ElevatorAddRecord selectElevatorAddRecordName(String hxzId, String runtime, Integer projectId);
 
 	/**
      * 查询2.5.3升降机实时数据信息
@@ -34,7 +37,7 @@ public interface ISbElevatorAddrecordService
      */
 	public List<SbElevatorAddrecord> selectSbElevatorAddrecordList(SbElevatorAddrecord sbElevatorAddrecord);
 	public List<SbElevatorAddrecord> selectSbElevatorAddrecordListTwo(SbElevatorAddrecord sbElevatorAddrecord);
-	public List<SbElevatorAddrecord> selectSbElevatorAddrecordListThree(Map<String,Object> map);
+	public List<SbElevatorAddrecord> selectSbElevatorAddrecordListThree(Map<String, Object> map);
 	
 	/**
      * 新增2.5.3升降机实时数据
@@ -65,16 +68,16 @@ public interface ISbElevatorAddrecordService
 	 * @param map
 	 * @return
 	 */
-	public List<SbElevatorAddrecord> selectElevatorCount(Map<String,Object> map);
+	public List<SbElevatorAddrecord> selectElevatorCount(Map<String, Object> map);
 
-	public int selectElevatorCountTwo(Map<String,Object> map);
-	public int selectElevatorCountThree(Map<String,Object> map);
-	public int selectElevatorCountFour(Map<String,Object> map);
-	public int selectElevatorCountFive(Map<String,Object> map);
-	public int selectElevatorCountSix(Map<String,Object> map);
-	public int selectElevatorCountSeven(Map<String,Object> map);
+	public int selectElevatorCountTwo(Map<String, Object> map);
+	public int selectElevatorCountThree(Map<String, Object> map);
+	public int selectElevatorCountFour(Map<String, Object> map);
+	public int selectElevatorCountFive(Map<String, Object> map);
+	public int selectElevatorCountSix(Map<String, Object> map);
+	public int selectElevatorCountSeven(Map<String, Object> map);
 
 	/**1.0看板*/
-	public  List<SbElevatorAddrecord> crane( Integer pid);
-	public  List<SbElevatorAddrecord> cranes( Integer pid,String runtime);
+	public  List<SbElevatorAddrecord> crane(Integer pid);
+	public  List<SbElevatorAddrecord> cranes(Integer pid, String runtime);
 }

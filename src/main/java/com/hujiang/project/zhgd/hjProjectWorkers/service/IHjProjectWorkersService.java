@@ -127,7 +127,7 @@ public interface IHjProjectWorkersService
 	 * @return
 	 */
 	Map<String,Object> updateHjProjectWorkersOutOrIn(String[] ids,Integer tag);
-
+int updateQuarantine(ProjectWorkerPC pw);
 	/**
 	 * 修改前查询
 	 * @param id 人员id

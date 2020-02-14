@@ -25,6 +25,11 @@ public class SbDustEmissionServiceImpl implements ISbDustEmissionService
 	@Autowired
 	private SbDustEmissionMapper sbDustEmissionMapper;
 
+	@Override
+	public List<SbDustEmission> selectSbDustEmissionListKB(Map<String, Object> map) {
+		return sbDustEmissionMapper.selectSbDustEmissionListKB(map);
+	}
+
 	/**
 	 * 根据设备id和记录时间查询
 	 * @param id
