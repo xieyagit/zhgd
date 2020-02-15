@@ -1,6 +1,6 @@
-package com.hujiang.project.zhgd.sbgroup.service;
+package com.hujiang.project.zhgd.sbGroup.service;
 
-import com.hujiang.project.zhgd.sbgroup.domain.SbProject;
+import com.hujiang.project.zhgd.sbGroup.domain.SbProject;
 
 import java.util.List;
 
@@ -50,7 +50,7 @@ public interface ISbGroupService
 	 * @param @param cid 集团账号ID
 	 * @return
 	 */
-	public int selectWorkerAttendance(Integer cid , String time);
+	public Integer selectWorkerAttendance(Integer cid , String time);
 
 	/**
 	 * 查询集团下管理人员考勤数量
@@ -58,7 +58,7 @@ public interface ISbGroupService
 	 * @param @param cid 集团账号ID
 	 * @return
 	 */
-	public int selectAdministorAttendance(Integer cid , String time);
+	public Integer selectAdministorAttendance(Integer cid , String time);
 
 	/**
 	 * 查询集团下在岗人数
@@ -74,7 +74,7 @@ public interface ISbGroupService
 	 * @param @param cid 集团账号ID
 	 * @return
 	 */
-	public int selectPlate(Integer cid ,Integer inOut, String time);
+	public Integer selectPlate(Integer cid ,Integer inOut, String time);
 
 	/**
 	 * 查询集团下TSP历史数据
@@ -82,5 +82,5 @@ public interface ISbGroupService
 	 * @param @param cid 集团账号ID
 	 * @return
 	 */
-	public int selectTsp(Integer cid ,Integer min,Integer max);
+	public Integer selectTsp(Integer cid ,Integer min,Integer max);
 }

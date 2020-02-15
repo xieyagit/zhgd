@@ -4,36 +4,52 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hujiang.project.zhgd.sbGroup.mapper.SbGroupMapper">
 
-    <sql id="selectSbGroupById">
-      select address as city, company_name as name from hj_company_library
-        <where>
-        <if test="cid != null ">and id = #{cid}</if>
-        </where>
-    </sql>
+    <resultMap type="CompanyLibrary" id="CompanyResult">
+        <result property="name"    column="company_name"    />
+        <result property="city"    column="address"    />
+    </resultMap>
 
-    <sql id="selectSbGroupMU">
+    <resultMap type="TotalList" id="TotalListResult">
+        <result property="allMoney"    column="allMoney"    />
+        <result property="allUnit"    column="allUnit"    />
+    </resultMap>
+
+    <resultMap type="ProjectList" id="ProjectListResult">
+        <result property="longitude"    column="longitude"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="name"    column="project_name"    />
+    </resultMap>
+
+    <select id="selectSbGroupById" parameterType="Integer" resultMap="CompanyResult">
+      select address, company_name from hj_company_library
+        <where>
+         id = #{cid}
+        </where>
+    </select>
+
+    <select id="selectSbGroupMU" parameterType="Integer" resultMap="TotalListResult">
         select sum(p.project_cost) as allMoney, COUNT(s.construction_id) AS allUnit from hj_project p LEFT OUTER JOIN hj_construction_project s on p.id=s.project_id LEFT OUTER JOIN hj_company_project c on p.id=c.project_id
         <where>
-            <if test="cid != null ">and c.path like #{cid}</if>
+            and c.path like #{cid}
         </where>
-    </sql>
+    </select>
 
-    <sql id="selectProjectList">
-        select p.longitude, p.latitude,p.project_name as name, from hj_project p LEFT OUTER JOIN hj_company_project c on p.id=c.project_id
+    <select id="selectProjectList" parameterType="Integer" resultMap="ProjectListResult">
+        select p.longitude, p.latitude, p.project_name from hj_project p LEFT OUTER JOIN hj_company_project c on p.id=c.project_id
         <where>
-            <if test="cid != null ">and c.path like #{cid}</if>
+            and c.path like #{cid}
         </where>
-    </sql>
+    </select>
 
-    <sql id="selectProjectCount">
+    <select id="selectProjectCount" resultType="java.lang.Integer">
         select count(*) from hj_project p LEFT OUTER JOIN hj_company_project c on p.id=c.project_id
         <where>
-            <if test="cid != null ">and c.path like #{cid}</if>
+            and c.path like #{cid}
             <if test="state != null ">and p.project_state = #{state}</if>
         </where>
-    </sql>
+    </select>
 
-    <sql id="selectWorkerAttendance">
+    <select id="selectWorkerAttendance" resultType="java.lang.Integer">
         select count(*) from hj_attendance_record r LEFT OUTER JOIN hj_company_project p on r.project_id=p.project_id  LEFT JOIN hj_project_workers hw ON r.employee_id = hw.id
         <where>
             <if test="cid != null ">and p.path like #{cid}</if>
@@ -42,8 +58,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         AND hw.emp_category = 00
         GROUP BY
         r.employee_id
-    </sql>
-    <sql id="selectAdministorAttendance">
+    </select>
+    <select id="selectAdministorAttendance" resultType="java.lang.Integer">
         select count(*) from hj_attendance_record r LEFT OUTER JOIN hj_company_project p on r.project_id=p.project_id  LEFT JOIN hj_project_workers hw ON r.employee_id = hw.id
         <where>
             <if test="cid != null ">and p.path like #{cid}</if>
@@ -52,32 +68,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         AND hw.emp_category != 00
         GROUP BY
         r.employee_id
-    </sql>
+    </select>
 
-    <sql id="selectOnGuard">
+    <select id="selectOnGuard" resultType="java.lang.Integer">
         select count(*) as onGuard from hj_project_workers r LEFT OUTER JOIN hj_company_project p on r.project_id=p.project_id
         <where>
-            <if test="cid != null ">and p.path like #{cid}</if>
+            and p.path like #{cid}
         </where>
         AND r.enter_And_Retreat_Condition = 0
-    </sql>
+    </select>
 
 
-    <sql id="selectPlate">
+    <select id="selectPlate" resultType="java.lang.Integer">
         select count(*) from hj_zhgd_vehicle v LEFT OUTER JOIN hj_company_project p on v.DeptID=p.project_id
         <where>
             <if test="cid != null ">and p.path like #{cid}</if>
             <if test="time != null ">and date_format(v.LiftTime,'%Y-%m-%d')= #{time}</if>
             <if test="inOut != null ">and v.InOut= #{inOut}</if>
         </where>
-    </sql>
+    </select>
 
-    <sql id="selectTsp">
+    <select id="selectTsp" resultType="java.lang.Integer">
         select count(*) from sb_dust_emission e left join sb_project_dust_emission m on e.sn=m.sn LEFT OUTER JOIN hj_company_project p on m.project_id=p.project_id
         <where>
             <if test="cid != null ">and p.path like #{cid}</if>
             <if test="min != null ">and e.pm25 &gt;= #{min}</if>
             <if test="max != null ">and e.pm25 &lt;= #{max}</if>
         </where>
-    </sql>
+    </select>
 </mapper>

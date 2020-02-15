@@ -4,12 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.hujiang.project.zhgd.sbElevatorAddrecord.domain.ElevatorAddRecord;
-import com.hujiang.project.zhgd.sbgroup.domain.ElevatorKB;
+import com.hujiang.project.zhgd.sbGroup.domain.ElevatorKB;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Service;
 import com.hujiang.project.zhgd.sbElevatorAddrecord.mapper.SbElevatorAddrecordMapper;
 import com.hujiang.project.zhgd.sbElevatorAddrecord.domain.SbElevatorAddrecord;
-import com.hujiang.project.zhgd.sbElevatorAddrecord.service.ISbElevatorAddrecordService;
 import com.hujiang.common.support.Convert;
 
 /**

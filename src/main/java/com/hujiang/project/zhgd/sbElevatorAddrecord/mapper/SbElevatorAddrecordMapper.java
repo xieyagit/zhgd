@@ -2,7 +2,7 @@ package com.hujiang.project.zhgd.sbElevatorAddrecord.mapper;
 
 import com.hujiang.project.zhgd.sbElevatorAddrecord.domain.ElevatorAddRecord;
 import com.hujiang.project.zhgd.sbElevatorAddrecord.domain.SbElevatorAddrecord;
-import com.hujiang.project.zhgd.sbgroup.domain.ElevatorKB;
+import com.hujiang.project.zhgd.sbGroup.domain.ElevatorKB;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
