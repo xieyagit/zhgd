@@ -212,10 +212,10 @@ public class SbGroupApi extends BaseController{
                 JSONObject result = new JSONObject();
                 Integer administrator = sbGroupService.selectAdministorAttendance(cid,DateUtils.timstamp2DateTime(time));
                 Integer worker = sbGroupService.selectWorkerAttendance(cid,DateUtils.timstamp2DateTime(time));
-                time = time+nd;
                 result.put("administrator",administrator);
                 result.put("worker",worker);
                 result.put("date",time);
+                time = time+nd;
                 list.add(result);
             }
             return AjaxResult.success(list);
