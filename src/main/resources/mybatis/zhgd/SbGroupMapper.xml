@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hujiang.project.zhgd.sbGroup.mapper.SbGroupMapper">
+<mapper namespace="com.hujiang.project.zhgd.sbgroup.mapper.SbGroupMapper">
 
     <sql id="selectSbGroupById">
       select address as city, company_name as name from hj_company_library

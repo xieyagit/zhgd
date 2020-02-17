@@ -218,7 +218,11 @@
     <select id="selectSbDustEmissionListKB" parameterType="Map" resultMap="SbDustEmissionResult">
      SELECT MAX(a.date) as date,a.sn,b.project_id FROM sb_dust_emission a
     LEFT JOIN sb_project_dust_emission b ON(a.sn=b.sn)
-    WHERE a.sn IS NOT NULL AND b.project_id = #{pid} GROUP BY a.sn
+    WHERE a.sn IS NOT NULL AND b.project_id in (select b.id from hj_company_project a
+    INNER JOIN hj_project b on (a.project_id=b.id)
+    where 1=1
+    and a.path like CONCAT((select path from hj_company_project where company_id=#{cid} LIMIT 1), '%')
+    and a.project_id is not null) GROUP BY a.sn
 
     </select>
 </mapper>

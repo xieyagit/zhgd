@@ -199,6 +199,10 @@
     <select id="SbCurrentTemperatureListKB" parameterType="Map" resultMap="SbCurrentTemperatureResult">
     SELECT MAX(a.tm) as tm,a.electricity_box_id,b.project_id FROM sb_current_temperature a
     LEFT JOIN sb_project_electricity_box b ON(a.electricity_box_id=b.electricity_box_id)
-    WHERE a.electricity_box_id IS NOT NULL AND b.project_id = #{pid} GROUP BY a.electricity_box_id
+    WHERE a.electricity_box_id IS NOT NULL AND b.project_id in (select b.id from hj_company_project a
+    INNER JOIN hj_project b on (a.project_id=b.id)
+    where 1=1
+    and a.path like CONCAT((select path from hj_company_project where company_id=#{cid} LIMIT 1), '%')
+    and a.project_id is not null) GROUP BY a.electricity_box_id
     </select>
 </mapper>

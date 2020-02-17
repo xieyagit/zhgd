@@ -345,7 +345,11 @@
     <select id="selectSbElevatorAddrecordListKB" parameterType="Map" resultMap="SbElevatorAddrecordResult">
      SELECT MAX(a.runtime) as runtime,a.hxzid,b.pid FROM sb_elevator_addrecord a
      LEFT JOIN sb_elevator_binding b ON(a.hxzid=b.hxzid)
-     WHERE a.hxzid IS NOT NULL AND b.pid = #{pid} GROUP BY a.hxzid
+     WHERE a.hxzid IS NOT NULL AND b.pid in (select b.id from hj_company_project a
+    INNER JOIN hj_project b on (a.project_id=b.id)
+    where 1=1
+    and a.path like CONCAT((select path from hj_company_project where company_id=#{cid} LIMIT 1), '%')
+    and a.project_id is not null) GROUP BY a.hxzid
     </select>
     <select id="selectCount" parameterType="Map" resultMap="ElevatorKBResult">
     SELECT
@@ -355,6 +359,10 @@
     COUNT(IF(ObliguityYAlarm=1,ObliguityYAlarm,NULL)) `Yincline`
     FROM sb_elevator_addrecord a
     LEFT JOIN sb_elevator_binding  b ON(a.hxzid=b.hxzid)
-    where b.pid = #{pid}
+    where b.pid in (select b.id from hj_company_project a
+    INNER JOIN hj_project b on (a.project_id=b.id)
+    where 1=1
+    and a.path like CONCAT((select path from hj_company_project where company_id=#{cid} LIMIT 1), '%')
+    and a.project_id is not null)
     </select>
 </mapper>

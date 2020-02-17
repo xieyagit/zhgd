@@ -2,6 +2,7 @@ package com.hujiang.project.zhgd.sbgroup.api;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.utils.DateUtils;
+import com.hujiang.common.utils.StringUtils;
 import com.hujiang.framework.web.controller.BaseController;
 import com.hujiang.framework.web.domain.AjaxResult;
 import com.hujiang.project.zhgd.sbCraneAddrecord.domain.SbCraneAddrecord;
@@ -50,8 +51,7 @@ public class SbGroupApi extends BaseController{
         JSONObject jsonObject = new JSONObject();
         JSONObject result = new JSONObject();
         Map<String,Object> paramMap=new HashMap<String,Object>();
-        paramMap.put("pid",cid);
-
+        paramMap.put("cid",cid);
         JSONObject margin = new JSONObject();
         List<SbCraneAddrecord> SbCraneAddrecordList = sbCraneAddrecordService.selectCraneAddrecordList(paramMap);
         int onCraneLine = 0;
@@ -120,13 +120,13 @@ public class SbGroupApi extends BaseController{
                 offElevatorLine++;
             }
         }
+        result.put("electricityBox",electricityBox);
+        result.put("environment",environment);
         lifter.put("total",SbElevatorAddrecordList.size());
         lifter.put("onLine",onElevatorLine);
         lifter.put("offLine",offElevatorLine);
 
         result.put("margin",margin);
-        result.put("electricityBox",electricityBox);
-        result.put("environment",environment);
         result.put("lifter",lifter);
         jsonObject.put("data",result);
         return jsonObject;
@@ -137,7 +137,7 @@ public class SbGroupApi extends BaseController{
         JSONObject jsonObject = new JSONObject();
         JSONObject result = new JSONObject();
         Map<String,Object> paramMap=new HashMap<String,Object>();
-        paramMap.put("pid",cid);
+        paramMap.put("cid",cid);
         CraneKB kb = sbCraneAddrecordService.selectCount(paramMap);
         result.put("limit",kb.getLlimit()+kb.getRlimit()+kb.getFlimit()+kb.getBlimit());
         result.put("incline",kb.getIncline());
@@ -156,7 +156,7 @@ public class SbGroupApi extends BaseController{
         JSONObject jsonObject = new JSONObject();
         JSONObject result = new JSONObject();
         Map<String,Object> paramMap=new HashMap<String,Object>();
-        paramMap.put("pid",cid);
+        paramMap.put("cid",cid);
 
         ElevatorKB kb = elevatorAddrecordService.selectCount(paramMap);
         result.put("load",kb.getLoad());
