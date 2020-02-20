@@ -40,13 +40,13 @@ public class SbGroupServiceImpl implements ISbGroupService
 	}
 
 	@Override
-	public Integer selectWorkerAttendance(Integer cid, String time) {
-		return sbGroupMapper.selectWorkerAttendance(cid,time);
+	public List<Integer> selectWorkerAttendance(Integer cid, String start, String end) {
+		return sbGroupMapper.selectWorkerAttendance(cid,start,end);
 	}
 
 	@Override
-	public Integer selectAdministorAttendance(Integer cid, String time) {
-		return sbGroupMapper.selectAdministorAttendance(cid,time);
+	public List<Integer> selectAdministorAttendance(Integer cid, String start, String end) {
+		return sbGroupMapper.selectAdministorAttendance(cid,start,end);
 	}
 
 	@Override
@@ -63,4 +63,9 @@ public class SbGroupServiceImpl implements ISbGroupService
 	public Integer selectTsp(Integer cid, Integer min, Integer max) {
 		return sbGroupMapper.selectTsp(cid,min,max);
 	}
+	@Override
+	public List<SbProject> searchProjectList(Integer cid,String name){
+		return sbGroupMapper.searchProjectList(cid,name);
+	}
+
 }

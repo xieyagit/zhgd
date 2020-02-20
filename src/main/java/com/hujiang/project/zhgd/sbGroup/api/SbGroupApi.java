@@ -193,7 +193,11 @@ public class SbGroupApi extends BaseController{
             result.put("allProject",allProject);
             return AjaxResult.success(result);
         }
-
+    @PostMapping("/searchProjectList")
+    public AjaxResult searchProjectList(@Param("cid") Integer cid,@Param("name") String name){
+        List<SbProject> list = sbGroupService.searchProjectList(cid,name);
+        return AjaxResult.success(list);
+    }
         @PostMapping("/count")
         public AjaxResult count(@Param("cid") Integer cid){
             JSONObject result = new JSONObject();
@@ -205,20 +209,23 @@ public class SbGroupApi extends BaseController{
         @PostMapping("/clickCard")
         public AjaxResult clickCard(@Param("cid") Integer cid,@Param("start")Long start,@Param("end")Long end){
             List<JSONObject> list = new ArrayList<>();
-            Long num = DateUtils.getDateToDay(end,start);
-            Long time = start;
             long nd = 1000 * 24 * 60 * 60;
-            for (int i=0;i<=num;i++){
-                JSONObject result = new JSONObject();
-                Integer administrator = sbGroupService.selectAdministorAttendance(cid,DateUtils.timstamp2DateTime(time));
-                Integer worker = sbGroupService.selectWorkerAttendance(cid,DateUtils.timstamp2DateTime(time));
-                result.put("administrator",administrator);
-                result.put("worker",worker);
-                result.put("date",time);
-                time = time+nd;
-                list.add(result);
+            List<Integer> administrators = sbGroupService.selectAdministorAttendance(cid,DateUtils.timstamp2DateTime(start),DateUtils.timstamp2DateTime(end+nd));
+            List<Integer> workers = sbGroupService.selectWorkerAttendance(cid,DateUtils.timstamp2DateTime(start),DateUtils.timstamp2DateTime(end+nd));
+            Long time = start;
+            if (administrators.size()<0){
+                return AjaxResult.error("无数据");
+            }else {
+                for (int i=0;i<administrators.size();i++){
+                    JSONObject result = new JSONObject();
+                    result.put("administrator", administrators.get(i));
+                    result.put("worker",workers.get(i));
+                    result.put("date",time);
+                    time = time+nd;
+                    list.add(result);
+                }
+                return AjaxResult.success(list);
             }
-            return AjaxResult.success(list);
         }
     @PostMapping("/plateList")
     public AjaxResult plateList(@Param("cid") Integer cid,@Param("start") Long start,@Param("end")Long end){

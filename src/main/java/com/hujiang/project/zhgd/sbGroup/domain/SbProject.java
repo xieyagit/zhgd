@@ -2,12 +2,22 @@ package com.hujiang.project.zhgd.sbGroup.domain;
 
 public class SbProject
 {
+	/** 项目名称 */
+	private int id;
 	/** 经度 */
 	private String longitude;
 	/** 纬度 */
 	private String latitude;
 	/** 项目名称 */
 	private String name;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public String getLongitude() {
 		return longitude;

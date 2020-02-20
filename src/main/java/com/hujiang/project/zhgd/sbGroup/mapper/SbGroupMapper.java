@@ -51,7 +51,7 @@ public interface SbGroupMapper
 	 * @param @param cid 集团账号ID
 	 * @return
 	 */
-	public Integer selectWorkerAttendance(Integer cid , String time);
+	public List<Integer> selectWorkerAttendance(Integer cid , String start, String end);
 
 	/**
 	 * 查询集团下管理人员考勤数量
@@ -59,7 +59,7 @@ public interface SbGroupMapper
 	 * @param @param cid 集团账号ID
 	 * @return
 	 */
-	public Integer selectAdministorAttendance(Integer cid , String time);
+	public List<Integer> selectAdministorAttendance(Integer cid , String start, String end);
 
 	/**
 	 * 查询集团下在岗人数
@@ -84,4 +84,9 @@ public interface SbGroupMapper
 	 * @return
 	 */
 	public Integer selectTsp(Integer cid ,Integer min,Integer max);
+	/**
+	 * 搜索集团下项目
+	 *
+	 */
+	public List<SbProject> searchProjectList(Integer cid, String name);
 }

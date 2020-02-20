@@ -18,6 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="longitude"    column="longitude"    />
         <result property="latitude"    column="latitude"    />
         <result property="name"    column="project_name"    />
+        <result property="id"    column="id"    />
     </resultMap>
 
     <select id="selectSbGroupById" parameterType="Integer" resultMap="CompanyResult">
@@ -35,12 +36,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectProjectList" parameterType="Integer" resultMap="ProjectListResult">
-        select p.longitude, p.latitude, p.project_name from hj_project p LEFT OUTER JOIN hj_company_project c on p.id=c.project_id
+        select p.id, p.longitude, p.latitude, p.project_name from hj_project p LEFT OUTER JOIN hj_company_project c on p.id=c.project_id
         <where>
             and c.path like CONCAT(CONCAT('%', #{cid}), '%')
         </where>
     </select>
-
+    <select id="searchProjectList" resultMap="ProjectListResult">
+        select p.id, p.longitude, p.latitude, p.project_name from hj_project p LEFT OUTER JOIN hj_company_project c on p.id=c.project_id
+        <where>
+            and c.path like CONCAT(CONCAT('%', #{cid}), '%')
+            <if test="name != null ">and p.project_name like CONCAT(CONCAT('%', #{name}), '%')</if>
+        </where>
+    </select>
     <select id="selectProjectCount" resultType="java.lang.Integer">
         select count(*) from hj_project p LEFT OUTER JOIN hj_company_project c on p.id=c.project_id
         <where>
@@ -50,22 +57,51 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectWorkerAttendance" resultType="java.lang.Integer">
-        select count(*) from hj_attendance_record r LEFT OUTER JOIN hj_company_project p on r.project_id=p.project_id  LEFT JOIN hj_project_workers hw ON r.employee_id = hw.id
-        <where>
-            <if test="cid != null ">and p.path like CONCAT(CONCAT('%', #{cid}), '%')</if>
-            <if test="time != null ">and date_format(r.passed_time,'%Y-%m-%d')=  #{time}</if>
-            AND hw.emp_category = 00
-        </where>
+        select count(*) from (
+        select project_id,employee_id,passed_time from hj_attendance_record where passed_time<![CDATA[>=]]>#{start} and passed_time <![CDATA[<=]]> #{end}
+        ) as r  inner JOIN (
+        select project_id,path from hj_company_project group by project_id
+        ) as p on r.project_id=p.project_id inner JOIN (
+        select id,emp_category from hj_project_workers
+        ) as hw ON r.employee_id = hw.id
+        where hw.emp_category = '00' and p.path like CONCAT(CONCAT('%', #{cid}), '%') group by date_format(r.passed_time,'%Y-%m-%d')
     </select>
 
+
     <select id="selectAdministorAttendance" resultType="java.lang.Integer">
-        select count(*) from hj_attendance_record r LEFT OUTER JOIN hj_company_project p on r.project_id=p.project_id  LEFT JOIN hj_project_workers hw ON r.employee_id = hw.id
-        <where>
-            <if test="cid != null ">and p.path like CONCAT(CONCAT('%', #{cid}), '%')</if>
-            <if test="time != null ">and date_format(r.passed_time,'%Y-%m-%d')=  #{time}</if>
-            AND hw.emp_category != 00
-        </where>
+        select count(*) from (
+        select project_id,employee_id,passed_time from hj_attendance_record where passed_time<![CDATA[>=]]>#{start} and passed_time <![CDATA[<=]]> #{end}
+        ) as r  inner JOIN (
+        select project_id,path from hj_company_project group by project_id
+        ) as p on r.project_id=p.project_id inner JOIN (
+        select id,emp_category from hj_project_workers
+        ) as hw ON r.employee_id = hw.id
+        where hw.emp_category != '00' and p.path like CONCAT(CONCAT('%', #{cid}), '%') group by date_format(r.passed_time,'%Y-%m-%d')
     </select>
+
+<!--    <where>-->
+<!--        <if test="cid != null ">and p.path like CONCAT(CONCAT('%', #{cid}), '%')</if>-->
+<!--        <if test="time != null ">and date_format(r.passed_time,'%Y-%m-%d')=  #{time}</if>-->
+<!--        AND hw.emp_category != 00-->
+<!--    </where>-->
+
+<!--    <select id="selectWorkerAttendance" resultType="java.lang.Integer">-->
+<!--        select count(*) from hj_attendance_record r LEFT OUTER JOIN hj_company_project p on r.project_id=p.project_id  LEFT JOIN hj_project_workers hw ON r.employee_id = hw.id-->
+<!--        <where>-->
+<!--            <if test="cid != null ">and p.path like CONCAT(CONCAT('%', #{cid}), '%')</if>-->
+<!--            <if test="time != null ">and date_format(r.passed_time,'%Y-%m-%d')=  #{time}</if>-->
+<!--            AND hw.emp_category = 00-->
+<!--        </where>-->
+<!--    </select>-->
+
+<!--    <select id="selectAdministorAttendance" resultType="java.lang.Integer">-->
+<!--        select count(*) from hj_attendance_record r LEFT OUTER JOIN hj_company_project p on r.project_id=p.project_id  LEFT JOIN hj_project_workers hw ON r.employee_id = hw.id-->
+<!--        <where>-->
+<!--            <if test="cid != null ">and p.path like CONCAT(CONCAT('%', #{cid}), '%')</if>-->
+<!--            <if test="time != null ">and date_format(r.passed_time,'%Y-%m-%d')=  #{time}</if>-->
+<!--            AND hw.emp_category != 00-->
+<!--        </where>-->
+<!--    </select>-->
 
     <select id="selectOnGuard" resultType="java.lang.Integer">
         select count(*) as onGuard from hj_project_workers r LEFT OUTER JOIN hj_company_project p on r.project_id=p.project_id
