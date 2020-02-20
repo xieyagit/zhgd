@@ -152,7 +152,6 @@ import com.hujiang.project.zhgd.sbUnloaderRegistration.api.PcUnloader;
 import com.hujiang.project.zhgd.sbUnloaderRegistration.domain.ExportUnloaderAlarmtime;
 import com.hujiang.project.zhgd.sbUnloaderRegistration.domain.ExportUnloaderRealtime;
 import com.hujiang.project.zhgd.sbVersion.api.VersionApi;
-import com.hujiang.project.zhgd.sbgroup.api.SbGroupApi;
 import com.hujiang.project.zhgd.utils.AliyunOSSClientUtil;
 import com.hujiang.project.zhgd.zhNode.api.NodeApi;
 import com.hujiang.project.zhgd.zhNode.domain.*;
@@ -364,7 +363,7 @@ public class api {
     @Autowired
     private GroupTitleApi groupTitleApi;
     @Autowired
-    private SbGroupApi sbGroupApi;
+    private com.hujiang.project.zhgd.sbGroup.api.SbGroupApi sbGroupApi;
 
     @PostMapping("/pcEquipmentWarning/warningCount")
     public JSONObject warningCount(@RequestParam(value = "projectId") Integer projectId){
@@ -2614,7 +2613,7 @@ public class api {
 
     }
     @PostMapping(value = "/HjGhformworktApi/getFactorDataT" )
-    public AjaxResult getFactorDataT(@RequestParam(value = "factorId") Integer factorId,@RequestParam(value = "startTime") String startTime, @RequestParam(value = "endTime")String endTime,  @RequestParam(value = "pageSize")Integer pageSize,
+    public AjaxResult getFactorDataTs(@RequestParam(value = "factorId") Integer factorId,@RequestParam(value = "startTime") String startTime, @RequestParam(value = "endTime")String endTime,  @RequestParam(value = "pageSize")Integer pageSize,
                                      @RequestParam(value = "pageNum")Integer pageNum){
         PageDomain pageDomain = new PageDomain();
         pageDomain.setPageNum(pageNum);
@@ -2815,7 +2814,7 @@ public class api {
         return groupTitleApi.getTitle(groupTitle);
     }
     @PostMapping(value = "/equipment")
-    public JSONObject equipment(@RequestParam(value = "cid")int cid){
+    public JSONObject equipment(@RequestParam(value = "cid")int cid) throws ParseException{
         return sbGroupApi.equipment(cid);
     }
     @PostMapping(value = "/marginAlarm")
