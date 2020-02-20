@@ -1,4 +1,4 @@
-package com.hujiang.project.zhgd.sbgroup.api;
+package com.hujiang.project.zhgd.sbGroup.api;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.utils.DateUtils;
@@ -13,10 +13,10 @@ import com.hujiang.project.zhgd.sbDustEmission.domain.SbDustEmission;
 import com.hujiang.project.zhgd.sbDustEmission.service.ISbDustEmissionService;
 import com.hujiang.project.zhgd.sbElevatorAddrecord.domain.SbElevatorAddrecord;
 import com.hujiang.project.zhgd.sbElevatorAddrecord.service.ISbElevatorAddrecordService;
-import com.hujiang.project.zhgd.sbgroup.domain.CraneKB;
-import com.hujiang.project.zhgd.sbgroup.domain.ElevatorKB;
-import com.hujiang.project.zhgd.sbgroup.domain.SbProject;
-import com.hujiang.project.zhgd.sbgroup.service.ISbGroupService;
+import com.hujiang.project.zhgd.sbGroup.domain.CraneKB;
+import com.hujiang.project.zhgd.sbGroup.domain.ElevatorKB;
+import com.hujiang.project.zhgd.sbGroup.domain.SbProject;
+import com.hujiang.project.zhgd.sbGroup.service.ISbGroupService;
 import feign.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -167,15 +167,15 @@ public class SbGroupApi extends BaseController{
         return jsonObject;
     }
         @PostMapping("/company")
-        public AjaxResult company(@Param("cid") Integer cid){
+        public AjaxResult company(@RequestParam(value = "cid") Integer cid){
             Object json = sbGroupService.selectSbGroupById(cid);
             return AjaxResult.success(json);
         }
 
         @PostMapping("/totalList")
         public AjaxResult totalList(@Param("cid") Integer cid){
-                Object json = sbGroupService.selectSbGroupMU(cid);
-                return AjaxResult.success(json);
+            Object json = sbGroupService.selectSbGroupMU(cid);
+            return AjaxResult.success(json);
        }
 
         @PostMapping("/projectList")
@@ -193,7 +193,11 @@ public class SbGroupApi extends BaseController{
             result.put("allProject",allProject);
             return AjaxResult.success(result);
         }
-
+    @PostMapping("/searchProjectList")
+    public AjaxResult searchProjectList(@Param("cid") Integer cid,@Param("name") String name){
+        List<SbProject> list = sbGroupService.searchProjectList(cid,name);
+        return AjaxResult.success(list);
+    }
         @PostMapping("/count")
         public AjaxResult count(@Param("cid") Integer cid){
             JSONObject result = new JSONObject();
@@ -203,33 +207,36 @@ public class SbGroupApi extends BaseController{
         }
 
         @PostMapping("/clickCard")
-        public AjaxResult clickCard(@Param("cid") Integer cid,@Param("start")Long startTime,@Param("end")Long endTime){
+        public AjaxResult clickCard(@Param("cid") Integer cid,@Param("start")Long start,@Param("end")Long end){
             List<JSONObject> list = new ArrayList<>();
-            Long num = DateUtils.getDateToDay(endTime,startTime);
-            Long time = startTime;
             long nd = 1000 * 24 * 60 * 60;
-            for (int i=0;i<=num;i++){
-                JSONObject result = new JSONObject();
-                int administrator = sbGroupService.selectAdministorAttendance(cid,DateUtils.timstamp2DateTime(time));
-                int worker = sbGroupService.selectWorkerAttendance(cid,DateUtils.timstamp2DateTime(time));
-                time = time+nd;
-                result.put("administrator",administrator);
-                result.put("worker",worker);
-                result.put("date",time);
-                list.add(result);
+            List<Integer> administrators = sbGroupService.selectAdministorAttendance(cid,DateUtils.timstamp2DateTime(start),DateUtils.timstamp2DateTime(end+nd));
+            List<Integer> workers = sbGroupService.selectWorkerAttendance(cid,DateUtils.timstamp2DateTime(start),DateUtils.timstamp2DateTime(end+nd));
+            Long time = start;
+            if (administrators.size()<0){
+                return AjaxResult.error("无数据");
+            }else {
+                for (int i=0;i<administrators.size();i++){
+                    JSONObject result = new JSONObject();
+                    result.put("administrator", administrators.get(i));
+                    result.put("worker",workers.get(i));
+                    result.put("date",time);
+                    time = time+nd;
+                    list.add(result);
+                }
+                return AjaxResult.success(list);
             }
-            return AjaxResult.success(list);
         }
     @PostMapping("/plateList")
-    public AjaxResult plateList(@Param("cid") Integer cid,@Param("start") Long startTime,@Param("end")Long endTime){
+    public AjaxResult plateList(@Param("cid") Integer cid,@Param("start") Long start,@Param("end")Long end){
         List<JSONObject> list = new ArrayList<>();
-        Long num = DateUtils.getDateToDay(endTime,startTime);
-        Long time = startTime;
+        Long num = DateUtils.getDateToDay(end,start);
+        Long time = start;
         long nd = 1000 * 24 * 60 * 60;
         for (int i=0;i<=num;i++){
             JSONObject result = new JSONObject();
-            int carIn = sbGroupService.selectPlate(cid,1,DateUtils.timstamp2DateTime(time));
-            int carOut = sbGroupService.selectPlate(cid,2,DateUtils.timstamp2DateTime(time));
+            Integer carIn = sbGroupService.selectPlate(cid,1,DateUtils.timstamp2DateTime(time));
+            Integer carOut = sbGroupService.selectPlate(cid,2,DateUtils.timstamp2DateTime(time));
             time = time+nd;
             result.put("carIn",carIn);
             result.put("carOut",carOut);
@@ -242,11 +249,11 @@ public class SbGroupApi extends BaseController{
     @PostMapping("/environmentList")
     public AjaxResult environmentList(@Param("cid") Integer cid){
         JSONObject result = new JSONObject();
-        int excellent = sbGroupService.selectTsp(cid,0,50);
-        int favorable = sbGroupService.selectTsp(cid,50,100);
-        int ordinary = sbGroupService.selectTsp(cid,100,150);
-        int slight = sbGroupService.selectTsp(cid,150,200);
-        int severity = sbGroupService.selectTsp(cid,200,300);
+        Integer excellent = sbGroupService.selectTsp(cid,0,50);
+        Integer favorable = sbGroupService.selectTsp(cid,50,100);
+        Integer ordinary = sbGroupService.selectTsp(cid,100,150);
+        Integer slight = sbGroupService.selectTsp(cid,150,200);
+        Integer severity = sbGroupService.selectTsp(cid,200,300);
         result.put("excellent",excellent);
         result.put("favorable",favorable);
         result.put("ordinary",ordinary);

@@ -1,32 +1,31 @@
-package com.hujiang.project.zhgd.sbgroup.mapper;
+package com.hujiang.project.zhgd.sbGroup.service;
 
-
-import com.hujiang.project.zhgd.sbgroup.domain.SbProject;
+import com.hujiang.project.zhgd.sbGroup.domain.SbProject;
 
 import java.util.List;
 
 /**
- * 集团对讲账号 数据层
+ * 集团对讲账号 服务层
  * 
  * @author hujiang
  * @date 2019-12-05
  */
-public interface SbGroupMapper
+public interface ISbGroupService
 {
 	/**
-     * 查询集团信息
-     * 
-     * @param cid 集团账号ID
-     * @return 集团账号信息
-     */
+	 * 查询集团信息
+	 *
+	 * @param cid 集团账号ID
+	 * @return 集团账号信息
+	 */
 	public Object selectSbGroupById(Integer cid);
-	
+
 	/**
-     * 查询集团下项目总投资额和参建单位
-     * 
-     * @param @param cid 集团账号ID
-     * @return
-     */
+	 * 查询集团下项目总投资额和参建单位
+	 *
+	 * @param @param cid 集团账号ID
+	 * @return
+	 */
 	public Object selectSbGroupMU(Integer cid);
 
 	/**
@@ -51,7 +50,7 @@ public interface SbGroupMapper
 	 * @param @param cid 集团账号ID
 	 * @return
 	 */
-	public int selectWorkerAttendance(Integer cid , String time);
+	public List<Integer> selectWorkerAttendance(Integer cid , String start, String end);
 
 	/**
 	 * 查询集团下管理人员考勤数量
@@ -59,7 +58,7 @@ public interface SbGroupMapper
 	 * @param @param cid 集团账号ID
 	 * @return
 	 */
-	public int selectAdministorAttendance(Integer cid , String time);
+	public List<Integer> selectAdministorAttendance(Integer cid , String start, String end);
 
 	/**
 	 * 查询集团下在岗人数
@@ -75,7 +74,7 @@ public interface SbGroupMapper
 	 * @param @param cid 集团账号ID
 	 * @return
 	 */
-	public int selectPlate(Integer cid ,Integer inOut,String time);
+	public Integer selectPlate(Integer cid ,Integer inOut, String time);
 
 	/**
 	 * 查询集团下TSP历史数据
@@ -83,5 +82,11 @@ public interface SbGroupMapper
 	 * @param @param cid 集团账号ID
 	 * @return
 	 */
-	public int selectTsp(Integer cid ,Integer min,Integer max);
+	public Integer selectTsp(Integer cid ,Integer min,Integer max);
+
+	/**
+	 * 搜索集团下项目
+	 *
+	 */
+	public List<SbProject> searchProjectList(Integer cid,String name);
 }

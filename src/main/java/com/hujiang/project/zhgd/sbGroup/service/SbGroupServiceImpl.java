@@ -1,7 +1,7 @@
-package com.hujiang.project.zhgd.sbgroup.service;
+package com.hujiang.project.zhgd.sbGroup.service;
 
-import com.hujiang.project.zhgd.sbgroup.domain.SbProject;
-import com.hujiang.project.zhgd.sbgroup.mapper.SbGroupMapper;
+import com.hujiang.project.zhgd.sbGroup.domain.SbProject;
+import com.hujiang.project.zhgd.sbGroup.mapper.SbGroupMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,13 +40,13 @@ public class SbGroupServiceImpl implements ISbGroupService
 	}
 
 	@Override
-	public int selectWorkerAttendance(Integer cid, String time) {
-		return sbGroupMapper.selectWorkerAttendance(cid,time);
+	public List<Integer> selectWorkerAttendance(Integer cid, String start, String end) {
+		return sbGroupMapper.selectWorkerAttendance(cid,start,end);
 	}
 
 	@Override
-	public int selectAdministorAttendance(Integer cid, String time) {
-		return sbGroupMapper.selectAdministorAttendance(cid,time);
+	public List<Integer> selectAdministorAttendance(Integer cid, String start, String end) {
+		return sbGroupMapper.selectAdministorAttendance(cid,start,end);
 	}
 
 	@Override
@@ -55,12 +55,17 @@ public class SbGroupServiceImpl implements ISbGroupService
 	}
 
 	@Override
-	public int selectPlate(Integer cid, Integer inOut, String time) {
+	public Integer selectPlate(Integer cid, Integer inOut, String time) {
 		return sbGroupMapper.selectPlate(cid,inOut,time);
 	}
 
 	@Override
-	public int selectTsp(Integer cid, Integer min, Integer max) {
+	public Integer selectTsp(Integer cid, Integer min, Integer max) {
 		return sbGroupMapper.selectTsp(cid,min,max);
 	}
+	@Override
+	public List<SbProject> searchProjectList(Integer cid,String name){
+		return sbGroupMapper.searchProjectList(cid,name);
+	}
+
 }
