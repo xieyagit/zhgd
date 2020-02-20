@@ -2613,7 +2613,10 @@ public class api {
 
     }
     @PostMapping(value = "/HjGhformworktApi/getFactorDataT" )
-    public AjaxResult getFactorDataTs(@RequestParam(value = "factorId") Integer factorId,@RequestParam(value = "startTime") String startTime, @RequestParam(value = "endTime")String endTime,  @RequestParam(value = "pageSize")Integer pageSize,
+    public AjaxResult getFactorDataTfor(@RequestParam(value = "factorId") Integer factorId,
+                                        @RequestParam(value = "startTime") String startTime,
+                                        @RequestParam(value = "endTime")String endTime,
+                                        @RequestParam(value = "pageSize")Integer pageSize,
                                      @RequestParam(value = "pageNum")Integer pageNum){
         PageDomain pageDomain = new PageDomain();
         pageDomain.setPageNum(pageNum);
@@ -2814,7 +2817,7 @@ public class api {
         return groupTitleApi.getTitle(groupTitle);
     }
     @PostMapping(value = "/equipment")
-    public JSONObject equipment(@RequestParam(value = "cid")int cid) throws ParseException{
+    public JSONObject equipment(@RequestParam(value = "cid")int cid)throws ParseException {
         return sbGroupApi.equipment(cid);
     }
     @PostMapping(value = "/marginAlarm")
@@ -2826,7 +2829,6 @@ public class api {
     public JSONObject lifterAlarm(@RequestParam(value = "cid")int cid){
         return sbGroupApi.lifterAlarm(cid);
     }
-
 
     @PostMapping(value = "/company")
     public AjaxResult company(@RequestParam(value = "cid")Integer cid){

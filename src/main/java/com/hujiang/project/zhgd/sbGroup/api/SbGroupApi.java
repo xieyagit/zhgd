@@ -193,7 +193,7 @@ public class SbGroupApi extends BaseController{
             result.put("allProject",allProject);
             return AjaxResult.success(result);
         }
-        
+
     @PostMapping("/searchProjectList")
     public AjaxResult searchProjectList(@Param("cid") Integer cid,@Param("name") String name){
         List<SbProject> list = sbGroupService.searchProjectList(cid,name);
