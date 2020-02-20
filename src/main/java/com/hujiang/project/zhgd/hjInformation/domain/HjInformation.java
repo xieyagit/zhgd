@@ -35,9 +35,11 @@ public class HjInformation
 	private String uploadingName;
 	/** 备注 */
 	private String remark;
+	/** 参建单位 */
+	private Integer unitId;
 	private Integer projectId;
-
 	private MultipartFile[] file;
+
 	private String[] fileNames;
 	private String[] filePaths;
 
@@ -57,6 +59,69 @@ public class HjInformation
 		this.filePaths = filePaths;
 	}
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getMenuId() {
+		return menuId;
+	}
+
+	public void setMenuId(Integer menuId) {
+		this.menuId = menuId;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+
+	public Date getUploadingDate() {
+		return uploadingDate;
+	}
+
+	public void setUploadingDate(Date uploadingDate) {
+		this.uploadingDate = uploadingDate;
+	}
+
+	public String getUploadingName() {
+		return uploadingName;
+	}
+
+	public void setUploadingName(String uploadingName) {
+		this.uploadingName = uploadingName;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public Integer getUnitId() {
+		return unitId;
+	}
+
+	public void setUnitId(Integer unitId) {
+		this.unitId = unitId;
+	}
 
 	public Integer getProjectId() {
 		return projectId;
@@ -66,80 +131,12 @@ public class HjInformation
 		this.projectId = projectId;
 	}
 
-	public static long getSerialVersionUID() {
-		return serialVersionUID;
-	}
-
 	public MultipartFile[] getFile() {
 		return file;
 	}
 
 	public void setFile(MultipartFile[] file) {
 		this.file = file;
-	}
-
-	public void setId(Integer id)
-	{
-		this.id = id;
-	}
-
-	public Integer getId()
-	{
-		return id;
-	}
-	public void setMenuId(Integer menuId)
-	{
-		this.menuId = menuId;
-	}
-
-	public Integer getMenuId()
-	{
-		return menuId;
-	}
-	public void setFileName(String fileName)
-	{
-		this.fileName = fileName;
-	}
-
-	public String getFileName()
-	{
-		return fileName;
-	}
-	public void setFilePath(String filePath)
-	{
-		this.filePath = filePath;
-	}
-
-	public String getFilePath()
-	{
-		return filePath;
-	}
-	public void setUploadingDate(Date uploadingDate)
-	{
-		this.uploadingDate = uploadingDate;
-	}
-
-	public Date getUploadingDate()
-	{
-		return uploadingDate;
-	}
-	public void setUploadingName(String uploadingName)
-	{
-		this.uploadingName = uploadingName;
-	}
-
-	public String getUploadingName()
-	{
-		return uploadingName;
-	}
-	public void setRemark(String remark)
-	{
-		this.remark = remark;
-	}
-
-	public String getRemark()
-	{
-		return remark;
 	}
 
 	@Override
@@ -152,6 +149,7 @@ public class HjInformation
 				", uploadingDate=" + uploadingDate +
 				", uploadingName='" + uploadingName + '\'' +
 				", remark='" + remark + '\'' +
+				", unitId=" + unitId +
 				", projectId=" + projectId +
 				", file=" + Arrays.toString(file) +
 				'}';

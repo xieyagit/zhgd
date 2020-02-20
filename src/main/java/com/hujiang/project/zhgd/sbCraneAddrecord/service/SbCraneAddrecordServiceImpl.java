@@ -30,6 +30,7 @@ public class SbCraneAddrecordServiceImpl implements ISbCraneAddrecordService
 		return sbCraneAddrecordMapper.selectCraneAddrecordList(map);
 	}
 
+
 	@Override
 	public CraneKB selectCount(Map<String, Object> map) {
 		return sbCraneAddrecordMapper.selectCount(map);

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.utils.StringUtils;
 import com.hujiang.framework.web.controller.BaseController;
+import com.hujiang.framework.web.page.PageDomain;
 import com.hujiang.framework.web.page.TableDataInfo;
 import com.hujiang.project.zhgd.hjWorkersInformation.domain.HjWorkersInformation;
 import com.hujiang.project.zhgd.hjWorkersInformation.domain.HjWorkersInformationPc;
@@ -246,7 +247,7 @@ public class HjWorkersInformationApi extends BaseController {
      * */
     @RequestMapping(value = "/selectall")
     @ResponseBody
-    public JSONObject selectall(@RequestBody HjWorkersInformation hjWorkersInformation){
+    public JSONObject selectall(@RequestBody HjWorkersInformation hjWorkersInformation, PageDomain pageDomain){
 
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray = new JSONArray();

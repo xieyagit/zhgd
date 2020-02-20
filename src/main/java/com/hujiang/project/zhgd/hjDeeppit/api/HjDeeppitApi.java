@@ -271,7 +271,9 @@ public class HjDeeppitApi extends BaseController {
      * @return
      */
     @PostMapping(value = "getFactorDataT" )
-    public AjaxResult getFactorDataT(@RequestParam(value = "factorId") Integer factorId,@RequestParam(value = "startTime") String startTime, @RequestParam(value = "endTime")String endTime, PageDomain pageDomain){
+    public AjaxResult getFactorDataT(@RequestParam(value = "factorId") Integer factorId,
+                                     @RequestParam(value = "startTime") String startTime,
+                                     @RequestParam(value = "endTime")String endTime, PageDomain pageDomain){
 
         startPage();
         AjaxResult jsonObject = new AjaxResult();

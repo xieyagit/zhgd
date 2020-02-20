@@ -40,7 +40,7 @@ public class AppCraneAddRecordApi extends BaseController {
      * @return
      */
     @PostMapping(value = "/getCraneHxzId")
-    public JSONObject getCraneHxzId(@RequestParam(value = "projectId")int project){
+    public JSONObject kanbangetCraneHxzId(@RequestParam(value = "projectId")int project){
         JSONObject jsonObject = new JSONObject();
         List<SbCraneBinding> craneBindings = craneBindingService.selectByHxzId(project);
         JSONArray array = new JSONArray();

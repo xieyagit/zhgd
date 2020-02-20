@@ -213,7 +213,9 @@ public class HjGhformworktApi extends BaseController {
      * @return
      */
     @PostMapping(value = "getFactorDataT" )
-    public AjaxResult getFactorDataT(@RequestParam(value = "factorId") Integer factorId,@RequestParam(value = "startTime") String startTime, @RequestParam(value = "endTime")String endTime, PageDomain pageDomain){
+    public AjaxResult getFactorDataT(@RequestParam(value = "factorId") Integer factorId,
+                                     @RequestParam(value = "startTime") String startTime,
+                                     @RequestParam(value = "endTime")String endTime, PageDomain pageDomain){
 
         AjaxResult jsonObject = new AjaxResult();
         List<HighformworkData> highformworkData = highformworkDataService.selectHighformworkDataListT(factorId,startTime,endTime);
@@ -240,7 +242,8 @@ public class HjGhformworktApi extends BaseController {
      * @return
      */
     @PostMapping(value = "getParmeterAvg" )
-    public AjaxResult getFactorDataInfo(@RequestParam(value = "displayId") Integer displayId,@RequestParam(value = "factorId") Integer factorId){
+    public AjaxResult getFactorDataInfo(@RequestParam(value = "displayId") Integer displayId
+            ,@RequestParam(value = "factorId") Integer factorId){
         SbAvg avg = new SbAvg();
         Map<String,String> map = new HashMap<>();;
         String avgR;
@@ -331,7 +334,10 @@ public class HjGhformworktApi extends BaseController {
      * @return
      */
     @PostMapping(value = "selectSpecialS" )
-    public JSONArray getFactorDataT(@RequestParam(value = "displayId") Integer displayId,@RequestParam(value = "factorId") Integer factorId,@RequestParam(value = "startTime") String startTime, @RequestParam(value = "endTime")String endTime) {
+    public JSONArray getFactorDataT(@RequestParam(value = "displayId") Integer displayId,
+                                    @RequestParam(value = "factorId") Integer factorId,
+                                    @RequestParam(value = "startTime") String startTime,
+                                    @RequestParam(value = "endTime")String endTime) {
 
         List<HighformworkData> highformworkData = highformworkDataService.selectHighformworkDataListT(factorId,startTime,endTime);
         JSONArray array = new JSONArray();

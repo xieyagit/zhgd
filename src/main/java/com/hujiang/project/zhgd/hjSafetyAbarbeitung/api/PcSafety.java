@@ -106,7 +106,8 @@ public class PcSafety extends BaseController {
                                               @RequestParam(value = "constructionId",required = false)Integer constructionId,
                                               @RequestParam(value = "areaId",required = false)Integer areaId,
                                               @RequestParam(value = "problemGradeId",required = false)Integer problemGradeId,
-                                              @RequestParam(value = "differentiate")Integer differentiate
+                                              @RequestParam(value = "differentiate")Integer differentiate,
+                                              PageDomain pageDomain
                                               ){
 
 
@@ -322,7 +323,8 @@ public class PcSafety extends BaseController {
                                         @RequestParam(value = "rectifyName",required = false)String rectifyName,
                                         @RequestParam(value = "reviewName",required = false)String reviewName,
                                         @RequestParam(value = "constructionId",required = false)Integer constructionId,
-                                        @RequestParam(value = "differentiate")Integer differentiate){
+                                        @RequestParam(value = "differentiate")Integer differentiate,
+                                        PageDomain pageDomain){
 
         JSONObject jsonObject = new JSONObject();
         //整改人
@@ -509,7 +511,7 @@ public class PcSafety extends BaseController {
                                    @RequestParam(value = "initiatorId",required = false)Integer initiatorId,
                                    @RequestParam(value = "rectifyId",required = false)Integer rectifyId,
                                    @RequestParam(value = "reviewId",required = false)Integer reviewId,
-                                   @RequestParam(value = "make",required = false)Integer[] makes,
+                                   @RequestParam(value = "make",required = false)String[] makes,
                                    @RequestParam(value = "areaId",required = false)Integer areaId,
                                    @RequestParam(value = "safetyDeadline",required = false)String safetyDeadline,
                                    @RequestParam(value = "hiddenId",required = false)Integer hiddenId,

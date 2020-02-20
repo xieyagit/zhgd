@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.framework.web.controller.BaseController;
 import com.hujiang.framework.web.domain.AjaxResult;
+import com.hujiang.framework.web.page.PageDomain;
 import com.hujiang.framework.web.page.TableDataInfo;
 import com.hujiang.project.zhgd.hjAttendanceRecord.domain.HjAttendanceRecord;
 import com.hujiang.project.zhgd.hjAttendanceRecord.domain.Param;
@@ -53,7 +54,7 @@ public class AttendanceRecordPcApi extends BaseController {
      */
     @RequestMapping("/selectAttendanceRecordList")
     @ResponseBody
-    public AjaxResult selectAttendanceRecordListTwo( @RequestBody Param param )
+    public AjaxResult selectAttendanceRecordListTwo(@RequestBody Param param, PageDomain pageDomain )
     {
         logger.info("pc查询考勤记录列表开始---selectAttendanceRecordList---start");
         startPage();

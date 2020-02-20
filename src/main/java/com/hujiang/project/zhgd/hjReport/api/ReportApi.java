@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.utils.poi.ExcelUtil;
 import com.hujiang.framework.web.controller.BaseController;
 import com.hujiang.framework.web.domain.AjaxResult;
+import com.hujiang.framework.web.page.PageDomain;
 import com.hujiang.framework.web.page.TableDataInfo;
 import com.hujiang.project.zhgd.hjConstructionCompany.domain.HjConstructionCompany;
 import com.hujiang.project.zhgd.hjReport.domain.HjReport;
@@ -26,7 +27,7 @@ public class ReportApi extends BaseController {
 
     @RequestMapping(value = "/select")
     @ResponseBody
-    public JSONObject select(@RequestBody HjReport hjReport){
+    public JSONObject select(@RequestBody HjReport hjReport, PageDomain pageDomain){
         startPage();
         JSONObject jsonObject = new JSONObject();
         List<HjReport> result = iHjReportService.select(hjReport);
