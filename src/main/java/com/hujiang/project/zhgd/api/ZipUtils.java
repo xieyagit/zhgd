@@ -17,8 +17,8 @@ import java.util.zip.ZipOutputStream;
  * @author: Mr.LiuYong
  * @create: 2019-06-06 18:19
  **/
-public class ZipUtil {
-    private static final Logger log = LoggerFactory.getLogger(ZipUtil.class);
+public class ZipUtils {
+    private static final Logger log = LoggerFactory.getLogger(ZipUtils.class);
 
     public static void zip(String inputFileName, String zipFileName)
             throws Exception {

@@ -6,7 +6,7 @@ package com.hujiang.project.zhgd.api;
  * @author: Mr.LiuYong
  * @create: 2019-05-25 09:27
  **/
-public class Constants {
+public class Constantss {
 
     public static final String SERVICE_NAME="http://user-api/";
 

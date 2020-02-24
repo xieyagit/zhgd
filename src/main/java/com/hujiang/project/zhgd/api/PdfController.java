@@ -119,7 +119,7 @@ public class PdfController {
         List<PdfWorkers> pdfWorkers = pc_projectWorkersApi.selectPdfWorkers(ids);
         List<String> oldResPath = new ArrayList<String>();
         // 文件路径
-        String zipName = "进场确认书" + ZipUtil.dateToString();
+        String zipName = "进场确认书" + ZipUtils.dateToString();
         map.put("zipName",zipName);
         String newResPath = Utils.getPath()+"\\" + zipName; // 生成的文件夹名
         //遍历人员信息
@@ -159,8 +159,8 @@ public class PdfController {
         }
         //生成进场合同zip
         String zipPath = newResPath + ".zip";                  // 压缩文件夹名
-        ZipUtil.copyResource(oldResPath, newResPath);                  // 把pdf拷贝到同个文件目录下
-        ZipUtil.createZip(newResPath, zipPath);                        // 打包改目录成.zip包
+        ZipUtils.copyResource(oldResPath, newResPath);                  // 把pdf拷贝到同个文件目录下
+        ZipUtils.createZip(newResPath, zipPath);                        // 打包改目录成.zip包
         String zipUrl = AliyunOSSClientUtil.uploadObject2OSS(AliyunOSSClientUtil.getOSSClient(), new File(zipPath), "hujiang", "zip");
         map.put("zipUrl",zipUrl);
         //删除zip文件
@@ -184,7 +184,7 @@ public class PdfController {
         List<PdfWorkers> pdfWorkers = pc_projectWorkersApi.selectPdfWorkers(ids);
         List<String> oldResPath = new ArrayList<String>();
         // 文件路径
-        String zipName = "退场确认书" + ZipUtil.dateToString();
+        String zipName = "退场确认书" + ZipUtils.dateToString();
         map.put("zipName",zipName);
         String newResPath = Utils.getPath()+"\\" + zipName; // 生成的文件夹名
         //遍历人员信息
@@ -216,8 +216,8 @@ public class PdfController {
         }
         //生成进场合同zip
         String zipPath = newResPath + ".zip";                  // 压缩文件夹名
-        ZipUtil.copyResource(oldResPath, newResPath);                  // 把pdf拷贝到同个文件目录下
-        ZipUtil.createZip(newResPath, zipPath);                        // 打包改目录成.zip包
+        ZipUtils.copyResource(oldResPath, newResPath);                  // 把pdf拷贝到同个文件目录下
+        ZipUtils.createZip(newResPath, zipPath);                        // 打包改目录成.zip包
         String zipUrl = AliyunOSSClientUtil.uploadObject2OSS(AliyunOSSClientUtil.getOSSClient(), new File(zipPath), "hujiang", "zip");
         map.put("zipUrl",zipUrl);
         //删除zip文件
@@ -240,7 +240,7 @@ public class PdfController {
         List<PdfWorkers> pdfWorkers = pc_projectWorkersApi.selectPdfWorkers(ids);
         List<String> oldResPath = new ArrayList<String>();
         // 文件路径
-        String zipName = "劳动合同" + ZipUtil.dateToString();
+        String zipName = "劳动合同" + ZipUtils.dateToString();
         map.put("zipName",zipName);
         String newResPath = Utils.getPath()+"\\" + zipName; // 生成的文件夹名
         //遍历人员信息
@@ -262,8 +262,8 @@ public class PdfController {
         }
         //生成进场合同zip
         String zipPath = newResPath + ".zip";                  // 压缩文件夹名
-        ZipUtil.copyResource(oldResPath, newResPath);                  // 把pdf拷贝到同个文件目录下
-        ZipUtil.createZip(newResPath, zipPath);                        // 打包改目录成.zip包
+        ZipUtils.copyResource(oldResPath, newResPath);                  // 把pdf拷贝到同个文件目录下
+        ZipUtils.createZip(newResPath, zipPath);                        // 打包改目录成.zip包
         String zipUrl = AliyunOSSClientUtil.uploadObject2OSS(AliyunOSSClientUtil.getOSSClient(), new File(zipPath), "hujiang", "zip");
         map.put("zipUrl",zipUrl);
         //删除zip文件
@@ -286,7 +286,7 @@ public class PdfController {
         List<PdfWorkers> pdfWorkers = pc_projectWorkersApi.selectPdfWorkers(ids);
         List<String> oldResPath = new ArrayList<String>();
         // 文件路径
-        String zipName = "两制确认书" + ZipUtil.dateToString();
+        String zipName = "两制确认书" + ZipUtils.dateToString();
         map.put("zipName",zipName);
         String newResPath = Utils.getPath()+"\\" + zipName; // 生成的文件夹名
         //遍历人员信息
@@ -306,8 +306,8 @@ public class PdfController {
         }
         //生成进场合同zip
         String zipPath = newResPath + ".zip";                  // 压缩文件夹名
-        ZipUtil.copyResource(oldResPath, newResPath);                  // 把pdf拷贝到同个文件目录下
-        ZipUtil.createZip(newResPath, zipPath);                        // 打包改目录成.zip包
+        ZipUtils.copyResource(oldResPath, newResPath);                  // 把pdf拷贝到同个文件目录下
+        ZipUtils.createZip(newResPath, zipPath);                        // 打包改目录成.zip包
         String zipUrl = AliyunOSSClientUtil.uploadObject2OSS(AliyunOSSClientUtil.getOSSClient(), new File(zipPath), "hujiang", "zip");
         map.put("zipUrl",zipUrl);
         //删除zip文件
@@ -330,7 +330,7 @@ public class PdfController {
         List<PdfWorkers> pdfWorkers = pc_projectWorkersApi.selectPdfWorkers(ids);
         List<String> oldResPath = new ArrayList<String>();
         // 文件路径
-        String zipName = "身份证正反面" + ZipUtil.dateToString();
+        String zipName = "身份证正反面" + ZipUtils.dateToString();
         map.put("zipName",zipName);
 
         String newResPath = Utils.getPath()+"\\" + zipName; // 生成的文件夹名
@@ -351,8 +351,8 @@ public class PdfController {
         }
         //生成进场合同zip
         String zipPath = newResPath + ".zip";                  // 压缩文件夹名
-        ZipUtil.copyResource(oldResPath, newResPath);                  // 把pdf拷贝到同个文件目录下
-        ZipUtil.createZip(newResPath, zipPath);                        // 打包改目录成.zip包
+        ZipUtils.copyResource(oldResPath, newResPath);                  // 把pdf拷贝到同个文件目录下
+        ZipUtils.createZip(newResPath, zipPath);                        // 打包改目录成.zip包
         String zipUrl = AliyunOSSClientUtil.uploadObject2OSS(AliyunOSSClientUtil.getOSSClient(), new File(zipPath), "hujiang", "zip");
         map.put("zipUrl",zipUrl);
         //删除zip文件

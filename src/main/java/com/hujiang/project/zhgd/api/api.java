@@ -36,7 +36,6 @@ import com.hujiang.project.zhgd.hjConstructionProject.api.OptionsConstructionApi
 import com.hujiang.project.zhgd.hjDeeppit.api.DeeppitExternalApi;
 import com.hujiang.project.zhgd.hjDeeppit.api.HjDeeppitApi;
 import com.hujiang.project.zhgd.hjDeeppit.domain.SbProjectDeeppitStructures;
-import com.hujiang.project.zhgd.hjDeviceProjectworkers.domain.HjDeviceProjectworkers;
 import com.hujiang.project.zhgd.hjDictionaries.api.DictionariesApi;
 import com.hujiang.project.zhgd.hjDictionaries.domain.HjDictionaries;
 import com.hujiang.project.zhgd.hjFile.api.FileApi;
@@ -156,16 +155,12 @@ import com.hujiang.project.zhgd.utils.AliyunOSSClientUtil;
 import com.hujiang.project.zhgd.zhNode.api.NodeApi;
 import com.hujiang.project.zhgd.zhNode.domain.*;
 import net.sf.json.JSONArray;
-import com.sun.jna.platform.win32.WinNT.HANDLE;
-import com.sun.jna.platform.win32.WinNT;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.awt.print.Pageable;
 import java.io.*;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
@@ -178,7 +173,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import static com.hujiang.framework.web.domain.AjaxResult.error;
 
@@ -1338,7 +1332,7 @@ public class api {
 //        System.out.println(file.getOriginalFilename());
         //        return hjProjectWorkersService.updateProjectWorkers(hj);
         hj.setUpdateDate(new SimpleDateFormat().format(new Date()));
-        return (Map<String, Object>) restTemplateUtil.PostFile(hj, Constants.SERVICE_NAME + "provider/projectWorkersApi/updateProjectWorkers", file);
+        return (Map<String, Object>) restTemplateUtil.PostFile(hj, Constantss.SERVICE_NAME + "provider/projectWorkersApi/updateProjectWorkers", file);
     }
     @RequestMapping("/dictionariesApi/selectDictionaries")
     public Map<String, Object> selectDictionaries(HjDictionaries hjDictionaries){
@@ -1386,7 +1380,7 @@ public class api {
         map.put("remark1",remark1);
         map.put("shortName1",shortName1);
 
-        return(Map<String,Object>) restTemplateUtil.PostFile(map,Constants.SERVICE_NAME+"provider/project/addProject",file);
+        return(Map<String,Object>) restTemplateUtil.PostFile(map, Constantss.SERVICE_NAME+"provider/project/addProject",file);
     }
     @RequestMapping("/projectWorkersApi/selectSignParam")
     @ResponseBody
@@ -2739,7 +2733,7 @@ public class api {
     public  Map<String, Object> insertProjectImage(HjProjectImage hjProjectImage, MultipartFile[] file) {
         Map<String, Object> result = null;
         try {
-            result = (Map<String, Object>) restTemplateUtil.PostFile(hjProjectImage, Constants.SERVICE_NAME + "provider/projectImage/insertProjectImage", file);
+            result = (Map<String, Object>) restTemplateUtil.PostFile(hjProjectImage, Constantss.SERVICE_NAME + "provider/projectImage/insertProjectImage", file);
         } catch (Exception e) {
             e.printStackTrace();
         }

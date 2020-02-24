@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  **/
 @RestController
 @RequestMapping(value = "/parking/")
-public class VehicleAPI {
+public class VehicleAPIs {
     private Logger logger = Logger.getLogger(com.hujiang.project.zhgd.hjZhgdVehicle.api.VehicleParkingAPI.class.getName());
 
     @Autowired
