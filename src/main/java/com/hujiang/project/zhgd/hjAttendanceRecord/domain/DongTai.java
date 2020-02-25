@@ -10,6 +10,15 @@ public class DongTai {
     private  String name;//姓名
     private String passedTime;//通行时间
     private String direction;//进出
+    private String idCode;//身份证号码
+
+    public String getIdCode() {
+        return idCode;
+    }
+
+    public void setIdCode(String idCode) {
+        this.idCode = idCode;
+    }
 
     public String getName() {
         return name;
