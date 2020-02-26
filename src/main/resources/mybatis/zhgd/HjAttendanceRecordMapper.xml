@@ -433,6 +433,7 @@
         <result property="name" column="name"/>
         <result property="passedTime" column="passedTime"/>
         <result property="direction" column="direction"/>
+        <result property="idCode" column="id_code"/>
     </resultMap>
     <!--工人考勤动态-->
     <select id="selectGRKQDongTai" parameterType="Integer" resultMap="DongTaiResult">
@@ -485,12 +486,12 @@ and TO_DAYS(curdate())=TO_DAYS(passed_time)  GROUP BY employee_id ORDER BY passe
 
     <!--电视看板工人考勤动态-->
     <select id="selectWorkerList" parameterType="Integer" resultMap="DongTaiResult">
-         select ha.id,ha.passed_time passedTime,ha.direction,hp.emp_name name FROM hj_attendance_record ha,hj_project_workers hp
+         select ha.id,ha.passed_time passedTime,ha.direction,hp.emp_name name,hp.id_code FROM hj_attendance_record ha,hj_project_workers hp
          WHERE ha.project_id=#{projectId} AND hp.emp_category ='00' AND ha.employee_id=hp.id and TO_DAYS(ha.passed_time) = TO_DAYS(NOW()) GROUP BY ha.passed_time desc limit 40;
     </select>
     <!--电视看板管理人员考勤动态-->
     <select id="selectManagerList" parameterType="Integer" resultMap="DongTaiResult">
-      select ha.id,ha.passed_time passedTime,ha.direction,hp.emp_name name FROM hj_attendance_record ha,hj_project_workers hp
+      select ha.id,ha.passed_time passedTime,ha.direction,hp.emp_name name,hp.id_code FROM hj_attendance_record ha,hj_project_workers hp
       WHERE ha.project_id=#{projectId} AND hp.emp_category !='00' AND ha.employee_id=hp.id and TO_DAYS(ha.passed_time) = TO_DAYS(NOW()) GROUP BY ha.passed_time desc limit 40;
     </select>
 </mapper>

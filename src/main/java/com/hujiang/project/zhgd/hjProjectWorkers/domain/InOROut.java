@@ -9,6 +9,15 @@ public class InOROut {
     private String jobName;//工种
     private String teamName;//班组名
     private String status;//状态
+    private String idCode;//身份证号码
+
+    public String getIdCode() {
+        return idCode;
+    }
+
+    public void setIdCode(String idCode) {
+        this.idCode = idCode;
+    }
 
     public String getFaceUrl() {
         return faceUrl;
