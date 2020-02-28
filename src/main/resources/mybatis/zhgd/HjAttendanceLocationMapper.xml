@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjAttendanceLocation.mapper.HjAttendanceLocationMapper">
+    
+    <resultMap type="HjAttendanceLocation" id="HjAttendanceLocationResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="name"    column="name"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="radius"    column="radius"    />
+    </resultMap>
+	
+	<sql id="selectHjAttendanceLocationVo">
+        select id, project_id, name, longitude, latitude, radius from hj_attendance_location
+    </sql>
+	
+    <select id="selectHjAttendanceLocationList" parameterType="HjAttendanceLocation" resultMap="HjAttendanceLocationResult">
+        <include refid="selectHjAttendanceLocationVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="projectId != null "> and project_id = #{projectId}</if>
+             <if test="name != null  and name != '' "> and name = #{name}</if>
+             <if test="longitude != null  and longitude != '' "> and longitude = #{longitude}</if>
+             <if test="latitude != null  and latitude != '' "> and latitude = #{latitude}</if>
+             <if test="radius != null "> and radius = #{radius}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjAttendanceLocationById" parameterType="Integer" resultMap="HjAttendanceLocationResult">
+        <include refid="selectHjAttendanceLocationVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjAttendanceLocation" parameterType="HjAttendanceLocation">
+        insert into hj_attendance_location
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="projectId != null  ">project_id,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="longitude != null  and longitude != ''  ">longitude,</if>
+			<if test="latitude != null  and latitude != ''  ">latitude,</if>
+			<if test="radius != null  ">radius,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="projectId != null  ">#{projectId},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="longitude != null  and longitude != ''  ">#{longitude},</if>
+			<if test="latitude != null  and latitude != ''  ">#{latitude},</if>
+			<if test="radius != null  ">#{radius},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjAttendanceLocation" parameterType="HjAttendanceLocation">
+        update hj_attendance_location
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null  ">project_id = #{projectId},</if>
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="longitude != null  and longitude != ''  ">longitude = #{longitude},</if>
+            <if test="latitude != null  and latitude != ''  ">latitude = #{latitude},</if>
+            <if test="radius != null  ">radius = #{radius},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjAttendanceLocationById" parameterType="Integer">
+        delete from hj_attendance_location where id = #{id}
+    </delete>
+    <delete id="deleteHjAttendanceLocationByIds" parameterType="String">
+        delete from hj_attendance_location where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
