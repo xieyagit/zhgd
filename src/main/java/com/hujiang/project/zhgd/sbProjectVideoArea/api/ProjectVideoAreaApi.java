@@ -75,7 +75,9 @@ public class ProjectVideoAreaApi extends BaseController {
      * 查询项目视频区列表
      */
     @PostMapping("/list")
-    public AjaxResult projectVideoAreaList(@RequestBody SbProjectVideoArea sbProjectVideoArea)
+    public AjaxResult projectVideoAreaList(@RequestBody SbProjectVideoArea sbProjectVideoArea,
+                                           @RequestParam(value = "pageNum")Integer pageNum,
+                                           @RequestParam(value = "pageSize")Integer pageSize)
     {
         startPage();
         List<SbProjectVideoArea> list = areaService.selectSbProjectVideoAreaList(sbProjectVideoArea);

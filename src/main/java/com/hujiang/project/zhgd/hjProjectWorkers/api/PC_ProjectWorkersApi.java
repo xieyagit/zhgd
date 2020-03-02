@@ -74,19 +74,19 @@ public class PC_ProjectWorkersApi extends BaseController {
      * 查询项目工人列表
      */
     @PostMapping("/list")
-    public TableDataInfo list(HjProjectWorkers hjProjectWorkers) {
+    public AjaxResult list(HjProjectWorkers hjProjectWorkers) {
         startPage();
         List<ProjectWorkerPC> list = hjProjectWorkersService.selectProjectWorkersListPC(hjProjectWorkers);
-        return getDataTable(list);
+        return AjaxResult.success(getDataTable(list));
     }
     /**
      * 查询项目工人疫情列表
      */
     @PostMapping("/quarantineList")
-    public TableDataInfo quarantineList(HjProjectWorkers hjProjectWorkers) {
+    public AjaxResult quarantineList(HjProjectWorkers hjProjectWorkers) {
         startPage();
         List<ProjectWorkerPC> list = hjProjectWorkersService.selectProjectWorkersListPC(hjProjectWorkers);
-        return getDataTable(list);
+        return AjaxResult.success(getDataTable(list));
     }
     /**
      * pdf导出查询

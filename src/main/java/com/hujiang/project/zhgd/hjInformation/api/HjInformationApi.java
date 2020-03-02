@@ -42,7 +42,7 @@ public class HjInformationApi extends BaseController {
      * */
     @RequestMapping("/particulars")
     @ResponseBody
-    public JSONObject particulars(@RequestBody HjInformation hjInformation){
+    public JSONObject particulars(@RequestBody HjInformation hjInformation, PageDomain pageDomain){
         startPage();
         HjInformation information = new HjInformation();
         information.setId(hjInformation.getId());

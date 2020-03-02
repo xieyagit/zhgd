@@ -3,6 +3,7 @@ package com.hujiang.project.zhgd.hjZhgdVehicle.api;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.framework.web.controller.BaseController;
+import com.hujiang.framework.web.page.PageDomain;
 import com.hujiang.framework.web.page.TableDataInfo;
 import com.hujiang.project.zhgd.hjZhgdPkcount.domain.HjZhgdPkcount;
 import com.hujiang.project.zhgd.hjZhgdPkcount.service.IHjZhgdPkcountService;
@@ -56,7 +57,7 @@ public class VehicleAPI extends BaseController {
      * @return
      * */
     @PostMapping( value = "/selectAll")
-    public JSONObject selectAll(@RequestBody Vehicle vehicle){
+    public JSONObject selectAll(@RequestBody Vehicle vehicle, PageDomain pageDomain){
         startPage();
         List<Vehicle> veh = vehicleService.selectAll(vehicle);
         JSONObject jsonObject = new JSONObject();
@@ -96,7 +97,7 @@ public class VehicleAPI extends BaseController {
      * @return
      * */
     @PostMapping(value = "/parking/selectscene")
-    public JSONObject selectscene(@RequestBody Vehicle vehicle) throws ParseException {
+    public JSONObject selectscene(@RequestBody Vehicle vehicle, PageDomain pageDomain) throws ParseException {
 
         JSONObject jsonObject = new JSONObject();
         Vehicle gicle = new Vehicle();

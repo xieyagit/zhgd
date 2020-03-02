@@ -7,6 +7,7 @@ import com.hujiang.framework.jms.JmsMessageInfo;
 import com.hujiang.framework.jms.JmsMessageType;
 import com.hujiang.framework.web.controller.BaseController;
 import com.hujiang.framework.web.domain.AjaxResult;
+import com.hujiang.framework.web.page.PageDomain;
 import com.hujiang.project.zhgd.hjProject.domain.HjProject;
 import com.hujiang.project.zhgd.hjProject.service.IHjProjectService;
 import com.hujiang.project.consumer.TspPersonnelService;
@@ -97,7 +98,7 @@ public class PcProjectDustEmissionApi extends BaseController {
      * 查询项目对应的扬尘设备SN列表
      */
     @PostMapping("/projectDustEmissionList")
-    public AjaxResult projectDustEmissionList(@RequestBody SbProjectDustEmission sbProjectDustEmission)
+    public AjaxResult projectDustEmissionList(@RequestBody SbProjectDustEmission sbProjectDustEmission, PageDomain pageDomain)
     {
         startPage();
         List<SbProjectDustEmission> list = projectDustEmissionService.getSbProjectDustEmissionList(sbProjectDustEmission);

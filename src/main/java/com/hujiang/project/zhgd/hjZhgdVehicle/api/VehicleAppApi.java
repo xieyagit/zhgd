@@ -4,6 +4,7 @@ package com.hujiang.project.zhgd.hjZhgdVehicle.api;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.framework.web.controller.BaseController;
+import com.hujiang.framework.web.page.PageDomain;
 import com.hujiang.project.zhgd.hjZhgdPkcount.domain.HjZhgdPkcount;
 import com.hujiang.project.zhgd.hjZhgdPkcount.service.IHjZhgdPkcountService;
 import com.hujiang.project.zhgd.hjZhgdVehicle.domain.Vehicle;
@@ -35,7 +36,7 @@ public class VehicleAppApi extends BaseController {
      * @return
      * */
     @PostMapping( value = "/selectAll")
-    public JSONObject selectAll(@RequestBody Vehicle vehicle){
+    public JSONObject selectAll(@RequestBody Vehicle vehicle, PageDomain pageDomain){
         startPage();
         JSONObject result = new JSONObject();
         List<Vehicle> vehicle1 = vehicleService.selectAll(vehicle);
