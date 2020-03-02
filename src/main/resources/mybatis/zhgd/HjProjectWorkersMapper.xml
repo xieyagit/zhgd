@@ -714,10 +714,11 @@
         <result property="jobName" column="jobName"/>
         <result property="teamName" column="teamName"/>
         <result property="status" column="status"/>
+        <result property="idCode" column="id_code"/>
     </resultMap>
 
     <select id="selectInOrOutKB" parameterType="Integer" resultMap="InOrOutResult">
-select w.emp_name empName,w.face_url,
+select w.emp_name empName,w.id_code,w.face_url,
 ( case  when w.enter_And_Retreat_Condition=0 then '在场' else '离场' end) status,
 (select title from hj_dictionaries where tag=w.job_name) jobName,
 (select team_name from hj_team where w.work_typename_id=id) teamName from hj_project_workers w where w.id=#{id}
