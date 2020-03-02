@@ -121,6 +121,7 @@
         <result property="projectName" column="project_name"/>
         <result property="quarantine" column="quarantine"/>
         <result property="idAddress" column="id_address"/>
+        <result property="faceImg" column="face_url"/>
     </resultMap>
 
     <resultMap type="com.hujiang.project.zhgd.hjProjectWorkers.domain.PdfWorkers" id="PdfWorkersResult">
@@ -234,7 +235,7 @@
     </select>
 
     <select id="selectProjectWorkersListPC" parameterType="com.hujiang.project.zhgd.hjProjectWorkers.domain.HjProjectWorkers" resultMap="ProjectWorkerPCResult">
-        select pw.quarantine,pw.id_address,pw.id,pw.emp_name,pw.is_team,pw.enter_And_Retreat_Condition,d.title,t.team_name,cc.construction_name,p.project_name,pw.id_address as idAddress,pw.id_code as idCode,pw.emp_phon from hj_project_workers pw
+        select pw.quarantine,pw.id_address,pw.id,pw.emp_name,pw.face_url,pw.is_team,pw.enter_And_Retreat_Condition,d.title,t.team_name,cc.construction_name,p.project_name,pw.id_address as idAddress,pw.id_code as idCode,pw.emp_phon from hj_project_workers pw
         LEFT JOIN hj_dictionaries d ON pw.job_name= d.tag
           LEFT JOIN hj_team t ON pw.work_typename_id=t.id
           LEFT JOIN hj_construction_company cc ON cc.id = pw.construction_id

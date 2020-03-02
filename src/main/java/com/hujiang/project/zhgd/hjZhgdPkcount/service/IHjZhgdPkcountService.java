@@ -87,4 +87,8 @@ public interface IHjZhgdPkcountService
 
 	/**查询sn*/
 	public HjZhgdPkcount selectSN(HjZhgdPkcount hjZhgdPkcount);
+	/**
+	 * 车辆总数
+	 */
+	public List<HjZhgdPkcount> getHjZhgdPkcountList(Integer cid);
 }

@@ -129,4 +129,11 @@ public class HjZhgdPkcountServiceImpl implements IHjZhgdPkcountService
 	public HjZhgdPkcount selectSN(HjZhgdPkcount hjZhgdPkcount){
 		return hjZhgdPkcountMapper.selectSN(hjZhgdPkcount);
 	}
+
+	/**
+	 * 车辆总数
+	 */
+	public List<HjZhgdPkcount> getHjZhgdPkcountList(Integer cid){
+		return hjZhgdPkcountMapper.getHjZhgdPkcountList(cid);
+	}
 }

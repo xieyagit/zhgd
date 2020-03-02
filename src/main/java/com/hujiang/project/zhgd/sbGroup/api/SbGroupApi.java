@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.utils.DateUtils;
 import com.hujiang.framework.web.controller.BaseController;
 import com.hujiang.framework.web.domain.AjaxResult;
+import com.hujiang.project.zhgd.hjZhgdPkcount.domain.HjZhgdPkcount;
+import com.hujiang.project.zhgd.hjZhgdPkcount.service.IHjZhgdPkcountService;
 import com.hujiang.project.zhgd.sbCraneAddrecord.domain.SbCraneAddrecord;
 import com.hujiang.project.zhgd.sbCraneAddrecord.service.ISbCraneAddrecordService;
 import com.hujiang.project.zhgd.sbCurrentTemperature.domain.SbCurrentTemperature;
@@ -43,7 +45,8 @@ public class SbGroupApi extends BaseController{
     private ISbDustEmissionService dustEmissionService;
     @Autowired
     private ISbElevatorAddrecordService elevatorAddrecordService;
-
+    @Autowired
+    private IHjZhgdPkcountService hjZhgdPkcountService;
 
     @PostMapping(value = "/equipment")
     public JSONObject equipment(@RequestParam(value = "cid")int cid) throws ParseException {
@@ -123,9 +126,14 @@ public class SbGroupApi extends BaseController{
         lifter.put("total",SbElevatorAddrecordList.size());
         lifter.put("onLine",onElevatorLine);
         lifter.put("offLine",offElevatorLine);
+        //车辆系统总数
+        List<HjZhgdPkcount> hzpList=hjZhgdPkcountService.getHjZhgdPkcountList(cid);
+        JSONObject plateNumber = new JSONObject();
+        plateNumber.put("total",hzpList.size());
 
         result.put("margin",margin);
         result.put("electricityBox",electricityBox);
+        result.put("plateNumber",plateNumber);
         result.put("environment",environment);
         result.put("lifter",lifter);
         jsonObject.put("data",result);
