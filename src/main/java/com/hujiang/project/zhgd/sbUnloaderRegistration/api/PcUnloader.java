@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.support.Convert;
 import com.hujiang.framework.web.controller.BaseController;
+import com.hujiang.framework.web.page.PageDomain;
 import com.hujiang.framework.web.page.TableDataInfo;
 import com.hujiang.project.zhgd.hjProject.domain.HjProject;
 import com.hujiang.project.zhgd.hjProject.service.IHjProjectService;
@@ -126,7 +127,8 @@ public class PcUnloader extends BaseController {
                                          @RequestParam(value = "deviceId") String deviceId,
                                          @RequestParam(value = "time",required = false)String time,
                                          @RequestParam(value = "endTime",required = false)String endTime,
-                                         @RequestParam(value = "alarmType")Integer alarmType
+                                         @RequestParam(value = "alarmType")Integer alarmType,
+                                         PageDomain pageDomain
     ){
         JSONObject jsonObject = new JSONObject();
         SbUnloaderAlarmtime sbUnloaderAlarmtime = new SbUnloaderAlarmtime();
@@ -158,7 +160,8 @@ public class PcUnloader extends BaseController {
     public JSONObject getSbUnloaderHistory(@RequestParam(value = "projectId")Integer projectId,
                                            @RequestParam(value = "deviceId") String deviceId,
                                            @RequestParam(value = "time",required = false)String time,
-                                           @RequestParam(value = "endTime",required = false)String endTime){
+                                           @RequestParam(value = "endTime",required = false)String endTime,
+                                           PageDomain pageDomain){
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray = new JSONArray();
         SbUnloaderRealtime sbUnloaderRealtime = new SbUnloaderRealtime();

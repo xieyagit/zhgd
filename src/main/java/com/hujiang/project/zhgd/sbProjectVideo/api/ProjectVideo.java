@@ -83,7 +83,9 @@ public class ProjectVideo extends BaseController {
      * 查询工区视频列表
      */
     @PostMapping("/projectVideoList")
-    public AjaxResult projectVideoList(@RequestBody SbProjectVideo sbProjectVideo)
+    public AjaxResult projectVideoList(@RequestBody SbProjectVideo sbProjectVideo,
+                                           @RequestParam(value = "pageNum")Integer pageNum,
+                                       @RequestParam(value = "pageSize")Integer pageSize)
     {
         startPage();
         List<SbProjectVideo> list = videoService.selectSbProjectVideoList(sbProjectVideo);
@@ -93,7 +95,9 @@ public class ProjectVideo extends BaseController {
      * 查询项目所有视频列表
      */
     @PostMapping("/selectSbProjectVideoByProjectId")
-    public AjaxResult selectSbProjectVideoByProjectId(@RequestParam(value = "projectId") Integer projectId)
+    public AjaxResult selectSbProjectVideoByProjectId(@RequestParam(value = "projectId") Integer projectId,
+                                                      @RequestParam(value = "pageNum")Integer pageNum,
+                                                      @RequestParam(value = "pageSize")Integer pageSize)
     {
         startPage();
         List<SbProjectVideo> list = videoService.selectSbProjectVideoByProjectId(projectId);

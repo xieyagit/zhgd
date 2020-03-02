@@ -139,7 +139,7 @@ public class OptionsLocationApi extends BaseController {
     @PostMapping("/getAreaUserList")
     public JSONObject getUserList(@RequestParam(value = "areaId",required = false) Integer areaId,
                                   @RequestParam(value = "filed",required = false)String filed,
-                                  @RequestParam(value = "projectId")Integer projectId){
+                                  @RequestParam(value = "projectId")Integer projectId, PageDomain pageDomain){
         JSONObject jsonObject = new JSONObject();
         startPage();
         List<OptionsUser> optionsUserList = areaService.getUserList(areaId,filed, projectId);

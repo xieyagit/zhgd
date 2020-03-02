@@ -60,8 +60,9 @@ public class MoredianAttendanceRecordApi extends BaseController {
      * @param  json
      * @return com.hujiang.framework.web.domain.AjaxResult
      */
-    @RequestMapping(value = "record")
-    public AjaxResult record( @RequestParam(value = "json") String json)throws Exception{
+    @RequestMapping(value = "/record")
+    @ResponseBody
+    public AjaxResult record(@RequestBody String json)throws Exception{
         logger.info("com.hujiang.project.zhgd.moredian.moredianAttendanceRecord.api.MoredianAttendanceRecordApi.record:\n请求地址"+request.getRemoteAddr());
         logger.info("com.hujiang.project.zhgd.moredian.moredianAttendanceRecord.api.MoredianAttendanceRecordApi.record:\n接收数据"+json);
         JSONObject object = JSONObject.parseObject(json);

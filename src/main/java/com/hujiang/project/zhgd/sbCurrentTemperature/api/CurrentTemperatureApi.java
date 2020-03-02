@@ -53,7 +53,9 @@ public class CurrentTemperatureApi extends BaseController {
     @PostMapping("/list")
     public JSONObject list(@RequestParam(value = "electricityBoxId")String electricityBoxId,
                            @RequestParam(value = "startTime",required = false)String startTime,
-                           @RequestParam(value = "endTime",required = false)String endTime)
+                           @RequestParam(value = "endTime",required = false)String endTime,
+                           @RequestParam(value = "pageNum")Integer pageNum,
+                           @RequestParam(value = "pageSize")Integer pageSize)
     {
         logger.info("com.hujiang.project.zhgd.sbCurrentTemperature.api.CurrentTemperatureApi.list分页开始");
         JSONObject result = new JSONObject();
