@@ -3,6 +3,7 @@ package com.hujiang.project.zhgd.hjZhgdDriver.api;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.framework.web.controller.BaseController;
+import com.hujiang.framework.web.page.PageDomain;
 import com.hujiang.framework.web.page.TableDataInfo;
 import com.hujiang.project.zhgd.hjZhgdDriver.domain.HjZhgdDriver;
 import com.hujiang.project.zhgd.hjZhgdDriver.service.IHjZhgdDriverService;
@@ -32,7 +33,7 @@ public class DriverApi extends BaseController {
     }
 
     @PostMapping(value = "/selectAll")
-    public JSONObject all(@RequestBody HjZhgdDriver hjZhgdDriver){
+    public JSONObject all(@RequestBody HjZhgdDriver hjZhgdDriver, PageDomain pageDomain){
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray = new JSONArray();
         startPage();

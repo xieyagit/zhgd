@@ -4,6 +4,7 @@ package com.hujiang.project.zhgd.hjTeam.pcApi;
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.framework.web.controller.BaseController;
 import com.hujiang.framework.web.domain.AjaxResult;
+import com.hujiang.framework.web.page.PageDomain;
 import com.hujiang.project.zhgd.hjCompanyHierarchy.domain.HjCompanyHierarchy;
 import com.hujiang.project.zhgd.hjCompanyHierarchy.service.IHjCompanyHierarchyService;
 import com.hujiang.project.zhgd.hjCompanyLibrary.domain.HjCompanyLibrary;
@@ -121,7 +122,7 @@ public class PcTeamApi  extends BaseController {
      */
     @RequestMapping("/selectHjTeamList")
     @ResponseBody
-    public AjaxResult selectHjTeamList(@RequestBody HjTeam hjTeam)
+    public AjaxResult selectHjTeamList(@RequestBody HjTeam hjTeam, PageDomain pageDomain)
     {
         logger.info("查询班组信息列表开始---selectHjTeamList---start");
         startPage();

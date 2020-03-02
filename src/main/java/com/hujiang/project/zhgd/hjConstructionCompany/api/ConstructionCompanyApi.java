@@ -317,7 +317,7 @@ public class ConstructionCompanyApi extends BaseController{
      */
     @RequestMapping("/selectConstructionCompanyList")
     @ResponseBody
-    public TableDataInfo selectHjConstructionCompanyListTwo(String param ,String suid, Integer projectId)
+    public AjaxResult selectHjConstructionCompanyListTwo(String param ,String suid, Integer projectId)
     {
         logger.info("查询参建单位列表开始---/selectConstructionCompanyList");
         startPage();
@@ -332,7 +332,7 @@ public class ConstructionCompanyApi extends BaseController{
             map.put("suid",suid);
         }
         logger.info("查询参建单位列表结束");
-        return getDataTable(hjConstructionCompanyService.selectHjConstructionCompanyListTwo(map));
+        return AjaxResult.success(hjConstructionCompanyService.selectHjConstructionCompanyListTwo(map));
     }
     /**
      * 根据id查询参建单位

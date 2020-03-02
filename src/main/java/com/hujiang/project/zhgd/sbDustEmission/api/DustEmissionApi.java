@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.utils.DateUtils;
 import com.hujiang.framework.web.controller.BaseController;
+import com.hujiang.framework.web.page.PageDomain;
 import com.hujiang.framework.web.page.TableDataInfo;
 import com.hujiang.project.zhgd.dustEmissionThresholdValue.domain.DustEmissionThresholdValue;
 import com.hujiang.project.zhgd.dustEmissionThresholdValue.service.IDustEmissionThresholdValueService;
@@ -133,7 +134,8 @@ public class DustEmissionApi extends BaseController {
     public JSONObject getDustEmission(@RequestParam(value = "sn")String sn,
                                       @RequestParam(value = "tag",required = false)Integer tag,
                                       @RequestParam(value = "startTime",required = false)String startTime,
-                                      @RequestParam(value = "endTime",required = false)String endTime
+                                      @RequestParam(value = "endTime",required = false)String endTime,
+                                      PageDomain pageDomain
                                       ){
         logger.info("com.hujiang.project.zhgd.sbDustEmission.api.DustEmissionApi.getDustEmission开始");
 

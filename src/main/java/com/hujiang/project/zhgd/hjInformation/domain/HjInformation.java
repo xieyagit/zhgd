@@ -36,6 +36,7 @@ public class HjInformation
 	/** 备注 */
 	private String remark;
 	private Integer projectId;
+	private Integer unitId;
 
 	private MultipartFile[] file;
 	private String[] fileNames;
@@ -140,6 +141,14 @@ public class HjInformation
 	public String getRemark()
 	{
 		return remark;
+	}
+
+	public Integer getUnitId() {
+		return unitId;
+	}
+
+	public void setUnitId(Integer unitId) {
+		this.unitId = unitId;
 	}
 
 	@Override

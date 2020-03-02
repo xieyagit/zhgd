@@ -2,6 +2,7 @@ package com.hujiang.project.zhgd.hjConstructionProject.api;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.framework.web.controller.BaseController;
+import com.hujiang.framework.web.page.PageDomain;
 import com.hujiang.framework.web.page.TableDataInfo;
 import com.hujiang.project.zhgd.hjConstructionCompany.domain.HjConstructionCompany;
 import com.hujiang.project.zhgd.hjConstructionCompany.service.IHjConstructionCompanyService;
@@ -27,7 +28,7 @@ public class OptionsConstructionApi extends BaseController {
      * @return
      */
     @PostMapping("/getConstructionList")
-    public JSONObject getConstructionList(Integer projectId)
+    public JSONObject getConstructionList(Integer projectId, PageDomain pageDomain)
     {
         startPage();
         Map<String, Object> map=new HashMap<String,Object>();
