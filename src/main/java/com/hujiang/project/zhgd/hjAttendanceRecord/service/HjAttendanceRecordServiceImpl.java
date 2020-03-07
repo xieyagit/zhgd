@@ -177,6 +177,10 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
     public int updateHjAttendanceRecord(HjAttendanceRecord hjAttendanceRecord) {
         return hjAttendanceRecordMapper.updateHjAttendanceRecord(hjAttendanceRecord);
     }
+    @Override
+    public int updateHjAttendanceRecordTwo(HjAttendanceRecord hjAttendanceRecord) {
+        return hjAttendanceRecordMapper.updateHjAttendanceRecordTwo(hjAttendanceRecord);
+    }
 
     /**
      * 删除考勤记录对象

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.lyPersonnel.mapper.LyPersonnelMapper">
+    
+    <resultMap type="LyPersonnel" id="LyPersonnelResult">
+        <result property="id"    column="id"    />
+        <result property="empName"    column="emp_name"    />
+        <result property="idCode"    column="id_code"    />
+        <result property="empPhon"    column="emp_phon"    />
+        <result property="empSex"    column="emp_sex"    />
+        <result property="empNation"    column="emp_nation"    />
+        <result property="idAddress"    column="id_address"    />
+        <result property="idAgency"    column="id_agency"    />
+        <result property="idValiddate"    column="id_validdate"    />
+        <result property="dateOfBirth"    column="date_of_birth"    />
+        <result property="faceUrl"    column="face_url"    />
+        <result property="idphotoScan"    column="idphoto_scan"    />
+        <result property="idphotoScan2"    column="idphoto_scan2"    />
+        <result property="pid"    column="pid"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="subordinate"    column="subordinate"    />
+        <result property="ispresent"    column="ispresent"    />
+        <result property="type"    column="type"    />
+        <result property="bz"    column="bz"    />
+    </resultMap>
+	
+	<sql id="selectLyPersonnelVo">
+        select id, emp_name, id_code, emp_phon, emp_sex, emp_nation, id_address, id_agency, id_validdate, date_of_birth, face_url, idphoto_scan, idphoto_scan2, pid, company_id, subordinate, ispresent, type, bz from ly_personnel
+    </sql>
+	
+    <select id="selectLyPersonnelList" parameterType="LyPersonnel" resultMap="LyPersonnelResult">
+        <include refid="selectLyPersonnelVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="empName != null  and empName != '' "> and emp_name = #{empName}</if>
+             <if test="idCode != null  and idCode != '' "> and id_code = #{idCode}</if>
+             <if test="empPhon != null  and empPhon != '' "> and emp_phon = #{empPhon}</if>
+             <if test="empSex != null  and empSex != '' "> and emp_sex = #{empSex}</if>
+             <if test="empNation != null  and empNation != '' "> and emp_nation = #{empNation}</if>
+             <if test="idAddress != null  and idAddress != '' "> and id_address = #{idAddress}</if>
+             <if test="idAgency != null  and idAgency != '' "> and id_agency = #{idAgency}</if>
+             <if test="idValiddate != null  and idValiddate != '' "> and id_validdate = #{idValiddate}</if>
+             <if test="dateOfBirth != null  and dateOfBirth != '' "> and date_of_birth = #{dateOfBirth}</if>
+             <if test="faceUrl != null  and faceUrl != '' "> and face_url = #{faceUrl}</if>
+             <if test="idphotoScan != null  and idphotoScan != '' "> and idphoto_scan = #{idphotoScan}</if>
+             <if test="idphotoScan2 != null  and idphotoScan2 != '' "> and idphoto_scan2 = #{idphotoScan2}</if>
+             <if test="pid != null "> and pid = #{pid}</if>
+             <if test="companyId != null "> and company_id = #{companyId}</if>
+             <if test="subordinate != null  and subordinate != '' "> and subordinate = #{subordinate}</if>
+             <if test="ispresent != null  and ispresent != '' "> and ispresent = #{ispresent}</if>
+             <if test="type != null  and type != '' "> and type = #{type}</if>
+             <if test="bz != null  and bz != '' "> and bz = #{bz}</if>
+         </where>
+    </select>
+    
+    <select id="selectLyPersonnelById" parameterType="Integer" resultMap="LyPersonnelResult">
+        <include refid="selectLyPersonnelVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLyPersonnel" parameterType="LyPersonnel">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into ly_personnel
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="empName != null  and empName != ''  ">emp_name,</if>
+			<if test="idCode != null  and idCode != ''  ">id_code,</if>
+			<if test="empPhon != null  and empPhon != ''  ">emp_phon,</if>
+			<if test="empSex != null  and empSex != ''  ">emp_sex,</if>
+			<if test="empNation != null  and empNation != ''  ">emp_nation,</if>
+			<if test="idAddress != null  and idAddress != ''  ">id_address,</if>
+			<if test="idAgency != null  and idAgency != ''  ">id_agency,</if>
+			<if test="idValiddate != null  and idValiddate != ''  ">id_validdate,</if>
+			<if test="dateOfBirth != null  and dateOfBirth != ''  ">date_of_birth,</if>
+			<if test="faceUrl != null  and faceUrl != ''  ">face_url,</if>
+			<if test="idphotoScan != null  and idphotoScan != ''  ">idphoto_scan,</if>
+			<if test="idphotoScan2 != null  and idphotoScan2 != ''  ">idphoto_scan2,</if>
+			<if test="pid != null  ">pid,</if>
+			<if test="companyId != null  ">company_id,</if>
+			<if test="subordinate != null  and subordinate != ''  ">subordinate,</if>
+			<if test="ispresent != null  and ispresent != ''  ">ispresent,</if>
+			<if test="type != null  and type != ''  ">type,</if>
+			<if test="bz != null  and bz != ''  ">bz,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="empName != null  and empName != ''  ">#{empName},</if>
+			<if test="idCode != null  and idCode != ''  ">#{idCode},</if>
+			<if test="empPhon != null  and empPhon != ''  ">#{empPhon},</if>
+			<if test="empSex != null  and empSex != ''  ">#{empSex},</if>
+			<if test="empNation != null  and empNation != ''  ">#{empNation},</if>
+			<if test="idAddress != null  and idAddress != ''  ">#{idAddress},</if>
+			<if test="idAgency != null  and idAgency != ''  ">#{idAgency},</if>
+			<if test="idValiddate != null  and idValiddate != ''  ">#{idValiddate},</if>
+			<if test="dateOfBirth != null  and dateOfBirth != ''  ">#{dateOfBirth},</if>
+			<if test="faceUrl != null  and faceUrl != ''  ">#{faceUrl},</if>
+			<if test="idphotoScan != null  and idphotoScan != ''  ">#{idphotoScan},</if>
+			<if test="idphotoScan2 != null  and idphotoScan2 != ''  ">#{idphotoScan2},</if>
+			<if test="pid != null  ">#{pid},</if>
+			<if test="companyId != null  ">#{companyId},</if>
+			<if test="subordinate != null  and subordinate != ''  ">#{subordinate},</if>
+			<if test="ispresent != null  and ispresent != ''  ">#{ispresent},</if>
+			<if test="type != null  and type != ''  ">#{type},</if>
+			<if test="bz != null  and bz != ''  ">#{bz},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateLyPersonnel" parameterType="LyPersonnel">
+        update ly_personnel
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="empName != null  and empName != ''  ">emp_name = #{empName},</if>
+            <if test="idCode != null  and idCode != ''  ">id_code = #{idCode},</if>
+            <if test="empPhon != null  and empPhon != ''  ">emp_phon = #{empPhon},</if>
+            <if test="empSex != null  and empSex != ''  ">emp_sex = #{empSex},</if>
+            <if test="empNation != null  and empNation != ''  ">emp_nation = #{empNation},</if>
+            <if test="idAddress != null  and idAddress != ''  ">id_address = #{idAddress},</if>
+            <if test="idAgency != null  and idAgency != ''  ">id_agency = #{idAgency},</if>
+            <if test="idValiddate != null  and idValiddate != ''  ">id_validdate = #{idValiddate},</if>
+            <if test="dateOfBirth != null  and dateOfBirth != ''  ">date_of_birth = #{dateOfBirth},</if>
+            <if test="faceUrl != null  and faceUrl != ''  ">face_url = #{faceUrl},</if>
+            <if test="idphotoScan != null  and idphotoScan != ''  ">idphoto_scan = #{idphotoScan},</if>
+            <if test="idphotoScan2 != null  and idphotoScan2 != ''  ">idphoto_scan2 = #{idphotoScan2},</if>
+            <if test="pid != null  ">pid = #{pid},</if>
+            <if test="companyId != null  ">company_id = #{companyId},</if>
+            <if test="subordinate != null  and subordinate != ''  ">subordinate = #{subordinate},</if>
+            <if test="ispresent != null  and ispresent != ''  ">ispresent = #{ispresent},</if>
+            <if test="type != null  and type != ''  ">type = #{type},</if>
+            <if test="bz != null  and bz != ''  ">bz = #{bz},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteLyPersonnelById" parameterType="Integer">
+        delete from ly_personnel where id = #{id}
+    </delete>
+	
+    <delete id="deleteLyPersonnelByIds" parameterType="String">
+        delete from ly_personnel where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

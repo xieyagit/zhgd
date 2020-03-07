@@ -15,11 +15,13 @@
         <result property="uploadTime" column="upload_time"/>
         <result property="deviceType" column="device_type"/>
         <result property="deviceSn" column="device_sn"/>
+        <result property="temperature" column="temperature"/>
+        <result property="alarm" column="alarm"/>
 
     </resultMap>
 
     <sql id="selectHjAttendanceRecordVo">
-        select id, project_id, employee_id, passed_time, direction, way, site_photo, create_date,upload_time from hj_attendance_record
+        select alarm,temperature,id, project_id, employee_id, passed_time, direction, way, site_photo, create_date,upload_time from hj_attendance_record
     </sql>
 
     <select id="items" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
@@ -267,6 +269,8 @@
             <if test="uploadTime != null  and uploadTime != '' ">upload_time,</if>
             <if test="deviceType != null  and deviceType != '' ">device_type,</if>
             <if test="deviceSn != null  and deviceSn != '' ">device_sn,</if>
+            <if test="temperature != null  and temperature != '' ">temperature,</if>
+            <if test="alarm != null  and alarm != '' ">temperature,</if>
 
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -281,6 +285,8 @@
             <if test="uploadTime != null  and uploadTime != '' ">#{uploadTime},</if>
             <if test="deviceType != null  and deviceType != '' ">#{deviceType},</if>
             <if test="deviceSn != null  and deviceSn != '' ">#{deviceSn},</if>
+            <if test="temperature != null  and temperature != '' ">#{temperature},</if>
+            <if test="alarm != null  and alarm != '' ">#{temperature},</if>
         </trim>
     </insert>
 
@@ -295,10 +301,18 @@
             <if test="sitePhoto != null  and sitePhoto != ''  ">site_photo = #{sitePhoto},</if>
             <if test="createDate != null  ">create_date = #{createDate},</if>
             <if test="uploadTime != null  and uploadTime != '' ">upload_time = #{uploadTime},</if>
+            <if test="alarm != null  and alarm != '' ">alarm = #{alarm},</if>
+            <if test="temperature != null  and temperature != '' ">temperature = #{temperature},</if>
         </trim>
         where id = #{id}
     </update>
+    <update id="updateHjAttendanceRecordTwo" parameterType="HjAttendanceRecord">
+        update hj_attendance_record set
+        alarm = #{alarm},
+           temperature = #{temperature}
 
+        where device_sn = #{deviceSn} and passed_time=#{passedTime} and project_id=#{projectId} and to_days(curdate())=to_days(#{passedTime})
+    </update>
     <delete id="deleteHjAttendanceRecordById" parameterType="Integer">
         delete from hj_attendance_record where id = #{id}
     </delete>
