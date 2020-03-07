@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.lyCompany.mapper.LyCompanyMapper">
+    
+    <resultMap type="LyCompany" id="LyCompanyResult">
+        <result property="id"    column="id"    />
+        <result property="companyName"    column="company_name"    />
+        <result property="floor"    column="floor"    />
+        <result property="checkIdTime"    column="check_id_time"    />
+        <result property="personCharge"    column="person_charge"    />
+        <result property="pid"    column="pid"    />
+        <result property="size"    column="size"    />
+    </resultMap>
+	
+	<sql id="selectLyCompanyVo">
+        select id, company_name, floor, check_id_time, person_charge, pid from ly_company
+    </sql>
+	
+    <select id="selectLyCompanyList" parameterType="LyCompany" resultMap="LyCompanyResult">
+        <include refid="selectLyCompanyVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="companyName != null  and companyName != '' "> and company_name like  ' %${companyName}%'</if>
+             <if test="floor != null  and floor != '' "> and floor = #{floor}</if>
+             <if test="checkIdTime != null  and checkIdTime != '' "> and check_id_time = #{checkIdTime}</if>
+             <if test="personCharge != null  and personCharge != '' "> and person_charge = #{personCharge}</if>
+             <if test="pid != null "> and pid = #{pid}</if>
+         </where>
+    </select>
+    
+    <select id="selectLyCompanyById" parameterType="Integer" resultMap="LyCompanyResult">
+        <include refid="selectLyCompanyVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLyCompany" parameterType="LyCompany">
+        insert into ly_company
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="companyName != null  and companyName != ''  ">company_name,</if>
+			<if test="floor != null  and floor != ''  ">floor,</if>
+			<if test="checkIdTime != null  and checkIdTime != ''  ">check_id_time,</if>
+			<if test="personCharge != null  and personCharge != ''  ">person_charge,</if>
+			<if test="pid != null  ">pid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="companyName != null  and companyName != ''  ">#{companyName},</if>
+			<if test="floor != null  and floor != ''  ">#{floor},</if>
+			<if test="checkIdTime != null  and checkIdTime != ''  ">#{checkIdTime},</if>
+			<if test="personCharge != null  and personCharge != ''  ">#{personCharge},</if>
+			<if test="pid != null  ">#{pid},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateLyCompany" parameterType="LyCompany">
+        update ly_company
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyName != null  and companyName != ''  ">company_name = #{companyName},</if>
+            <if test="floor != null  and floor != ''  ">floor = #{floor},</if>
+            <if test="checkIdTime != null  and checkIdTime != ''  ">check_id_time = #{checkIdTime},</if>
+            <if test="personCharge != null  and personCharge != ''  ">person_charge = #{personCharge},</if>
+            <if test="pid != null  ">pid = #{pid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteLyCompanyById" parameterType="Integer">
+        delete from ly_company where id = #{id}
+    </delete>
+	
+    <delete id="deleteLyCompanyByIds" parameterType="String">
+        delete from ly_company where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

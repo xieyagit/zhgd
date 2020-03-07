@@ -130,5 +130,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
-    
+    <select id="getHjZhgdPkcountList" parameterType="Integer" resultMap="HjZhgdPkcountResult">
+        select * from hj_zhgd_pkcount where projectid in (select b.id from hj_company_project a
+    INNER JOIN hj_project b on (a.project_id=b.id)
+    where 1=1
+        and a.path like CONCAT((select path from hj_company_project where company_id=#{cid} LIMIT 1), '%')
+        and a.project_id is not null) GROUP BY projectid,DeptID
+        </select>
 </mapper>

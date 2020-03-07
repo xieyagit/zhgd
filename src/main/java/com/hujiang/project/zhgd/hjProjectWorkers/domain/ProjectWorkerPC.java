@@ -50,6 +50,15 @@ public class ProjectWorkerPC
 	private String idAddress ;
 	private String quarantine;
 private  String ids;
+private String faceImg;
+
+	public String getFaceImg() {
+		return faceImg;
+	}
+
+	public void setFaceImg(String faceImg) {
+		this.faceImg = faceImg;
+	}
 
 	public String getIds() {
 		return ids;

@@ -89,6 +89,7 @@ public interface IHjAttendanceRecordService {
      * @return 结果
      */
     public int updateHjAttendanceRecord(HjAttendanceRecord hjAttendanceRecord);
+    public int updateHjAttendanceRecordTwo(HjAttendanceRecord hjAttendanceRecord);
 
     /**
      * 删除考勤记录信息

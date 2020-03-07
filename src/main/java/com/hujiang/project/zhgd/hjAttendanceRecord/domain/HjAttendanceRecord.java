@@ -39,6 +39,8 @@ public class HjAttendanceRecord
 	private String deviceType;
 	/** 考勤设备唯一识别码 */
 	private String deviceSn;
+	private String temperature;
+	private String alarm;
 
 	private  String name;//
 	private String title; //工种名称
@@ -46,6 +48,22 @@ public class HjAttendanceRecord
 	private int count1;		//今日考勤数
 	private int count2;		//今日在场人数
 	private String team;	//班组名称
+
+	public String getAlarm() {
+		return alarm;
+	}
+
+	public void setAlarm(String alarm) {
+		this.alarm = alarm;
+	}
+
+	public String getTemperature() {
+		return temperature;
+	}
+
+	public void setTemperature(String temperature) {
+		this.temperature = temperature;
+	}
 
 	public String getDeviceType() {
 		return deviceType;

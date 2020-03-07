@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.lyRegistrationRecord.mapper.LyRegistrationRecordMapper">
+    
+    <resultMap type="LyRegistrationRecord" id="LyRegistrationRecordResult">
+        <result property="id"    column="id"    />
+        <result property="pwid"    column="pwid"    />
+        <result property="time"    column="time"    />
+        <result property="companyName"    column="companyName"    />
+        <result property="floor"    column="floor"    />
+        <result property="bz"    column="bz"    />
+        <result property="subordinate"    column="subordinate"    />
+        <result property="ispresent"    column="ispresent"    />
+    </resultMap>
+	
+	<sql id="selectLyRegistrationRecordVo">
+        select id, pwid, time, companyName, floor, bz, subordinate,ispresent from ly_registration_record
+    </sql>
+	
+    <select id="selectLyRegistrationRecordList" parameterType="LyRegistrationRecord" resultMap="LyRegistrationRecordResult">
+        <include refid="selectLyRegistrationRecordVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="pwid != null "> and pwid = #{pwid}</if>
+             <if test="time != null  and time != '' "> and time = #{time}</if>
+             <if test="companyName != null  and companyName != '' "> and companyName = #{companyName}</if>
+             <if test="floor != null  and floor != '' "> and floor = #{floor}</if>
+             <if test="bz != null  and bz != '' "> and bz = #{bz}</if>
+             <if test="subordinate != null  and subordinate != '' "> and subordinate = #{subordinate}</if>
+             <if test="ispresent != null  and ispresent != '' "> and ispresent = #{ispresent}</if>
+         </where>
+    </select>
+    
+    <select id="selectLyRegistrationRecordById" parameterType="Integer" resultMap="LyRegistrationRecordResult">
+        <include refid="selectLyRegistrationRecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLyRegistrationRecord" parameterType="LyRegistrationRecord">
+        insert into ly_registration_record
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="pwid != null  ">pwid,</if>
+			<if test="time != null  and time != ''  ">time,</if>
+			<if test="companyName != null  and companyName != ''  ">companyName,</if>
+			<if test="floor != null  and floor != ''  ">floor,</if>
+			<if test="bz != null  and bz != ''  ">bz,</if>
+			<if test="subordinate != null  and subordinate != ''  ">subordinate,</if>
+			<if test="ispresent != null  and ispresent != ''  ">ispresent,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="pwid != null  ">#{pwid},</if>
+			<if test="time != null  and time != ''  ">#{time},</if>
+			<if test="companyName != null  and companyName != ''  ">#{companyName},</if>
+			<if test="floor != null  and floor != ''  ">#{floor},</if>
+			<if test="bz != null  and bz != ''  ">#{bz},</if>
+			<if test="subordinate != null  and subordinate != ''  ">#{subordinate},</if>
+			<if test="ispresent != null  and ispresent != ''  ">#{ispresent},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateLyRegistrationRecord" parameterType="LyRegistrationRecord">
+        update ly_registration_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pwid != null  ">pwid = #{pwid},</if>
+            <if test="time != null  and time != ''  ">time = #{time},</if>
+            <if test="companyName != null  and companyName != ''  ">companyName = #{companyName},</if>
+            <if test="floor != null  and floor != ''  ">floor = #{floor},</if>
+            <if test="bz != null  and bz != ''  ">bz = #{bz},</if>
+            <if test="subordinate != null  and subordinate != ''  ">subordinate = #{subordinate},</if>
+            <if test="ispresent != null  and ispresent != ''  ">ispresent = #{ispresent},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteLyRegistrationRecordById" parameterType="Integer">
+        delete from ly_registration_record where id = #{id}
+    </delete>
+	
+    <delete id="deleteLyRegistrationRecordByIds" parameterType="String">
+        delete from ly_registration_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

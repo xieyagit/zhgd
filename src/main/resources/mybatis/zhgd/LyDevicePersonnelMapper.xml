@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.lyDevicePersonnel.mapper.LyDevicePersonnelMapper">
+    
+    <resultMap type="LyDevicePersonnel" id="LyDevicePersonnelResult">
+        <result property="id"    column="id"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="personnelId"    column="personnel_id"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+	
+	<sql id="selectLyDevicePersonnelVo">
+        select id, device_no, personnel_id, status from ly_device_personnel
+    </sql>
+	
+    <select id="selectLyDevicePersonnelList" parameterType="LyDevicePersonnel" resultMap="LyDevicePersonnelResult">
+        <include refid="selectLyDevicePersonnelVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
+             <if test="personnelId != null "> and personnel_id = #{personnelId}</if>
+             <if test="status != null  and status != '' "> and status = #{status}</if>
+         </where>
+    </select>
+    <select id="selectLyDevicePersonnelTwo" parameterType="LyDevicePersonnel" resultMap="LyDevicePersonnelResult">
+        <include refid="selectLyDevicePersonnelVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
+            <if test="personnelId != null "> and personnelId = #{personnelId}</if>
+            <if test="status != null and status != '' "> and status != '1' and status !='2'</if>
+        </where>
+    </select>
+    <update id="updateLyDevicePersonnelTwo" parameterType="LyDevicePersonnel">
+        update ly_device_personnel set status=#{status}
+        <where>
+            <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
+            <if test="personnelId != null "> and personnelId = #{personnelId}</if>
+        </where>
+    </update>
+    <select id="selectLyDevicePersonnelById" parameterType="Integer" resultMap="LyDevicePersonnelResult">
+        <include refid="selectLyDevicePersonnelVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLyDevicePersonnel" parameterType="LyDevicePersonnel">
+        insert into ly_device_personnel
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">device_no,</if>
+			<if test="personnelId != null  ">personnel_id,</if>
+			<if test="status != null  and status != ''  ">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+			<if test="personnelId != null  ">#{personnelId},</if>
+			<if test="status != null  and status != ''  ">#{status},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateLyDevicePersonnel" parameterType="LyDevicePersonnel">
+        update ly_device_personnel
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceNo != null  and deviceNo != ''  ">device_no = #{deviceNo},</if>
+            <if test="personnelId != null  ">personnel_id = #{personnelId},</if>
+            <if test="status != null  and status != ''  ">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteLyDevicePersonnelById" parameterType="Integer">
+        delete from ly_device_personnel where id = #{id}
+    </delete>
+	
+    <delete id="deleteLyDevicePersonnelByIds" parameterType="String">
+        delete from ly_device_personnel where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

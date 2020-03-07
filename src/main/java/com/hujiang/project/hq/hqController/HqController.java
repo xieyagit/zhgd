@@ -214,7 +214,8 @@ public class HqController {
             har.setPassedTime(passedTime);
             har.setDirection(had2.getDirection());
             har.setWay(1);
-
+            har.setDeviceType("face");
+            har.setDeviceSn(deviceId);
             if(flag2){
                 har.setUploadTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
             }

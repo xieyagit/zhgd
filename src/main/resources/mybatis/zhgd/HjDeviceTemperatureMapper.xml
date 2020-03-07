@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjDeviceTemperature.mapper.HjDeviceTemperatureMapper">
+    
+    <resultMap type="HjDeviceTemperature" id="HjDeviceTemperatureResult">
+        <result property="id"    column="id"    />
+        <result property="deviceSn"    column="device_sn"    />
+        <result property="temperatureSn"    column="temperature_sn"    />
+        <result property="pid"    column="pid"    />
+    </resultMap>
+	
+	<sql id="selectHjDeviceTemperatureVo">
+        select pid,id, device_sn, temperature_sn from hj_device_temperature
+    </sql>
+	
+    <select id="selectHjDeviceTemperatureList" parameterType="HjDeviceTemperature" resultMap="HjDeviceTemperatureResult">
+        <include refid="selectHjDeviceTemperatureVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="pid != null "> and pid = #{pid}</if>
+             <if test="deviceSn != null  and deviceSn != '' "> and device_sn = #{deviceSn}</if>
+             <if test="temperatureSn != null  and temperatureSn != '' "> and temperature_sn = #{temperatureSn}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjDeviceTemperatureById" parameterType="Integer" resultMap="HjDeviceTemperatureResult">
+        <include refid="selectHjDeviceTemperatureVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjDeviceTemperature" parameterType="HjDeviceTemperature">
+        insert into hj_device_temperature
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="pid != null  ">pid,</if>
+			<if test="deviceSn != null  and deviceSn != ''  ">device_sn,</if>
+			<if test="temperatureSn != null  and temperatureSn != ''  ">temperature_sn,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="pid != null  ">#{pid},</if>
+			<if test="deviceSn != null  and deviceSn != ''  ">#{deviceSn},</if>
+			<if test="temperatureSn != null  and temperatureSn != ''  ">#{temperatureSn},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjDeviceTemperature" parameterType="HjDeviceTemperature">
+        update hj_device_temperature
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceSn != null  and deviceSn != ''  ">device_sn = #{deviceSn},</if>
+            <if test="pid != null  ">pid = #{pid},</if>
+            <if test="temperatureSn != null  and temperatureSn != ''  ">temperature_sn = #{temperatureSn},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjDeviceTemperatureById" parameterType="Integer">
+        delete from hj_device_temperature where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjDeviceTemperatureByIds" parameterType="String">
+        delete from hj_device_temperature where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
