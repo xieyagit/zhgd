@@ -48,7 +48,7 @@ public class PcCompanyLibraryApi extends BaseController {
      */
     @RequestMapping("/companyLibraryList")
     @ResponseBody
-    public TableDataInfo list(HjCompanyLibrary hjCompanyLibrary,Integer companyId)
+    public TableDataInfo list(@RequestBody HjCompanyLibrary hjCompanyLibrary,Integer companyId)
     {
         hjCompanyLibrary.setShowState(0);
         System.out.println(companyId);

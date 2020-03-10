@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.lyAttendanceRecord.mapper.LyAttendanceRecordMapper">
+    
+    <resultMap type="LyAttendanceRecord" id="LyAttendanceRecordResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="employeeId"    column="employee_id"    />
+        <result property="passedTime"    column="passed_time"    />
+        <result property="direction"    column="direction"    />
+        <result property="way"    column="way"    />
+        <result property="sitePhoto"    column="site_photo"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="uploadTime"    column="upload_time"    />
+        <result property="deviceType"    column="device_type"    />
+        <result property="deviceSn"    column="device_sn"    />
+        <result property="temperature"    column="temperature"    />
+        <result property="alarm"    column="alarm"    />
+    </resultMap>
+	
+	<sql id="selectLyAttendanceRecordVo">
+        select id, project_id, employee_id, passed_time, direction, way, site_photo, create_date, upload_time, device_type, device_sn, temperature, alarm from ly_attendance_record
+    </sql>
+	
+    <select id="selectLyAttendanceRecordList" parameterType="LyAttendanceRecord" resultMap="LyAttendanceRecordResult">
+        <include refid="selectLyAttendanceRecordVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="projectId != null "> and project_id = #{projectId}</if>
+             <if test="employeeId != null "> and employee_id = #{employeeId}</if>
+             <if test="passedTime != null  and passedTime != '' "> and passed_time = #{passedTime}</if>
+             <if test="direction != null  and direction != '' "> and direction = #{direction}</if>
+             <if test="way != null "> and way = #{way}</if>
+             <if test="sitePhoto != null  and sitePhoto != '' "> and site_photo = #{sitePhoto}</if>
+             <if test="createDate != null "> and create_date = #{createDate}</if>
+             <if test="uploadTime != null  and uploadTime != '' "> and upload_time = #{uploadTime}</if>
+             <if test="deviceType != null  and deviceType != '' "> and device_type = #{deviceType}</if>
+             <if test="deviceSn != null  and deviceSn != '' "> and device_sn = #{deviceSn}</if>
+             <if test="temperature != null  and temperature != '' "> and temperature = #{temperature}</if>
+             <if test="alarm != null  and alarm != '' "> and alarm = #{alarm}</if>
+         </where>
+    </select>
+    <!--人员同行详情-->
+    <select id="selectLyAttendanceRecordListTwo" parameterType="LyAttendanceRecord" resultMap="LyAttendanceRecordResult">
+       select id,employee_id,(select p.emp_name from ly_personnel p where p.id=employee_id) empName,DATE_FORMAT(passed_time, '%H:%m') passed_time,temperature
+       from ly_attendance_record
+        <where>
+
+            <if test="employeeId != null "> and employee_id = #{employeeId}</if>
+            <if test="passedTime != null  and passedTime != '' "> and to_days(passed_time) = to_days(#{passedTime})</if>
+
+        </where>
+    </select>
+    <select id="selectLyAttendanceRecordById" parameterType="Integer" resultMap="LyAttendanceRecordResult">
+        <include refid="selectLyAttendanceRecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLyAttendanceRecord" parameterType="LyAttendanceRecord">
+        insert into ly_attendance_record
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="projectId != null  ">project_id,</if>
+			<if test="employeeId != null  ">employee_id,</if>
+			<if test="passedTime != null  and passedTime != ''  ">passed_time,</if>
+			<if test="direction != null  and direction != ''  ">direction,</if>
+			<if test="way != null  ">way,</if>
+			<if test="sitePhoto != null  and sitePhoto != ''  ">site_photo,</if>
+			<if test="createDate != null  ">create_date,</if>
+			<if test="uploadTime != null  and uploadTime != ''  ">upload_time,</if>
+			<if test="deviceType != null  and deviceType != ''  ">device_type,</if>
+			<if test="deviceSn != null  and deviceSn != ''  ">device_sn,</if>
+			<if test="temperature != null  and temperature != ''  ">temperature,</if>
+			<if test="alarm != null  and alarm != ''  ">alarm,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="projectId != null  ">#{projectId},</if>
+			<if test="employeeId != null  ">#{employeeId},</if>
+			<if test="passedTime != null  and passedTime != ''  ">#{passedTime},</if>
+			<if test="direction != null  and direction != ''  ">#{direction},</if>
+			<if test="way != null  ">#{way},</if>
+			<if test="sitePhoto != null  and sitePhoto != ''  ">#{sitePhoto},</if>
+			<if test="createDate != null  ">#{createDate},</if>
+			<if test="uploadTime != null  and uploadTime != ''  ">#{uploadTime},</if>
+			<if test="deviceType != null  and deviceType != ''  ">#{deviceType},</if>
+			<if test="deviceSn != null  and deviceSn != ''  ">#{deviceSn},</if>
+			<if test="temperature != null  and temperature != ''  ">#{temperature},</if>
+			<if test="alarm != null  and alarm != ''  ">#{alarm},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateLyAttendanceRecord" parameterType="LyAttendanceRecord">
+        update ly_attendance_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null  ">project_id = #{projectId},</if>
+            <if test="employeeId != null  ">employee_id = #{employeeId},</if>
+            <if test="passedTime != null  and passedTime != ''  ">passed_time = #{passedTime},</if>
+            <if test="direction != null  and direction != ''  ">direction = #{direction},</if>
+            <if test="way != null  ">way = #{way},</if>
+            <if test="sitePhoto != null  and sitePhoto != ''  ">site_photo = #{sitePhoto},</if>
+            <if test="createDate != null  ">create_date = #{createDate},</if>
+            <if test="uploadTime != null  and uploadTime != ''  ">upload_time = #{uploadTime},</if>
+            <if test="deviceType != null  and deviceType != ''  ">device_type = #{deviceType},</if>
+            <if test="deviceSn != null  and deviceSn != ''  ">device_sn = #{deviceSn},</if>
+            <if test="temperature != null  and temperature != ''  ">temperature = #{temperature},</if>
+            <if test="alarm != null  and alarm != ''  ">alarm = #{alarm},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteLyAttendanceRecordById" parameterType="Integer">
+        delete from ly_attendance_record where id = #{id}
+    </delete>
+	
+    <delete id="deleteLyAttendanceRecordByIds" parameterType="String">
+        delete from ly_attendance_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

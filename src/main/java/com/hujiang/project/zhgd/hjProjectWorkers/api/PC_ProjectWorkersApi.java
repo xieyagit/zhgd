@@ -74,7 +74,7 @@ public class PC_ProjectWorkersApi extends BaseController {
      * 查询项目工人列表
      */
     @PostMapping("/list")
-    public AjaxResult list(HjProjectWorkers hjProjectWorkers) {
+    public AjaxResult list(@RequestBody HjProjectWorkers hjProjectWorkers) {
         startPage();
         List<ProjectWorkerPC> list = hjProjectWorkersService.selectProjectWorkersListPC(hjProjectWorkers);
         return AjaxResult.success(getDataTable(list));
@@ -83,7 +83,7 @@ public class PC_ProjectWorkersApi extends BaseController {
      * 查询项目工人疫情列表
      */
     @PostMapping("/quarantineList")
-    public AjaxResult quarantineList(HjProjectWorkers hjProjectWorkers) {
+    public AjaxResult quarantineList(@RequestBody HjProjectWorkers hjProjectWorkers) {
         startPage();
         List<ProjectWorkerPC> list = hjProjectWorkersService.selectProjectWorkersListPC(hjProjectWorkers);
         return AjaxResult.success(getDataTable(list));
@@ -113,7 +113,7 @@ public class PC_ProjectWorkersApi extends BaseController {
      */
     @Log(title = "项目工人", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
-    public AjaxResult editSave(HjProjectWorkers hjProjectWorkers)throws Exception
+    public AjaxResult editSave(@RequestBody HjProjectWorkers hjProjectWorkers)throws Exception
     {
         HjConstructionCompany hcc=hjConstructionCompanyService.selectHjConstructionCompanyById(hjProjectWorkers.getConstructionId());
         if("1".equals(hcc.getIsUpload())){

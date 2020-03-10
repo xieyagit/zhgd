@@ -92,7 +92,7 @@ public class ProjectApi extends BaseController {
      * @return
      */
     @RequestMapping("selectProjectList")
-    public TableDataInfo list(HjProject hjProject, Integer cid) {
+    public TableDataInfo list(@RequestBody HjProject hjProject, Integer cid) {
         startPage();
         out.println(cid);
         out.println(hjProject);

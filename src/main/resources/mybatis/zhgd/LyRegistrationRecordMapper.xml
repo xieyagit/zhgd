@@ -13,16 +13,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="bz"    column="bz"    />
         <result property="subordinate"    column="subordinate"    />
         <result property="ispresent"    column="ispresent"    />
+        <result property="type"    column="type"    />
+        <result property="pid"    column="pid"    />
     </resultMap>
 	
 	<sql id="selectLyRegistrationRecordVo">
-        select id, pwid, time, companyName, floor, bz, subordinate,ispresent from ly_registration_record
+        select pid,id,type, pwid, time, companyName, floor, bz, subordinate,ispresent from ly_registration_record
     </sql>
 	
     <select id="selectLyRegistrationRecordList" parameterType="LyRegistrationRecord" resultMap="LyRegistrationRecordResult">
         <include refid="selectLyRegistrationRecordVo"/>
         <where>  
             <if test="id != null "> and id = #{id}</if>
+            <if test="pid != null "> and pid = #{pid}</if>
              <if test="pwid != null "> and pwid = #{pwid}</if>
              <if test="time != null  and time != '' "> and time = #{time}</if>
              <if test="companyName != null  and companyName != '' "> and companyName = #{companyName}</if>
@@ -30,6 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="bz != null  and bz != '' "> and bz = #{bz}</if>
              <if test="subordinate != null  and subordinate != '' "> and subordinate = #{subordinate}</if>
              <if test="ispresent != null  and ispresent != '' "> and ispresent = #{ispresent}</if>
+             <if test="type != null  and type != '' "> and type = #{type}</if>
          </where>
     </select>
     
@@ -42,6 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into ly_registration_record
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null  ">id,</if>
+			<if test="pid != null  ">pid,</if>
 			<if test="pwid != null  ">pwid,</if>
 			<if test="time != null  and time != ''  ">time,</if>
 			<if test="companyName != null  and companyName != ''  ">companyName,</if>
@@ -49,9 +54,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="bz != null  and bz != ''  ">bz,</if>
 			<if test="subordinate != null  and subordinate != ''  ">subordinate,</if>
 			<if test="ispresent != null  and ispresent != ''  ">ispresent,</if>
+			<if test="type != null  and type != ''  ">type,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null  ">#{id},</if>
+			<if test="pid != null  ">#{pid},</if>
 			<if test="pwid != null  ">#{pwid},</if>
 			<if test="time != null  and time != ''  ">#{time},</if>
 			<if test="companyName != null  and companyName != ''  ">#{companyName},</if>
@@ -59,6 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="bz != null  and bz != ''  ">#{bz},</if>
 			<if test="subordinate != null  and subordinate != ''  ">#{subordinate},</if>
 			<if test="ispresent != null  and ispresent != ''  ">#{ispresent},</if>
+			<if test="type != null  and type != ''  ">#{type},</if>
          </trim>
     </insert>
 	 
@@ -66,12 +74,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update ly_registration_record
         <trim prefix="SET" suffixOverrides=",">
             <if test="pwid != null  ">pwid = #{pwid},</if>
+            <if test="pid != null  ">pid = #{pid},</if>
             <if test="time != null  and time != ''  ">time = #{time},</if>
             <if test="companyName != null  and companyName != ''  ">companyName = #{companyName},</if>
             <if test="floor != null  and floor != ''  ">floor = #{floor},</if>
             <if test="bz != null  and bz != ''  ">bz = #{bz},</if>
             <if test="subordinate != null  and subordinate != ''  ">subordinate = #{subordinate},</if>
             <if test="ispresent != null  and ispresent != ''  ">ispresent = #{ispresent},</if>
+            <if test="type != null  and type != ''  ">type = #{type},</if>
         </trim>
         where id = #{id}
     </update>
