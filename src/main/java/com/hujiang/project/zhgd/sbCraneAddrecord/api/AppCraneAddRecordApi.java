@@ -183,54 +183,76 @@ public class AppCraneAddRecordApi extends BaseController {
         for (SbCraneAddrecord sbCraneAddrecord : t) {
             HjProjectWorkers projectWorkers = iHjProjectWorkersService.seleimg(sbCraneAddrecord.getUserid());
             SbCraneAddrecord addrecord = craneAddrecordService.kanban(sbCraneAddrecord.getHxzid());
-            try {
-                JSONObject object1 = new JSONObject();
-                object1.put("runtime", addrecord.getRuntime());
-                object1.put("load", addrecord.getLoad());
-                object1.put("moment", addrecord.getMoment());
-                object1.put("slewingSpeed", addrecord.getSlewingSpeed());
-                object1.put("range", addrecord.getRange());
-                object1.put("height", addrecord.getHeight());
-                object1.put("isUpWarning", addrecord.getIsUpWarning());
-                object1.put("magnification", addrecord.getMagnification());
-                object1.put("ratedWeight", addrecord.getRatedWeight());
-                object1.put("dname", addrecord.getDname());
-                object1.put("windSpeed", addrecord.getWindSpeed());
-                object1.put("obliguity", addrecord.getObliguity());//倾角
-                object1.put("size", t.size());              //塔吊数量
-                object1.put("img", projectWorkers.getFaceUrl());
-                object1.put("name", projectWorkers.getEmpName());
-                Date date = new Date();
-                Timestamp timestamp = new Timestamp(date.getTime());
-                Date parse = df.parse(addrecord.getRuntime());
-                Timestamp timestamp1 = new Timestamp(parse.getTime());
-                Date d1 = df.parse(String.valueOf(timestamp));
-                Date d2 = df.parse(String.valueOf(timestamp1));
-                long diff = d1.getTime() - d2.getTime();//这样得到的差值是微秒级别
-                Long a = diff / (1000 * 60 * 60 * 24);
-                Long b = (diff - a * (1000 * 60 * 60 * 24)) / (1000 * 60 * 60);
-                Integer days = Integer.parseInt(String.valueOf(a));
-                Integer hours = Integer.parseInt(String.valueOf(b));
-                int hour = days * 24 + hours;
-                String sb = "正常";
-                if (days >= 1 && hour > 58) {
-                    sb = "异常";
+            if (projectWorkers != null && addrecord != null) {
+                try {
+                    JSONObject object1 = new JSONObject();
+                    object1.put("runtime", addrecord.getRuntime());
+                    object1.put("load", addrecord.getLoad());
+                    object1.put("moment", addrecord.getMoment());
+                    object1.put("slewingSpeed", addrecord.getSlewingSpeed());
+                    object1.put("range", addrecord.getRange());
+                    object1.put("height", addrecord.getHeight());
+                    object1.put("isUpWarning", addrecord.getIsUpWarning());
+                    object1.put("magnification", addrecord.getMagnification());
+                    object1.put("ratedWeight", addrecord.getRatedWeight());
+                    object1.put("dname", addrecord.getDname());
+                    object1.put("windSpeed", addrecord.getWindSpeed());
+                    object1.put("obliguity", addrecord.getObliguity());//倾角
+                    object1.put("size", t.size());              //塔吊数量
+                    object1.put("img", projectWorkers.getFaceUrl());
+                    object1.put("name", projectWorkers.getEmpName());
+                    Date date = new Date();
+                    Timestamp timestamp = new Timestamp(date.getTime());
+                    Date parse = df.parse(addrecord.getRuntime());
+                    Timestamp timestamp1 = new Timestamp(parse.getTime());
+                    Date d1 = df.parse(String.valueOf(timestamp));
+                    Date d2 = df.parse(String.valueOf(timestamp1));
+                    long diff = d1.getTime() - d2.getTime();//这样得到的差值是微秒级别
+                    Long a = diff / (1000 * 60 * 60 * 24);
+                    Long b = (diff - a * (1000 * 60 * 60 * 24)) / (1000 * 60 * 60);
+                    Integer days = Integer.parseInt(String.valueOf(a));
+                    Integer hours = Integer.parseInt(String.valueOf(b));
+                    int hour = days * 24 + hours;
+                    String sb = "正常";
+                    if (days >= 1 && hour > 58) {
+                        sb = "异常";
+                    }
+                    object1.put("sb", sb);
+                    //缺计算最早时间
+                    SbCraneAddrecord min = craneAddrecordService.lists(sbCraneAddrecord.getHxzid());
+                    Date parse1 = df.parse(min.getRuntime());
+                    Timestamp timestamp2 = new Timestamp(parse1.getTime());
+                    Date dd = df.parse(String.valueOf(timestamp));
+                    Date de = df.parse(String.valueOf(timestamp2));
+                    long dif = dd.getTime() - de.getTime();//这样得到的差值是微秒级别
+                    Long a1 = dif / (1000 * 60 * 60 * 24);
+                    Integer day = Integer.parseInt(String.valueOf(a1));
+                    int h = 90 - day;
+                    object1.put("residue", h);//剩余检修时长
+                    jsonArray.add(object1);
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
-                object1.put("sb", sb);
-                //缺计算最早时间
-                SbCraneAddrecord min = craneAddrecordService.lists(sbCraneAddrecord.getHxzid());
-                Date parse1 = df.parse(min.getRuntime());
-                Timestamp timestamp2 = new Timestamp(parse1.getTime());
-                Date dd = df.parse(String.valueOf(timestamp));
-                Date de = df.parse(String.valueOf(timestamp2));
-                long dif = dd.getTime() - de.getTime();//这样得到的差值是微秒级别
-                Long a1 = dif / (1000 * 60 * 60 * 24);
-                Integer day = Integer.parseInt(String.valueOf(a1));
-                int h = 90 -day;
-                object1.put("residue",h);//剩余检修时长
+            }else{
+                JSONObject object1 = new JSONObject();
+                object1.put("runtime", "");
+                object1.put("load", "");
+                object1.put("moment", "");
+                object1.put("slewingSpeed", "");
+                object1.put("range", "");
+                object1.put("height", "");
+                object1.put("isUpWarning", "");
+                object1.put("magnification", "");
+                object1.put("ratedWeight", "");
+                object1.put("dname", "");
+                object1.put("angle", "");
+                object1.put("windSpeed","");
+                object1.put("sb", "");
+                object1.put("size", "");              //塔吊数量
+                object1.put("img", "");
+                object1.put("name","");
+                object1.put("residue","");//剩余检修时长
                 jsonArray.add(object1);
-            } catch (ParseException e) {
-                e.printStackTrace();
             }
         }
         if(t.size()==0){
