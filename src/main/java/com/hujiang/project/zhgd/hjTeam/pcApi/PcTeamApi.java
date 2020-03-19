@@ -52,7 +52,7 @@ public class PcTeamApi  extends BaseController {
      */
     @RequestMapping("/insertHjTeam")
     @ResponseBody
-    public AjaxResult insertHjTeam( HjTeam hjTeam)
+    public AjaxResult insertHjTeam(@RequestBody HjTeam hjTeam)
     {
         logger.info("保存班组信息开始---insertHjTeam---start");
         int i=hjTeamService.insertHjTeam(hjTeam);
@@ -148,7 +148,7 @@ public class PcTeamApi  extends BaseController {
      */
     @RequestMapping("/updateHjTeam")
     @ResponseBody
-    public AjaxResult updateHjTeam( HjTeam hjTeam)
+    public AjaxResult updateHjTeam(@RequestBody HjTeam hjTeam)
     {
         logger.info("修改班组信息开始---updateHjTeam---start");
         hjTeam.setUpdateDate(dateFormat.format(new Date().getTime()));

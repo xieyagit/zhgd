@@ -28,6 +28,24 @@ public class LyRegistrationRecord
 	/** 所属部门或拜访对象 */
 	private String subordinate;
 private  String ispresent;
+private String type;
+private Integer pid;
+
+	public Integer getPid() {
+		return pid;
+	}
+
+	public void setPid(Integer pid) {
+		this.pid = pid;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 
 	public String getIspresent() {
 		return ispresent;

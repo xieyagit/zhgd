@@ -1,6 +1,10 @@
 package com.hujiang.project.zhgd.lyPersonnel.service;
 
+import com.hujiang.project.zhgd.lyAttendanceRecord.domain.LyAttendanceRecord;
+import com.hujiang.project.zhgd.lyPersonnel.domain.LyCompanyPersonnel;
 import com.hujiang.project.zhgd.lyPersonnel.domain.LyPersonnel;
+import com.hujiang.project.zhgd.lyPersonnel.domain.LyPersonnelRecord;
+
 import java.util.List;
 
 /**
@@ -52,4 +56,14 @@ public interface ILyPersonnelService
 	public int deleteLyPersonnelByIds(String ids);
 
 	public void personnelInOUt(LyPersonnel lyPersonnel,String ispresent);
+	public List<LyCompanyPersonnel> getLyCompanyPersonnel(LyPersonnel lyPersonnel);
+	public Integer zzryzs(Integer pid);
+	public Integer zzryin(LyAttendanceRecord lyAttendanceRecord);
+	public Integer zzryout(LyAttendanceRecord lyAttendanceRecord);
+	public Integer fkryzs(LyAttendanceRecord lyAttendanceRecord);
+	public Integer fkryin(LyAttendanceRecord lyAttendanceRecord);
+	public Integer fkryout(LyAttendanceRecord lyAttendanceRecord);
+
+	public List<LyPersonnelRecord> getLyPersonnelRecordZZ(LyAttendanceRecord lyAttendanceRecord);
+	public List<LyPersonnelRecord> getLyPersonnelRecordFK(LyAttendanceRecord lyAttendanceRecord);
 }

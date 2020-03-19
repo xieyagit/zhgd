@@ -24,10 +24,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="ispresent"    column="ispresent"    />
         <result property="type"    column="type"    />
         <result property="bz"    column="bz"    />
+        <result property="companyName"    column="companyName"    />
+        <result property="floor"    column="floor"    />
     </resultMap>
 	
 	<sql id="selectLyPersonnelVo">
-        select id, emp_name, id_code, emp_phon, emp_sex, emp_nation, id_address, id_agency, id_validdate, date_of_birth, face_url, idphoto_scan, idphoto_scan2, pid, company_id, subordinate, ispresent, type, bz from ly_personnel
+        select companyName,floor,id, emp_name, id_code, emp_phon, emp_sex, emp_nation, id_address, id_agency, id_validdate, date_of_birth, face_url, idphoto_scan, idphoto_scan2, pid, company_id, subordinate, ispresent, type, bz from ly_personnel
     </sql>
 	
     <select id="selectLyPersonnelList" parameterType="LyPersonnel" resultMap="LyPersonnelResult">
@@ -52,6 +54,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="ispresent != null  and ispresent != '' "> and ispresent = #{ispresent}</if>
              <if test="type != null  and type != '' "> and type = #{type}</if>
              <if test="bz != null  and bz != '' "> and bz = #{bz}</if>
+             <if test="bz != null  and bz != '' "> and bz = #{bz}</if>
+             <if test="floor != null  and floor != '' "> and floor = #{floor}</if>
+             <if test="companyName != null  and companyName != '' "> and companyName = #{companyName}</if>
          </where>
     </select>
     
@@ -59,7 +64,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectLyPersonnelVo"/>
         where id = #{id}
     </select>
-        
+    <!--在职人员总数-->
+    <select id="zzryzs" parameterType="Integer" resultType="Integer">
+        select count(id) from ly_personnel
+        where pid = #{pid} and ispresent='0' and type='1'
+    </select>
+    <!--在职人员进入数-->
+    <select id="zzryin" parameterType="LyAttendanceRecord" resultType="Integer">
+select count(d.id) from (select r.id from ly_attendance_record  r left join ly_personnel p on r.employee_id=p.id where r.project_id=#{projectId} and r.direction='in' and TO_DAYS(r.passed_time)=TO_DAYS(#{passedTime})  and p.ispresent='0' and p.type='1' GROUP BY r.employee_id) d
+    </select>
+    <!--在职人员出去数-->
+    <select id="zzryout" parameterType="LyAttendanceRecord" resultType="Integer">
+select count(d.id) from (select r.id from ly_attendance_record  r left join ly_personnel p on r.employee_id=p.id where r.project_id=#{projectId} and r.direction='out' and TO_DAYS(r.passed_time)=TO_DAYS(#{passedTime})  and p.ispresent='0' and p.type='1' GROUP BY r.employee_id) d
+      </select>
+    <!--访客人员总数-->
+    <select id="fkryzs" parameterType="LyAttendanceRecord" resultType="Integer">
+
+select count(id) from ly_registration_record where pid=#{projectId} and type='2' and TO_DAYS(time)=TO_DAYS(#{passedTime})
+    </select>
+     <!--访客人员进入数-->
+    <select id="fkryin" parameterType="LyAttendanceRecord" resultType="Integer">
+
+select count(d.id) from (select r.id from ly_attendance_record r where r.employee_id in (select p.pwid from ly_registration_record p where p.pid=#{projectId} and p.type='2' and TO_DAYS(p.time)=TO_DAYS(#{passedTime})) and TO_DAYS(r.passed_time)=TO_DAYS(#{passedTime}) and r.direction='in' GROUP BY r.employee_id) d
+    </select>
+    <!--访客人员出去数-->
+    <select id="fkryout" parameterType="LyAttendanceRecord" resultType="Integer">
+
+select count(d.id) from (select r.id from ly_attendance_record r where r.employee_id in (select p.pwid from ly_registration_record p where p.pid=#{projectId} and p.type='2' and TO_DAYS(p.time)=TO_DAYS(#{passedTime})) and TO_DAYS(r.passed_time)=TO_DAYS(#{passedTime}) and r.direction='out' GROUP BY r.employee_id) d
+    </select>
     <insert id="insertLyPersonnel" parameterType="LyPersonnel">
         <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
             SELECT LAST_INSERT_ID()
@@ -85,6 +117,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="ispresent != null  and ispresent != ''  ">ispresent,</if>
 			<if test="type != null  and type != ''  ">type,</if>
 			<if test="bz != null  and bz != ''  ">bz,</if>
+			<if test="companyName != null  and companyName != ''  ">companyName,</if>
+			<if test="floor != null  and floor != ''  ">floor,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null  ">#{id},</if>
@@ -106,6 +140,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="ispresent != null  and ispresent != ''  ">#{ispresent},</if>
 			<if test="type != null  and type != ''  ">#{type},</if>
 			<if test="bz != null  and bz != ''  ">#{bz},</if>
+			<if test="companyName != null  and companyName != ''  ">#{companyName},</if>
+			<if test="floor != null  and floor != ''  ">#{floor},</if>
          </trim>
     </insert>
 	 
@@ -144,5 +180,52 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
-    
+    <resultMap type="LyCompanyPersonnel" id="getLyCompanyPersonnelResult">
+
+        <result property="id"    column="cid"    />
+        <result property="companyName"    column="company_name"    />
+        <collection property="pList" ofType="LyPersonnel"  >
+            <result property="id"    column="plid"    />
+            <result property="empName"    column="emp_name"    />
+            <result property="faceUrl"    column="face_url"    />
+        </collection>
+    </resultMap>
+    <select id="getLyCompanyPersonnel" parameterType="LyPersonnel"  resultMap="getLyCompanyPersonnelResult">
+
+
+    select c.id cid,c.company_name,p.id plid,p.emp_name,p.face_url from ly_company c RIGHT JOIN ly_personnel p on c.id=p.company_id
+    where c.pid=#{pid}
+        <if test="empName != null  and empName != '' "> and p.emp_name like  '%${empName}%'</if>
+
+
+    </select>
+    <resultMap type="LyPersonnelRecord" id="getLyPersonnelRecordResult">
+
+        <result property="id"    column="id"    />
+        <result property="empName"    column="emp_name"    />
+        <result property="faceUrl"    column="face_url"    />
+        <collection property="larList" ofType="LyAttendanceRecord"  >
+            <result property="direction"    column="direction"    />
+            <result property="temperature"    column="temperature"    />
+            <result property="passedTime"    column="passed_time"    />
+        </collection>
+    </resultMap>
+    <select id="getLyPersonnelRecordZZ" parameterType="LyAttendanceRecord"  resultMap="getLyPersonnelRecordResult">
+
+
+select p.emp_name,p.face_url,p.id,DATE_FORMAT(r.passed_time, '%H:%m') passed_time,r.temperature,r.direction
+from ly_attendance_record r left join ly_personnel p on p.id=r.employee_id
+where r.project_id=#{projectId} and TO_DAYS(r.passed_time)=TO_DAYS(#{passedTime}) and p.type='1' and ispresent='0' GROUP BY r.direction ORDER BY r.id
+
+    </select>
+    <select id="getLyPersonnelRecordFK" parameterType="LyAttendanceRecord"  resultMap="getLyPersonnelRecordResult">
+
+
+select p.emp_name,p.face_url,p.id,DATE_FORMAT(r.passed_time, '%H:%m') passed_time,r.temperature,r.direction
+from ly_attendance_record r left join ly_personnel p on p.id=r.employee_id
+where r.project_id=#{projectId} and TO_DAYS(r.passed_time)=TO_DAYS(#{passedTime}) and p.type='2'
+and p.id in (select t.pwid from ly_registration_record t where t.pid=4 and  t.type='2' and TO_DAYS(t.time)=TO_DAYS(#{passedTime}) )
+GROUP BY r.direction ORDER BY r.id
+
+    </select>
 </mapper>

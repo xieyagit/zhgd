@@ -1,7 +1,11 @@
 package com.hujiang.project.zhgd.lyPersonnel.mapper;
 
+import com.hujiang.project.zhgd.lyAttendanceRecord.domain.LyAttendanceRecord;
+import com.hujiang.project.zhgd.lyPersonnel.domain.LyCompanyPersonnel;
 import com.hujiang.project.zhgd.lyPersonnel.domain.LyPersonnel;
-import java.util.List;	
+import com.hujiang.project.zhgd.lyPersonnel.domain.LyPersonnelRecord;
+
+import java.util.List;
 
 /**
  * 楼宇人员 数据层
@@ -18,7 +22,13 @@ public interface LyPersonnelMapper
      * @return 楼宇人员信息
      */
 	public LyPersonnel selectLyPersonnelById(Integer id);
-	
+	public Integer zzryzs(Integer pid);
+	public Integer zzryin(LyAttendanceRecord lyAttendanceRecord);
+	public Integer zzryout(LyAttendanceRecord lyAttendanceRecord);
+	public Integer fkryzs(LyAttendanceRecord lyAttendanceRecord);
+	public Integer fkryin(LyAttendanceRecord lyAttendanceRecord);
+	public Integer fkryout(LyAttendanceRecord lyAttendanceRecord);
+
 	/**
      * 查询楼宇人员列表
      * 
@@ -26,6 +36,7 @@ public interface LyPersonnelMapper
      * @return 楼宇人员集合
      */
 	public List<LyPersonnel> selectLyPersonnelList(LyPersonnel lyPersonnel);
+	public List<LyCompanyPersonnel> getLyCompanyPersonnel(LyPersonnel lyPersonnel);
 	
 	/**
      * 新增楼宇人员
@@ -58,5 +69,7 @@ public interface LyPersonnelMapper
      * @return 结果
      */
 	public int deleteLyPersonnelByIds(String[] ids);
-	
+
+	public List<LyPersonnelRecord> getLyPersonnelRecordZZ(LyAttendanceRecord lyAttendanceRecord);
+	public List<LyPersonnelRecord> getLyPersonnelRecordFK(LyAttendanceRecord lyAttendanceRecord);
 }
