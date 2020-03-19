@@ -1377,7 +1377,6 @@ public class api {
         map.put("cid",cid);
         map.put("remark1",remark1);
         map.put("shortName1",shortName1);
-
         return projectApi.addSave(hjProject,cid,file,remark1,shortName1);
     }
     @RequestMapping("/projectWorkersApi/selectSignParam")
@@ -1628,6 +1627,14 @@ public class api {
             file.delete();
         }
     }
+    @PostMapping("/pc/projectWorkersApi/edit")
+    public AjaxResult editSaveq(HjProjectWorkers hjProjectWorkers)throws Exception
+    {
+        System.out.println(hjProjectWorkers);
+        hjProjectWorkers.setUpdateDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        return pcProjectWorkersApi.editSave(hjProjectWorkers);
+    }
+
     @GetMapping("/attendanceRecordPcApi/export")
     public void export(Param param , HttpServletResponse response)throws Exception{
         System.out.println("导出Excel："+param);

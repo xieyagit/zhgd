@@ -190,16 +190,10 @@
     </select>
 
     <select id="seleimg" parameterType="HjProjectWorkers" resultMap="HjProjectWorkersResult">
-        select face_url,emp_name
-        from sb_crane_addrecord a
-        INNER JOIN sb_crane_binding b
-        INNER JOIN hj_project_workers w
-        ON a.hxzid = b.hxzid
-        AND b.pid = w.project_id
+        SELECT face_url,emp_name from hj_project_workers
         <where>
-            <if test="userid != null"> and  w.id = #{userid} </if>
+            <if test="userid != null"> id = #{userid} </if>
         </where>
-        GROUP BY emp_name
     </select>
 
     <select id="seleimgs" parameterType="HjProjectWorkers" resultMap="HjProjectWorkersResult">
