@@ -7,10 +7,13 @@ import com.hujiang.project.zhgd.hjAttendanceDevice.domain.HjAttendanceDevice;
 import com.hujiang.project.zhgd.hjAttendanceDevice.service.IHjAttendanceDeviceService;
 import com.hujiang.project.zhgd.hjDeviceProjectworkers.domain.HjDeviceProjectworkers;
 import com.hujiang.project.zhgd.hjProjectWorkers.domain.HjProjectWorkers;
+import com.hujiang.project.zhgd.lyAttendanceRecord.domain.LyAttendanceRecord;
 import com.hujiang.project.zhgd.lyDevicePersonnel.domain.LyDevicePersonnel;
 import com.hujiang.project.zhgd.lyDevicePersonnel.mapper.LyDevicePersonnelMapper;
 import com.hujiang.project.zhgd.lyDevicePersonnel.service.ILyDevicePersonnelService;
+import com.hujiang.project.zhgd.lyPersonnel.domain.LyCompanyPersonnel;
 import com.hujiang.project.zhgd.lyPersonnel.domain.LyPersonnel;
+import com.hujiang.project.zhgd.lyPersonnel.domain.LyPersonnelRecord;
 import com.hujiang.project.zhgd.lyPersonnel.mapper.LyPersonnelMapper;
 import com.hujiang.project.zhgd.lyRegistrationRecord.domain.LyRegistrationRecord;
 import com.hujiang.project.zhgd.lyRegistrationRecord.mapper.LyRegistrationRecordMapper;
@@ -34,8 +37,7 @@ public class LyPersonnelServiceImpl implements ILyPersonnelService
 {
 	@Autowired
 	private LyPersonnelMapper lyPersonnelMapper;
-	@Autowired
-	private LyRegistrationRecordMapper lyRegistrationRecordMapper;
+
 	@Autowired
 	private IHjAttendanceDeviceService hjAttendanceDeviceService;
 	@Autowired
@@ -107,15 +109,7 @@ public class LyPersonnelServiceImpl implements ILyPersonnelService
 	 */
 	@Override
 	public void personnelInOUt(LyPersonnel lyPersonnel,String ispresent){
-		LyRegistrationRecord lrr=new LyRegistrationRecord();
-		lrr.setPwid(lyPersonnel.getId());
-		lrr.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-		lrr.setCompanyName(lyPersonnel.getCompanyName());
-		lrr.setFloor(lyPersonnel.getFloor());
-		lrr.setSubordinate(lyPersonnel.getSubordinate());
-		lrr.setBz(lyPersonnel.getBz());
-		lrr.setIspresent(ispresent);
-		lyRegistrationRecordMapper.insertLyRegistrationRecord(lrr);
+
 		if("0".equals(ispresent)){
 			insertLyPersonnel(lyPersonnel);
 		}else{
@@ -178,5 +172,47 @@ public class LyPersonnelServiceImpl implements ILyPersonnelService
 
 
 		}
+	}
+
+	/**
+	 * 获取公司人员
+	 * @param lyPersonnel
+	 * @return
+	 */
+	@Override
+	public List<LyCompanyPersonnel> getLyCompanyPersonnel(LyPersonnel lyPersonnel){
+		return lyPersonnelMapper.getLyCompanyPersonnel(lyPersonnel);
+	}
+	@Override
+	public Integer zzryzs(Integer pid){
+		return lyPersonnelMapper.zzryzs(pid);
+	}
+	@Override
+	public Integer zzryin(LyAttendanceRecord lyAttendanceRecord){
+		return lyPersonnelMapper.zzryin(lyAttendanceRecord);
+	}
+	@Override
+	public Integer zzryout(LyAttendanceRecord lyAttendanceRecord){
+		return lyPersonnelMapper.zzryout(lyAttendanceRecord);
+	}
+	@Override
+	public Integer fkryzs(LyAttendanceRecord lyAttendanceRecord){
+		return lyPersonnelMapper.fkryzs(lyAttendanceRecord);
+	}
+	@Override
+	public Integer fkryin(LyAttendanceRecord lyAttendanceRecord){
+		return lyPersonnelMapper.fkryin(lyAttendanceRecord);
+	}
+	@Override
+	public Integer fkryout(LyAttendanceRecord lyAttendanceRecord){
+		return lyPersonnelMapper.fkryout(lyAttendanceRecord);
+	}
+	@Override
+	public List<LyPersonnelRecord> getLyPersonnelRecordZZ(LyAttendanceRecord lyAttendanceRecord){
+		return lyPersonnelMapper.getLyPersonnelRecordZZ(lyAttendanceRecord);
+	}
+	@Override
+	public List<LyPersonnelRecord> getLyPersonnelRecordFK(LyAttendanceRecord lyAttendanceRecord){
+		return lyPersonnelMapper.getLyPersonnelRecordFK(lyAttendanceRecord);
 	}
 }

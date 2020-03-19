@@ -31,7 +31,7 @@ public class PC_HjSynchronizationInformationApi extends BaseController {
      * 查询项目两制同步列表
      */
     @PostMapping("/list")
-    public TableDataInfo list(HjSynchronizationInformation hjSynchronizationInformation)
+    public TableDataInfo list(@RequestBody HjSynchronizationInformation hjSynchronizationInformation)
     {
         startPage();
         List<HjSynchronizationInformation> list = hjSynchronizationInformationService.selectHjSynchronizationInformationList(hjSynchronizationInformation);

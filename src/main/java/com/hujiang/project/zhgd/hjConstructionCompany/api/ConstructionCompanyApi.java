@@ -65,7 +65,7 @@ public class ConstructionCompanyApi extends BaseController{
      */
     @RequestMapping("/insertConstructionCompany")
     @ResponseBody
-    public AjaxResult insertConstructionCompany( HjConstructionCompany hjConstructionCompany, Integer projectId) throws  Exception
+    public AjaxResult insertConstructionCompany(@RequestBody HjConstructionCompany hjConstructionCompany, Integer projectId) throws  Exception
     {
 
         logger.info("保存参建单位开始");
@@ -272,7 +272,7 @@ public class ConstructionCompanyApi extends BaseController{
      */
     @RequestMapping("/updateConstructionCompany")
     @ResponseBody
-    public AjaxResult updateConstructionCompany( HjConstructionCompany hjConstructionCompany)
+    public AjaxResult updateConstructionCompany(@RequestBody HjConstructionCompany hjConstructionCompany)
     {
         int i;
         logger.info("更新参建单位开始");
