@@ -55,7 +55,7 @@ public interface ILyPersonnelService
      */
 	public int deleteLyPersonnelByIds(String ids);
 
-	public void personnelInOUt(LyPersonnel lyPersonnel,String ispresent);
+	public void personnelInOUt(LyPersonnel lyPersonnel,String ispresent)throws Exception;
 	public List<LyCompanyPersonnel> getLyCompanyPersonnel(LyPersonnel lyPersonnel);
 	public Integer zzryzs(Integer pid);
 	public Integer zzryin(LyAttendanceRecord lyAttendanceRecord);
@@ -66,4 +66,8 @@ public interface ILyPersonnelService
 
 	public List<LyPersonnelRecord> getLyPersonnelRecordZZ(LyAttendanceRecord lyAttendanceRecord);
 	public List<LyPersonnelRecord> getLyPersonnelRecordFK(LyAttendanceRecord lyAttendanceRecord);
+	public int insertBlacklist(String ids);
+	public int deleteBlacklist(String ids);
+	public Integer zzryinout(LyAttendanceRecord lyAttendanceRecord);
+	public Integer fkryinout(LyAttendanceRecord lyAttendanceRecord);
 }

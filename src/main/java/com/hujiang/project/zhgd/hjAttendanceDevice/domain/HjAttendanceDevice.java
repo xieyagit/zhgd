@@ -38,6 +38,26 @@ public class HjAttendanceDevice
 	private String remark;
 	/** 连接状态，1，正常，0,断线 */
 	private String isConnect;
+	/** 系统类型 */
+	private String systemType;
+	/** 是否双向打卡 */
+	private String twoway;
+
+	public String getTwoway() {
+		return twoway;
+	}
+
+	public void setTwoway(String twoway) {
+		this.twoway = twoway;
+	}
+
+	public String getSystemType() {
+		return systemType;
+	}
+
+	public void setSystemType(String systemType) {
+		this.systemType = systemType;
+	}
 
 	public String getIsConnect() {
 		return isConnect;

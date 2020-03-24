@@ -9,6 +9,9 @@ import com.hujiang.project.zhgd.hjDeviceProjectworkers.domain.HjDeviceProjectwor
 import com.hujiang.project.zhgd.hjDeviceProjectworkers.domain.HjDeviceProjectworkersParam;
 import com.hujiang.project.zhgd.hjDeviceProjectworkers.service.IHjDeviceProjectworkersService;
 import com.hujiang.project.zhgd.hjProjectWorkers.domain.HjProjectWorkers;
+import com.hujiang.project.zhgd.lyDevicePersonnel.domain.LyDevicePersonnel;
+import com.hujiang.project.zhgd.lyDevicePersonnel.mapper.LyDevicePersonnelMapper;
+import com.hujiang.project.zhgd.lyDevicePersonnel.service.ILyDevicePersonnelService;
 import com.hujiang.project.zhgd.utils.BASE64DecodedMultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ResourceUtils;
@@ -30,8 +33,89 @@ private IHjDeviceProjectworkersService hjDeviceProjectworkersService;
 
 @Autowired
 private IHjAttendanceDeviceService hjAttendanceDeviceService;
+@Autowired
+private ILyDevicePersonnelService lyDevicePersonnelService;
+
     @PostMapping(value = "/xm")
     public JSONObject xm(@RequestParam(value = "deviceNo") String deviceNo)throws  Exception{
+        HjAttendanceDevice hds = new HjAttendanceDevice();
+        hds.setDeviceNo(deviceNo);
+        List<HjAttendanceDevice> hdsList = hjAttendanceDeviceService.selectHjAttendanceDeviceList(hds);
+        if (hdsList.size() > 0) {
+            HjAttendanceDevice hds2 = hdsList.get(0);
+            String systemType = hds2.getSystemType();
+            if("zhgd".equals(systemType)){
+                return getZhgd(deviceNo);
+            }else{
+                return getLy(deviceNo);
+            }
+        }
+        return null;
+    }
+private  JSONObject getLy(String deviceNo){
+    int i=0;
+    Map<String,String > param=new HashMap<String ,String>();
+    param.put("deviceNo",deviceNo);
+    param.put("status","0");
+    JSONObject json=new JSONObject();
+    json.put("result","0");
+    json.put("msg","获取成功");
+    JSONObject content=new JSONObject();
+    List<HjDeviceProjectworkersParam> hList1=lyDevicePersonnelService.selectLyDevicePersonnelListTwo(param);
+    LyDevicePersonnel hd;
+    if(hList1.size()>0){
+        i++;
+        content.put("comcount",i);
+        JSONArray addemps=new JSONArray();
+        JSONObject add;
+        for(HjDeviceProjectworkersParam hw: hList1){
+            add=new JSONObject();
+            add.put("comid",hw.getDid());
+            add.put("comtype","105");
+            add.put("name",hw.getEmpName());
+            add.put("user_id",hw.getPid());
+            add.put("ic","");
+            add.put("id_card",hw.getIdCode());
+            add.put("enroll_type","0");
+            add.put("face_template",BASE64DecodedMultipartFile.ImageToBase64ByOnline(hw.getFaceUrl()).replaceAll("\r|\n", ""));
+            add.put("finger_template","");
+            addemps.add(add);
+            hd=new LyDevicePersonnel();
+            hd.setStatus("4");
+            hd.setDeviceNo(deviceNo);
+            hd.setPersonnelId(hw.getPid());
+            lyDevicePersonnelService.updateLyDevicePersonnelTwo(hd);
+        }
+        content.put("addemps",addemps);
+    }
+    param.put("status","2");
+    List<HjDeviceProjectworkersParam> hList2=lyDevicePersonnelService.selectLyDevicePersonnelListTwo(param);
+    if(hList2.size()>0){
+        i++;
+        content.put("comcount",i);
+        JSONArray deleteemps=new JSONArray();
+        JSONObject del;
+        for(HjDeviceProjectworkersParam hw: hList2){
+            del=new JSONObject();
+            del.put("comid",hw.getDid());
+            del.put("comtype","106");
+            del.put("name",hw.getEmpName());
+            del.put("user_id",hw.getPid());
+            deleteemps.add(del);
+            hd=new LyDevicePersonnel();
+            hd.setStatus("5");
+            hd.setDeviceNo(deviceNo);
+            hd.setPersonnelId(hw.getPid());
+            lyDevicePersonnelService.updateLyDevicePersonnelTwo(hd);
+        }
+        content.put("deleteemps",deleteemps);
+    }
+    json.put("content",content);
+    System.out.println(json);
+    updateConnectTime(deviceNo);
+    return json;
+}
+    private   JSONObject getZhgd(String deviceNo){
         int i=0;
         Map<String,String > param=new HashMap<String ,String>();
         param.put("deviceNo",deviceNo);
@@ -93,7 +177,7 @@ private IHjAttendanceDeviceService hjAttendanceDeviceService;
         System.out.println(json);
         updateConnectTime(deviceNo);
         return json;
-    }
+        }
 
     public void  updateConnectTime(String deviceNo){
         HjAttendanceDevice had=new HjAttendanceDevice();
@@ -106,17 +190,33 @@ private IHjAttendanceDeviceService hjAttendanceDeviceService;
     public void feedBack(@RequestBody String json){
         System.out.println("返回+++++++"+json);
 //        JSONObject content=
+        String sn=JSONObject.parseObject(json).getString("sn");
+        HjAttendanceDevice hds = new HjAttendanceDevice();
+        hds.setDeviceNo(sn);
+        List<HjAttendanceDevice> hdsList = hjAttendanceDeviceService.selectHjAttendanceDeviceList(hds);
+        if (hdsList.size() > 0) {
+            HjAttendanceDevice hds2 = hdsList.get(0);
+            String systemType = hds2.getSystemType();
+            if("zhgd".equals(systemType)){
+                getZhgdFeedBack(json);
+            }else{
+                getLyFeedBack(json);
+            }
+        }
+
+    }
+    private void getLyFeedBack(String json){
         JSONArray addemps=JSONObject.parseObject(json).getJSONObject("content").getJSONArray("addemps");
         JSONArray deleteemps=JSONObject.parseObject(json).getJSONObject("content").getJSONArray("deleteemps");
-        HjDeviceProjectworkers hd;
+        LyDevicePersonnel hd;
         if(addemps!=null) {
             for (Object o : addemps) {
                 JSONObject con = JSONObject.parseObject(o.toString());
                 if ("0".equals(con.getString("result"))) {
-                    hd = new HjDeviceProjectworkers();
+                    hd = new LyDevicePersonnel();
                     hd.setId(con.getInteger("comid"));
                     hd.setStatus("1");
-                    hjDeviceProjectworkersService.updateHjDeviceProjectworkers(hd);
+                    lyDevicePersonnelService.updateLyDevicePersonnel(hd);
                 }
             }
         }
@@ -124,12 +224,35 @@ private IHjAttendanceDeviceService hjAttendanceDeviceService;
             for (Object o : deleteemps) {
                 JSONObject con = JSONObject.parseObject(o.toString());
                 if ("0".equals(con.getString("result"))) {
-                    hjDeviceProjectworkersService.deleteHjDeviceProjectworkersByIds(con.getString("comid"));
+                    lyDevicePersonnelService.deleteLyDevicePersonnelByIds(con.getString("comid"));
                 }
             }
         }
     }
-
+private void getZhgdFeedBack(String json){
+    JSONArray addemps=JSONObject.parseObject(json).getJSONObject("content").getJSONArray("addemps");
+    JSONArray deleteemps=JSONObject.parseObject(json).getJSONObject("content").getJSONArray("deleteemps");
+    HjDeviceProjectworkers hd;
+    if(addemps!=null) {
+        for (Object o : addemps) {
+            JSONObject con = JSONObject.parseObject(o.toString());
+            if ("0".equals(con.getString("result"))) {
+                hd = new HjDeviceProjectworkers();
+                hd.setId(con.getInteger("comid"));
+                hd.setStatus("1");
+                hjDeviceProjectworkersService.updateHjDeviceProjectworkers(hd);
+            }
+        }
+    }
+    if(deleteemps!=null) {
+        for (Object o : deleteemps) {
+            JSONObject con = JSONObject.parseObject(o.toString());
+            if ("0".equals(con.getString("result"))) {
+                hjDeviceProjectworkersService.deleteHjDeviceProjectworkersByIds(con.getString("comid"));
+            }
+        }
+    }
+}
     private String getImg(String img)throws Exception{
         MultipartFile image = BASE64DecodedMultipartFile.base64ToMultipartOnt(BASE64DecodedMultipartFile.ImageToBase64ByOnline(img));
         File path = new File(ResourceUtils.getURL("classpath:").getPath());

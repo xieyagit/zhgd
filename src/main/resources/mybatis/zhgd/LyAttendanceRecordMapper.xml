@@ -121,5 +121,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
-    
+    <resultMap type="LyAttendanceRecordPersonnel" id="LyAttendanceRecordPersonnelResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="employeeId"    column="employee_id"    />
+        <result property="passedTime"    column="passed_time"    />
+        <result property="direction"    column="direction"    />
+        <result property="sitePhoto"    column="site_photo"    />
+        <result property="temperature"    column="temperature"    />
+        <result property="empName"    column="empName"    />
+        <result property="companyName"    column="companyName"    />
+        <result property="type"    column="type"    />
+
+    </resultMap>
+    <select id="selectPersonnelRecordPageList" parameterType="LyAttendanceRecordPersonnel" resultMap="LyAttendanceRecordPersonnelResult">
+            select r.id,p.emp_name empName,r.project_id, r.employee_id,p.companyName ,r.direction,r.passed_time,r.temperature,p.type from ly_attendance_record r left join ly_personnel p on r.employee_id=p.id
+            where r.project_id =#{projectId}
+        <if test="passedTime != null  and passedTime != '' "> and to_days(r.passed_time) = to_days(#{passedTime})</if>
+        <if test="empName != null  and empName != '' "> and emp_name like  '%${empName}%'</if>
+        <if test="companyName != null  and companyName != '' "> and companyName like  '%${companyName}%'</if>
+        <if test="direction != null  and direction != '' "> and direction = #{direction}</if>
+         order by r.id desc
+    </select>
 </mapper>

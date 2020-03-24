@@ -1,7 +1,9 @@
 package com.hujiang.project.zhgd.lyAttendanceRecord.mapper;
 
 import com.hujiang.project.zhgd.lyAttendanceRecord.domain.LyAttendanceRecord;
-import java.util.List;	
+import com.hujiang.project.zhgd.lyAttendanceRecord.domain.LyAttendanceRecordPersonnel;
+
+import java.util.List;
 
 /**
  * 考勤记录 数据层
@@ -59,5 +61,6 @@ public interface LyAttendanceRecordMapper
      * @return 结果
      */
 	public int deleteLyAttendanceRecordByIds(String[] ids);
-	
+
+	public List<LyAttendanceRecordPersonnel> selectPersonnelRecordPageList(LyAttendanceRecordPersonnel lyAttendanceRecordPersonnel);
 }
