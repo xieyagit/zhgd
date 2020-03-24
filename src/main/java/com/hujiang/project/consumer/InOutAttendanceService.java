@@ -1,6 +1,7 @@
 package com.hujiang.project.consumer;
 
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.utils.HttpUtils;
 import com.hujiang.common.utils.JsonUtils;
@@ -8,6 +9,7 @@ import com.hujiang.common.utils.Md5Utils;
 import com.hujiang.framework.config.JmsConfig;
 import com.hujiang.framework.jms.JmsMessageInfo;
 import com.hujiang.framework.jms.JmsMessageType;
+import com.hujiang.project.client.SystemClient;
 import com.hujiang.project.ys.util.YsUtil;
 import com.hujiang.project.zhgd.hjAttendanceDevice.domain.HjAttendanceDevice;
 import com.hujiang.project.zhgd.hjAttendanceDevice.service.IHjAttendanceDeviceService;
@@ -39,6 +41,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -58,6 +61,8 @@ public class InOutAttendanceService {
     private IHjLoggingService hjLoggingService;
     @Autowired
     private IHjDeviceHikvisionService hjDeviceHikvisionService;
+    @Autowired
+    private SystemClient client;
     //log日志
     private static Logger logger = LoggerFactory.getLogger(InOutAttendanceService.class);
 
@@ -65,7 +70,7 @@ public class InOutAttendanceService {
     @JmsListener(destination = JmsConfig.OPEN_YS)
     // SendTo 会将此方法返回的数据, 写入到 OutQueue 中去.
     @SendTo(JmsConfig.OPEN_YS + "_OUT") //双向队列
-    public String handleMessage(String message)throws IOException,URISyntaxException {
+    public String handleMessage(String message)throws Exception {
 
         try {
             JmsMessageInfo info = JsonUtils.parse(message, JmsMessageInfo.class);
@@ -85,7 +90,7 @@ public class InOutAttendanceService {
         return null;
     }
     //进场操作
-    private void insertAttendance(JmsMessageInfo info) throws IOException,URISyntaxException {
+    private void insertAttendance(JmsMessageInfo info) throws Exception {
 
         HjProjectWorkers hw = JsonUtils.convert(info.getBody(), HjProjectWorkers.class);
         HjAttendanceDevice had=new HjAttendanceDevice();
@@ -108,17 +113,60 @@ public class InOutAttendanceService {
                 if(list.size()>0){
                     hdpw.setStatus("1");
                     hjDeviceProjectworkersService.updateHjDeviceProjectworkersTwo(hdpw);
+                }else  if("yushi".equals(h.getDeviceFactory())){
+                    if(comparisonDate(h.getConnectTime())){
+                        String photo=BASE64DecodedMultipartFile.ImageToBase64ByOnline(hw.getFaceUrl()).replaceAll("\r|\n", "");
+                        JSONObject json=new JSONObject();
+                        json.put("Num",1);
+
+                        JSONObject personInfoList=new JSONObject();
+                        personInfoList.put("PersonID",hw.getId());
+                        personInfoList.put("LastChange",System.currentTimeMillis()/1000);
+                        personInfoList.put("PersonName",hw.getEmpName());
+                        JSONObject timeTemplate=new JSONObject();
+                        timeTemplate.put("BeginTime",0);
+                        timeTemplate.put("EndTime",4294967295L);
+                        timeTemplate.put("Index",0);
+                        personInfoList.put("TimeTemplate",timeTemplate);
+                        personInfoList.put("IdentificationNum",1);
+                        JSONArray codeArray=new JSONArray();
+                        JSONObject codeObject=new JSONObject();
+                        codeObject.put("Type",0);
+                        codeObject.put("Number",hw.getIdCode());
+                        codeArray.add(codeObject);
+                        personInfoList.put("IdentificationList",codeArray);
+                        personInfoList.put("ImageNum",1);
+                        JSONArray imageArray=new JSONArray();
+                        JSONObject imageObject=new JSONObject();
+                        imageObject.put("FaceID",hw.getId());
+                        imageObject.put("Size",photo.length());
+                        imageObject.put("Data",photo);
+                        imageArray.add(imageObject);
+                        personInfoList.put("ImageList",imageArray);
+                        JSONArray perList=new JSONArray();
+                        perList.add(personInfoList);
+                        json.put("PersonInfoList",perList);
+                        client.insertPerson(json.toJSONString(),h.getDeviceNo());
+                        hdpw.setStatus("1");
+                        hjDeviceProjectworkersService.insertHjDeviceProjectworkers(hdpw);
+                    }else {
+                        hdpw.setStatus("0");
+                        hjDeviceProjectworkersService.insertHjDeviceProjectworkers(hdpw);
+                    }
+
                 }else{
                     //否的话就待添加
                     hdpw.setStatus("0");
                     hjDeviceProjectworkersService.insertHjDeviceProjectworkers(hdpw);
                 }
+                //如果是宇视设备，就立刻添加
+
             }
 
         }
     }
     //离场操作
-    private void deleteAttendance(JmsMessageInfo info) throws IOException,URISyntaxException {
+    private void deleteAttendance(JmsMessageInfo info) throws Exception {
 
         HjProjectWorkers hw = JsonUtils.convert(info.getBody(), HjProjectWorkers.class);
         HjAttendanceDevice had=new HjAttendanceDevice();
@@ -139,6 +187,15 @@ public class InOutAttendanceService {
                 //是的话就直接删除
                 if(list.size()>0){
                     hjDeviceProjectworkersService.deleteHjDeviceProjectworkersByIds(list.get(0).getId().toString());
+                }else if("yushi".equals(h.getDeviceFactory())){
+                    if(comparisonDate(h.getConnectTime())){
+                        client.deletePerson(hw.getId(),h.getDeviceNo());
+                        hjDeviceProjectworkersService.deleteHjDeviceProjectworkersTwo(hdpw);
+                    }else{
+                        //否的话就待删除
+                        hdpw.setStatus("2");
+                        hdpw.setProjectWorkersId(hw.getId());
+                        hjDeviceProjectworkersService.updateHjDeviceProjectworkersTwo(hdpw);}
                 }else{
                     //否的话就待删除
                     hdpw.setStatus("2");
@@ -235,5 +292,18 @@ public class InOutAttendanceService {
             hdp.setStatus("1");
             hjDeviceProjectworkersService.insertHjDeviceProjectworkers(hdp);
         }
+    }
+    public boolean comparisonDate(String time) throws ParseException {
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd hh:mm");
+        Date kqTime=sdf.parse(time);//考勤时间
+        Calendar beforeTime = Calendar.getInstance();
+        beforeTime.add(Calendar.MINUTE, -10);//
+        Date dqTime=sdf.parse(sdf.format(beforeTime.getTime()));//当前时间
+        if(dqTime.before(kqTime)){
+            return true;
+        } else{
+            return false;
+        }
+
     }
 }

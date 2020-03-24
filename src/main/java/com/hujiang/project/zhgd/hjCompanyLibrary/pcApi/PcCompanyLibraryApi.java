@@ -48,13 +48,13 @@ public class PcCompanyLibraryApi extends BaseController {
      */
     @RequestMapping("/companyLibraryList")
     @ResponseBody
-    public TableDataInfo list(@RequestBody HjCompanyLibrary hjCompanyLibrary,Integer companyId)
+    public AjaxResult list(@RequestBody HjCompanyLibrary hjCompanyLibrary,Integer companyId)
     {
         hjCompanyLibrary.setShowState(0);
         System.out.println(companyId);
         startPage();
         List<HjCompanyLibrary> list = hjCompanyLibraryService.selectHjCompanyLibraryPage(hjCompanyLibrary,companyId);
-        return getDataTable(list);
+        return AjaxResult.success(getDataTable(list));
     }
     /**
      * 保存公司库信息

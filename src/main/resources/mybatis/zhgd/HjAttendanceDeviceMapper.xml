@@ -16,10 +16,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="deviceIp"    column="device_ip"    />
         <result property="connectTime"    column="connect_time"    />
         <result property="remark"     column="remark"    />
+        <result property="systemType"     column="system_type"    />
+        <result property="twoway"     column="twoway"    />
     </resultMap>
 	
 	<sql id="selectHjAttendanceDeviceVo">
-        select connect_time,remark,id, device_no, device_name, device_factory, direction, create_time, status, project_id, device_ip from hj_attendance_device
+        select twoway,system_type,connect_time,remark,id, device_no, device_name, device_factory, direction, create_time, status, project_id, device_ip from hj_attendance_device
     </sql>
 
     <select id="selectHjAttendanceDeviceList" parameterType="HjAttendanceDevice" resultMap="HjAttendanceDeviceResult">
@@ -36,6 +38,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="deviceIp != null  and deviceIp != '' "> and device_ip = #{deviceIp}</if>
              <if test="connectTime != null  and connectTime != '' "> and connect_time = #{connectTime}</if>
              <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+             <if test="systemType != null  and systemType != '' "> and system_type = #{systemType}</if>
+             <if test="twoway != null  and twoway != '' "> and twoway = #{twoway}</if>
          </where>
     </select>
     
@@ -57,6 +61,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="projectId != null  ">project_id,</if>
 			<if test="deviceIp != null  and deviceIp != ''  ">device_ip,</if>
 			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="systemType != null  and systemType != ''  ">system_type,</if>
+			<if test="twoway != null  and twoway != ''  ">twoway,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null  ">#{id},</if>
@@ -69,6 +75,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="projectId != null  ">#{projectId},</if>
 			<if test="deviceIp != null  and deviceIp != ''  ">#{deviceIp},</if>
 			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="systemType != null  and systemType != ''  ">#{systemType},</if>
+			<if test="twoway != null  and twoway != ''  ">#{twoway},</if>
          </trim>
     </insert>
 	 
@@ -84,6 +92,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="projectId != null  ">project_id = #{projectId},</if>
             <if test="deviceIp != null  and deviceIp != ''  ">device_ip = #{deviceIp},</if>
             <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="systemType != null  and systemType != ''  ">system_type = #{systemType},</if>
+            <if test="twoway != null  and twoway != ''  ">twoway = #{twoway},</if>
         </trim>
         where id = #{id}
     </update>

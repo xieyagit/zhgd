@@ -92,12 +92,12 @@ public class ProjectApi extends BaseController {
      * @return
      */
     @RequestMapping("selectProjectList")
-    public TableDataInfo list(@RequestBody HjProject hjProject, Integer cid) {
+    public AjaxResult list(@RequestBody HjProject hjProject, Integer cid) {
         startPage();
         out.println(cid);
         out.println(hjProject);
         List<HjProject> list = hjProjectService.selectProjectPage(hjProject, cid);
-        return getDataTable(list);
+        return AjaxResult.success(getDataTable(list));
     }
 
     /**

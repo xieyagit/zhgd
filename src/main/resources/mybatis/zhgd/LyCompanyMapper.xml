@@ -22,7 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectLyCompanyVo"/>
         <where>  
             <if test="id != null "> and id = #{id}</if>
-             <if test="companyName != null  and companyName != '' "> and company_name like  ' %${companyName}%'</if>
+             <if test="companyName != null  and companyName != '' "> and company_name like  '%${companyName}%'</if>
              <if test="floor != null  and floor != '' "> and floor = #{floor}</if>
              <if test="checkIdTime != null  and checkIdTime != '' "> and check_id_time = #{checkIdTime}</if>
              <if test="personCharge != null  and personCharge != '' "> and person_charge = #{personCharge}</if>

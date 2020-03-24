@@ -53,6 +53,15 @@ public class LyPersonnel
 	private String bz;
 private String companyName;
 private  String floor;
+private String isBlacklist;
+
+	public String getIsBlacklist() {
+		return isBlacklist;
+	}
+
+	public void setIsBlacklist(String isBlacklist) {
+		this.isBlacklist = isBlacklist;
+	}
 
 	public String getCompanyName() {
 		return companyName;

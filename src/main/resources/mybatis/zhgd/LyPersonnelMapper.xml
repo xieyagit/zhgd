@@ -26,17 +26,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="bz"    column="bz"    />
         <result property="companyName"    column="companyName"    />
         <result property="floor"    column="floor"    />
+        <result property="isBlacklist"    column="isBlacklist"    />
     </resultMap>
 	
 	<sql id="selectLyPersonnelVo">
-        select companyName,floor,id, emp_name, id_code, emp_phon, emp_sex, emp_nation, id_address, id_agency, id_validdate, date_of_birth, face_url, idphoto_scan, idphoto_scan2, pid, company_id, subordinate, ispresent, type, bz from ly_personnel
+        select isBlacklist,companyName,floor,id, emp_name, id_code, emp_phon, emp_sex, emp_nation, id_address, id_agency, id_validdate, date_of_birth, face_url, idphoto_scan, idphoto_scan2, pid, company_id, subordinate, ispresent, type, bz from ly_personnel
     </sql>
 	
     <select id="selectLyPersonnelList" parameterType="LyPersonnel" resultMap="LyPersonnelResult">
         <include refid="selectLyPersonnelVo"/>
         <where>  
             <if test="id != null "> and id = #{id}</if>
-             <if test="empName != null  and empName != '' "> and emp_name = #{empName}</if>
+             <if test="empName != null  and empName != '' "> and emp_name like '%${empName}%'</if>
              <if test="idCode != null  and idCode != '' "> and id_code = #{idCode}</if>
              <if test="empPhon != null  and empPhon != '' "> and emp_phon = #{empPhon}</if>
              <if test="empSex != null  and empSex != '' "> and emp_sex = #{empSex}</if>
@@ -54,10 +55,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="ispresent != null  and ispresent != '' "> and ispresent = #{ispresent}</if>
              <if test="type != null  and type != '' "> and type = #{type}</if>
              <if test="bz != null  and bz != '' "> and bz = #{bz}</if>
-             <if test="bz != null  and bz != '' "> and bz = #{bz}</if>
-             <if test="floor != null  and floor != '' "> and floor = #{floor}</if>
-             <if test="companyName != null  and companyName != '' "> and companyName = #{companyName}</if>
+             <if test="isBlacklist != null  and isBlacklist != '' "> and isBlacklist = #{isBlacklist}</if>
+
+             <if test="floor != null  and floor != '' "> and floor like '%${floor}%'</if>
+             <if test="companyName != null  and companyName != '' "> and companyName like '%${companyName}%'</if>
          </where>
+         order by id desc
     </select>
     
     <select id="selectLyPersonnelById" parameterType="Integer" resultMap="LyPersonnelResult">
@@ -73,6 +76,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="zzryin" parameterType="LyAttendanceRecord" resultType="Integer">
 select count(d.id) from (select r.id from ly_attendance_record  r left join ly_personnel p on r.employee_id=p.id where r.project_id=#{projectId} and r.direction='in' and TO_DAYS(r.passed_time)=TO_DAYS(#{passedTime})  and p.ispresent='0' and p.type='1' GROUP BY r.employee_id) d
     </select>
+    <!--在职人员进出数-->
+    <select id="zzryinout" parameterType="LyAttendanceRecord" resultType="Integer">
+select count(d.id) from (select r.id from ly_attendance_record  r left join ly_personnel p on r.employee_id=p.id where r.project_id=#{projectId}  and TO_DAYS(r.passed_time)=TO_DAYS(#{passedTime})  and p.ispresent='0' and p.type='1' GROUP BY r.employee_id) d
+    </select>
     <!--在职人员出去数-->
     <select id="zzryout" parameterType="LyAttendanceRecord" resultType="Integer">
 select count(d.id) from (select r.id from ly_attendance_record  r left join ly_personnel p on r.employee_id=p.id where r.project_id=#{projectId} and r.direction='out' and TO_DAYS(r.passed_time)=TO_DAYS(#{passedTime})  and p.ispresent='0' and p.type='1' GROUP BY r.employee_id) d
@@ -86,6 +93,11 @@ select count(id) from ly_registration_record where pid=#{projectId} and type='2'
     <select id="fkryin" parameterType="LyAttendanceRecord" resultType="Integer">
 
 select count(d.id) from (select r.id from ly_attendance_record r where r.employee_id in (select p.pwid from ly_registration_record p where p.pid=#{projectId} and p.type='2' and TO_DAYS(p.time)=TO_DAYS(#{passedTime})) and TO_DAYS(r.passed_time)=TO_DAYS(#{passedTime}) and r.direction='in' GROUP BY r.employee_id) d
+    </select>
+    <!--访客人员进出数-->
+    <select id="fkryinout" parameterType="LyAttendanceRecord" resultType="Integer">
+
+select count(d.id) from (select r.id from ly_attendance_record r where r.employee_id in (select p.pwid from ly_registration_record p where p.pid=#{projectId} and p.type='2' and TO_DAYS(p.time)=TO_DAYS(#{passedTime})) and TO_DAYS(r.passed_time)=TO_DAYS(#{passedTime})  GROUP BY r.employee_id) d
     </select>
     <!--访客人员出去数-->
     <select id="fkryout" parameterType="LyAttendanceRecord" resultType="Integer">
@@ -166,6 +178,9 @@ select count(d.id) from (select r.id from ly_attendance_record r where r.employe
             <if test="ispresent != null  and ispresent != ''  ">ispresent = #{ispresent},</if>
             <if test="type != null  and type != ''  ">type = #{type},</if>
             <if test="bz != null  and bz != ''  ">bz = #{bz},</if>
+            <if test="companyName != null  and companyName != ''  ">companyName = #{companyName},</if>
+            <if test="floor != null  and floor != ''  ">floor = #{floor},</if>
+
         </trim>
         where id = #{id}
     </update>
@@ -188,12 +203,13 @@ select count(d.id) from (select r.id from ly_attendance_record r where r.employe
             <result property="id"    column="plid"    />
             <result property="empName"    column="emp_name"    />
             <result property="faceUrl"    column="face_url"    />
+            <result property="subordinate"    column="subordinate"    />
         </collection>
     </resultMap>
     <select id="getLyCompanyPersonnel" parameterType="LyPersonnel"  resultMap="getLyCompanyPersonnelResult">
 
 
-    select c.id cid,c.company_name,p.id plid,p.emp_name,p.face_url from ly_company c RIGHT JOIN ly_personnel p on c.id=p.company_id
+    select c.id cid,c.company_name,p.id plid,p.emp_name,p.face_url,p.subordinate from ly_company c RIGHT JOIN ly_personnel p on c.id=p.company_id
     where c.pid=#{pid}
         <if test="empName != null  and empName != '' "> and p.emp_name like  '%${empName}%'</if>
 
@@ -228,4 +244,14 @@ and p.id in (select t.pwid from ly_registration_record t where t.pid=4 and  t.ty
 GROUP BY r.direction ORDER BY r.id
 
     </select>
+    <update id="insertBlacklist" parameterType="String">
+        update ly_personnel
+        set isBlacklist='1'
+        where id in (${ids})
+    </update>
+    <update id="deleteBlacklist" parameterType="String">
+        update ly_personnel
+        set isBlacklist='0'
+        where id in (${ids})
+    </update>
 </mapper>
