@@ -57,7 +57,7 @@ public class SbHireApi extends BaseController{
             JSONObject result = new JSONObject();
             JSONArray projectArray = new JSONArray();       //项目array
             JSONArray areaArray = new JSONArray();          //工区array
-            JSONArray userArray = new JSONArray();//人员array
+
             List<HirePeople> projectList = hireService.selectProject(projectId);
             List<HirePeople> areaList = hireService.selectArea(null);
             List<HirePeople> peopleList = hireService.selectPeople(null);
@@ -88,7 +88,9 @@ public class SbHireApi extends BaseController{
                     if (myPeopleList == null || myPeopleList.size() < 1) {
                         continue;
                     }
+                    JSONArray userArray = new JSONArray();//人员array
                     for (HirePeople times : myPeopleList){
+
                         JSONObject userMap = new JSONObject();//人员map
                         if(!timeList.stream().filter(
                                 a->a.getImei().equals(times.getImei())).findAny().isPresent()) {

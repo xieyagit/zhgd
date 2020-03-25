@@ -110,7 +110,7 @@
         <where>
             <if test="id != null "> and id = #{id}</if>
             <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
-            <if test="runtime != null  and runtime != '' "> and runtime = #{runtime}</if>
+            <if test="runtime != null  and runtime != '' "> and to_days(runtime)=to_days(#{runtime})</if>
             <if test="laod != null "> and laod = #{laod}</if>
             <if test="loadRatio != null "> and load_ratio = #{loadRatio}</if>
             <if test="sign != null "> and sign = #{sign}</if>
