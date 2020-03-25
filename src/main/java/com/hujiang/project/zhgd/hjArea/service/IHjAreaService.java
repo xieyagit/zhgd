@@ -50,5 +50,24 @@ public interface IHjAreaService
      * @return 结果
      */
 	public int deleteHjAreaByIds(String ids);
-	
+
+	/**
+	 * @Author xieya
+	 * @Description 查询所有省和市
+	 * @Date 2020/3/25 12:04
+	 * @param
+	 * @return java.util.List<com.hujiang.project.zhgd.hjArea.domain.HjArea>
+	 **/
+	List<HjArea> selectAllProvinceAndCity();
+
+	/**
+	 * @Author xieya
+	 * @Description
+	 * @Date 2020/3/21 19:04
+	 * @param ids
+	 * @return java.util.List<com.hujiang.project.zhgd.hjArea.domain.HjArea>
+	 **/
+	List<HjArea> selectProvinceAndCityByIds(String[] ids);
+
+
 }

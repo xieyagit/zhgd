@@ -58,5 +58,23 @@ public interface HjAreaMapper
      * @return 结果
      */
 	public int deleteHjAreaByIds(String[] ids);
-	
+
+	/**
+	 * @Author xieya
+	 * @Description
+	 * @Date 2020/3/21 15:37
+	 * @return java.util.List<com.hujiang.project.zhgd.hjArea.domain.HjArea>
+	 **/
+	List<HjArea> selectAllProvinceAndCity();
+
+	/**
+	 * @Author xieya
+	 * @Description
+	 * @Date 2020/3/21 19:05
+	 * @param * @param ids
+	 * @return java.util.List<com.hujiang.project.zhgd.hjArea.domain.HjArea>
+	 **/
+	List<HjArea> selectProvinceAndCityByIds(String[] ids);
+
+
 }

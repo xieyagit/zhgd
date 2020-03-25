@@ -21,7 +21,8 @@ public class HjArea
 	private String type;
 	/** 上级id */
 	private Long parentId;
-private  String isid;
+
+	private  String isid;
 
 	public String getIsid() {
 		return isid;
@@ -36,34 +37,34 @@ private  String isid;
 		this.id = id;
 	}
 
-	public Long getId() 
+	public Long getId()
 	{
 		return id;
 	}
-	public void setTitle(String title) 
+	public void setTitle(String title)
 	{
 		this.title = title;
 	}
 
-	public String getTitle() 
+	public String getTitle()
 	{
 		return title;
 	}
-	public void setType(String type) 
+	public void setType(String type)
 	{
 		this.type = type;
 	}
 
-	public String getType() 
+	public String getType()
 	{
 		return type;
 	}
-	public void setParentId(Long parentId) 
+	public void setParentId(Long parentId)
 	{
 		this.parentId = parentId;
 	}
 
-	public Long getParentId() 
+	public Long getParentId()
 	{
 		return parentId;
 	}

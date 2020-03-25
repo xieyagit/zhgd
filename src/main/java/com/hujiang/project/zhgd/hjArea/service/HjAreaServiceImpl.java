@@ -79,5 +79,15 @@ public class HjAreaServiceImpl implements IHjAreaService
 	{
 		return hjAreaMapper.deleteHjAreaByIds(Convert.toStrArray(ids));
 	}
-	
+
+	@Override
+	public List<HjArea> selectAllProvinceAndCity() {
+		return hjAreaMapper.selectAllProvinceAndCity();
+	}
+
+	@Override
+	public List<HjArea> selectProvinceAndCityByIds(String[] ids) {
+		return hjAreaMapper.selectProvinceAndCityByIds(ids);
+	}
+
 }

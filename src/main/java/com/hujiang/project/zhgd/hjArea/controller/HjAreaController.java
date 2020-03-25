@@ -1,7 +1,10 @@
 package com.hujiang.project.zhgd.hjArea.controller;
 
+import com.hujiang.project.zhgd.hjTeam.pcApi.PcTeamApi;
 import org.springframework.stereotype.Controller;
 import java.util.List;
+import java.util.logging.Logger;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
@@ -18,6 +21,7 @@ import com.hujiang.framework.web.controller.BaseController;
 import com.hujiang.framework.web.page.TableDataInfo;
 import com.hujiang.framework.web.domain.AjaxResult;
 import com.hujiang.common.utils.poi.ExcelUtil;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 城市 信息操作处理
@@ -29,6 +33,8 @@ import com.hujiang.common.utils.poi.ExcelUtil;
 @RequestMapping("/zhgd/hjArea")
 public class HjAreaController extends BaseController
 {
+	private Logger logger = Logger.getLogger(HjAreaController.class.getName());
+
     private String prefix = "zhgd/hjArea";
 	
 	@Autowired

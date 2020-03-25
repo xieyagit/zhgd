@@ -31,13 +31,18 @@ public class AjaxResult extends HashMap<String, Object>
         return error(1, "操作失败");
     }
 
+    public static AjaxResult error(String str)
+    {
+        return error(1, str);
+    }
+
     /**
      * 返回错误消息
      * 
      * @param msg 内容
      * @return 错误消息
      */
-    public static AjaxResult error(String msg)
+    public static AjaxResult 查找error(String msg)
     {
         return error(500, msg);
     }
