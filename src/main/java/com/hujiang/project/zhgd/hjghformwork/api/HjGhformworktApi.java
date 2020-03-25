@@ -149,7 +149,6 @@ public class HjGhformworktApi extends BaseController {
         hjDeeppitData.setEndTime(endTime);
         List<HighformworkData> hjDeeppitDataList = highformworkDataService.selectHighformworkDataList(hjDeeppitData);
         TableDataInfo dataTable = getDataTable(hjDeeppitDataList);
-
         int count = Integer.parseInt(String.valueOf(dataTable.getTotal()));
         if ((pageDomain.getPageNum()) <= Math.ceil(count / (double) pageDomain.getPageSize())) {
             jb.put("msg", "查询成功");
