@@ -21,8 +21,18 @@ public class LyDevicePersonnel
 	private Integer personnelId;
 	/** 1:已添加，2待删除，0，待添加，4添加结果未返回，5删除结果未返回 */
 	private String status;
+	/** 人员类型， */
+	private String type;
 
-	public void setId(Integer id) 
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public void setId(Integer id)
 	{
 		this.id = id;
 	}
@@ -65,6 +75,7 @@ public class LyDevicePersonnel
             .append("deviceNo", getDeviceNo())
             .append("personnelId", getPersonnelId())
             .append("status", getStatus())
+            .append("type", getType())
             .toString();
     }
 }

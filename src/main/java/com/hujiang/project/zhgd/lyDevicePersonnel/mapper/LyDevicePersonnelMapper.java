@@ -1,8 +1,10 @@
 package com.hujiang.project.zhgd.lyDevicePersonnel.mapper;
 
 import com.hujiang.project.zhgd.hjDeviceProjectworkers.domain.HjDeviceProjectworkers;
+import com.hujiang.project.zhgd.hjDeviceProjectworkers.domain.HjDeviceProjectworkersParam;
 import com.hujiang.project.zhgd.lyDevicePersonnel.domain.LyDevicePersonnel;
-import java.util.List;	
+import java.util.List;
+import java.util.Map;
 
 /**
  * 楼宇考勤设备人员 数据层
@@ -59,6 +61,11 @@ public interface LyDevicePersonnelMapper
      * @return 结果
      */
 	public int deleteLyDevicePersonnelByIds(String[] ids);
+	public int deleteLyDevicePersonnelTypeTwo();
+	public int updateLyDevicePersonnelTypeTwo();
 	public int updateLyDevicePersonnelTwo(LyDevicePersonnel lyDevicePersonnel);
+	public int deleteLyDevicePersonnelTwo(LyDevicePersonnel lyDevicePersonnel);
 	public List<LyDevicePersonnel> selectLyDevicePersonnelTwo(LyDevicePersonnel lyDevicePersonnel);
+
+	public List<HjDeviceProjectworkersParam> selectLyDevicePersonnelListTwo(Map<String,String> param);
 }

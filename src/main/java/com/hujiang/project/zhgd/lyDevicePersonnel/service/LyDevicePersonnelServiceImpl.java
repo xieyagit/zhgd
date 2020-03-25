@@ -1,6 +1,9 @@
 package com.hujiang.project.zhgd.lyDevicePersonnel.service;
 
 import java.util.List;
+import java.util.Map;
+
+import com.hujiang.project.zhgd.hjDeviceProjectworkers.domain.HjDeviceProjectworkersParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;import org.springframework.transaction.annotation.Transactional;
 import com.hujiang.project.zhgd.lyDevicePersonnel.mapper.LyDevicePersonnelMapper;
@@ -79,5 +82,25 @@ public class LyDevicePersonnelServiceImpl implements ILyDevicePersonnelService
 	{
 		return lyDevicePersonnelMapper.deleteLyDevicePersonnelByIds(Convert.toStrArray(ids));
 	}
-	
+	//清除访客人员
+	@Override
+	public int deleteLyDevicePersonnelTypeTwo(){
+		return lyDevicePersonnelMapper.deleteLyDevicePersonnelTypeTwo();
+	}
+	@Override
+	public int updateLyDevicePersonnelTypeTwo(){
+		return lyDevicePersonnelMapper.updateLyDevicePersonnelTypeTwo();
+	}
+	@Override
+	public List<HjDeviceProjectworkersParam> selectLyDevicePersonnelListTwo(Map<String,String> param){
+		return lyDevicePersonnelMapper.selectLyDevicePersonnelListTwo(param);
+	}
+	@Override
+	public int updateLyDevicePersonnelTwo(LyDevicePersonnel lyDevicePersonnel){
+		return lyDevicePersonnelMapper.updateLyDevicePersonnelTwo(lyDevicePersonnel);
+	}
+	@Override
+	public int deleteLyDevicePersonnelTwo(LyDevicePersonnel lyDevicePersonnel){
+		return lyDevicePersonnelMapper.deleteLyDevicePersonnelTwo(lyDevicePersonnel);
+	}
 }

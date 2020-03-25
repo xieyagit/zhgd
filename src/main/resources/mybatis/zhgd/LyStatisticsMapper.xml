@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.lyStatistics.mapper.LyStatisticsMapper">
+    
+    <resultMap type="LyStatistics" id="LyStatisticsResult">
+        <result property="id"    column="id"    />
+        <result property="pid"    column="pid"    />
+        <result property="time"    column="time"    />
+        <result property="type"    column="type"    />
+        <result property="inout"    column="inout"    />
+    </resultMap>
+	
+	<sql id="selectLyStatisticsVo">
+        select id, pid, time, type, `inout` from ly_statistics
+    </sql>
+	<select id="selectLyTimeCount" parameterType="LyStatistics" resultMap="LyStatisticsResult">
+      select DATE_FORMAT(time, '%d') time,type,`inout` FROM ly_statistics WHERE pid=#{pid} and DATE_FORMAT(time, '%Y-%m') =#{time}  order by time;  </select>
+    <select id="selectLyStatisticsList" parameterType="LyStatistics" resultMap="LyStatisticsResult">
+        <include refid="selectLyStatisticsVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="pid != null "> and pid = #{pid}</if>
+             <if test="time != null  and time != '' "> and time = #{time}</if>
+             <if test="type != null  and type != '' "> and type = #{type}</if>
+             <if test="inout != null  and inout != '' "> and inout = #{inout}</if>
+         </where>
+    </select>
+    
+    <select id="selectLyStatisticsById" parameterType="Integer" resultMap="LyStatisticsResult">
+        <include refid="selectLyStatisticsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLyStatistics" parameterType="LyStatistics">
+        insert into ly_statistics
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="pid != null  ">pid,</if>
+			<if test="time != null  and time != ''  ">time,</if>
+			<if test="type != null  and type != ''  ">type,</if>
+			<if test="inout != null  and inout != ''  ">`inout`,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="pid != null  ">#{pid},</if>
+			<if test="time != null  and time != ''  ">#{time},</if>
+			<if test="type != null  and type != ''  ">#{type},</if>
+			<if test="inout != null  and inout != ''  ">#{inout},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateLyStatistics" parameterType="LyStatistics">
+        update ly_statistics
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pid != null  ">pid = #{pid},</if>
+            <if test="time != null  and time != ''  ">time = #{time},</if>
+            <if test="type != null  and type != ''  ">type = #{type},</if>
+            <if test="inout != null  and inout != ''  ">inout = #{inout},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteLyStatisticsById" parameterType="Integer">
+        delete from ly_statistics where id = #{id}
+    </delete>
+	
+    <delete id="deleteLyStatisticsByIds" parameterType="String">
+        delete from ly_statistics where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -4,6 +4,7 @@ import com.hujiang.project.zhgd.lyAttendanceRecord.domain.LyAttendanceRecord;
 import com.hujiang.project.zhgd.lyPersonnel.domain.LyCompanyPersonnel;
 import com.hujiang.project.zhgd.lyPersonnel.domain.LyPersonnel;
 import com.hujiang.project.zhgd.lyPersonnel.domain.LyPersonnelRecord;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -28,7 +29,8 @@ public interface LyPersonnelMapper
 	public Integer fkryzs(LyAttendanceRecord lyAttendanceRecord);
 	public Integer fkryin(LyAttendanceRecord lyAttendanceRecord);
 	public Integer fkryout(LyAttendanceRecord lyAttendanceRecord);
-
+	public Integer zzryinout(LyAttendanceRecord lyAttendanceRecord);
+	public Integer fkryinout(LyAttendanceRecord lyAttendanceRecord);
 	/**
      * 查询楼宇人员列表
      * 
@@ -72,4 +74,6 @@ public interface LyPersonnelMapper
 
 	public List<LyPersonnelRecord> getLyPersonnelRecordZZ(LyAttendanceRecord lyAttendanceRecord);
 	public List<LyPersonnelRecord> getLyPersonnelRecordFK(LyAttendanceRecord lyAttendanceRecord);
+	public int insertBlacklist(@Param("ids") String ids);
+	public int deleteBlacklist(@Param("ids") String ids);
 }

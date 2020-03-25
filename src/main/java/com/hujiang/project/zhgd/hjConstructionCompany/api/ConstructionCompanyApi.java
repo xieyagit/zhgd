@@ -332,7 +332,7 @@ public class ConstructionCompanyApi extends BaseController{
             map.put("suid",suid);
         }
         logger.info("查询参建单位列表结束");
-        return AjaxResult.success(hjConstructionCompanyService.selectHjConstructionCompanyListTwo(map));
+        return AjaxResult.success(getDataTable(hjConstructionCompanyService.selectHjConstructionCompanyListTwo(map)));
     }
     /**
      * 根据id查询参建单位

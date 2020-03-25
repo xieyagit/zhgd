@@ -1,6 +1,8 @@
 package com.hujiang.project.zhgd.lyAttendanceRecord.service;
 
 import com.hujiang.project.zhgd.lyAttendanceRecord.domain.LyAttendanceRecord;
+import com.hujiang.project.zhgd.lyAttendanceRecord.domain.LyAttendanceRecordPersonnel;
+
 import java.util.List;
 
 /**
@@ -51,5 +53,6 @@ public interface ILyAttendanceRecordService
      * @return 结果
      */
 	public int deleteLyAttendanceRecordByIds(String ids);
-	
+
+	public List<LyAttendanceRecordPersonnel> selectPersonnelRecordPageList(LyAttendanceRecordPersonnel lyAttendanceRecordPersonnel);
 }

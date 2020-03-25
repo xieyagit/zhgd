@@ -1,7 +1,9 @@
 package com.hujiang.project.zhgd.lyDevicePersonnel.service;
 
+import com.hujiang.project.zhgd.hjDeviceProjectworkers.domain.HjDeviceProjectworkersParam;
 import com.hujiang.project.zhgd.lyDevicePersonnel.domain.LyDevicePersonnel;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 楼宇考勤设备人员 服务层
@@ -50,5 +52,10 @@ public interface ILyDevicePersonnelService
      * @return 结果
      */
 	public int deleteLyDevicePersonnelByIds(String ids);
-	
+	//清除访客人员
+	public int deleteLyDevicePersonnelTypeTwo();
+	public int updateLyDevicePersonnelTypeTwo();
+	public List<HjDeviceProjectworkersParam> selectLyDevicePersonnelListTwo(Map<String,String> param);
+	public int updateLyDevicePersonnelTwo(LyDevicePersonnel lyDevicePersonnel);
+	public int deleteLyDevicePersonnelTwo(LyDevicePersonnel lyDevicePersonnel);
 }
