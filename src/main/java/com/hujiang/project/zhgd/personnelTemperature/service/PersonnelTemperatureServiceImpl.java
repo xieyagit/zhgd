@@ -18,12 +18,11 @@ import java.util.List;
 @Service
 public class PersonnelTemperatureServiceImpl implements IPersonnelTemperatureService {
 
-//    @Autowired
-//    private PersonnelTemperatureMapper personnelTemperatureMapper;
+    @Autowired
+    private PersonnelTemperatureMapper personnelTemperatureMapper;
 
     @Override
     public List<PersonnelTemperature> selectPersonnelTemperatureList(PersonnelTemperatureReq personnelTemperatureReq) {
-//        return personnelTemperatureMapper.selectPersonnelTemperatureList(personnelTemperatureReq);
-        return null;
+        return personnelTemperatureMapper.selectPersonnelTemperatureList(personnelTemperatureReq);
     }
 }

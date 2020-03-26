@@ -11,7 +11,7 @@ public class PersonnelTemperature {
     /**人员id*/
     private Integer id;
     /**姓名*/
-    private String name;
+    private String empName;
     /**是否隔离，1，隔离，0或空，正常*/
     private String quarantine;
     /**参建单位名称*/
@@ -24,6 +24,8 @@ public class PersonnelTemperature {
     private String passedTime;
     /**体温*/
     private String temperature;
+    /**项目id*/
+    private String projectId;
 
     public Integer getId() {
         return id;
@@ -33,12 +35,12 @@ public class PersonnelTemperature {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getEmpName() {
+        return empName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setEmpName(String empName) {
+        this.empName = empName;
     }
 
     public String getQuarantine() {
@@ -89,17 +91,26 @@ public class PersonnelTemperature {
         this.temperature = temperature;
     }
 
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
+
     @Override
     public String toString() {
         return "PersonnelTemperature{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", empName='" + empName + '\'' +
                 ", quarantine='" + quarantine + '\'' +
                 ", constructionName='" + constructionName + '\'' +
                 ", title='" + title + '\'' +
                 ", direction='" + direction + '\'' +
                 ", passedTime='" + passedTime + '\'' +
                 ", temperature='" + temperature + '\'' +
+                ", projectId='" + projectId + '\'' +
                 '}';
     }
 }

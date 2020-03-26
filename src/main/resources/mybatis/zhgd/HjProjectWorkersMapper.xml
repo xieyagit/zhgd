@@ -269,9 +269,11 @@
             <if test="projectId != null">and pw.project_id = #{projectId}</if>
             <if test="quarantine != null and quarantine != ''">and pw.quarantine = #{quarantine}</if>
             <if test="adsList != null and adsList.size > 0">and
+                (
                 <foreach collection="adsList" index="index" item="ads" open="" separator="or" close="">
                     pw.id_address like "%${ads}%"
                 </foreach>
+                )
             </if>
 
 
