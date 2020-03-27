@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbCraneAlarmChangeDataCrane.mapper.SbCraneAlarmChangeDataCraneMapper">
+
+    <resultMap type="SbCraneAlarmChangeDataCrane" id="SbCraneAlarmChangeDataCraneResult">
+        <result property="alarmAction" column="alarm_action"/>
+        <result property="alarmType" column="alarm_type"/>
+        <result property="angle" column="angle"/>
+        <result property="height" column="height"/>
+        <result property="hxzFactory" column="hxz_factory"/>
+        <result property="hxzId" column="hxz_id"/>
+        <result property="idNo" column="id_no"/>
+        <result property="moment" column="moment"/>
+        <result property="name" column="name"/>
+        <result property="obliguity" column="obliguity"/>
+        <result property="obliguityX" column="obliguity_x"/>
+        <result property="obliguityY" column="obliguity_y"/>
+        <result property="ratedWeight" column="rated_weight"/>
+        <result property="RRange" column="r_range"/>
+        <result property="RTime" column="r_time"/>
+        <result property="weight" column="weight"/>
+        <result property="windLevel" column="wind_level"/>
+        <result property="windSpeed" column="wind_speed"/>
+        <result property="workNo" column="work_no"/>
+    </resultMap>
+
+    <select id="selectByHxzId" parameterType="String" resultMap="SbCraneAlarmChangeDataCraneResult">
+        SELECT
+            t1.alarm_action,
+            t1.alarm_type,
+            t1.angle,
+            t1.height,
+            t1.hxz_factory,
+            t1.hxz_id,
+            t1.id_no,
+            t1.moment,
+            t1.`name`,
+            t1.obliguity,
+            t1.obliguity_x,
+            t1.obliguity_y,
+            t1.rated_weight,
+            t1.r_range,
+            t1.r_time,
+            t1.weight,
+            t1.wind_level,
+            t1.wind_speed,
+            t1.work_no
+        FROM `sb_crane_alarm_change_data_crane` t1 WHERE t1.hxz_id = #{hxzId};
+    </select>
+
+    <insert id="insertSbCraneAlarmChangeDataCrane" parameterType="SbCraneAlarmChangeDataCrane">
+        insert into sb_crane_alarm_change_data_crane
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="alarmAction != null  ">alarm_action,</if>
+            <if test="alarmType != null  ">alarm_type,</if>
+            <if test="angle != null ">angle,</if>
+            <if test="height != null  ">height,</if>
+            <if test="hxzFactory != null  and hxzFactory != ''">hxz_factory,</if>
+            <if test="hxzId != null  and hxzId != ''">hxz_id,</if>
+            <if test="idNo != null  and idNo != ''">id_no,</if>
+            <if test="moment != null ">moment,</if>
+            <if test="name != null  and name != ''">`name`,</if>
+            <if test="obliguity != null ">obliguity,</if>
+            <if test="obliguityX != null  ">obliguity_x,</if>
+            <if test="obliguityY != null  ">obliguity_y,</if>
+            <if test="ratedWeight != null  ">rated_weight,</if>
+            <if test="RRange != null  ">r_range,</if>
+            <if test="RTime != null  ">r_time,</if>
+            <if test="weight != null  ">weight,</if>
+            <if test="windLevel != null  ">wind_level,</if>
+            <if test="windSpeed != null  ">wind_speed,</if>
+            <if test="workNo != null  ">work_no,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="alarmAction != null  ">#{alarmAction},</if>
+            <if test="alarmType != null  ">#{alarmType},</if>
+            <if test="angle != null ">#{angle},</if>
+            <if test="height != null  ">#{height},</if>
+            <if test="hxzFactory != null  and hxzFactory != ''">#{hxzFactory},</if>
+            <if test="hxzId != null  and hxzId != ''">#{hxzId},</if>
+            <if test="idNo != null  and idNo != ''">#{idNo},</if>
+            <if test="moment != null ">#{moment},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="obliguity != null ">#{obliguity},</if>
+            <if test="obliguityX != null  ">#{obliguityX},</if>
+            <if test="obliguityY != null  ">#{obliguityY},</if>
+            <if test="ratedWeight != null  ">#{ratedWeight},</if>
+            <if test="RRange != null  ">#{RRange},</if>
+            <if test="RTime != null  ">#{RTime},</if>
+            <if test="weight != null  ">#{weight},</if>
+            <if test="windLevel != null  ">#{windLevel},</if>
+            <if test="windSpeed != null  ">#{windSpeed},</if>
+            <if test="workNo != null  ">#{workNo},</if>
+
+        </trim>
+    </insert>
+
+
+    <update id="updateSbCraneAlarmChangeDataCrane" parameterType="SbCraneAlarmChangeDataCrane">
+        update sb_crane_alarm_change_data_crane
+        <trim prefix="SET" suffixOverrides=",">
+
+            <if test="alarmAction != null  ">alarm_action=#{alarmAction},</if>
+            <if test="alarmType != null  ">alarm_type=#{alarmType},</if>
+            <if test="angle != null ">angle=#{angle},</if>
+            <if test="height != null  ">height=#{height},</if>
+            <if test="hxzFactory != null  and hxzFactory != ''">hxz_factory=#{hxzFactory},</if>
+            <if test="hxzId != null  and hxzId != ''">hxz_id=#{hxzId},</if>
+            <if test="idNo != null  and idNo != ''">id_no=#{idNo},</if>
+            <if test="moment != null ">moment=#{moment},</if>
+            <if test="name != null  and name != ''">`name`=#{name},</if>
+            <if test="obliguity != null ">obliguity=#{obliguity},</if>
+            <if test="obliguityX != null  ">obliguity_x=#{obliguityX},</if>
+            <if test="obliguityY != null  ">obliguity_y=#{obliguityY},</if>
+            <if test="ratedWeight != null  ">rated_weight=#{ratedWeight},</if>
+            <if test="RRange != null  ">r_range=#{RRange},</if>
+            <if test="RTime != null  ">r_time=#{RTime},</if>
+            <if test="weight != null  ">weight=#{weight},</if>
+            <if test="windLevel != null  ">wind_level=#{windLevel},</if>
+            <if test="windSpeed != null  ">wind_speed=#{windSpeed},</if>
+            <if test="workNo != null  ">work_no=#{workNo},</if>
+        </trim>
+        where hxz_id = #{hxzId}
+    </update>
+
+
+
+</mapper>

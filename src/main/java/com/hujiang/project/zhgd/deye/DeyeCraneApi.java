@@ -1,9 +1,8 @@
 package com.hujiang.project.zhgd.deye;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.hujiang.common.utils.ThreadUtils;
-import com.hujiang.project.zhgd.hjProject.domain.HjProject;
 import com.hujiang.project.zhgd.hjProject.service.IHjProjectService;
 import com.hujiang.project.zhgd.hjSynchronizationInformation.domain.HjSynchronizationInformation;
 import com.hujiang.project.zhgd.hjSynchronizationInformation.service.IHjSynchronizationInformationService;
@@ -12,12 +11,16 @@ import com.hujiang.project.zhgd.sbCraneAddparams.domain.SbCraneAddparams;
 import com.hujiang.project.zhgd.sbCraneAddparams.service.ISbCraneAddparamsService;
 import com.hujiang.project.zhgd.sbCraneAddrecord.domain.SbCraneAddrecord;
 import com.hujiang.project.zhgd.sbCraneAddrecord.service.ISbCraneAddrecordService;
+import com.hujiang.project.zhgd.sbCraneAlarmChangeDataCrane.domain.SbCraneAlarmChangeDataCrane;
+import com.hujiang.project.zhgd.sbCraneAlarmChangeDataCrane.service.ISbCraneAlarmChangeDataCraneService;
 import com.hujiang.project.zhgd.sbCraneBasicinfo.domain.SbCraneBasicinfo;
 import com.hujiang.project.zhgd.sbCraneBasicinfo.service.ISbCraneBasicinfoService;
 import com.hujiang.project.zhgd.sbCraneBinding.domain.SbCraneBinding;
 import com.hujiang.project.zhgd.sbCraneBinding.service.ISbCraneBindingService;
 import com.hujiang.project.zhgd.sbCraneElectrify.domain.SbCraneElectrify;
 import com.hujiang.project.zhgd.sbCraneElectrify.service.ISbCraneElectrifyService;
+import com.hujiang.project.zhgd.sbCraneHeart.domain.SbCraneHeart;
+import com.hujiang.project.zhgd.sbCraneHeart.service.ISbCraneHeartService;
 import com.hujiang.project.zhgd.sbCraneLocatordata.domain.SbCraneLocatordata;
 import com.hujiang.project.zhgd.sbCraneLocatordata.service.ISbCraneLocatordataService;
 import com.hujiang.project.zhgd.sbCraneWarning.domain.SbCraneWarning;
@@ -71,7 +74,7 @@ public class DeyeCraneApi {
     DecimalFormat df=new DecimalFormat("0.0000");//设置保留位数
     DecimalFormat df2=new DecimalFormat("0.00");
 
-    private final Logger logger = LoggerFactory.getLogger(ZCAPIClient.class);
+    private final Logger logger = LoggerFactory.getLogger(DeyeCraneApi.class);
 
     @Autowired
     private ISbCraneBasicinfoService sbCraneBasicinfoService;
@@ -129,6 +132,10 @@ public class DeyeCraneApi {
     private SendElevatorToPERSONNEL sendElevatorToPERSONNEL;
     @Autowired
     private SendCraneToPERSONNEL sendCraneToPERSONNEL;
+    @Autowired
+    private ISbCraneHeartService sbCraneHeartService;
+    @Autowired
+    private ISbCraneAlarmChangeDataCraneService isbCraneAlarmChangeDataCraneService;
 
 
     /**
@@ -142,7 +149,7 @@ public class DeyeCraneApi {
         SbCraneBasicinfo sbCraneBasicinfo=new SbCraneBasicinfo();
         sbCraneBasicinfo.setHxzid(s.getString("HxzId"));
         List<SbCraneBasicinfo> sbList=sbCraneBasicinfoService.selectSbCraneBasicinfoList(sbCraneBasicinfo);
-        if(sbList.size()<=0){
+        if(sbList == null || sbList.size() == 0){
             sbCraneBasicinfo.setMonDeviceMan(s.getString("HxzFactory"));
             sbCraneBasicinfo.setDeviceNo(Tools.encodeToMD5s(s.getString("HxzId")));
             sbCraneBasicinfoService.insertSbCraneBasicinfo(sbCraneBasicinfo);
@@ -888,6 +895,60 @@ public class DeyeCraneApi {
         results.put("data","{}");
         results.put("status",0);//成功
         return results;
+    }
+
+    /**
+     * @Author xieya
+     * @Description 上报心跳数据
+     * @Date 2020/3/27 19:09
+     * @param json
+     * @return com.alibaba.fastjson.JSONObject
+     **/
+    @RequestMapping(value="/heartBeatDataCrane",method = RequestMethod.POST)
+    public JSONObject heartBeatDataCrane(@RequestBody String json) {
+        //根据id查询   没有插入   有就跟新
+        SbCraneHeart sbCraneHeart = JSON.parseObject(json, SbCraneHeart.class);
+        String hxzId = sbCraneHeart.getHxzId();
+        SbCraneHeart sbCraneHeart1 = sbCraneHeartService.selectByHxzId(hxzId);
+        if(isEmpty(sbCraneHeart1)){
+            int add = sbCraneHeartService.insertSbCraneHeart(sbCraneHeart);
+            if(add == 1){
+                logger.info("插入成功");
+            }
+        }else{
+            int udt = sbCraneHeartService.updateSbCraneHeart(sbCraneHeart);
+            if(udt == 1){
+                logger.info("插入成功");
+            }
+        }
+
+        return null;
+    }
+
+    public static boolean isEmpty(Object str) {
+        return (str == null || "".equals(str));
+    }
+
+    @RequestMapping(value="/alarmChangeDataCrane",method = RequestMethod.POST)
+    public JSONObject AlarmChangeDataCrane(@RequestBody String json) throws Exception {
+        //根据id查询   没有插入   有就跟新
+        SbCraneAlarmChangeDataCrane sbCraneAlarmChangeDataCrane = JSON.parseObject(json, SbCraneAlarmChangeDataCrane.class);
+        String hxzId = sbCraneAlarmChangeDataCrane.getHxzId();
+        SbCraneAlarmChangeDataCrane sbCraneAlarmChangeDataCrane1 = isbCraneAlarmChangeDataCraneService.selectByHxzId(hxzId);
+
+        if(isEmpty(sbCraneAlarmChangeDataCrane1)){
+            int add = isbCraneAlarmChangeDataCraneService.insertSbCraneAlarmChangeDataCrane(sbCraneAlarmChangeDataCrane);
+            if(add == 1){
+                logger.info("插入成功");
+            }
+        }else{
+            int udt = isbCraneAlarmChangeDataCraneService.updateSbCraneAlarmChangeDataCrane(sbCraneAlarmChangeDataCrane);
+            if(udt == 1){
+                logger.info("插入成功");
+            }
+        }
+
+        return null;
     }
 
     /**
