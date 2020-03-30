@@ -49,8 +49,10 @@ public class ProjectWorkerPC
 	@Excel(name = "居住地址")
 	private String idAddress ;
 	private String quarantine;
-private  String ids;
-private String faceImg;
+
+	/**地址字符串  用，号隔开的*/
+	private  String ids;
+	private String faceImg;
 
 	public String getFaceImg() {
 		return faceImg;

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjTemperature.mapper.HjTemperatureMapper">
+
+    <resultMap type="HjTemperature" id="HjTemperatureResult">
+        <result property="id" column="id"/>
+        <result property="temperature" column="temperature"/>
+        <result property="pid" column="pid"/>
+        <result property="enter" column="enter"/>
+    </resultMap>
+
+    <select id="temperatureList" parameterType="String" resultType="com.hujiang.framework.web.domain.AjaxResult">
+        SELECT
+        t1.temperature,
+        t1.enter,
+        t1.id
+        FROM hj_temperature t1 WHERE t1.pid = #{pid};
+    </select>
+
+    <insert id="addTemperature" parameterType="HjTemperature">
+        insert into hj_temperature
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pid != null  ">pid,</if>
+            <if test="temperature != null  and temperature != ''  ">temperature,</if>
+            <if test="enter != null  and enter != ''  ">enter,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pid != null  ">#{pid},</if>
+            <if test="temperature != null  and temperature != ''  ">#{temperature},</if>
+            <if test="enter != null  and enter != ''  ">#{enter},</if>
+        </trim>
+    </insert>
+
+    <delete id="deleteTemperature" parameterType="int">
+        delete from hj_temperature where id = #{id}
+    </delete>
+
+    <update id="forbidTemperatures" parameterType="HjTemperature">
+        UPDATE hj_temperature SET enter = #{enter} WHERE pid=#{pid} AND id = #{id};
+    </update>
+
+    <select id="selectByPidAndTemperature" resultType="int">
+        SELECT COUNT(1) FROM hj_temperature WHERE pid=#{pid} AND temperature = #{temperature};
+    </select>
+
+
+</mapper>

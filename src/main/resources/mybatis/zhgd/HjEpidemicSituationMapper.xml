@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjEpidemicSituation.mapper.HjEpidemicSituationMapper">
+
+    <resultMap type="EpidemicSituation" id="HjEpidemicSituationResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="type"    column="type"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="isid"    column="isid"    />
+        <result property="areaId"    column="area_id"    />
+        <result property="enter"    column="enter"    />
+    </resultMap>
+
+    <insert id="insertEpidemicSituation" parameterType="EpidemicSituation">
+        insert into hj_epidemic_situation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="areaId != null  ">area_id,</if>
+            <if test="title != null  and title != ''  ">title,</if>
+            <if test="type != null  and type != ''  ">type,</if>
+            <if test="parentId != null  ">parent_id,</if>
+            <if test="pid != null  ">pid,</if>
+            <if test="enter != null  ">enter,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="areaId != null  ">#{areaId},</if>
+            <if test="title != null  and title != ''  ">#{title},</if>
+            <if test="type != null  and type != ''  ">#{type},</if>
+            <if test="parentId != null  ">#{parentId},</if>
+            <if test="pid != null  ">#{pid},</if>
+            <if test="enter != null  ">#{enter},</if>
+        </trim>
+    </insert>
+
+    <select id="selectEpidemicSituationByIdAndPid" parameterType="EpidemicSituation" resultMap="HjEpidemicSituationResult">
+        SELECT
+        t1.id,
+        t1.isid,
+        t1.parent_id,
+        t1.pid,
+        t1.title,
+        t1.type,
+        t1.area_id
+        FROM hj_epidemic_situation t1
+        WHERE t1.area_id = #{areaId} AND t1.pid = #{pid};
+    </select>
+
+    <delete id="deleteAreaSetting">
+        delete from hj_epidemic_situation where area_id = #{areaId} and pid = #{pid};
+    </delete>
+
+    <update id="forbidAreaSetting" parameterType="EpidemicSituation">
+        UPDATE hj_epidemic_situation SET enter = #{enter} WHERE area_id = #{areaId} AND pid=#{pid};
+    </update>
+
+    <select id="selectEpidemicSituationByPid" parameterType="EpidemicSituation" resultMap="HjEpidemicSituationResult">
+        SELECT
+        t1.id,
+        t1.isid,
+        t1.parent_id,
+        t1.pid,
+        t1.title,
+        t1.type,
+        t1.area_id,
+        t1.enter
+        FROM hj_epidemic_situation t1
+        WHERE t1.pid = #{pid};
+    </select>
+
+</mapper>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.sbCraneHeart.mapper.SbCraneHeartMapper">
+
+    <resultMap type="SbCraneHeart" id="SbCraneHeartResult">
+        <result property="id" column="id"/>
+        <result property="hxzId" column="hxz_id"/>
+        <result property="windSpeed" column="wind_speed"/>
+        <result property="windLevel" column="wind_level"/>
+        <result property="windSpeedAlarm" column="wind_speed_alarm"/>
+        <result property="workNo" column="work_no"/>
+        <result property="name" column="name"/>
+        <result property="idNo" column="id_no"/>
+        <result property="hxzFactory" column="hxz_factory"/>
+    </resultMap>
+
+    <select id="selectByHxzId" parameterType="String" resultMap="SbCraneHeartResult">
+        SELECT
+        t1.hxz_factory,
+        t1.hxz_id,
+        t1.id,
+        t1.id_no,
+        t1.name,
+        t1.wind_level,
+        t1.wind_speed,
+        t1.wind_speed_alarm,
+        t1.work_no
+        FROM sb_crane_heart t1 WHERE t1.hxz_id = #{hxzId};
+    </select>
+
+    <insert id="insertSbCraneHeart" parameterType="SbCraneHeart">
+        insert into sb_crane_heart
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="hxzId != null  and hxzId != ''">hxz_id,</if>
+            <if test="windSpeed != null  and windSpeed != ''">wind_speed,</if>
+            <if test="windLevel != null  ">wind_level,</if>
+            <if test="windSpeedAlarm != null  ">wind_speed_alarm,</if>
+            <if test="workNo != null  ">work_no,</if>
+            <if test="name != null  ">`name`,</if>
+            <if test="idNo != null  ">id_no,</if>
+            <if test="hxzFactory != null  ">hxz_factory,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="hxzId != null  ">#{hxzId},</if>
+            <if test="windSpeed != null  and windSpeed != ''  ">#{windSpeed},</if>
+            <if test="windLevel != null  and windLevel != ''  ">#{windLevel},</if>
+            <if test="windSpeedAlarm != null  ">#{windSpeedAlarm},</if>
+            <if test="workNo != null  ">#{workNo},</if>
+            <if test="name != null  ">#{name},</if>
+            <if test="idNo != null  ">#{idNo},</if>
+            <if test="hxzFactory != null  ">#{hxzFactory},</if>
+        </trim>
+    </insert>
+
+
+    <update id="updateSbCraneHeart" parameterType="SbCraneHeart">
+        update sb_crane_heart
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="windSpeed != null ">wind_speed=#{windSpeed},</if>
+            <if test="windLevel != null ">wind_level=#{windLevel},</if>
+            <if test="windSpeedAlarm != null and windSpeedAlarm != '' ">wind_speed_alarm =#{windSpeedAlarm},</if>
+            <if test="workNo != null  ">work_no= #{workNo},</if>
+            <if test="name != null  ">`name`= #{name},</if>
+            <if test="idNo != null  ">id_no=#{idNo},</if>
+            <if test="hxzFactory != null  ">hxz_factory = #{hxzFactory},</if>
+        </trim>
+        where hxz_id = #{hxzId}
+    </update>
+
+
+
+</mapper>

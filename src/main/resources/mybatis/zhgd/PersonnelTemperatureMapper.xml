@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.personnelTemperature.mapper.PersonnelTemperatureMapper">
+
+    <resultMap type="PersonnelTemperature" id="PersonnelTemperatureResult">
+        <result property="id" column="id"/>
+        <result property="empName" column="emp_name"/>
+        <result property="quarantine" column="quarantine"/>
+        <result property="constructionName" column="construction_name"/>
+        <result property="title" column="title"/>
+        <result property="direction" column="direction"/>
+        <result property="passedTime" column="passed_time"/>
+        <result property="temperature" column="temperature"/>
+    </resultMap>
+
+    <select id="selectPersonnelTemperatureList" parameterType="com.hujiang.project.zhgd.personnelTemperature.domain.PersonnelTemperature" resultMap="PersonnelTemperatureResult">
+        SELECT
+            t1.id,
+            t1.emp_name,
+            t1.quarantine,
+            t2.construction_name,
+            t3.title,
+            t4.direction,
+            t4.passed_time,
+            t4.temperature
+            FROM hj_project_workers t1
+            LEFT JOIN hj_dictionaries t3 ON t1.job_typename = t3.id
+            LEFT JOIN hj_construction_company t2 ON t1.construction_id = t2.id
+            LEFT JOIN hj_attendance_record t4 ON t1.id = t4.employee_id
+            <where>
+                <if test="empName != null  and empName != '' ">and t1.emp_name like"%${empName}%"</if>
+                <if test="quarantine != null and quarantine != '' ">and t1.quarantine = #{quarantine}</if>
+                <if test="projectId != null and projectId != ''">and t1.project_id = #{projectId}</if>
+                <if test="startDate != null and startDate != ''">
+                    AND t4.passed_time <![CDATA[>=]]> date(#{startDate})
+                </if>
+                <if test="endDate != null and endDate != ''">
+                    AND t4.passed_time <![CDATA[<=]]> date(#{endDate})
+                </if>
+                <if test="temperature != null and temperature != ''">and t4.temperature<![CDATA[ >=]]>#{temperature}</if>
+            </where>
+            order by t4.passed_time desc
+    </select>
+
+</mapper>

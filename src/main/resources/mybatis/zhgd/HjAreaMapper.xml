@@ -67,5 +67,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
-    
+
+
+    <select id="selectAllProvinceAndCity" resultMap="HjAreaResult">
+        SELECT
+        t1.id,
+        t1.title,
+        t1.parent_id,
+        t1.type
+        FROM hj_area t1
+        WHERE t1.type = 'PROVINCE' OR t1.type = 'CITY' ;
+    </select>
+
+    <select id="selectProvinceAndCityByIds" parameterType="String" resultMap="HjAreaResult">
+        SELECT
+        t1.id,
+        t1.title,
+        t1.parent_id,
+        t1.type
+        FROM hj_area t1
+        WHERE t1.id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
 </mapper>

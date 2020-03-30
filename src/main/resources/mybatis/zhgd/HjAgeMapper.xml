@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjAge.mapper.HjAgeMapper">
+
+    <resultMap type="HjAge" id="HjAgeResult">
+        <result property="id" column="id"/>
+        <result property="age" column="age"/>
+        <result property="pid" column="pid"/>
+        <result property="enter" column="enter"/>
+    </resultMap>
+
+    <select id="limitAgeList" parameterType="String" resultType="com.hujiang.framework.web.domain.AjaxResult">
+        SELECT
+        t1.age,
+        t1.enter,
+        t1.id
+        FROM hj_age t1 WHERE t1.pid = #{pid};
+    </select>
+
+    <insert id="addForbidAge" parameterType="HjAge">
+        insert into hj_age
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pid != null  ">pid,</if>
+            <if test="age != null  and age != ''  ">age,</if>
+            <if test="enter != null  and enter != ''  ">enter,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pid != null  ">#{pid},</if>
+            <if test="age != null  and age != ''  ">#{age},</if>
+            <if test="enter != null  and enter != ''  ">#{enter},</if>
+        </trim>
+    </insert>
+
+    <delete id="deleteForbidAge" parameterType="int">
+        delete from hj_age where id = #{id}
+    </delete>
+
+    <update id="forbidAge" parameterType="HjAge">
+        UPDATE hj_age SET enter = #{enter} WHERE pid=#{pid} AND id = #{id};
+    </update>
+
+    <select id="selectByPidAndAge" resultType="int">
+        SELECT COUNT(1) FROM hj_age WHERE pid=#{pid} AND age = #{age};
+    </select>
+
+
+</mapper>

@@ -1,6 +1,7 @@
 package com.hujiang.project.zhgd.hjProjectWorkers.domain;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 项目工人表 hj_project_workers
@@ -110,7 +111,9 @@ public class HjProjectWorkers
 	private String workTypenameName;
 
 	private Integer count;
-private  String quarantine;
+	private String quarantine;
+
+	private List<String> adsList;
 
 	public String getQuarantine() {
 		return quarantine;
@@ -534,6 +537,14 @@ private  String quarantine;
 
 	public void setConstructionName(String constructionName) {
 		this.constructionName = constructionName;
+	}
+
+	public List<String> getAdsList() {
+		return adsList;
+	}
+
+	public void setAdsList(List<String> adsList) {
+		this.adsList = adsList;
 	}
 
 	@Override

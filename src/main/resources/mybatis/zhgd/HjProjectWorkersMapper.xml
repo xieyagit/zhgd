@@ -228,12 +228,36 @@
             AND enter_And_Retreat_Condition=0
     </select>
 
+<!--    <select id="selectProjectWorkersListPC" parameterType="com.hujiang.project.zhgd.hjProjectWorkers.domain.HjProjectWorkers" resultMap="ProjectWorkerPCResult">-->
+<!--        select pw.quarantine,pw.id_address,pw.id,pw.emp_name,pw.face_url,pw.is_team,pw.enter_And_Retreat_Condition,d.title,t.team_name,cc.construction_name,p.project_name,pw.id_address as idAddress,pw.id_code as idCode,pw.emp_phon from hj_project_workers pw-->
+<!--        LEFT JOIN hj_dictionaries d ON pw.job_name= d.tag-->
+<!--        LEFT JOIN hj_team t ON pw.work_typename_id=t.id-->
+<!--        LEFT JOIN hj_construction_company cc ON cc.id = pw.construction_id-->
+<!--        LEFT JOIN hj_project p ON p.id=pw.project_id-->
+<!--        <where>-->
+<!--            <if test="empName != null  and empName != '' ">and pw.emp_name like"%${empName}%"</if>-->
+<!--            <if test="idCode != null  and idCode != '' ">and pw.id_code like"%${idCode}%"</if>-->
+<!--            <if test="empPhon != null ">and pw.emp_phon like"%${empPhon}%"</if>-->
+<!--            <if test="jobName != null  and jobName != '' ">and pw.job_name = #{jobName}</if>-->
+<!--            <if test="workTypenameId != null ">and pw.work_typename_id = #{workTypenameId}</if>-->
+<!--            <if test="enterAndRetreatCondition != null ">and pw.enter_And_Retreat_Condition = #{enterAndRetreatCondition}</if>-->
+<!--            <if test="constructionId != null">and pw.construction_id = #{constructionId}</if>-->
+<!--            <if test="projectId != null">and pw.project_id = #{projectId}</if>-->
+<!--            <if test="quarantine != null and quarantine != ''">and pw.quarantine = #{quarantine}</if>-->
+<!--            <if test="idAddress != null and idAddress != ''">and pw.id_address like '%${idAddress}%'</if>-->
+<!--            <if test="startTime != null  and startTime != '' ">	and pw.id not in (select employee_id from hj_attendance_record where project_id=21 and TO_DAYS(passed_time)>=TO_DAYS(#{startTime}) and TO_DAYS(passed_time)<![CDATA[ <=]]>TO_DAYS(#{endTime}))-->
+<!--                and pw.enter_And_Retreat_Condition=0-->
+<!--            </if>-->
+<!--        </where>-->
+<!--        order by pw.create_date desc-->
+<!--    </select>-->
+
     <select id="selectProjectWorkersListPC" parameterType="com.hujiang.project.zhgd.hjProjectWorkers.domain.HjProjectWorkers" resultMap="ProjectWorkerPCResult">
         select pw.quarantine,pw.id_address,pw.id,pw.emp_name,pw.face_url,pw.is_team,pw.enter_And_Retreat_Condition,d.title,t.team_name,cc.construction_name,p.project_name,pw.id_address as idAddress,pw.id_code as idCode,pw.emp_phon from hj_project_workers pw
         LEFT JOIN hj_dictionaries d ON pw.job_name= d.tag
-          LEFT JOIN hj_team t ON pw.work_typename_id=t.id
-          LEFT JOIN hj_construction_company cc ON cc.id = pw.construction_id
-          LEFT JOIN hj_project p ON p.id=pw.project_id
+        LEFT JOIN hj_team t ON pw.work_typename_id=t.id
+        LEFT JOIN hj_construction_company cc ON cc.id = pw.construction_id
+        LEFT JOIN hj_project p ON p.id=pw.project_id
         <where>
             <if test="empName != null  and empName != '' ">and pw.emp_name like"%${empName}%"</if>
             <if test="idCode != null  and idCode != '' ">and pw.id_code like"%${idCode}%"</if>
@@ -244,7 +268,15 @@
             <if test="constructionId != null">and pw.construction_id = #{constructionId}</if>
             <if test="projectId != null">and pw.project_id = #{projectId}</if>
             <if test="quarantine != null and quarantine != ''">and pw.quarantine = #{quarantine}</if>
-            <if test="idAddress != null and idAddress != ''">and pw.id_address like '%${idAddress}%'</if>
+            <if test="adsList != null and adsList.size > 0">and
+                (
+                <foreach collection="adsList" index="index" item="ads" open="" separator="or" close="">
+                    pw.id_address like "%${ads}%"
+                </foreach>
+                )
+            </if>
+
+
             <if test="startTime != null  and startTime != '' ">	and pw.id not in (select employee_id from hj_attendance_record where project_id=21 and TO_DAYS(passed_time)>=TO_DAYS(#{startTime}) and TO_DAYS(passed_time)<![CDATA[ <=]]>TO_DAYS(#{endTime}))
                 and pw.enter_And_Retreat_Condition=0
             </if>

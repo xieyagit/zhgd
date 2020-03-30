@@ -42,6 +42,7 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -84,6 +85,13 @@ public class PC_ProjectWorkersApi extends BaseController {
      */
     @PostMapping("/quarantineList")
     public AjaxResult quarantineList(@RequestBody HjProjectWorkers hjProjectWorkers) {
+        String ads = hjProjectWorkers.getIdAddress();
+        String [] strAds = ads.split(",");
+        List<String> adsList = new ArrayList<>();
+        for(String str : strAds){
+            adsList.add(str);
+        }
+        hjProjectWorkers.setAdsList(adsList);
         startPage();
         List<ProjectWorkerPC> list = hjProjectWorkersService.selectProjectWorkersListPC(hjProjectWorkers);
         return AjaxResult.success(getDataTable(list));
