@@ -30,7 +30,8 @@ public interface IHighformworkDataService
      * @return 高支模数据记录集合
      */
 	public List<HighformworkData> selectHighformworkDataList(HighformworkData highformworkData);
-	
+	public List<HighformworkData> selectHighformworkDataListTask(HighformworkData highformworkData);
+
 	/**
      * 新增高支模数据记录
      * 

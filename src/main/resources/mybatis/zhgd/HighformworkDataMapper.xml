@@ -48,6 +48,10 @@
         </where>
     </select>
 
+    <select id="selectHighformworkDataListTask" parameterType="HighformworkData" resultMap="HjHighformworkDataResult">
+        <include refid="selectHjHighformworkDataVo"/>
+    </select>
+
     <select id="selectHighformworkDataById" parameterType="Integer" resultMap="HjHighformworkDataResult">
         <include refid="selectHjHighformworkDataVo"/>
         where id = #{id}

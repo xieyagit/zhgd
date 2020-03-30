@@ -46,8 +46,13 @@ public class HighformworkDataServiceImpl implements IHighformworkDataService
 	{
 	    return highformworkDataMapper.selectHighformworkDataList(highformworkData);
 	}
-	
-    /**
+
+	@Override
+	public List<HighformworkData> selectHighformworkDataListTask(HighformworkData highformworkData) {
+		return highformworkDataMapper.selectHighformworkDataListTask(highformworkData);
+	}
+
+	/**
      * 新增高支模数据记录
      * 
      * @param highformworkData 高支模数据记录信息
