@@ -60,9 +60,9 @@ public class Constants {
     public static final String LOCALTIONDATA = "http://home.welleplus.com.cn:58000/Location/data/getinfos.do";
     public static final String LOCALTIONDATAWARNING = "http://home.welleplus.com.cn:58000/Location/data/getwarns.do";
     //对接城安院地址 市管项目(生产环境)
-    public static final String CAY_CS = "http://139.159.186.240/misInter/";
+//    public static final String CAY_CS = "http://139.159.186.240/misInter/";
     //对接城安院地址 (城安院测试环境地址)
-//    public static final String CAY_CS = "http://139.159.251.33/misInter/";
+    public static final String CAY_CS = "http://139.159.251.33/misInter/";
 
     /**对接城安院使用的token+市管*/
     public static final String TOKEN_CS = "?token=CF8116A785BAF1296C6A2C19E4A426E45E0A19C5";
@@ -72,9 +72,9 @@ public class Constants {
     public static final String TOKEN_CS_QG = "?token=EBDECFCC5DE096892050A8E6913168A7A0A41963";
 
     //城安院(区管项目)生产环境
-    public static final String CAY_QGXM = "http://139.159.197.174/misInter/";
+//    public static final String CAY_QGXM = "http://139.159.197.174/misInter/";
     /**城安院(区管项目)测试环境地址*/
-//    public static final String CAY_QGXM = "http://yqce.szsti.org/misInter/";
+    public static final String CAY_QGXM = "http://yqce.szsti.org/misInter/";
 
     //人才安居
     public static final String RCAJ="http://218.17.11.171:7010";
