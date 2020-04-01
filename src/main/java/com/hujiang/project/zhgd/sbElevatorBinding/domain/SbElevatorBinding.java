@@ -49,6 +49,8 @@ public class SbElevatorBinding
 	private String hxzId;
 	private String elevatorName;
 
+	private Integer gctype;
+
 
 	public String getElevatorName() {
 		return elevatorName;
@@ -217,6 +219,14 @@ public class SbElevatorBinding
 	public Double getHeight()
 	{
 		return height;
+	}
+
+	public Integer getGctype() {
+		return gctype;
+	}
+
+	public void setGctype(Integer gctype) {
+		this.gctype = gctype;
 	}
 
 	public String toString() {

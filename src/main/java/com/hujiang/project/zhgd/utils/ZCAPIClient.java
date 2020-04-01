@@ -1,7 +1,6 @@
 package com.hujiang.project.zhgd.utils;
 
 
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.utils.JsonUtils;
@@ -14,18 +13,20 @@ import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class ZCAPIClient {
 
     /**
      * 中车上报设备数据
-     * @param url  请求地址
-     * @param jsonObject  提交的数据
+     *
+     * @param url        请求地址
+     * @param jsonObject 提交的数据
      * @return
      * @throws URISyntaxException
      * @throws IOException
      */
-    public static String  reportedData(String url, JSONObject jsonObject)throws URISyntaxException, IOException {
+    public static String reportedData(String url, JSONObject jsonObject) throws URISyntaxException, IOException {
         //获取时间
         String simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         //拼接签名
@@ -39,16 +40,18 @@ public class ZCAPIClient {
         //转MD5 32位大写
         String serverSignature = Tools.encodeToMD5(str4MD5.toString()).toUpperCase();
         //设置签名
-        jsonObject.put("signature",serverSignature);
-        jsonObject.put("timestamp",simpleDateFormat);
+        jsonObject.put("signature", serverSignature);
+        jsonObject.put("timestamp", simpleDateFormat);
         System.out.println(jsonObject);
-        String s = Util.httpPostWithJSON(Constants.ZCAPI+url, jsonObject);
-        System.out.println("请求服务："+url);
+        String s = Util.httpPostWithJSON(Constants.ZCAPI + url, jsonObject);
+        System.out.println("请求服务：" + url);
         return s;
     }
 
-    /** 上报惠州住建局两制 */
-    public static String xieTwoSystems(String url,JSONObject jsonObject) throws IOException, URISyntaxException {
+    /**
+     * 上报惠州住建局两制
+     */
+    public static String xieTwoSystems(String url, JSONObject jsonObject) throws IOException, URISyntaxException {
         //获取时间
         String simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 
@@ -58,27 +61,28 @@ public class ZCAPIClient {
 //                .append("timestamp").append(simpleDateFormat)
 //                .append("body").append(jsonObject.getString("body"));
 
-        String save = jsonObject.getString("api_key")+"api_key"+jsonObject.getString("api_key")+"api_version"+jsonObject.getString("api_version")
-                +"body"+jsonObject.getString("body")+"timestamp"+simpleDateFormat+jsonObject.getString("api_key");
+        String save = jsonObject.getString("api_key") + "api_key" + jsonObject.getString("api_key") + "api_version" + jsonObject.getString("api_version")
+                + "body" + jsonObject.getString("body") + "timestamp" + simpleDateFormat + jsonObject.getString("api_key");
 
         //转MD5 32位大写
         String serverSignature = Tools.encodeToMD5(save);
         //设置签名
-        jsonObject.put("signature",serverSignature);
-        jsonObject.put("timestamp",simpleDateFormat);
-        String s = Util.httpPostWithJSON(Constants.XIETWOSYSTEMS+url, jsonObject);
+        jsonObject.put("signature", serverSignature);
+        jsonObject.put("timestamp", simpleDateFormat);
+        String s = Util.httpPostWithJSON(Constants.XIETWOSYSTEMS + url, jsonObject);
         return s;
     }
 
     /**
      * 中车上报设备数据
-     * @param url  请求地址
-     * @param jsonObject  提交的数据
+     *
+     * @param url        请求地址
+     * @param jsonObject 提交的数据
      * @return
      * @throws URISyntaxException
      * @throws IOException
      */
-    public static String  reportedData2019(String url, JSONObject jsonObject)throws URISyntaxException, IOException {
+    public static String reportedData2019(String url, JSONObject jsonObject) throws URISyntaxException, IOException {
 
         ThreadUtils.async(new Runnable() {
             private final Logger logger = LoggerFactory.getLogger(ZCAPIClient.class);
@@ -99,19 +103,19 @@ public class ZCAPIClient {
                     //转MD5 32位大写
                     String serverSignature = Tools.encodeToMD5(str4MD5.toString()).toUpperCase();
                     //设置签名
-                    jsonObject.put("signature",serverSignature);
-                    jsonObject.put("timestamp",simpleDateFormat);
+                    jsonObject.put("signature", serverSignature);
+                    jsonObject.put("timestamp", simpleDateFormat);
                     System.out.println(jsonObject);
 
-                    Util.httpPostWithJSON(Constants.Version+url, jsonObject);
+                    Util.httpPostWithJSON(Constants.Version + url, jsonObject);
                 } catch (URISyntaxException e) {
-                    logger.error("中车上报设备数据错误: "+e.getMessage());
+                    logger.error("中车上报设备数据错误: " + e.getMessage());
                 } catch (IOException e) {
-                    logger.error("中车上报设备数据错误: "+e.getMessage());
+                    logger.error("中车上报设备数据错误: " + e.getMessage());
                 } catch (Exception e) {
-                    logger.error("中车上报设备数据错误: "+e.getMessage());
+                    logger.error("中车上报设备数据错误: " + e.getMessage());
                 }
-                logger.error("请求服务："+url);
+                logger.error("请求服务：" + url);
                 logger.error("请求参数：" + JsonUtils.toJson(jsonObject));
             }
         });
@@ -121,14 +125,14 @@ public class ZCAPIClient {
 
     /**
      * 上传至城安院获取项目id（市管项目）
-     * */
-    public static final String reportedCay2019(String url ,JSONObject jsonObject)throws URISyntaxException, IOException {
-        String s = Util.httpPostWithJSON(Constants.CAY_CS+url+Constants.TOKEN_CS,jsonObject);
-        System.out.println("请求服务："+Constants.CAY_CS+url+Constants.TOKEN_CS);
-        JSONObject a=JSONObject.parseObject(s);
+     */
+    public static final String reportedCay2019(String url, JSONObject jsonObject) throws URISyntaxException, IOException {
+        String returnDate = Util.httpPostWithJSON(Constants.CAY_CS + url + Constants.TOKEN_CS, jsonObject);
+        System.out.println("请求服务：" + Constants.CAY_CS + url + Constants.TOKEN_CS);
+        JSONObject jSONObject = JSONObject.parseObject(returnDate);
         String k = null;
-        if (!a.getString("total").equals("0")) {
-            JSONArray data = a.getJSONArray("res");
+        if (!"0".equals(jSONObject.getString("total"))) {
+            JSONArray data = jSONObject.getJSONArray("res");
             JSONObject datas = data.getJSONObject(0);
             k = datas.getString("xmid");
         }
@@ -137,58 +141,70 @@ public class ZCAPIClient {
 
     /**
      * 上传至城安院获取项目监督编号和工程ID（市管项目）
-     * */
-    public static final JSONObject reportedCay(String url,JSONObject jsonObject)throws URISyntaxException, IOException {
-        String s = Util.httpPostWithJSON(Constants.CAY_CS+url+Constants.TOKEN_CS,jsonObject);
-        System.out.println("请求服务："+Constants.CAY_CS+url+Constants.TOKEN_CS);
-        JSONObject a=JSONObject.parseObject(s);
-        JSONArray data = a.getJSONArray("res");
-        JSONObject datas = data.getJSONObject(0);
-        String gcid = datas.getString("gcid");
-        String jdbh = datas.getString("jdbh");
-        String xmid = datas.getString("xmid");
-        JSONObject object = new JSONObject();
-        object.put("gcid",gcid);
-        object.put("jdbh",jdbh);
-        object.put("xmid",xmid);
-        return object;
+     */
+    public static final JSONObject reportedCay(String url, JSONObject jsonObject) throws URISyntaxException, IOException {
+        String returnJson = Util.httpPostWithJSON(Constants.CAY_CS + url + Constants.TOKEN_CS, jsonObject);
+        System.out.println("请求服务：" + Constants.CAY_CS + url + Constants.TOKEN_CS);
+        JSONObject jSONObject = JSONObject.parseObject(returnJson);
+//        JSONArray data = a.getJSONArray("res");
+//        JSONObject datas = data.getJSONObject(0);
+//        String gcid = datas.getString("gcid");
+//        String jdbh = datas.getString("jdbh");
+//        String xmid = datas.getString("xmid");
+//        JSONObject object = new JSONObject();
+//        object.put("gcid",gcid);
+//        object.put("jdbh",jdbh);
+//        object.put("xmid",xmid);
+        return jSONObject;
     }
 
     /**
-     * 上传至城安院获取项目id&项目监督编号(区管项目)
-     * */
-    public static final JSONObject reportedCay2019s(String url,JSONObject jsonObject)throws URISyntaxException, IOException {
-        System.out.println("请求服务："+Constants.CAY_QGXM+url+Constants.TOKEN_CS);
-        String s = Util.httpPostWithJSON(Constants.CAY_QGXM+url+Constants.TOKEN_CS,jsonObject);
+     * @Author xieya
+     * @Description 城安院(区管项目)模糊查询项目工程信息
+     * @Date 2020/4/1 10:45
+     * @param url
+     * @param jsonObject
+     * @return com.alibaba.fastjson.JSONObject
+     **/
+    public static final JSONObject cayArea(String url, JSONObject jsonObject) throws URISyntaxException, IOException {
+        System.out.println("请求城安院区管项目接口地址：" + Constants.CAY_QGXM + url + Constants.TOKEN_CS_QG);
+        String qgReturnList = Util.httpPostWithJSON(Constants.CAY_QGXM + url + Constants.TOKEN_CS_QG, jsonObject);
 
-        JSONObject a=JSONObject.parseObject(s);
+        JSONObject jSONObject = JSONObject.parseObject(qgReturnList);
+        System.out.println(jSONObject);
         JSONObject object = new JSONObject();
-        if (!a.getString("total").equals("0")) {
-            JSONArray data = a.getJSONArray("res");
-            JSONObject datas = data.getJSONObject(0);
-            String xmid = datas.getString("xmid");
-            String jdbh = datas.getString("jdbh");
+        if("SUCCESS".equals(jSONObject.get("msg"))){
+            List<Map<String, Object>> dataJSONObject = (List<Map<String, Object>>) jSONObject.get("data");
+            //暂时取第一个(一个项目id对应多个工程id)
+            String xmid = (String) dataJSONObject.get(0).get("项目id");
+            String jdbh = (String) dataJSONObject.get(0).get("项目监督编号");
+            String gcid = (String) dataJSONObject.get(0).get("工程id");
+
             object.put("xmid", xmid);
             object.put("jdbh", jdbh);
-        }else {
-            object.put("xmid", "");
-            object.put("jdbh", "");
+            object.put("gcid", gcid);
+            return object;
         }
+
+        object.put("xmid", null);
+        object.put("jdbh", null);
+        object.put("gcid", null);
         return object;
-    }
-    /**
-     * 上传至城安院升降机基本信息(区管项目)
-     * */
-    public static final String QGXMCAY(String url,JSONObject jsonObject) throws IOException, URISyntaxException {
-        String s = Util.httpPostWithJSON(Constants.CAY_QGXM+url+Constants.TOKEN_CS,jsonObject);
-        return s;
     }
 
     /**
-     * 上传至城安院升降机基本信息(市管项目)
-     * */
-    public static final String SGXMCAY(String url,JSONObject jsonObject) throws IOException, URISyntaxException {
-        String s = Util.httpPostWithJSON(Constants.CAY_CS+url+Constants.TOKEN_CS,jsonObject);
+     * 上报城安院升降机基本信息(区管项目)
+     */
+    public static final String QGXMCAY(String url, JSONObject jsonObject) throws IOException, URISyntaxException {
+        String returnArea = Util.httpPostWithJSON(Constants.CAY_QGXM + url + Constants.TOKEN_CS, jsonObject);
+        return returnArea;
+    }
+
+    /**
+     * 上报城安院升降机基本信息(市管项目)
+     */
+    public static final String SGXMCAY(String url, JSONObject jsonObject) throws IOException, URISyntaxException {
+        String s = Util.httpPostWithJSON(Constants.CAY_CS + url + Constants.TOKEN_CS, jsonObject);
         return s;
     }
 }

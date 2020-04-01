@@ -19,6 +19,7 @@ import com.hujiang.project.zhgd.deye.PcApi;
 import com.hujiang.project.zhgd.deye.PcElevatorApi;
 import com.hujiang.project.zhgd.dustEmissionThresholdValue.api.DustEmissionThresholdValueAPI;
 import com.hujiang.project.zhgd.dustEmissionThresholdValue.domain.DustEmissionThresholdValue;
+import com.hujiang.project.zhgd.hjAge.controller.HjAgeApi;
 import com.hujiang.project.zhgd.hjArea.api.AreaApi;
 import com.hujiang.project.zhgd.hjAttendanceDevice.api.AttendanceDeviceApi;
 import com.hujiang.project.zhgd.hjAttendanceDevice.domain.HjAttendanceDevice;
@@ -38,6 +39,7 @@ import com.hujiang.project.zhgd.hjDeeppit.api.HjDeeppitApi;
 import com.hujiang.project.zhgd.hjDeeppit.domain.SbProjectDeeppitStructures;
 import com.hujiang.project.zhgd.hjDictionaries.api.DictionariesApi;
 import com.hujiang.project.zhgd.hjDictionaries.domain.HjDictionaries;
+import com.hujiang.project.zhgd.hjEpidemicSituation.controller.HjEpidemicSituationApi;
 import com.hujiang.project.zhgd.hjFile.api.FileApi;
 import com.hujiang.project.zhgd.hjFolder.api.FolderApi;
 import com.hujiang.project.zhgd.hjFolder.domain.HjFolder;
@@ -82,6 +84,7 @@ import com.hujiang.project.zhgd.hjSystemUser.domain.UserParam;
 import com.hujiang.project.zhgd.hjTeam.api.APP_TeamApi;
 import com.hujiang.project.zhgd.hjTeam.domain.HjTeam;
 import com.hujiang.project.zhgd.hjTeam.pcApi.PcTeamApi;
+import com.hujiang.project.zhgd.hjTemperature.api.HjTemperatureApi;
 import com.hujiang.project.zhgd.hjWorkersInformation.api.HjWorkersInformationApi;
 import com.hujiang.project.zhgd.hjWorkersInformation.domain.HjWorkersInformation;
 import com.hujiang.project.zhgd.hjWorkersInformation.domain.HjWorkersInformationPc;
@@ -365,6 +368,12 @@ public class api {
     private GroupTitleApi groupTitleApi;
     @Autowired
     private com.hujiang.project.zhgd.sbGroup.api.SbGroupApi sbGroupApi;
+    @Autowired
+    private HjAgeApi hjAgeApi;
+    @Autowired
+    private HjEpidemicSituationApi hjEpidemicSituationApi;
+    @Autowired
+    private HjTemperatureApi hjTemperatureApi;
 
     @PostMapping("/pcEquipmentWarning/warningCount")
     public JSONObject warningCount(@RequestParam(value = "projectId") Integer projectId){
@@ -3127,5 +3136,158 @@ public class api {
     @PostMapping("/searchProjectList")
     public AjaxResult searchProjectList( Integer cid,  String name){
         return  sbGroupApi.searchProjectList(cid,name);
+    }
+
+    /**
+     * @param
+     * @return com.hujiang.framework.web.domain.AjaxResult
+     * @Author xieya
+     * @Description 查询所有年龄
+     * @Date 2020/3/24 11:21
+     **/
+    @RequestMapping("/age/limitAgeList")
+    public AjaxResult limitAgeList(@RequestParam String pid) {
+        return hjAgeApi.limitAgeList(pid);
+    }
+
+    /**
+     * @param pid
+     * @param age
+     * @return com.hujiang.framework.web.domain.AjaxResult
+     * @Author xieya
+     * @Description 插入年龄
+     * @Date 2020/3/24 12:56
+     **/
+    @RequestMapping("/age/addForbidAge")
+    public AjaxResult addForbidAge(@RequestParam String pid, @RequestParam Integer age) {
+        return hjAgeApi.addForbidAge(pid, age);
+    }
+
+    /**
+     * @param id
+     * @return com.hujiang.framework.web.domain.AjaxResult
+     * @Author xieya
+     * @Description 删除年龄
+     * @Date 2020/3/24 13:09
+     **/
+    @RequestMapping("/age/deleteForbidAge")
+    public AjaxResult deleteForbidAge(@RequestParam Integer id) {
+        return hjAgeApi.deleteForbidAge(id);
+    }
+
+    /**
+     * @param id
+     * @param pid
+     * @return com.hujiang.framework.web.domain.AjaxResult
+     * @Author xieya
+     * @Description 修改年龄状态
+     * @Date 2020/3/24 13:13
+     **/
+    @RequestMapping("/age/forbidAge")
+    public AjaxResult forbidAge(@RequestParam Integer id, @RequestParam String pid, @RequestParam Integer enter) {
+        return hjAgeApi.forbidAge(id, pid, enter);
+    }
+
+    /**
+     * @Author xieya
+     * @Description 查询所有省和市
+     * @Date 2020/3/25 12:10
+     * @param
+     * @return com.hujiang.framework.web.domain.AjaxResult
+     **/
+    @RequestMapping("/hjarea/selectAllProvinceAndCity")
+    public AjaxResult selectAllProvinceAndCity(){
+        return hjEpidemicSituationApi.selectAllProvinceAndCity();
+    }
+
+    /**
+     * @Author xieya
+     * @Description 查询所有疫情城市
+     * @Date 2020/3/21 16:59
+     * @return com.hujiang.framework.web.domain.AjaxResult
+     **/
+    @RequestMapping("/hjarea/areaSettingList")
+    public AjaxResult areaSettingList(@RequestParam String pid){
+        return hjEpidemicSituationApi.areaSettingList(pid);
+    }
+
+    /**
+     * @Author xieya
+     * @Description 查询选中的疫情省和城市 存入数据库
+     * @Date 2020/3/21 18:03
+     * @param ids
+     * @return com.hujiang.framework.web.domain.AjaxResult
+     **/
+    @RequestMapping(value = "/hjarea/addAreaSetting")
+    public AjaxResult addAreaSetting(@RequestParam String ids, @RequestParam String pid){
+        return hjEpidemicSituationApi.addAreaSetting(ids, pid);
+    }
+
+    /**
+     * @Author xieya
+     * @Description
+     * @Date 删除疫情城市数据 17:30
+     * @param id
+     * @param pid
+     * @return com.hujiang.framework.web.domain.AjaxResult
+     **/
+    @RequestMapping("/hjarea/deleteAreaSetting")
+    public AjaxResult deleteAreaSetting(@RequestParam Integer id, @RequestParam String pid) {
+        return hjEpidemicSituationApi.deleteAreaSetting(id, pid);
+    }
+
+    @RequestMapping("/hjarea/forbidAreaSetting")
+    public AjaxResult forbidAreaSetting(@RequestParam Integer id, @RequestParam String pid, @RequestParam Integer enter) {
+        return hjEpidemicSituationApi.forbidAreaSetting(id, pid, enter);
+    }
+
+    /**
+     * @param pid
+     * @return com.hujiang.framework.web.domain.AjaxResult
+     * @Author xieya
+     * @Description 查询温度列表
+     * @Date 2020/3/24 13:48
+     **/
+    @RequestMapping("/temperature/temperatureList")
+    public AjaxResult temperatureList(@RequestParam String pid) {
+        return hjTemperatureApi.temperatureList(pid);
+    }
+
+    /**
+     * @param pid
+     * @param temperature
+     * @return com.hujiang.framework.web.domain.AjaxResult
+     * @Author xieya
+     * @Description 新增
+     * @Date 2020/3/24 13:56
+     **/
+    @RequestMapping("/temperature/addTemperature")
+    public AjaxResult addTemperature(@RequestParam String pid, @RequestParam String temperature) {
+        return hjTemperatureApi.addTemperature(pid, temperature);
+    }
+
+    /**
+     * @param id
+     * @return com.hujiang.framework.web.domain.AjaxResult
+     * @Author xieya
+     * @Description 删除
+     * @Date 2020/3/24 13:57
+     **/
+    @RequestMapping("/temperature/deleteTemperature")
+    public AjaxResult deleteTemperature(@RequestParam Integer id) {
+        return hjTemperatureApi.deleteTemperature(id);
+    }
+
+    /**
+     * @param id
+     * @param pid
+     * @return com.hujiang.framework.web.domain.AjaxResult
+     * @Author xieya
+     * @Description 修改状态
+     * @Date 2020/3/24 13:57
+     **/
+    @RequestMapping("/temperature/forbidTemperatures")
+    public AjaxResult forbidTemperatures(@RequestParam Integer id, @RequestParam String pid, @RequestParam Integer enter) {
+        return hjTemperatureApi.forbidTemperatures(id, pid, enter);
     }
 }
