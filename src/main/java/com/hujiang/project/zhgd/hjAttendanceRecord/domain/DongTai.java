@@ -11,6 +11,24 @@ public class DongTai {
     private String passedTime;//通行时间
     private String direction;//进出
     private String idCode;//身份证号码
+    private String temperature;
+    private String alarm;
+
+    public String getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature(String temperature) {
+        this.temperature = temperature;
+    }
+
+    public String getAlarm() {
+        return alarm;
+    }
+
+    public void setAlarm(String alarm) {
+        this.alarm = alarm;
+    }
 
     public String getIdCode() {
         return idCode;

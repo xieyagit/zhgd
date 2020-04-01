@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/provider/lyPersonnel",method = RequestMethod.POST)
+@RequestMapping(value = "/api/lyPersonnel",method = RequestMethod.POST)
 public class PersonnelApi extends BaseController {
     @Autowired
     private ILyPersonnelService lyPersonnelService;
@@ -40,7 +40,7 @@ public class PersonnelApi extends BaseController {
     private ILyStatisticsService lyStatisticsService;
 
     @PostMapping("/insertPersonnel")
-    public AjaxResult insertPersonnel(@RequestBody LyPersonnel lyPersonnel)throws Exception{
+    public AjaxResult insertPersonnel( LyPersonnel lyPersonnel)throws Exception{
         lyPersonnel.setIspresent("0");
         LyPersonnel a=new LyPersonnel();
         a.setPid(lyPersonnel.getPid());
@@ -82,7 +82,7 @@ public class PersonnelApi extends BaseController {
      * 信息查询人员资料
      */
     @PostMapping("/selectPersonnelCompany")
-    public AjaxResult selectPersonnelCompany(@RequestBody LyPersonnel lyPersonnel){
+    public AjaxResult selectPersonnelCompany( LyPersonnel lyPersonnel){
         lyPersonnel.setType("1");
         lyPersonnel.setIspresent("0");
         List<LyCompanyPersonnel> lcpList=lyPersonnelService.getLyCompanyPersonnel(lyPersonnel);
@@ -166,7 +166,7 @@ public class PersonnelApi extends BaseController {
      * 人员分页列表
      */
     @PostMapping("/selectPersonnelPageList")
-    public AjaxResult selectPersonnelPageList(@RequestBody LyPersonnel lyPersonnel){
+    public AjaxResult selectPersonnelPageList( LyPersonnel lyPersonnel){
         startPage();
         List<LyPersonnel> lpList=lyPersonnelService.selectLyPersonnelList(lyPersonnel);
         return AjaxResult.success(getDataTable(lpList));
@@ -175,7 +175,7 @@ public class PersonnelApi extends BaseController {
      * 人员修改保存
      */
     @PostMapping("/updatePersonnelById")
-    public AjaxResult updatePersonnelById(@RequestBody LyPersonnel lyPersonnel){
+    public AjaxResult updatePersonnelById( LyPersonnel lyPersonnel){
 
        lyPersonnelService.updateLyPersonnel(lyPersonnel);
         return AjaxResult.success("修改成功");
@@ -184,7 +184,7 @@ public class PersonnelApi extends BaseController {
      * 在职人员离职
      */
     @PostMapping("/personnelQuit")
-    public AjaxResult personnelQuit(@RequestBody LyPersonnel lyPersonnel)throws Exception{
+    public AjaxResult personnelQuit( LyPersonnel lyPersonnel)throws Exception{
         lyPersonnel.setIspresent("1");
         lyPersonnelService.updateLyPersonnel(lyPersonnel);
         //删除人脸
@@ -195,8 +195,15 @@ public class PersonnelApi extends BaseController {
      * 添加黑名单
      */
     @PostMapping("/insertBlacklist")
-    public AjaxResult insertBlacklist(String ids){
+    public AjaxResult insertBlacklist(String ids)throws Exception{
       int i=  lyPersonnelService.insertBlacklist(ids);
+      String[] idss=ids.split(",");
+      for(int j=0;j<idss.length;j++){
+        LyPersonnel lyPersonnel=lyPersonnelService.selectLyPersonnelById(Integer.valueOf(idss[j]));
+        lyPersonnel.setIspresent("1");
+        lyPersonnelService.updateLyPersonnel(lyPersonnel);
+          lyPersonnelService.personnelInOUt(lyPersonnel,"1");
+      }
       if(i>0){
           return AjaxResult.success("添加黑名单成功！");
       }else{

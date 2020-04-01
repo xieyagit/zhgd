@@ -44,7 +44,12 @@ public class  VehicleServiceImpl implements IVehicleService
 	{
 	    return vehicleMapper.selectVehicleList(vehicle);
 	}
-	
+		@Override
+	public List<Vehicle> selectVehicleListTwo(Vehicle vehicle)
+	{
+	    return vehicleMapper.selectVehicleListTwo(vehicle);
+	}
+
     /**
      * 新增车牌数据
      * 

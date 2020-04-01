@@ -26,22 +26,22 @@ private IHjAttendanceRecordService hjAttendanceRecordService;
     public String temperature(@RequestBody String json)throws Exception{
         logger.info("=====体温数据：" + json);
 //        Thread.sleep(2000);
-        JSONObject j=JSONObject.parseObject(json);
-        String temperatureSn=j.getString("sn");
-        HjDeviceTemperature hjDeviceTemperature=new HjDeviceTemperature();
-        hjDeviceTemperature.setTemperatureSn(temperatureSn);
-        List<HjDeviceTemperature> tList=hjDeviceTemperatureService.selectHjDeviceTemperatureList(hjDeviceTemperature);
-        if(tList.size()>0){
-            String deviceSn=tList.get(0).getDeviceSn();
-            String time=j.getString("time");
-            HjAttendanceRecord hjAttendanceRecord=new HjAttendanceRecord();
-            hjAttendanceRecord.setDeviceSn(deviceSn);
-            hjAttendanceRecord.setPassedTime(time);
-            hjAttendanceRecord.setAlarm(j.getString("alarm"));
-            hjAttendanceRecord.setTemperature(j.getString("temperature"));
-            hjAttendanceRecord.setProjectId(tList.get(0).getPid());
-            hjAttendanceRecordService.updateHjAttendanceRecordTwo(hjAttendanceRecord);
-        }
+//        JSONObject j=JSONObject.parseObject(json);
+//        String temperatureSn=j.getString("sn");
+//        HjDeviceTemperature hjDeviceTemperature=new HjDeviceTemperature();
+//        hjDeviceTemperature.setTemperatureSn(temperatureSn);
+//        List<HjDeviceTemperature> tList=hjDeviceTemperatureService.selectHjDeviceTemperatureList(hjDeviceTemperature);
+//        if(tList.size()>0){
+//            String deviceSn=tList.get(0).getDeviceSn();
+//            String time=j.getString("time");
+//            HjAttendanceRecord hjAttendanceRecord=new HjAttendanceRecord();
+//            hjAttendanceRecord.setDeviceSn(deviceSn);
+//            hjAttendanceRecord.setPassedTime(time);
+//            hjAttendanceRecord.setAlarm(j.getString("alarm"));
+//            hjAttendanceRecord.setTemperature(j.getString("temperature"));
+//            hjAttendanceRecord.setProjectId(tList.get(0).getPid());
+//            hjAttendanceRecordService.updateHjAttendanceRecordTwo(hjAttendanceRecord);
+//        }
 
 
         JSONObject result=new JSONObject();

@@ -37,6 +37,15 @@ public class LyAttendanceRecordPersonnel
 	private String empName;//人员名字
 	private String companyName;//公司名字
 	private String type;//在职人员或访客
+	private String empNumber;
+
+	public String getEmpNumber() {
+		return empNumber;
+	}
+
+	public void setEmpNumber(String empNumber) {
+		this.empNumber = empNumber;
+	}
 
 	public String getType() {
 		return type;

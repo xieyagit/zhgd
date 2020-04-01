@@ -51,9 +51,19 @@ public class LyPersonnel
 	private String type;
 	/** 备注 */
 	private String bz;
+	/** 工号 */
+	private String empNumber;
 private String companyName;
 private  String floor;
 private String isBlacklist;
+
+	public String getEmpNumber() {
+		return empNumber;
+	}
+
+	public void setEmpNumber(String empNumber) {
+		this.empNumber = empNumber;
+	}
 
 	public String getIsBlacklist() {
 		return isBlacklist;

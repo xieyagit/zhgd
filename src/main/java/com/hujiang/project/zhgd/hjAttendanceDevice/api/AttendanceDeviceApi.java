@@ -84,7 +84,7 @@ import java.util.List;
      */
     public String comparisonDate(String time) throws ParseException {
         if (!"".equals(time) && time != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             Date kqTime = sdf.parse(time);//考勤时间
             Calendar beforeTime = Calendar.getInstance();
             beforeTime.add(Calendar.MINUTE, -15);//

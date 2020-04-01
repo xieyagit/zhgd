@@ -36,9 +36,10 @@ public class VehicleAppApi extends BaseController {
      * @return
      * */
     @PostMapping( value = "/selectAll")
-    public JSONObject selectAll(@RequestBody Vehicle vehicle, PageDomain pageDomain){
+    public JSONObject selectAll(Vehicle vehicle, PageDomain pageDomain){
         startPage();
         JSONObject result = new JSONObject();
+        vehicle.setLiftTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         List<Vehicle> vehicle1 = vehicleService.selectAll(vehicle);
         JSONArray jsonArray = new JSONArray();
         for (Vehicle list : vehicle1 ){

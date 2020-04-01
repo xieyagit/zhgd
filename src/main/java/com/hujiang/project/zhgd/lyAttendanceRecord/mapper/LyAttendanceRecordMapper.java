@@ -2,6 +2,7 @@ package com.hujiang.project.zhgd.lyAttendanceRecord.mapper;
 
 import com.hujiang.project.zhgd.lyAttendanceRecord.domain.LyAttendanceRecord;
 import com.hujiang.project.zhgd.lyAttendanceRecord.domain.LyAttendanceRecordPersonnel;
+import com.hujiang.project.zhgd.lyAttendanceRecord.domain.LyRecordExport;
 
 import java.util.List;
 
@@ -63,4 +64,5 @@ public interface LyAttendanceRecordMapper
 	public int deleteLyAttendanceRecordByIds(String[] ids);
 
 	public List<LyAttendanceRecordPersonnel> selectPersonnelRecordPageList(LyAttendanceRecordPersonnel lyAttendanceRecordPersonnel);
+	public List<LyRecordExport> selectRecordExport(LyRecordExport lyRecordExport);
 }

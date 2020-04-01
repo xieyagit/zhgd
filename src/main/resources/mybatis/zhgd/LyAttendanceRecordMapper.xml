@@ -132,15 +132,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="empName"    column="empName"    />
         <result property="companyName"    column="companyName"    />
         <result property="type"    column="type"    />
+        <result property="empNumber"    column="emp_number"    />
 
     </resultMap>
     <select id="selectPersonnelRecordPageList" parameterType="LyAttendanceRecordPersonnel" resultMap="LyAttendanceRecordPersonnelResult">
-            select r.id,p.emp_name empName,r.project_id, r.employee_id,p.companyName ,r.direction,r.passed_time,r.temperature,p.type from ly_attendance_record r left join ly_personnel p on r.employee_id=p.id
+            select p.emp_number,r.id,p.emp_name empName,r.project_id, r.employee_id,p.companyName ,r.direction,r.passed_time,r.temperature,p.type from ly_attendance_record r left join ly_personnel p on r.employee_id=p.id
             where r.project_id =#{projectId}
         <if test="passedTime != null  and passedTime != '' "> and to_days(r.passed_time) = to_days(#{passedTime})</if>
         <if test="empName != null  and empName != '' "> and emp_name like  '%${empName}%'</if>
         <if test="companyName != null  and companyName != '' "> and companyName like  '%${companyName}%'</if>
         <if test="direction != null  and direction != '' "> and direction = #{direction}</if>
          order by r.id desc
+    </select>
+    <resultMap type="LyRecordExport" id="LyRecordExportResult">
+
+        <result property="empNumber"    column="emp_number"    />
+        <result property="empName"    column="emp_name"    />
+        <result property="subordinate"    column="subordinate"    />
+        <result property="maxTime"    column="maxTime"    />
+        <result property="minTime"    column="minTime"    />
+        <result property="temperature"    column="temperature"    />
+    </resultMap>
+    <select id="selectRecordExport" parameterType="LyRecordExport" resultMap="LyRecordExportResult">
+
+ select p.emp_number,p.emp_name,p.subordinate,(select MAX(passed_time) from ly_attendance_record where TO_DAYS(passed_time)=TO_DAYS(#{passedTime}) and direction='out' and employee_id=r.employee_id) maxTime,
+(select MIN(passed_time) from ly_attendance_record where TO_DAYS(passed_time)=TO_DAYS(#{passedTime}) and direction='in' and employee_id=r.employee_id) minTime,r.temperature
+
+from ly_attendance_record r left join ly_personnel p on r.employee_id=p.id where project_id=#{projectId} and TO_DAYS(passed_time)=TO_DAYS(#{passedTime}) and p.type=1 and p.ispresent=0 GROUP BY employee_id
     </select>
 </mapper>

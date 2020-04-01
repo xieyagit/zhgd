@@ -33,7 +33,8 @@ public interface VehicleMapper
      * @return 车牌数据集合
      */
 	public List<Vehicle> selectVehicleList(Vehicle vehicle);
-	
+	public List<Vehicle> selectVehicleListTwo(Vehicle vehicle);
+
 	/**
      * 新增车牌数据
      * 

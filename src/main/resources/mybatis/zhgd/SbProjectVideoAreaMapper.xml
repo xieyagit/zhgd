@@ -124,11 +124,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 <result property="videoSn"    column="video_sn"    />
                 <result property="picUrl"    column="picUrl"    />
                 <result property="channelNo"    column="channelNo"    />
+                <result property="factory"    column="factory"    />
             </collection>
 
     </resultMap>
     <select id="getVideoPicUrl"  resultMap="getVideoPicUrlResult">
-select a.projectId , v.id vid,v.video_sn,v.picUrl,v.channelNo from sb_project_video_area a left join sb_project_video v on a.id=v.area_id
+select a.projectId , v.id vid,v.video_sn,v.picUrl,v.channelNo,v.factory from sb_project_video_area a left join sb_project_video v on a.id=v.area_id
 
     </select>
     <resultMap type="ProjectVideoJT" id="getVideoListResult">

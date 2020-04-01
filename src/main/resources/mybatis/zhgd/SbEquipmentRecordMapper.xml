@@ -30,10 +30,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="yloc != null "> and yloc = #{yloc}</if>
              <if test="bat != null "> and bat = #{bat}</if>
              <if test="rssi != null  and rssi != '' "> and rssi = #{rssi}</if>
-             <if test="watchDate != null "> and watchDate = #{watchDate}</if>
+             <if test="watchDate != null "> and to_days(watchDate) = to_days(#{watchDate})</if>
              <if test="createDate != null "> and createDate = #{createDate}</if>
              <if test="isPosition != null  and isPosition != '' "> and isPosition = #{isPosition}</if>
-             <if test="address != null  and address != '' "> and address = #{address}</if>
+             <if test="address != null  and address != '' "> and address like '%${address}%'</if>
          </where>
     </select>
     

@@ -27,10 +27,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="companyName"    column="companyName"    />
         <result property="floor"    column="floor"    />
         <result property="isBlacklist"    column="isBlacklist"    />
+        <result property="empNumber"    column="emp_number"    />
     </resultMap>
 	
 	<sql id="selectLyPersonnelVo">
-        select isBlacklist,companyName,floor,id, emp_name, id_code, emp_phon, emp_sex, emp_nation, id_address, id_agency, id_validdate, date_of_birth, face_url, idphoto_scan, idphoto_scan2, pid, company_id, subordinate, ispresent, type, bz from ly_personnel
+        select emp_number,isBlacklist,companyName,floor,id, emp_name, id_code, emp_phon, emp_sex, emp_nation, id_address, id_agency, id_validdate, date_of_birth, face_url, idphoto_scan, idphoto_scan2, pid, company_id, subordinate, ispresent, type, bz from ly_personnel
     </sql>
 	
     <select id="selectLyPersonnelList" parameterType="LyPersonnel" resultMap="LyPersonnelResult">
@@ -59,6 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
              <if test="floor != null  and floor != '' "> and floor like '%${floor}%'</if>
              <if test="companyName != null  and companyName != '' "> and companyName like '%${companyName}%'</if>
+             <if test="empNumber != null  and empNumber != '' "> and emp_number = #{empNumber}</if>
          </where>
          order by id desc
     </select>
@@ -131,6 +133,7 @@ select count(d.id) from (select r.id from ly_attendance_record r where r.employe
 			<if test="bz != null  and bz != ''  ">bz,</if>
 			<if test="companyName != null  and companyName != ''  ">companyName,</if>
 			<if test="floor != null  and floor != ''  ">floor,</if>
+			<if test="empNumber != null  and empNumber != ''  ">emp_number,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null  ">#{id},</if>
@@ -154,6 +157,7 @@ select count(d.id) from (select r.id from ly_attendance_record r where r.employe
 			<if test="bz != null  and bz != ''  ">#{bz},</if>
 			<if test="companyName != null  and companyName != ''  ">#{companyName},</if>
 			<if test="floor != null  and floor != ''  ">#{floor},</if>
+			<if test="empNumber != null  and empNumber != ''  ">#{empNumber},</if>
          </trim>
     </insert>
 	 
@@ -180,6 +184,7 @@ select count(d.id) from (select r.id from ly_attendance_record r where r.employe
             <if test="bz != null  and bz != ''  ">bz = #{bz},</if>
             <if test="companyName != null  and companyName != ''  ">companyName = #{companyName},</if>
             <if test="floor != null  and floor != ''  ">floor = #{floor},</if>
+            <if test="empNumber != null  and empNumber != ''  ">emp_number = #{empNumber},</if>
 
         </trim>
         where id = #{id}
