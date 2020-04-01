@@ -9,7 +9,6 @@ import com.hujiang.project.zhgd.hjAttendanceRecord.service.IHjAttendanceRecordSe
 import com.hujiang.project.zhgd.hjProject.domain.HjProject;
 import com.hujiang.project.zhgd.hjProject.service.IHjProjectService;
 import com.hujiang.project.zhgd.hjProjectWorkers.domain.Cqgztj;
-import com.hujiang.project.zhgd.hjProjectWorkers.domain.HjProjectWorkers;
 import com.hujiang.project.zhgd.hjProjectWorkers.domain.InOROut;
 import com.hujiang.project.zhgd.hjProjectWorkers.domain.TCount;
 import com.hujiang.project.zhgd.hjProjectWorkers.service.IHjProjectWorkersService;
@@ -29,8 +28,8 @@ import java.util.logging.Logger;
 
 @RestController
 @RequestMapping(value = "/provider/inOutKanBan")
-public class inOutKanBan {
-    private Logger logger = Logger.getLogger(inOutKanBan.class.getName());
+public class InOutKanBan {
+    private Logger logger = Logger.getLogger(InOutKanBan.class.getName());
     @Autowired
     private IHjProjectService projectService;
     @Autowired

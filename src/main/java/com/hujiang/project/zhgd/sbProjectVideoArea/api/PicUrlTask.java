@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-//@Component
+@Component
 @RestController
 @RequestMapping(value = "/provider/abc")
 public class PicUrlTask extends AutoTaskBase {

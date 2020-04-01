@@ -97,7 +97,7 @@
                 <when test="liftTime != null and liftTime != '' and endTime != null and endTime != ''">
                     and to_days(LiftTime) BETWEEN to_days(#{liftTime}) and to_days(#{endTime})
                 </when>
-                <otherwise>x
+                <otherwise>
                     and to_days(LiftTime)=to_days(#{liftTime})
                 </otherwise>
             </choose>
@@ -112,7 +112,13 @@
         </where>
         order by v.id desc
     </select>
-
+    <select id="selectVehicleListTwo" parameterType="Vehicle" resultMap="VehicleResult">
+    <include refid="selectVehicleVo"/>
+        <where>
+            <if test="deptID != 0 "> and DeptID = #{deptID}</if>
+            <if test="liftTime != null "> and to_days(LiftTime) = to_days(#{liftTime})</if>
+        </where>
+    </select>
     <select id="selectVehicleList" parameterType="Vehicle" resultMap="VehicleResult">
         <include refid="selectVehicleVo"/>
         <where>
@@ -123,7 +129,7 @@
             <if test="deptID != 0 "> and DeptID = #{deptID}</if>
             <if test="cameraMac != null  and cameraMac != '' "> and Camera_Mac = #{cameraMac}</if>
             <if test="liftType != null  and liftType != '' "> and LiftType = #{liftType}</if>
-            <if test="liftTime != null "> and LiftTime = #{liftTime}</if>
+            <if test="liftTime != null "> LiftTime = #{liftTime}</if>
             <if test="inOut != 0 "> and InOut = #{inOut}</if>
             <if test="img != null  and img != '' "> and img = #{img}</if>
             <if test="cardType != 0 "> and CardType = #{cardType}</if>

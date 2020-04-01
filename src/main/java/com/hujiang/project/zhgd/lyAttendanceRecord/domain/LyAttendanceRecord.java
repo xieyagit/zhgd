@@ -43,6 +43,15 @@ public class LyAttendanceRecord
 	/** 体温是否报警 */
 	private String alarm;
 	private String empName;
+	private String empNumber;
+
+	public String getEmpNumber() {
+		return empNumber;
+	}
+
+	public void setEmpNumber(String empNumber) {
+		this.empNumber = empNumber;
+	}
 
 	public String getEmpName() {
 		return empName;

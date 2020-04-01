@@ -14,7 +14,7 @@ import java.util.List;
  * 楼宇公司表
  */
 @RestController
-@RequestMapping(value = "/provider/lyCompany",method = RequestMethod.POST)
+@RequestMapping(value = "/api/lyCompany",method = RequestMethod.POST)
 public class LyCompanyApi extends BaseController {
     @Autowired
     private ILyCompanyService lyCompanyService;
@@ -22,7 +22,7 @@ public class LyCompanyApi extends BaseController {
      * 分页查询
      */
     @PostMapping("/selectPageList")
-    public TableDataInfo selectPageList(@RequestBody LyCompany lyCompany){
+    public TableDataInfo selectPageList( LyCompany lyCompany){
         startPage();
         List<LyCompany> list = lyCompanyService.selectLyCompanyList(lyCompany);
         return getDataTable(list);
@@ -31,7 +31,7 @@ public class LyCompanyApi extends BaseController {
      * 查询
      */
     @PostMapping("/selectList")
-    public AjaxResult selectList(@RequestBody LyCompany lyCompany){
+    public AjaxResult selectList( LyCompany lyCompany){
 
         List<LyCompany> list = lyCompanyService.selectLyCompanyList(lyCompany);
         return AjaxResult.success(list);
@@ -40,7 +40,7 @@ public class LyCompanyApi extends BaseController {
      * 新增
      */
     @PostMapping("/insert")
-    public AjaxResult insert(@RequestBody LyCompany lyCompany){
+    public AjaxResult insert( LyCompany lyCompany){
      int i=   lyCompanyService.insertLyCompany(lyCompany);
      if(i>0){
          return AjaxResult.success("成功");
@@ -61,7 +61,7 @@ public class LyCompanyApi extends BaseController {
      * 修改
      */
     @PostMapping("/update")
-    public AjaxResult update(@RequestBody LyCompany lyCompany){
+    public AjaxResult update( LyCompany lyCompany){
         int i=   lyCompanyService.updateLyCompany(lyCompany);
         if(i>0){
             return AjaxResult.success("成功");
@@ -79,5 +79,17 @@ public class LyCompanyApi extends BaseController {
         }
         return AjaxResult.error("失败");
     }
+//    @PostMapping("/companyPerson")
+//    public AjaxResult companyPerson(Integer pid){
+//        return
+//    }
+
+
+
+
+
+
+
+
 
 }

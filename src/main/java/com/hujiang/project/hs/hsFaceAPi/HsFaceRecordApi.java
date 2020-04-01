@@ -179,7 +179,7 @@ public class HsFaceRecordApi {
      * @throws ParseException
      */
     public boolean comparisonDate(String time) throws ParseException {
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date kqTime=sdf.parse(time);//考勤时间
         Calendar beforeTime = Calendar.getInstance();
         beforeTime.add(Calendar.MINUTE, -15);//

@@ -410,7 +410,7 @@ private SystemClient client;
      */
     private void ly(JSONObject faceInfo, LyPersonnel hpw,HjAttendanceDevice had2,String direction,String sn)throws Exception{
         LyAttendanceRecord har=new LyAttendanceRecord();
-        String passedTime=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(faceInfo.getLong("Timestamp")));
+        String passedTime=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(Long.valueOf(faceInfo.getString("Timestamp")+"000")));
         MultipartFile file = BASE64DecodedMultipartFile.base64ToMultipartOnt(faceInfo.getJSONObject("PanoImage").getString("Data"));
         String FileImgurl = AliyunOSSClientUtil.uploadFileImg(file, "hujiang", hpw.getIdCode() + System.currentTimeMillis() + ".jpg");
         String name = FileImgurl.substring(0, FileImgurl.lastIndexOf("?"));
@@ -430,7 +430,7 @@ private SystemClient client;
     }
     /**
      * 获取秘钥列表
-     * @param projectId 
+     * @param projectId
      * @return
      */
     public List<HjSynchronizationInformation> queryHjSynchronizationInformation(Integer projectId){
@@ -448,7 +448,7 @@ private SystemClient client;
      * @throws ParseException
      */
     public boolean comparisonDate(String time) throws ParseException {
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date kqTime=sdf.parse(time);//考勤时间
         Calendar beforeTime = Calendar.getInstance();
         beforeTime.add(Calendar.MINUTE, -15);//

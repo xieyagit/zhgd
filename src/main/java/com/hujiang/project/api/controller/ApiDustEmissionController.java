@@ -174,7 +174,7 @@ public class ApiDustEmissionController {
      * @return
      * @throws Exception
      */
-    @RequestMapping("HomeDustEmissionCentre")
+    @RequestMapping(value = "HomeDustEmissionCentre",method = RequestMethod.GET)
     public JSONObject getHomeDustEmission(String pid)throws Exception{
         long pid1 = 0;
         try{

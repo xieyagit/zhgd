@@ -3,6 +3,7 @@ package com.hujiang.project.zhgd.lyAttendanceRecord.service;
 import java.util.List;
 
 import com.hujiang.project.zhgd.lyAttendanceRecord.domain.LyAttendanceRecordPersonnel;
+import com.hujiang.project.zhgd.lyAttendanceRecord.domain.LyRecordExport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;import org.springframework.transaction.annotation.Transactional;
 import com.hujiang.project.zhgd.lyAttendanceRecord.mapper.LyAttendanceRecordMapper;
@@ -91,5 +92,9 @@ public class LyAttendanceRecordServiceImpl implements ILyAttendanceRecordService
 	@Override
 	public List<LyAttendanceRecordPersonnel> selectPersonnelRecordPageList(LyAttendanceRecordPersonnel lyAttendanceRecordPersonnel){
 		return lyAttendanceRecordMapper.selectPersonnelRecordPageList(lyAttendanceRecordPersonnel);
+	}
+	@Override
+	public List<LyRecordExport> selectRecordExport(LyRecordExport lyRecordExport){
+		return lyAttendanceRecordMapper.selectRecordExport(lyRecordExport);
 	}
 }

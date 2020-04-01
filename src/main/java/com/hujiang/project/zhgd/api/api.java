@@ -10,6 +10,7 @@ import com.hujiang.framework.web.page.TableDataInfo;
 import com.hujiang.project.api.controller.ApiDustEmissionController;
 import com.hujiang.project.api.controller.ApiElectricityBoxController;
 import com.hujiang.project.api.controller.ApiLZController;
+import com.hujiang.project.common.FileController;
 import com.hujiang.project.hq.api.HqFaceApi;
 import com.hujiang.project.hs.hsFaceAPi.HsFaceApi;
 import com.hujiang.project.hs.hsFaceAPi.HsFaceRecordApi;
@@ -77,6 +78,7 @@ import com.hujiang.project.zhgd.hjSystemUser.api.PC_SystrmUserApi;
 import com.hujiang.project.zhgd.hjSystemUser.domain.HjSystemUser;
 import com.hujiang.project.zhgd.hjSystemUser.domain.PasswordParam;
 import com.hujiang.project.zhgd.hjSystemUser.domain.SystemUserParam;
+import com.hujiang.project.zhgd.hjSystemUser.domain.UserParam;
 import com.hujiang.project.zhgd.hjTeam.api.APP_TeamApi;
 import com.hujiang.project.zhgd.hjTeam.domain.HjTeam;
 import com.hujiang.project.zhgd.hjTeam.pcApi.PcTeamApi;
@@ -91,6 +93,7 @@ import com.hujiang.project.zhgd.hjZhgdVehicle.api.VehicleAppApi;
 import com.hujiang.project.zhgd.hjZhgdVehicle.domain.Vehicle;
 import com.hujiang.project.zhgd.hjghformwork.api.FormWorkExternalApi;
 import com.hujiang.project.zhgd.hjghformwork.api.HjGhformworktApi;
+import com.hujiang.project.zhgd.inOut.InOutKanBan;
 import com.hujiang.project.zhgd.kqbb.KqbbAPI;
 import com.hujiang.project.zhgd.kqbb.domain.BG;
 import com.hujiang.project.zhgd.kqbb.domain.Kqbb;
@@ -151,10 +154,13 @@ import com.hujiang.project.zhgd.sbUnloaderRegistration.domain.ExportUnloaderReal
 import com.hujiang.project.zhgd.sbVersion.api.VersionApi;
 import com.hujiang.project.zhgd.utils.AliyunOSSClientUtil;
 import com.hujiang.project.zhgd.utils.Constants;
+import com.hujiang.project.zhgd.utils.Util;
 import com.hujiang.project.zhgd.zhNode.api.NodeApi;
 import com.hujiang.project.zhgd.zhNode.domain.*;
+import io.swagger.annotations.ApiOperation;
 import net.sf.json.JSONArray;
 import org.apache.commons.io.IOUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -189,6 +195,8 @@ public class api {
     private FormWorkExternalApi formWorkExternalApi;
     @Autowired
     private DeeppitExternalApi deeppitExternalApi;
+    @Autowired
+    private InOutKanBan inOutKanBan;
     @Autowired
     private ElectricityBoxExternalApi electricityBoxExternalApi;
     @Autowired
@@ -313,6 +321,8 @@ public class api {
     private FolderApi folderApi;
     @Autowired
     private FileApi fileApi;
+    @Autowired
+    private FileController filec;
     @Autowired
     private FaceAttendanceAPI faceAttendanceAPI;
     @Autowired
@@ -1005,6 +1015,26 @@ public class api {
     public AjaxResult insertHjTeamTwo(@RequestBody String json)throws Exception {
         return pcTeamApi.insertHjTeamTwo(json);
     }
+    @RequestMapping("/pcCompanyLibrary/insertHjTeam")
+    @ResponseBody
+    public AjaxResult insertHjTeam(HjTeam hjTeam)throws Exception {
+        return pcTeamApi.insertHjTeam(hjTeam);
+    }
+    @RequestMapping("/pcCompanyLibrary/updateHjTeam")
+    @ResponseBody
+    public AjaxResult updateHjTeam(HjTeam hjTeam) {
+        return pcTeamApi.updateHjTeam(hjTeam);
+    }
+    @RequestMapping("/pcCompanyLibrary/deleteHjTeam")
+    @ResponseBody
+    public AjaxResult deleteHjTeam(String ids) {
+        return pcTeamApi.deleteHjTeam(ids);
+    }
+    @RequestMapping("/pcCompanyLibrary/selectHjTeamId")
+    @ResponseBody
+    public AjaxResult selectHjTeamId(Integer id) {
+        return pcTeamApi.selectHjTeamId(id);
+    }
     @RequestMapping("/dustEmission/addDustEmission")
     @ResponseBody
     public Map<String,Object> addDustEmission(@RequestBody String json){
@@ -1021,7 +1051,7 @@ public class api {
         return dictionariesApi.getHjDictionariesList(json);
     }
 
-    @RequestMapping("/lz/get/getWeather")
+    @RequestMapping(value = "/lz/get/getWeather",method = RequestMethod.GET)
     public JSONObject getWeather(@RequestParam(value = "pid") Integer pid)throws Exception {
         return apiLZController.getWeather(pid);
     }
@@ -1033,7 +1063,7 @@ public class api {
     public JSONObject getDustEmissionData(String sid)throws Exception{
         return apiDustEmissionController.getDustEmissionData(sid);
     }
-    @RequestMapping("/dustEmission/get/HomeDustEmissionCentre")
+    @RequestMapping(value = "/dustEmission/get/HomeDustEmissionCentre",method = RequestMethod.GET)
     public JSONObject getHomeDustEmission(String pid)throws Exception{
         return apiDustEmissionController.getHomeDustEmission(pid);
     }
@@ -1637,27 +1667,58 @@ public class api {
 
     @GetMapping("/attendanceRecordPcApi/export")
     public void export(Param param , HttpServletResponse response)throws Exception{
-        System.out.println("导出Excel："+param);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        //获取数据
         List<Param> list = attendanceRecordPcApi.export(param);
-        ExcelUtil<Param> util = new ExcelUtil<Param>(Param.class);
-        //生成Excel
-        AjaxResult a = util.exportExcel(list, "考勤记录");
 
-        //设置下载文件名
-        String fileName = URLEncoder.encode((String)a.get("msg"), "UTF-8");
-        File file = new File(Utils.getPath(), (String) a.get("msg"));
-        try (InputStream inputStream = new FileInputStream(file);
-             OutputStream outputStream = response.getOutputStream();) {
+        //excel标题
+        String[] title = {"人员编号", "姓名", "项目名称", "参建单位名称", "工种","通行方向","通行时间"};
 
-            response.setContentType("application/x-download");
-            response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
+        //excel文件名
+        String fileName = "考勤记录" + System.currentTimeMillis() + ".xls";
 
-            IOUtils.copy(inputStream, outputStream);
+        //sheet名
+        String sheetName = "考勤记录";
+
+        String content[][] = new String[list.size()][title.length];
+        for (int i = 0; i < list.size(); i++) {
+
+
+            Param obj = list.get(i);
+            content[i][0] = obj.getEmployeeId().toString();
+            content[i][1] = obj.getName();
+            content[i][2] = obj.getProjectName();
+            content[i][3] = obj.getCompanyName();
+            content[i][4] = obj.getJobName();
+            content[i][5] ="in".equals(obj.getDirection())?"进":"出";
+            content[i][6]=obj.getPassedTime();
+            ;
+        }
+
+        //创建HSSFWorkbook
+        HSSFWorkbook wb = ExcelUtil.getHSSFWorkbook(sheetName, title, content, null);
+        //响应到客户端
+        try {
+            try {
+                try {
+                    fileName = new String(fileName.getBytes(), "ISO8859-1");
+                } catch (UnsupportedEncodingException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                response.setContentType("application/octet-stream;charset=ISO8859-1");
+                response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+                response.addHeader("Pargam", "no-cache");
+                response.addHeader("Cache-Control", "no-cache");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            OutputStream os = response.getOutputStream();
+            wb.write(os);
+            os.flush();
+            os.close();
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        if(file.exists()){
-            file.delete();
         }
     }
     @GetMapping("/parkings/export")
@@ -2088,6 +2149,17 @@ public class api {
     public  Map<String,Object> deleteFile(@RequestParam(value = "ids") String ids){
         return fileApi.deleteFile(ids);
     }
+    @RequestMapping(value = "/projectWorkersApi/faceVerify")
+    @ResponseBody
+    public Map<String, Object> faceVerify(@RequestParam("imageUrl1") String imageUrl1, @RequestParam("imageUrl2") String imageUrl2) {
+        return projectWorkersApi.faceVerify(imageUrl1,imageUrl2);
+    }
+    @RequestMapping(value ="/file/upload")
+    public void upload( @RequestParam(value = "file", required = true) MultipartFile[] file,
+                        @RequestParam(value = "folderName", required = true) String folderName,
+                        HttpServletRequest request, HttpServletResponse response)throws Exception{
+        filec.upload(file,folderName,request,response);
+    }
     @PostMapping("/FaceAttendanceAPI/getAttendance")
     public Map<String,Object> getAttendance( @RequestBody String json, HttpServletRequest request){
         SbApiFaceAttendance attendance = JSONObject.parseObject(json, SbApiFaceAttendance.class);
@@ -2494,8 +2566,8 @@ public class api {
     }
     @PostMapping("/Node/selectZhProgressPlanList")
     @ResponseBody
-    public AjaxResult selectZhProgressPlanList(ZhProgressPlan zhProgressPlan) {
-        return AjaxResult.success(nodeApi.selectZhProgressPlanList(zhProgressPlan));
+    public JSONObject selectZhProgressPlanList(ZhProgressPlan zhProgressPlan) {
+        return nodeApi.selectZhProgressPlanList(zhProgressPlan);
     }
     @PostMapping("/Node/selectZhPreposeList")
     @ResponseBody
@@ -2992,5 +3064,68 @@ public class api {
         System.out.println(hjProjectWorkers);
         hjProjectWorkers.setUpdateDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         return pcProjectWorkersApi.editSave(hjProjectWorkers);
+    }
+    @RequestMapping(value = "/projectWorkersApi/getAliOcrIdCard")
+    @ResponseBody
+    public Map<String, Object> getAliOcrIdcard(
+            @RequestParam(value = "file", required = true) MultipartFile file,
+            @RequestParam(value = "configStr", required = true) String configStr
+    ) throws Exception {
+        return projectWorkersApi.getAliOcrIdcard(file,configStr);
+    }
+    @RequestMapping("/attendanceRecordApi/insertAdministration")
+    @ResponseBody
+    public Map<String, Object> insertAdministration(HjAttendanceRecord hjAttendanceRecord,
+                                                     MultipartFile file)
+    {String direction=hjAttendanceRecord.getDirection();
+        String deviceType=hjAttendanceRecord.getDeviceType();
+        String deviceSn=hjAttendanceRecord.getDeviceSn();
+        if(direction!=null) {
+            hjAttendanceRecord.setDirection(direction.indexOf(",") >= 0 ? direction.substring(0, direction.indexOf(",")) : direction);
+        }
+        if(deviceSn!=null){
+        hjAttendanceRecord.setDeviceSn(deviceSn.indexOf(",")>=0?deviceSn.substring(0,deviceSn.indexOf(",")):deviceSn);}
+        if(deviceType!=null){
+        hjAttendanceRecord.setDeviceType(deviceType.indexOf(",")>=0?deviceType.substring(0,deviceType.indexOf(",")):deviceType);}
+        return attendanceRecordApi.insertAdministration(hjAttendanceRecord,file);
+    }
+    @RequestMapping(value = "/projectWorkersApi/queryWitnessComparison")
+    @ApiOperation("人证对比")
+    @ResponseBody
+    public Map<String, Object> queryWitnessComparison(
+            @RequestParam(value = "file", required = true) MultipartFile file,
+            @RequestParam(value = "url", required = true) String url
+    ) throws Exception {
+        return projectWorkersApi.queryWitnessComparison(file,url);
+    }
+    @RequestMapping("/pcCompanyLibrary/companyLibraryList")
+    @ResponseBody
+    public AjaxResult list( HjCompanyLibrary hjCompanyLibrary,Integer companyId)
+    {
+        return pcCompanyLibraryApi.list(hjCompanyLibrary,companyId);
+    }
+    @RequestMapping(value = "/system/computer/querySystemUser")
+    public Map<String, Object> querySystemUser( UserParam userParam) {
+        return pc_systrmUserApi.querySystemUser(userParam);
+    }
+    @RequestMapping("/project/selectProjectList")
+    public AjaxResult list( HjProject hjProject, Integer cid) {
+        return projectApi.list(hjProject,cid);
+    }
+    @PostMapping(value = "/inOutKanBan/selectWorkerList")
+    public AjaxResult selectWorkerList(Integer pid) {
+        return inOutKanBan.selectWorkerList(pid);
+    }
+    @PostMapping(value = "/inOutKanBan/selectManagerList")
+    public AjaxResult selectManagerList(Integer pid) {
+        return inOutKanBan.selectManagerList(pid);
+    }
+    @PostMapping(value = "/inOutKanBan/selectPicture")
+    public AjaxResult selectPicture(Integer pid) {
+        return inOutKanBan.selectPicture(pid);
+    }
+    @PostMapping("/searchProjectList")
+    public AjaxResult searchProjectList( Integer cid,  String name){
+        return  sbGroupApi.searchProjectList(cid,name);
     }
 }

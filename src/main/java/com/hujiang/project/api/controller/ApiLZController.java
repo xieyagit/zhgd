@@ -35,7 +35,7 @@ public class ApiLZController {
      * @param pid
      * @return
      */
-    @RequestMapping("getWeather")
+    @RequestMapping(value = "getWeather",method = RequestMethod.GET)
     public JSONObject getWeather(@RequestParam(value = "pid") Integer pid)throws Exception {
         JSONObject jsonObject = new JSONObject();
         //获取项目信息
