@@ -2,6 +2,7 @@ package com.hujiang.project.zhgd.sbElevatorAddparams.api;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hujiang.ConfigurationProperties;
 import com.hujiang.project.zhgd.hjProjectUser.domain.HjProjectUser;
 import com.hujiang.project.zhgd.hjProjectUser.service.IHjProjectUserService;
 import com.hujiang.project.zhgd.hjRolePrivileges.domain.HjRolePrivileges;
@@ -18,7 +19,9 @@ import com.hujiang.project.zhgd.sbElevatorBinding.domain.SbElevatorBinding;
 import com.hujiang.project.zhgd.sbElevatorBinding.service.ISbElevatorBindingService;
 import com.hujiang.project.zhgd.utils.Tools;
 import com.hujiang.project.zhgd.utils.ZCAPIClient;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,9 +35,12 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@EnableConfigurationProperties(ConfigurationProperties.class)
 @RestController
 @RequestMapping(value = "/provider/OptionsElevatorApi", method = RequestMethod.POST)
 public class OptionsElevatorApi {
+
+    private static Logger logger = Logger.getLogger(OptionsElevatorApi.class);
     @Autowired
     private ISbElevatorAddparamsService elevatorAddparamsService;
     @Autowired
@@ -53,6 +59,8 @@ public class OptionsElevatorApi {
     private com.hujiang.project.cay.cay cay;
     @Resource
     private SendElevatorToPERSONNEL sendElevatorToPERSONNEL;
+    @Resource
+    private ConfigurationProperties configurationProperties;
 
     //升降机模块权限
     private static final int PRIVILEGESID = 8;
@@ -87,8 +95,10 @@ public class OptionsElevatorApi {
         elevator.setPid(elevator.getProjectId());
         elevator.setUserid(elevator.getUserid());
         int result = iSbElevatorBindingService.insertSbElevatorBinding(elevator);
-        /** 获取城安院项目id&项目监管编号(市管项目)*/
+
+        //增加是否上传开关精确到项目
         if ("CAY".equals(elevator.getScznl())) {
+            /** 获取城安院项目id&项目监管编号(市管项目)*/
             if(elevator.getGctype() == 1){
 
                 SbElevatorBinding sbElevatorBinsing = new SbElevatorBinding();
@@ -102,19 +112,14 @@ public class OptionsElevatorApi {
                 object1.put("PList", array);
                 System.out.println("object1" + object1);
                 String h = ZCAPIClient.SGXMCAY("lifter/ele_info", object1);
-                System.out.println("上报城安院状态：" + h);
-                //上报城安院升降机基本信息（结束）
-                //上报城安院升降机参数信息 （开始）
 
                 //组装入参
                 JSONObject object2 = setParamElePar(elevator);
                 array1.add(object2);
                 JSONObject jsonObject4 = new JSONObject();
                 jsonObject4.put("PList", array1);
-                //上报城安院升降机参数信息
                 String k = ZCAPIClient.SGXMCAY("lifter/ele_par", jsonObject4);
-                System.out.println("上报城安院升降机基本信息状态：" + k);
-                //上报城安院升降机参数信息 （结束）
+
             }else if(elevator.getGctype() == 2){
                 /** 对接cay(区管项目) */
                 JSONObject qgJson = setEleInfoParamJson(elevator);
@@ -126,7 +131,7 @@ public class OptionsElevatorApi {
                 String f = ZCAPIClient.QGXMCAY("lifter/ele_info", jsonObject3);
                 JSONObject cayInsertReturn = JSONObject.parseObject(f);
                 if("OK".equals(cayInsertReturn.get("res"))){
-                    System.out.println("升降机基本信息上报成功");
+                    logger.info("升降机基本信息上报城安院成功");
                 }
 
                 //入参
@@ -151,6 +156,7 @@ public class OptionsElevatorApi {
             elevator.setSerialNum(elevator.getSerialNum());
             sendElevatorToPERSONNEL.cayMachine(elevator);
         }
+
         if ("RCAJ".equals(elevator.getScznl())) {
             SbElevatorBinding sbElevatorBinding = new SbElevatorBinding();
             sbElevatorBinding.setHxzId(sbElevatorBinding.getHxzId());
