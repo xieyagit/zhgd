@@ -2,7 +2,6 @@ package com.hujiang.project.zhgd.sbElevatorAddparams.api;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.hujiang.ConfigurationProperties;
 import com.hujiang.project.zhgd.hjProjectUser.domain.HjProjectUser;
 import com.hujiang.project.zhgd.hjProjectUser.service.IHjProjectUserService;
 import com.hujiang.project.zhgd.hjRolePrivileges.domain.HjRolePrivileges;
@@ -21,7 +20,6 @@ import com.hujiang.project.zhgd.utils.Tools;
 import com.hujiang.project.zhgd.utils.ZCAPIClient;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +33,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@EnableConfigurationProperties(ConfigurationProperties.class)
 @RestController
 @RequestMapping(value = "/provider/OptionsElevatorApi", method = RequestMethod.POST)
 public class OptionsElevatorApi {
@@ -59,8 +56,6 @@ public class OptionsElevatorApi {
     private com.hujiang.project.cay.cay cay;
     @Resource
     private SendElevatorToPERSONNEL sendElevatorToPERSONNEL;
-    @Resource
-    private ConfigurationProperties configurationProperties;
 
     //升降机模块权限
     private static final int PRIVILEGESID = 8;
