@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.utils.JsonUtils;
 import com.hujiang.common.utils.ThreadUtils;
-import org.slf4j.Logger;
+import org.apache.log4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 public class ZCAPIClient {
+
+    private static Logger logger = Logger.getLogger(ZCAPIClient.class);
 
     /**
      * 中车上报设备数据
@@ -85,7 +87,7 @@ public class ZCAPIClient {
     public static String reportedData2019(String url, JSONObject jsonObject) throws URISyntaxException, IOException {
 
         ThreadUtils.async(new Runnable() {
-            private final Logger logger = LoggerFactory.getLogger(ZCAPIClient.class);
+            private final Logger logger = (Logger) LoggerFactory.getLogger(ZCAPIClient.class);
 
             @Override
             public void run() {
@@ -197,6 +199,7 @@ public class ZCAPIClient {
      */
     public static final String QGXMCAY(String url, JSONObject jsonObject) throws IOException, URISyntaxException {
         String returnArea = Util.httpPostWithJSON(Constants.CAY_QGXM + url + Constants.TOKEN_CS, jsonObject);
+        logger.info("升降机基本信息(区管项目)返回数据"+returnArea);
         return returnArea;
     }
 
@@ -205,6 +208,7 @@ public class ZCAPIClient {
      */
     public static final String SGXMCAY(String url, JSONObject jsonObject) throws IOException, URISyntaxException {
         String s = Util.httpPostWithJSON(Constants.CAY_CS + url + Constants.TOKEN_CS, jsonObject);
+        logger.info("升降机基本信息(市管项目)返回数据"+s);
         return s;
     }
 }

@@ -1139,8 +1139,8 @@ public class DeyeCraneApi {
         data.put("LeasePhone","13000000000");
         data.put("StationPhone","13000000000");
         data.put("WorkPhone","13000000000");
-        data.put("ServerIp","39.108.103.150");
-        data.put("ServerPort","8989");
+        data.put("ServerIp","47.106.71.3");
+        data.put("ServerPort","8080");
 
 
         result.put("data",data);
