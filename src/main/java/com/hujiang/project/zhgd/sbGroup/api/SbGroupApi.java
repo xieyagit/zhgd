@@ -191,7 +191,7 @@ public class SbGroupApi extends BaseController{
         Map<String,Object> map=new HashMap<String,Object>();
         map.put("cid",cid);
         List<HjProject> projectList = hjProjectService.projectList(map);
-        CraneKB kb = sbCraneAddrecordService.selectCount(projectList.filter(a ->));
+        CraneKB kb = sbCraneAddrecordService.selectCount(projectList.stream().map(u -> u.getId()).collect(Collectors.toList()));
         result.put("limit",kb.getLlimit()+kb.getRlimit()+kb.getFlimit()+kb.getBlimit());
         result.put("incline",kb.getIncline());
         result.put("hoisting",kb.getHoisting());
@@ -208,10 +208,10 @@ public class SbGroupApi extends BaseController{
     public JSONObject lifterAlarm(@RequestParam(value = "cid")int cid){
         JSONObject jsonObject = new JSONObject();
         JSONObject result = new JSONObject();
-        Map<String,Object> paramMap=new HashMap<String,Object>();
-        paramMap.put("pid",cid);
-
-        ElevatorKB kb = elevatorAddrecordService.selectCount(paramMap);
+        Map<String,Object> map=new HashMap<String,Object>();
+        map.put("cid",cid);
+        List<HjProject> projectList = hjProjectService.projectList(map);
+        ElevatorKB kb = elevatorAddrecordService.selectCount(projectList.stream().map(u -> u.getId()).collect(Collectors.toList()));
         result.put("load",kb.getLoad());
         result.put("people",kb.getPeople());
         result.put("incline",kb.getXincline()+kb.getYincline());

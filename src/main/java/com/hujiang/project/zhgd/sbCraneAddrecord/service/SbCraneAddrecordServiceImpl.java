@@ -30,8 +30,8 @@ public class SbCraneAddrecordServiceImpl implements ISbCraneAddrecordService
 	}
 
 	@Override
-	public CraneKB selectCount(Map<String, Object> map) {
-		return sbCraneAddrecordMapper.selectCount(map);
+	public CraneKB selectCount(List list) {
+		return sbCraneAddrecordMapper.selectCount(list);
 	}
 
 	@Override

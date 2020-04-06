@@ -24,8 +24,8 @@ public class SbElevatorAddrecordServiceImpl implements ISbElevatorAddrecordServi
 	private SbElevatorAddrecordMapper sbElevatorAddrecordMapper;
 
 	@Override
-	public ElevatorKB selectCount(Map<String, Object> map) {
-		return sbElevatorAddrecordMapper.selectCount(map);
+	public ElevatorKB selectCount(List list) {
+		return sbElevatorAddrecordMapper.selectCount(list);
 	}
 
 	@Override

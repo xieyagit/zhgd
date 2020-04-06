@@ -310,7 +310,9 @@
     COUNT(IF(wind_speed>100,wind_speed,NULL)) `windSpeed`
     FROM sb_crane_addrecord a
     LEFT JOIN sb_crane_binding  b ON(a.hxzid=b.hxzid)
-    where b.pid = #{pid}
-
+    where b.pid IN
+    <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+        #{id}
+    </foreach>
     </select>
 </mapper>
