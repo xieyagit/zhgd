@@ -1,6 +1,8 @@
 package com.hujiang.project.zhgd.hjDeeppit.service;
 
 import java.util.List;
+
+import com.hujiang.project.zhgd.hjDeeppit.domain.SbStationsListData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;import org.springframework.transaction.annotation.Transactional;
 import com.hujiang.project.zhgd.hjDeeppit.mapper.SbProjectDeeppitStructuresMapper;
@@ -19,6 +21,11 @@ public class SbProjectDeeppitStructuresServiceImpl implements ISbProjectDeeppitS
 {
 	@Autowired
 	private SbProjectDeeppitStructuresMapper sbProjectDeeppitStructuresMapper;
+
+	@Override
+	public List<SbStationsListData> selectSbStationsList() {
+		return sbProjectDeeppitStructuresMapper.selectSbStationsList();
+	}
 
 	/**
      * 查询深基坑结构物-项目信息

@@ -1,7 +1,9 @@
 package com.hujiang.project.zhgd.hjDeeppit.mapper;
 
 import com.hujiang.project.zhgd.hjDeeppit.domain.SbProjectDeeppitStructures;
-import java.util.List;	
+import com.hujiang.project.zhgd.hjDeeppit.domain.SbStationsListData;
+
+import java.util.List;
 
 /**
  * 深基坑结构物-项目 数据层
@@ -9,8 +11,9 @@ import java.util.List;
  * @author hujiang
  * @date 2019-09-02
  */
-public interface SbProjectDeeppitStructuresMapper 
+public interface SbProjectDeeppitStructuresMapper
 {
+	public List<SbStationsListData> selectSbStationsList();
 	/**
      * 查询深基坑结构物-项目信息
      * 

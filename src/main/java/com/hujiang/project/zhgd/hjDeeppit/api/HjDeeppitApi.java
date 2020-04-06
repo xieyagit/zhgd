@@ -167,50 +167,57 @@ public class HjDeeppitApi extends BaseController {
      * @return
      */
     @PostMapping(value = "getParmeterAvg" )
-    public AjaxResult getFactorDataInfo(@RequestParam(value = "displayId") Integer displayId,@RequestParam(value = "factorId") Integer factorId){
+    public AjaxResult getFactorDataInfo(@RequestParam(value = "displayId") Integer displayId,
+                                        @RequestParam(value = "factorId") Integer factorId){
         SbAvg avg = new SbAvg();
         Map<String,String> map = new HashMap<>();;
         String avgR;
         String maxR;
         String minR;
+        avg.setSubside(displayId.toString());
+        avg.setSubside("water_level");
+        avg.setFactorId(factorId);
+        avgR = hjDeeppitDataService.selectParmeterAvg(avg);
+        minR = hjDeeppitDataService.selectParmeterMax(avg);
+        maxR = hjDeeppitDataService.selectParmeterMin(avg);
+        map.put("avg",avgR);
+        map.put("min",minR);
+        map.put("max",maxR);
 
-        String avgS =null;
-        String maxS=null;
-        String minS=null;
 
-        switch (displayId){
-            case 126:
-                avg.setSubside(displayId.toString());
-                avg.setSubside("subside");
-                avg.setFactorId(factorId);
-                avgR = hjDeeppitDataService.selectParmeterAvg(avg);
-                avgS = avgR.substring(0,avgR.indexOf(".")+3);
-                maxR = hjDeeppitDataService.selectParmeterMax(avg);
-                maxS = maxR.substring(0,maxR.indexOf(".")+3);
-                minR = hjDeeppitDataService.selectParmeterMin(avg);
-                minS = minR.substring(0,minR.indexOf(".")+3);
-                map.put("avg",avgR);
-                map.put("min",minR);
-                map.put("max",maxR);
-                break;
-            case 33:
-                avg.setSubside(displayId.toString());
-                avg.setSubside("water_level");
-                avg.setFactorId(factorId);
-                avgR = hjDeeppitDataService.selectParmeterAvg(avg);
-                //avgS = avgR.substring(0,avgR.indexOf(".")+3);
-                maxR = hjDeeppitDataService.selectParmeterMax(avg);
-                //maxS = maxR.substring(0,maxR.indexOf(".")+3);
-                minR = hjDeeppitDataService.selectParmeterMin(avg);
-                //minS = minR.substring(0,minR.indexOf(".")+3);
-                map.put("avg",avgR);
-                map.put("min",minR);
-                map.put("max",maxR);
-                break;
-
-            default:
-                map.put("msg","没有这个检测类型");
-        }
+//        switch (displayId){
+//            case 126:
+//                avg.setSubside(displayId.toString());
+//                avg.setSubside("subside");
+//                avg.setFactorId(factorId);
+//                avgR = hjDeeppitDataService.selectParmeterAvg(avg);
+//                avgS = avgR.substring(0,avgR.indexOf(".")+3);
+//                maxR = hjDeeppitDataService.selectParmeterMax(avg);
+//                maxS = maxR.substring(0,maxR.indexOf(".")+3);
+//                minR = hjDeeppitDataService.selectParmeterMin(avg);
+//                minS = minR.substring(0,minR.indexOf(".")+3);
+//                map.put("avg",avgR);
+//                map.put("min",minR);
+//                map.put("max",maxR);
+//                break;
+//            case 33:
+//                avg.setSubside(displayId.toString());
+//                avg.setSubside("water_level");
+//                avg.setFactorId(factorId);
+//                avgR = hjDeeppitDataService.selectParmeterAvg(avg);
+//                //avgS = avgR.substring(0,avgR.indexOf(".")+3);
+//                maxR = hjDeeppitDataService.selectParmeterMax(avg);
+//                //maxS = maxR.substring(0,maxR.indexOf(".")+3);
+//                minR = hjDeeppitDataService.selectParmeterMin(avg);
+//                //minS = minR.substring(0,minR.indexOf(".")+3);
+//                map.put("avg",avgR);
+//                map.put("min",minR);
+//                map.put("max",maxR);
+//                break;
+//
+//            default:
+//                map.put("msg","没有这个检测类型");
+//        }
         return AjaxResult.success(map);
     }
 
@@ -299,7 +306,9 @@ public class HjDeeppitApi extends BaseController {
      * @return
      */
     @PostMapping(value = "selectSpecial" )
-    public List selectSpecial(@RequestParam(value = "factorId")Integer factorId,@RequestParam(value = "param")String param,@RequestParam(value = "date") String date){
+    public List selectSpecial(@RequestParam(value = "factorId")Integer factorId,
+                              @RequestParam(value = "param")String param,
+                              @RequestParam(value = "date") String date){
         String s1  = hjDeeppitDataService.selectHjDeeppitDataListV(factorId,param,date+" 00:00:01",date+" 04:00:00");
         String s2  = hjDeeppitDataService.selectHjDeeppitDataListV(factorId,param,date+" 04:00:01",date+" 08:00:00");
         String s3  = hjDeeppitDataService.selectHjDeeppitDataListV(factorId,param,date+" 08:00:01",date+" 12:00:00");
@@ -325,63 +334,95 @@ public class HjDeeppitApi extends BaseController {
      * @return
      */
     @PostMapping(value = "selectSpecialS" )
-    public JSONArray getFactorDataT(@RequestParam(value = "displayId") Integer displayId,@RequestParam(value = "factorId") Integer factorId,@RequestParam(value = "startTime") String startTime, @RequestParam(value = "endTime")String endTime) {
+    public JSONArray getFactorDataT(@RequestParam(value = "displayId") Integer displayId,
+                                    @RequestParam(value = "factorId") Integer factorId,
+                                    @RequestParam(value = "startTime") String startTime,
+                                    @RequestParam(value = "endTime")String endTime) {
 
         List<HjDeeppitData> hjDeeppitDataList = hjDeeppitDataService.selectHjDeeppitDataListT(factorId,startTime,endTime);
         JSONArray array = new JSONArray();
         JSONArray array1;
-        switch (displayId){
-            //沉降
-            case 126 :
-                for (HjDeeppitData data : hjDeeppitDataList){
-                    array1 = new JSONArray();
-                    array1.add(data.getCreation());
-                    array1.add(data.getSubside());
-                    array.add(array1);
-                }
-                break;
-            //地下水位
-            case 33 :
-                for (HjDeeppitData data : hjDeeppitDataList){
-                    array1 = new JSONArray();
-                    array1.add(data.getCreation());
-                    array1.add(data.getWaterLevel());
-                    array.add(array1);
-                }
-                break;
-            //深层水平位移
-            case 21 :
-                for (HjDeeppitData data : hjDeeppitDataList){
-                    array1 = new JSONArray();
-                    array1.add(data.getCreation());
-                    array1.add(data.getLevelX());
-                    array1.add(data.getLevelY());
-                    array.add(array1);
-                }
-                break;
-            //应变原始数据
-            case 22 :
-                for (HjDeeppitData data : hjDeeppitDataList){
-                    array1 = new JSONArray();
-                    array1.add(data.getCreation());
-                    array1.add(data.getStrainFrequency());
-                    array1.add(data.getStrainTemperature());
-                    array.add(array1);
-                }
-                break;
-            //建筑物倾斜
-            case 127 :
-                for (HjDeeppitData data : hjDeeppitDataList){
-                    array1 = new JSONArray();
-                    array1.add(data.getCreation());
-                    array1.add(data.getTiltX());
-                    array1.add(data.getTiltY());
-                    array.add(array1);
-                }
-                break;
-            default:
-                array.add("参数错误");
+        for (HjDeeppitData data : hjDeeppitDataList){
+            array1 = new JSONArray();
+            array1.add(data.getCreation());
+            if(data.getSubside() != null && data.getSubside() != "") {
+                array1.add(data.getSubside());
+            }
+            if(data.getWaterLevel() != null && data.getWaterLevel() != "") {
+                array1.add(data.getWaterLevel());
+            }
+            if(data.getLevelX() != null && data.getLevelX() != ""){
+                array1.add(data.getLevelX());
+            }
+            if(data.getLevelY() != null && data.getLevelY() != "") {
+                array1.add(data.getLevelY());
+            }
+            if(data.getStrainFrequency() != null && data.getStrainFrequency() != "") {
+                array1.add(data.getStrainFrequency());
+            }
+            if(data.getStrainTemperature() != null && data.getStrainTemperature() != "") {
+                array1.add(data.getStrainTemperature());
+            }
+            if(data.getTiltX() != null && data.getTiltX() != "") {
+                array1.add(data.getTiltX());
+            }
+            if(data.getTiltY() != null && data.getTiltY() != "") {
+                array1.add(data.getTiltY());
+            }
+            array.add(array1);
         }
+//        switch (displayId){
+//            //沉降
+//            case 126 :
+//                for (HjDeeppitData data : hjDeeppitDataList){
+//                    array1 = new JSONArray();
+//                    array1.add(data.getCreation());
+//                    array1.add(data.getSubside());
+//                    array.add(array1);
+//                }
+//                break;
+//            //地下水位
+//            case 33 :
+//                for (HjDeeppitData data : hjDeeppitDataList){
+//                    array1 = new JSONArray();
+//                    array1.add(data.getCreation());
+//                    array1.add(data.getWaterLevel());
+//                    array.add(array1);
+//                }
+//                break;
+//            //深层水平位移
+//            case 21 :
+//                for (HjDeeppitData data : hjDeeppitDataList){
+//                    array1 = new JSONArray();
+//                    array1.add(data.getCreation());
+//                    array1.add(data.getLevelX());
+//                    array1.add(data.getLevelY());
+//                    array.add(array1);
+//                }
+//                break;
+//            //应变原始数据
+//            case 22 :
+//                for (HjDeeppitData data : hjDeeppitDataList){
+//                    array1 = new JSONArray();
+//                    array1.add(data.getCreation());
+//                    array1.add(data.getStrainFrequency());
+//                    array1.add(data.getStrainTemperature());
+//                    array.add(array1);
+//                }
+//                break;
+//            //建筑物倾斜
+//            case 127 :
+//                for (HjDeeppitData data : hjDeeppitDataList){
+//                    array1 = new JSONArray();
+//                    array1.add(data.getCreation());
+//                    array1.add(data.getTiltX());
+//                    array1.add(data.getTiltY());
+//                    array.add(array1);
+//                }
+//                break;
+//            default:
+//                array.add("参数错误");
+//        }
 
         return array;
     }

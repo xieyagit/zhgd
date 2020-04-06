@@ -16,7 +16,7 @@ import java.util.Map;
 public interface ISbCraneAddrecordService
 {
 	public List<SbCraneAddrecord> selectCraneAddrecordList(Map<String, Object> map);
-	public CraneKB selectCount(Map<String, Object> map);
+	public CraneKB selectCount(List list);
 
 
 

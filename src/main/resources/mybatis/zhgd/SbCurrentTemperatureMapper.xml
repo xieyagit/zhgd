@@ -15,6 +15,7 @@
         <result property="nwarm" column="nwarm"/>
         <result property="tm" column="tm"/>
         <result property="doorType" column="door_type"/>
+        <result property="projectId" column="project_id"/>
     </resultMap>
 
     <sql id="selectSbCurrentTemperatureVo">
@@ -199,6 +200,8 @@
     <select id="SbCurrentTemperatureListKB" parameterType="Map" resultMap="SbCurrentTemperatureResult">
     SELECT MAX(a.tm) as tm,a.electricity_box_id,b.project_id FROM sb_current_temperature a
     LEFT JOIN sb_project_electricity_box b ON(a.electricity_box_id=b.electricity_box_id)
-    WHERE a.electricity_box_id IS NOT NULL AND b.project_id = #{pid} GROUP BY a.electricity_box_id
+    WHERE a.electricity_box_id IS NOT NULL  AND b.project_id  IS NOT NULl
+    <if test="pid != null  and pid != ''  ">AND b.project_id = #{pid}</if>
+     GROUP BY a.electricity_box_id
     </select>
 </mapper>

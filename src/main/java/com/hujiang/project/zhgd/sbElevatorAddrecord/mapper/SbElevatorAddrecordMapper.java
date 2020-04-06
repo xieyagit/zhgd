@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public interface SbElevatorAddrecordMapper 
 {
-	public ElevatorKB selectCount(Map<String, Object> map);
+	public ElevatorKB selectCount(List list);
 	public List<SbElevatorAddrecord> selectSbElevatorAddrecordListKB(Map<String, Object> map);
 	public SbElevatorAddrecord selectSbElevatorAddRecord(@Param(value = "hxzId") String hxzId,
                                                          @Param(value = "runtime") String runtime);

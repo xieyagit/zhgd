@@ -27,6 +27,11 @@ public class HjProjectServiceImpl implements IHjProjectService
 	@Autowired
 	private HjProjectMapper hjProjectMapper;
 
+	@Override
+	public List<HjProject> projectList(Map<String, Object> map) {
+		return hjProjectMapper.projectList(map);
+	}
+
 	/**
      * 查询项目信息
      * 

@@ -37,6 +37,7 @@
         <result property="floor"    column="Floor"    />
         <result property="obliguityX"    column="ObliguityX"    />
         <result property="obliguityY"    column="ObliguityY"    />
+        <result property="projectId"    column="pid"    />
     </resultMap>
 
     <resultMap id="ElevatorAddRecordResult" type="ElevatorAddRecord">
@@ -345,7 +346,9 @@
     <select id="selectSbElevatorAddrecordListKB" parameterType="Map" resultMap="SbElevatorAddrecordResult">
      SELECT MAX(a.runtime) as runtime,a.hxzid,b.pid FROM sb_elevator_addrecord a
      LEFT JOIN sb_elevator_binding b ON(a.hxzid=b.hxzid)
-     WHERE a.hxzid IS NOT NULL AND b.pid = #{pid} GROUP BY a.hxzid
+     WHERE a.hxzid IS NOT NULL AND b.pid IS NOT NULL
+    <if test="pid != null  and pid != '' ">AND b.pid = #{pid} </if>
+    GROUP BY a.hxzid
     </select>
     <select id="selectCount" parameterType="Map" resultMap="ElevatorKBResult">
     SELECT
@@ -355,6 +358,9 @@
     COUNT(IF(ObliguityYAlarm=1,ObliguityYAlarm,NULL)) `Yincline`
     FROM sb_elevator_addrecord a
     LEFT JOIN sb_elevator_binding  b ON(a.hxzid=b.hxzid)
-    where b.pid = #{pid}
+    where b.pid IN
+    <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+        #{id}
+    </foreach>
     </select>
 </mapper>

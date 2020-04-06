@@ -18,7 +18,7 @@ public interface SbCraneAddrecordMapper
 {
 
         public List<SbCraneAddrecord> selectCraneAddrecordList(Map<String, Object> map);
-        public CraneKB selectCount(Map<String, Object> map);
+        public CraneKB selectCount(List list);
         /**
          * 塔吊界面
          * @param hxzId

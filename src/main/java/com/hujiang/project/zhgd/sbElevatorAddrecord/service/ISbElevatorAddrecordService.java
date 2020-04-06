@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public interface ISbElevatorAddrecordService 
 {
-	public ElevatorKB selectCount(Map<String, Object> map);
+	public ElevatorKB selectCount(List lsit);
 	public List<SbElevatorAddrecord> selectSbElevatorAddrecordListKB(Map<String, Object> map);
 	public SbElevatorAddrecord selectSbElevatorAddRecord(String hxzId, String runtime);
 	public ElevatorAddRecord selectElevatorAddRecordName(String hxzId, String runtime, Integer projectId);

@@ -14,8 +14,8 @@ public interface SystemClient {
     @PostMapping("/api/instructions/oneClean")
     public int oneClean(@RequestParam(value = "deviceNo") String deviceNo,@RequestParam(value = "projectWorkersId") Integer projectWorkersId);
     @RequestMapping(value = "/lapi/lapiFace/insertPerson",method = RequestMethod.POST)
-    public void insertPerson(@RequestBody String json,@RequestParam String sn);
+    public void insertPerson(@RequestBody String json,@RequestParam(value = "sn") String sn);
     @RequestMapping(value = "/lapi/lapiFace/deletePerson",method = RequestMethod.POST)
-    public void deletePerson(@RequestParam Integer personId,@RequestParam String sn);
+    public void deletePerson(@RequestParam(value = "personId") Integer personId,@RequestParam(value = "sn") String sn);
 
 }

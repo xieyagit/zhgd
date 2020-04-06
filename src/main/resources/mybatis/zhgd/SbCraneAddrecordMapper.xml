@@ -30,6 +30,7 @@
         <result property="magnification"    column="magnification"    />
         <result property="ratedWeight"    column="ratedWeight"    />
         <result property="obliguity"    column="obliguity"    />
+        <result property="projectId"    column="pid"    />
     </resultMap>
     <resultMap id="CraneAddRecordResult" type="CraneAddRecord">
         <result property="emp_name" column="emp_name"/>
@@ -292,7 +293,11 @@
     <select id="selectCraneAddrecordList" parameterType="Map" resultMap="SbCraneAddrecordResult">
      SELECT MAX(a.runtime) as runtime,a.hxzid,b.pid FROM sb_crane_addrecord a
      LEFT JOIN sb_crane_binding b ON(a.hxzid=b.hxzid)
-     WHERE a.hxzid IS NOT NULL AND b.pid = #{pid} GROUP BY a.hxzid
+     WHERE a.hxzid IS NOT NULL and b.pid IS NOT NULL
+    <if test="pid != null  and pid != '' ">
+        AND b.pid = #{pid}
+    </if>
+    GROUP BY a.hxzid
     </select>
     <select id="selectCount" parameterType="Map" resultMap="CraneKBResult">
     SELECT
@@ -305,7 +310,9 @@
     COUNT(IF(wind_speed>100,wind_speed,NULL)) `windSpeed`
     FROM sb_crane_addrecord a
     LEFT JOIN sb_crane_binding  b ON(a.hxzid=b.hxzid)
-    where b.pid = #{pid}
-
+    where b.pid IN
+    <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+        #{id}
+    </foreach>
     </select>
 </mapper>
