@@ -1,6 +1,8 @@
 package com.hujiang.project.zhgd.hjDeeppit.service;
 
 import com.hujiang.project.zhgd.hjDeeppit.domain.SbProjectDeeppitStructures;
+import com.hujiang.project.zhgd.hjDeeppit.domain.SbStationsListData;
+
 import java.util.List;
 
 /**
@@ -11,6 +13,7 @@ import java.util.List;
  */
 public interface ISbProjectDeeppitStructuresService 
 {
+	public List<SbStationsListData> selectSbStationsList();
 	/**
      * 查询深基坑结构物-项目信息
      * 

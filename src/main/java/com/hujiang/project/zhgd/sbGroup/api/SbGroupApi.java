@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.utils.DateUtils;
 import com.hujiang.framework.web.controller.BaseController;
 import com.hujiang.framework.web.domain.AjaxResult;
+import com.hujiang.project.zhgd.hjProject.domain.HjProject;
+import com.hujiang.project.zhgd.hjProject.service.IHjProjectService;
 import com.hujiang.project.zhgd.hjZhgdPkcount.domain.HjZhgdPkcount;
 import com.hujiang.project.zhgd.hjZhgdPkcount.service.IHjZhgdPkcountService;
 import com.hujiang.project.zhgd.sbCraneAddrecord.domain.SbCraneAddrecord;
@@ -24,10 +26,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 集团端
@@ -47,93 +47,137 @@ public class SbGroupApi extends BaseController{
     private ISbElevatorAddrecordService elevatorAddrecordService;
     @Autowired
     private IHjZhgdPkcountService hjZhgdPkcountService;
+    @Autowired
+    private IHjProjectService hjProjectService;
 
     @PostMapping(value = "/equipment")
     public JSONObject equipment(@RequestParam(value = "cid")int cid) throws ParseException {
         JSONObject jsonObject = new JSONObject();
         JSONObject result = new JSONObject();
-        Map<String,Object> paramMap=new HashMap<String,Object>();
-        paramMap.put("pid",cid);
-
         JSONObject margin = new JSONObject();
-        List<SbCraneAddrecord> SbCraneAddrecordList = sbCraneAddrecordService.selectCraneAddrecordList(paramMap);
         int onCraneLine = 0;
         int offCraneLine = 0;
-        for(SbCraneAddrecord crane :SbCraneAddrecordList){
-            long time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(crane.getRuntime()).getTime();
-            long now = System.currentTimeMillis();//系统毫秒
-            //电箱运行状态
-            if((time+3600000)>now){         //监测时间加一个小时大于当前时间
-                onCraneLine++;
-            }else{
-                offCraneLine++;
-            }
-        }
-        margin.put("total",SbCraneAddrecordList.size());
-        margin.put("onLine",onCraneLine);
-        margin.put("offLine",offCraneLine);
-
+        int totalCraneLine = 0;
         JSONObject electricityBox = new JSONObject();
-        List<SbCurrentTemperature> SbCurrentTemperatureList = sbCurrentTemperatureService.SbCurrentTemperatureListKB(paramMap);
         int onCurrentLine = 0;
         int offCurrentLine = 0;
-        for(SbCurrentTemperature current :SbCurrentTemperatureList){
-            long time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(current.getTm()).getTime();
-            long now = System.currentTimeMillis();//系统毫秒
-            //电箱运行状态
-            if((time+3600000)>now){         //监测时间加一个小时大于当前时间
-                onCurrentLine++;
-            }else{
-                offCurrentLine++;
-            }
-        }
-        electricityBox.put("total",SbCurrentTemperatureList.size());
-        electricityBox.put("onLine",onCurrentLine);
-        electricityBox.put("offLine",offCurrentLine);
-
+        int totalCurrentLine = 0;
         JSONObject environment = new JSONObject();
-        List<SbDustEmission> sbDustEmissions = dustEmissionService.selectSbDustEmissionListKB(paramMap);
         int onDustLine = 0;
         int offDustLine = 0;
-        for(SbDustEmission dust :sbDustEmissions){
-            long time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dust.getDate()).getTime();
-            long now = System.currentTimeMillis();//系统毫秒
-            //电箱运行状态
-            if((time+3600000)>now){         //监测时间加一个小时大于当前时间
-                onDustLine++;
-            }else{
-                offDustLine++;
-            }
-        }
-        environment.put("total",sbDustEmissions.size());
-        environment.put("onLine",onDustLine);
-        environment.put("offLine",offDustLine);
-
+        int totalDustLine = 0;
         JSONObject lifter = new JSONObject();
-        List<SbElevatorAddrecord> SbElevatorAddrecordList = elevatorAddrecordService.selectSbElevatorAddrecordListKB(paramMap);
         int onElevatorLine = 0;
         int offElevatorLine = 0;
-        for(SbElevatorAddrecord elevator :SbElevatorAddrecordList){
-            long time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(elevator.getRuntime()).getTime();
-            long now = System.currentTimeMillis();//系统毫秒
-            //电箱运行状态
-            if((time+3600000)>now){         //监测时间加一个小时大于当前时间
-                onElevatorLine++;
-            }else{
-                offElevatorLine++;
+        int totalElevatorLine = 0;
+
+        List<SbCraneAddrecord> SbCraneAddrecords = sbCraneAddrecordService.selectCraneAddrecordList(null);
+        List<SbCurrentTemperature> SbCurrentTemperatures = sbCurrentTemperatureService.SbCurrentTemperatureListKB(null);
+        List<SbDustEmission> SbDustEmissionlist = dustEmissionService.selectSbDustEmissionListKB(null);
+        List<SbElevatorAddrecord> SbElevatorAddrecords = elevatorAddrecordService.selectSbElevatorAddrecordListKB(null);
+        Map<String,Object> map=new HashMap<String,Object>();
+        map.put("cid",cid);
+
+        List<HjProject> projectList = hjProjectService.projectList(map);
+        for(HjProject project :projectList){
+            //塔吊
+            List<SbCraneAddrecord> SbCraneAddrecordList = SbCraneAddrecords.stream()
+                    .filter(a -> a.getProjectId().equals(project.getId()))
+                    .collect(Collectors.toList());
+            if(SbCraneAddrecordList.size()>0) {
+                for (SbCraneAddrecord crane : SbCraneAddrecordList) {
+                    long time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(crane.getRuntime()).getTime();
+                    long now = System.currentTimeMillis();//系统毫秒
+                    //电箱运行状态
+                    if ((time + 3600000) > now) {         //监测时间加一个小时大于当前时间
+                        onCraneLine++;
+                    } else {
+                        offCraneLine++;
+                    }
+                }
+                totalCraneLine=totalCraneLine+SbCraneAddrecordList.size();
             }
+            //电箱
+            List<SbCurrentTemperature> SbCurrentTemperatureList = SbCurrentTemperatures.stream()
+                    .filter(a -> a.getProjectId().equals(project.getId()))
+                    .collect(Collectors.toList());
+            if(SbCurrentTemperatureList.size()>0) {
+                for (SbCurrentTemperature current : SbCurrentTemperatureList) {
+                    long time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(current.getTm()).getTime();
+                    long now = System.currentTimeMillis();//系统毫秒
+                    //电箱运行状态
+                    if ((time + 3600000) > now) {         //监测时间加一个小时大于当前时间
+                        onCurrentLine++;
+                    } else {
+                        offCurrentLine++;
+                    }
+                }
+                totalCurrentLine = totalCurrentLine+SbCurrentTemperatureList.size();
+            }
+            //扬尘
+            List<SbDustEmission> sbDustEmissionList = SbDustEmissionlist.stream()
+                    .filter(a -> a.getProjectId().equals(project.getId()))
+                    .collect(Collectors.toList());
+            if(sbDustEmissionList.size()>0) {
+                for (SbDustEmission dust : sbDustEmissionList) {
+                    long time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dust.getDate()).getTime();
+                    long now = System.currentTimeMillis();//系统毫秒
+                    //电箱运行状态
+                    if ((time + 3600000) > now) {         //监测时间加一个小时大于当前时间
+                        onDustLine++;
+                    } else {
+                        offDustLine++;
+                    }
+                }
+                totalDustLine = totalDustLine+sbDustEmissionList.size();
+            }
+
+
+            //升降机
+            List<SbElevatorAddrecord> SbElevatorAddrecordList = SbElevatorAddrecords.stream()
+                    .filter(a -> a.getProjectId().equals(project.getId()))
+                    .collect(Collectors.toList());
+            if(SbElevatorAddrecordList.size()>0) {
+                for (SbElevatorAddrecord elevator : SbElevatorAddrecordList) {
+                    long time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(elevator.getRuntime()).getTime();
+                    long now = System.currentTimeMillis();
+
+                    if ((time + 3600000) > now) {
+                        onElevatorLine++;
+                    } else {
+                        offElevatorLine++;
+                    }
+                }
+                totalElevatorLine = totalElevatorLine+SbElevatorAddrecordList.size();
+            }
+
+            //车辆系统总数
+//            List<HjZhgdPkcount> hzpList=hjZhgdPkcountService.getHjZhgdPkcountList(cid);
+//            JSONObject plateNumber = new JSONObject();
+//            plateNumber.put("total",hzpList.size());
+
+
         }
-        lifter.put("total",SbElevatorAddrecordList.size());
+        //塔吊
+        margin.put("total",totalCraneLine);
+        margin.put("onLine",onCraneLine);
+        margin.put("offLine",offCraneLine);
+        //升降机
+        electricityBox.put("total",totalCurrentLine);
+        electricityBox.put("onLine",onCurrentLine);
+        electricityBox.put("offLine",offCurrentLine);
+        //扬尘
+        environment.put("total",totalDustLine);
+        environment.put("onLine",onDustLine);
+        environment.put("offLine",offDustLine);
+        //升降机
+        lifter.put("total",totalElevatorLine);
         lifter.put("onLine",onElevatorLine);
         lifter.put("offLine",offElevatorLine);
-        //车辆系统总数
-        List<HjZhgdPkcount> hzpList=hjZhgdPkcountService.getHjZhgdPkcountList(cid);
-        JSONObject plateNumber = new JSONObject();
-        plateNumber.put("total",hzpList.size());
 
         result.put("margin",margin);
         result.put("electricityBox",electricityBox);
-        result.put("plateNumber",plateNumber);
+//        result.put("plateNumber", Collections.emptyList());
         result.put("environment",environment);
         result.put("lifter",lifter);
         jsonObject.put("data",result);
@@ -144,9 +188,10 @@ public class SbGroupApi extends BaseController{
     public JSONObject marginAlarm(@RequestParam(value = "cid")int cid){
         JSONObject jsonObject = new JSONObject();
         JSONObject result = new JSONObject();
-        Map<String,Object> paramMap=new HashMap<String,Object>();
-        paramMap.put("pid",cid);
-        CraneKB kb = sbCraneAddrecordService.selectCount(paramMap);
+        Map<String,Object> map=new HashMap<String,Object>();
+        map.put("cid",cid);
+        List<HjProject> projectList = hjProjectService.projectList(map);
+        CraneKB kb = sbCraneAddrecordService.selectCount(projectList.filter(a ->));
         result.put("limit",kb.getLlimit()+kb.getRlimit()+kb.getFlimit()+kb.getBlimit());
         result.put("incline",kb.getIncline());
         result.put("hoisting",kb.getHoisting());

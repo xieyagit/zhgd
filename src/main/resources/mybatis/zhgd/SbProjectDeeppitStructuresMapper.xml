@@ -13,6 +13,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="appSecret"    column="app_secret"    />
         <result property="supplier"    column="supplier"    />
     </resultMap>
+    <resultMap type="SbStationsListData" id="SbStationsListDataResult">
+        <result property="projectId"    column="projectId"    />
+        <result property="structuresId"    column="structuresId"    />
+        <result property="displayId"    column="displayId"    />
+        <result property="groupId"    column="groupId"    />
+        <result property="factorId"    column="factorId"    />
+    </resultMap>
 
 	<sql id="selectSbProjectDeeppitStructuresVo">
         select id, structures_id, project_id, user_id, app_d, app_secret,supplier from sb_project_deeppit_structures
@@ -29,6 +36,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="appSecret != null  and appSecret != '' "> and app_secret = #{appSecret}</if>
             <if test="supplier != null  and supplier != '' "> and supplier = #{supplier}</if>
          </where>
+    </select>
+
+    <select id="selectSbStationsList" parameterType="SbStationsListData" resultMap="SbStationsListDataResult">
+        SELECT
+        a.reserved_o AS projectId,
+        a.id AS structuresId,
+        b.id AS displayId,
+        c.id AS groupId,
+        d.id AS factorId
+        FROM sb_deeppit_structures AS a
+        LEFT JOIN sb_deeppit_display AS b ON (a.id = b.reserved)
+        LEFT JOIN sb_deeppit_group AS c ON (b.id = c.reserved)
+        LEFT JOIN sb_deeppit_factor AS d ON (c.id = d.reserved)
     </select>
 
     <select id="selectSbProjectDeeppitStructuresListS" parameterType="SbProjectDeeppitStructures" resultMap="SbProjectDeeppitStructuresResult">

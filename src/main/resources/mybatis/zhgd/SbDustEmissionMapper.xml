@@ -18,6 +18,7 @@
         <result property="winddirection"    column="winddirection"    />
         <result property="windPower"    column="wind_power"    />
         <result property="airPressure"    column="air_pressure"    />
+        <result property="projectId"    column="project_id"    />
     </resultMap>
     <sql id="selectSbDustEmissionVo">
         select id, sn, `date`, pm25, pm10, tsp, noise, temperature, humidity, wind_speed, winddirection, wind_power, air_pressure
@@ -218,7 +219,8 @@
     <select id="selectSbDustEmissionListKB" parameterType="Map" resultMap="SbDustEmissionResult">
      SELECT MAX(a.date) as date,a.sn,b.project_id FROM sb_dust_emission a
     LEFT JOIN sb_project_dust_emission b ON(a.sn=b.sn)
-    WHERE a.sn IS NOT NULL AND b.project_id = #{pid} GROUP BY a.sn
-
+    WHERE a.sn IS NOT NULL and b.project_id IS NOT NULL
+    <if test="pid != null  ">and project_id = #{pid}</if>
+    GROUP BY a.sn
     </select>
 </mapper>

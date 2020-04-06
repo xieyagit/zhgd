@@ -31,13 +31,14 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
  * 基坑、高支模定时任务
  */
-//    @RestController
-//    @RequestMapping(value = "/provider/ElectricityDeeppitTask")
+    @RestController
+    @RequestMapping(value = "/provider/ElectricityDeeppitTask")
 @Component("ElectricityDeeppitTask")
 public class ElectricityDeeppitTask extends AutoTaskBase {
 
@@ -100,12 +101,26 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
             }
         });
     }
+    @Scheduled(cron = "0 0 * * * ?")
+    public void task3() {
+        super.exec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    insertStationDate();
+                }
+                catch (Exception e) {
+                    // logger
+                }
+            }
+        });
+    }
 
     /**
      * 更新所有token
      * @return
      */
-    //    @PostMapping("tokens")
+    @PostMapping("tokens")
     public AjaxResult tokens(){
         List<SbProjectDeeppitStructures> pdsl = sbProjectDeeppitStructuresService.selectSbProjectDeeppitStructuresList(null);
         for (SbProjectDeeppitStructures p :pdsl){
@@ -119,7 +134,7 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
     /**
      * 获取所有用户的报警信息
      */
-//    @PostMapping("/insert")
+    @PostMapping("/insert")
     public void getStationAlarmDataAll(){
 
         List<SbProjectDeeppitStructures> list = sbProjectDeeppitStructuresService.selectSbProjectDeeppitStructuresList(null);
@@ -138,12 +153,14 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
     }
 
     /**
-     * 获取token
+     * 获取token--1
      * @param
      * @return
      */
     @PostMapping("token")
-    public AjaxResult token(@RequestParam(value = "appId") String appId, @RequestParam(value = "appSecret") String appSecret, @RequestParam(value = "projectId") Integer projectId){
+    public AjaxResult token(@RequestParam(value = "appId") String appId,
+                            @RequestParam(value = "appSecret") String appSecret,
+                            @RequestParam(value = "projectId") Integer projectId){
         String authorization = Util.EncodeBase64(appId+":"+appSecret);
 
         // 创建POST请求对象
@@ -183,19 +200,19 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
         SbDeeppitToken dk = new SbDeeppitToken();
         dk.setAppId(projectId.toString());
         List<SbDeeppitToken> ldk = sbDeeppitTokenService.selectSbDeeppitTokenList(dk);
-        if(ldk != null){
+        if(ldk.size()>0){
             for (SbDeeppitToken t:ldk){
                 t.setToken(jsonObject.getString("token"));
                 sbDeeppitTokenService.updateSbDeeppitToken(t);
             }
         }else {
-            int sum = sbDeeppitTokenService.insertSbDeeppitToken(st);
+            sbDeeppitTokenService.insertSbDeeppitToken(st);
         }
-        return AjaxResult.error();
+        return AjaxResult.success();
     }
 
     /**
-     * 获取结构物列表
+     * 获取结构物列表--2
      * @return
      */
     @RequestMapping(value = "getStructures" ,method = RequestMethod.GET)
@@ -285,12 +302,13 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
     }
 
     /**
-     * 获取监测因素列表
+     * 获取监测因素列表--3
      * @param structuresId 结构件id
      * @return
      */
     @RequestMapping(value = "getDisplay" ,method = RequestMethod.GET)
-    public AjaxResult getDisplay(@RequestParam(value = "projectId") Integer projectId,@RequestParam(value = "structuresId") Integer structuresId){
+    public AjaxResult getDisplay(@RequestParam(value = "projectId") Integer projectId,
+                                 @RequestParam(value = "structuresId") Integer structuresId){
         AjaxResult ajaxResult = new AjaxResult();
         String urlS =url+"/structures/"+structuresId+"/factors";
 
@@ -366,11 +384,13 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
 
 
     /**
-     * 获取结构物下已配置的监测点
+     * 获取结构物下已配置的监测点--4
      * @return
      */
     @RequestMapping(value = "getStation" ,method = RequestMethod.GET)
-    public AjaxResult getStation(@RequestParam(value = "projectId") Integer projectId,@RequestParam(value = "structuresId") Integer structuresId,@RequestParam(value = "displayId") Integer displayId){
+    public AjaxResult getStation(@RequestParam(value = "projectId") Integer projectId,
+                                 @RequestParam(value = "structuresId") Integer structuresId,
+                                 @RequestParam(value = "displayId") Integer displayId){
         AjaxResult ajaxResult = new AjaxResult();
 
 
@@ -468,14 +488,40 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
         return ajaxResult;
     }
 
-
-
+    @RequestMapping(value = "getStationData" ,method = RequestMethod.GET)
+    public void insertStationDate(){
+        List<SbStationsListData> pdsl = sbProjectDeeppitStructuresService.selectSbStationsList();
+        Calendar calendar = new GregorianCalendar();
+        calendar.add(Calendar.DAY_OF_MONTH,0);
+        calendar.set(Calendar.HOUR_OF_DAY,0);
+        calendar.set(Calendar.MINUTE,0);
+        calendar.set(Calendar.SECOND,0);
+        calendar.set(Calendar.MILLISECOND,0);
+        Date dayStart = calendar.getTime();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String startStr = simpleDateFormat.format(dayStart);
+        calendar.set(Calendar.HOUR_OF_DAY,23);
+        calendar.set(Calendar.MINUTE,59);
+        calendar.set(Calendar.SECOND,59);
+        calendar.set(Calendar.MILLISECOND,999);
+        Date dayEnd = calendar.getTime();
+        String endStr = simpleDateFormat.format(dayEnd);
+        for (SbStationsListData p :pdsl){
+            if(p.getFactorId() !=null) {
+                getStationData(p.getProjectId(), p.getFactorId().toString(), startStr, endStr, "");
+            }
+        }
+    }
     /**
      * 获取基坑测点检测数据
      * @return
      */
-    @RequestMapping(value = "getStationData" ,method = RequestMethod.GET)
-    public AjaxResult getStationData(@RequestParam(value = "projectId") Integer projectId,@RequestParam(value = "structuresId") Integer structuresId,@RequestParam(value = "stations") String stations, @RequestParam(value = "startTime") String startTime, @RequestParam(value = "endTime") String endTime, @RequestParam(value = "limit") Integer limit){
+    @RequestMapping(value = "getStationDatas" ,method = RequestMethod.GET)
+    public void getStationData(@RequestParam(value = "projectId") Integer projectId,
+                                     @RequestParam(value = "stations") String stations,
+                                     @RequestParam(value = "startTime") String startTime,
+                                     @RequestParam(value = "endTime") String endTime,
+                                     @RequestParam(value = "limit",required = false) String limit){
         AjaxResult ajaxResult = new AjaxResult();
 
         //获取token
@@ -483,12 +529,12 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
         st.setAppId(projectId.toString());
         List<SbDeeppitToken> listT= sbDeeppitTokenService.selectSbDeeppitTokenList(st);
         if(listT.size() ==0){
-            return AjaxResult.error("没有这个项目的结构件");
+            return;
         }
         if (listT.size() <= 0){
             ajaxResult.put("code",0);
             ajaxResult.put("msg","token为空，请获取token");
-            return ajaxResult;
+            return;
         }
         try {
             // 创建POST请求对象
@@ -501,7 +547,7 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
             BasicNameValuePair param1 = new BasicNameValuePair("stations",stations);
             BasicNameValuePair param2 = new BasicNameValuePair("startTime",startTime);
             BasicNameValuePair param3 = new BasicNameValuePair("endTime",endTime);
-            BasicNameValuePair param4 = new BasicNameValuePair("limit",limit.toString());
+            BasicNameValuePair param4 = new BasicNameValuePair("limit",limit);
             BasicNameValuePair param5 = new BasicNameValuePair("token",token);
             list.add(param1);
             list.add(param2);
@@ -522,77 +568,88 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
 
             //将数据存入数据库
             net.sf.json.JSONObject sj = net.sf.json.JSONObject.fromObject(s);
-            net.sf.json.JSONArray fList = sj.getJSONArray("stations");
-            net.sf.json.JSONObject types = sj.getJSONObject("items");
-            net.sf.json.JSONObject type = types.getJSONObject("displacement");
-            net.sf.json.JSONObject station;
-            net.sf.json.JSONArray fDataList;
-            net.sf.json.JSONObject fData;
-            HjDeeppitData hjDeeppitData;
+                if(sj.get("message").equals("数据查询成功")) {
+                    net.sf.json.JSONArray fList = sj.getJSONArray("stations");
+                    net.sf.json.JSONObject station;
+                    net.sf.json.JSONArray fDataList;
+                    net.sf.json.JSONObject fData;
+                    HjDeeppitData hjDeeppitData;
 
-            for (int i = 0;i  < fList.size(); i++) {
-                station = fList.getJSONObject(i);
-                fDataList = station.getJSONArray("data");
-                switch(type.getString("name")){
-                    case "位移" :
-                        for (int j =0;j <fDataList.size();j++){
-                            fData =fDataList.getJSONObject(j);
-                            hjDeeppitData =new HjDeeppitData();
+                    for (int i = 0; i < fList.size(); i++) {
+                        station = fList.getJSONObject(i);
+                        fDataList = station.getJSONArray("data");
+                        for (int j = 0; j < fDataList.size(); j++) {
+                            fData = fDataList.getJSONObject(j);
+                            hjDeeppitData = new HjDeeppitData();
                             hjDeeppitData.setFactorId(station.getInt("id"));
-                            hjDeeppitData.setSubside(fData.getString("displacement"));
+                            hjDeeppitData.setWaterLevel(fData.getString("waterLevel"));
                             hjDeeppitData.setCreation(fData.getString("time"));
                             hjDeeppitDataService.insertHjDeeppitData(hjDeeppitData);
                         }
-                        break;
-                    case "深层水平位移" :
-                        for (int j =0;j <fDataList.size();j++){
-                            fData =fDataList.getJSONObject(j);
-                            hjDeeppitData =new HjDeeppitData();
-                            hjDeeppitData.setFactorId(station.getInt("id"));
-                            //hjDeeppitData.setLevelX();
-                            //hjDeeppitData.setLevelY();
-                            //hjDeeppitData.setLevelAccumulateX();
-                            //hjDeeppitData.setLevelAccumulateY();
-                            hjDeeppitData.setCreation(fData.getString("time"));
-                            hjDeeppitDataService.insertHjDeeppitData(hjDeeppitData);
-                        }
-                        break;
-                    case "建筑物倾斜" :
-                        for (int j =0;j <fDataList.size();j++){
-                            fData =fDataList.getJSONObject(j);
-                            hjDeeppitData =new HjDeeppitData();
-                            hjDeeppitData.setFactorId(station.getInt("id"));
-                            hjDeeppitData.setSubside(fData.getString("displacement"));
-                            hjDeeppitData.setCreation(fData.getString("time"));
-                            hjDeeppitDataService.insertHjDeeppitData(hjDeeppitData);
-                        }
-                        break;
-                    case "应变原始数据" :
-                        for (int j =0;j <fDataList.size();j++){
-                            fData =fDataList.getJSONObject(j);
-                            hjDeeppitData =new HjDeeppitData();
-                            hjDeeppitData.setFactorId(station.getInt("id"));
-                            hjDeeppitData.setSubside(fData.getString("displacement"));
-                            hjDeeppitData.setCreation(fData.getString("time"));
-                            hjDeeppitDataService.insertHjDeeppitData(hjDeeppitData);
-                        }
-                        break;
-                    default:
-                        System.out.println("无此类型因素");
-                        break;
-
+//                switch(station.getString("name")){
+//                    case "水位" :
+//                        for (int j =0;j <fDataList.size();j++){
+//                            fData =fDataList.getJSONObject(j);
+//                            hjDeeppitData =new HjDeeppitData();
+//                            hjDeeppitData.setFactorId(station.getInt("id"));
+//                            hjDeeppitData.setWaterLevel(fData.getString("waterLevel"));
+//                            hjDeeppitData.setCreation(fData.getString("time"));
+//                            hjDeeppitDataService.insertHjDeeppitData(hjDeeppitData);
+//                        }
+//                        break;
+//                    case "位移" :
+//                        for (int j =0;j <fDataList.size();j++){
+//                            fData =fDataList.getJSONObject(j);
+//                            hjDeeppitData =new HjDeeppitData();
+//                            hjDeeppitData.setFactorId(station.getInt("id"));
+//                            hjDeeppitData.setSubside(fData.getString("displacement"));
+//                            hjDeeppitData.setCreation(fData.getString("time"));
+//                            hjDeeppitDataService.insertHjDeeppitData(hjDeeppitData);
+//                        }
+//                        break;
+//                    case "深层水平位移" :
+//                        for (int j =0;j <fDataList.size();j++){
+//                            fData =fDataList.getJSONObject(j);
+//                            hjDeeppitData =new HjDeeppitData();
+//                            hjDeeppitData.setFactorId(station.getInt("id"));
+//                            //hjDeeppitData.setLevelX();
+//                            //hjDeeppitData.setLevelY();
+//                            //hjDeeppitData.setLevelAccumulateX();
+//                            //hjDeeppitData.setLevelAccumulateY();
+//                            hjDeeppitData.setCreation(fData.getString("time"));
+//                            hjDeeppitDataService.insertHjDeeppitData(hjDeeppitData);
+//                        }
+//                        break;
+//                    case "建筑物倾斜" :
+//                        for (int j =0;j <fDataList.size();j++){
+//                            fData =fDataList.getJSONObject(j);
+//                            hjDeeppitData =new HjDeeppitData();
+//                            hjDeeppitData.setFactorId(station.getInt("id"));
+//                            hjDeeppitData.setSubside(fData.getString("displacement"));
+//                            hjDeeppitData.setCreation(fData.getString("time"));
+//                            hjDeeppitDataService.insertHjDeeppitData(hjDeeppitData);
+//                        }
+//                        break;
+//                    case "应变原始数据" :
+//                        for (int j =0;j <fDataList.size();j++){
+//                            fData =fDataList.getJSONObject(j);
+//                            hjDeeppitData =new HjDeeppitData();
+//                            hjDeeppitData.setFactorId(station.getInt("id"));
+//                            hjDeeppitData.setSubside(fData.getString("displacement"));
+//                            hjDeeppitData.setCreation(fData.getString("time"));
+//                            hjDeeppitDataService.insertHjDeeppitData(hjDeeppitData);
+//                        }
+//                        break;
+//                    default:
+//                        System.out.println("无此类型因素");
+//                        break;
+//
+//                }
+                    }
                 }
-            }
-
-            ajaxResult.put("code",1);
-            ajaxResult.put("msg",s);
-            return ajaxResult;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ajaxResult.put("code",0);
-        ajaxResult.put("data","获取失败！");
-        return ajaxResult;
     }
 
     /**
@@ -724,7 +781,9 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
      * @return
      */
     //@RequestMapping(value = "getStationAlarmData" ,method = RequestMethod.POST)
-    public AjaxResult getStationAlarmData(@RequestParam(value = "projectId") Integer projectId,@RequestParam(value = "userId") Integer userId,@RequestParam(value = "structuresId") int structuresId){
+    public AjaxResult getStationAlarmData(@RequestParam(value = "projectId") Integer projectId,
+                                          @RequestParam(value = "userId") Integer userId,
+                                          @RequestParam(value = "structuresId") int structuresId){
 
         //获取token
         SbDeeppitToken st = new SbDeeppitToken();

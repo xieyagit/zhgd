@@ -16,6 +16,7 @@ import java.util.Map;
  */
 public interface IHjProjectService 
 {
+	public List<HjProject> projectList(Map<String, Object> map);
 	/**
      * 查询项目信息
      * 

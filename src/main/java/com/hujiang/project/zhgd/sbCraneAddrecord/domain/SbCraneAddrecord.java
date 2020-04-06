@@ -80,6 +80,7 @@ public class SbCraneAddrecord
 	private String PunchTime;
 	private String ClosingTime;
 
+
 	public String getPunchTime() {
 		return PunchTime;
 	}
