@@ -1,39 +1,43 @@
 package com.hujiang.project.zhgd.hjAttendanceRecord.service;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.exception.BusinessException;
-import com.hujiang.common.utils.*;
+import com.hujiang.common.support.Convert;
 import com.hujiang.common.utils.AliyunOSSClientUtil;
-import com.hujiang.framework.jms.JmsMessageInfo;
-import com.hujiang.framework.jms.JmsMessageType;
+import com.hujiang.common.utils.FaceMatchUtil;
+import com.hujiang.common.utils.StringUtil;
+import com.hujiang.common.utils.ThreadUtils;
 import com.hujiang.framework.web.domain.AjaxResult;
 import com.hujiang.project.zhgd.hjAttendanceRecord.domain.DongTai;
+import com.hujiang.project.zhgd.hjAttendanceRecord.domain.HjAttendanceRecord;
 import com.hujiang.project.zhgd.hjAttendanceRecord.domain.Param;
+import com.hujiang.project.zhgd.hjAttendanceRecord.mapper.HjAttendanceRecordMapper;
 import com.hujiang.project.zhgd.hjProject.domain.HjProject;
 import com.hujiang.project.zhgd.hjProject.mapper.HjProjectMapper;
 import com.hujiang.project.zhgd.hjProjectWorkers.domain.HjProjectWorkers;
 import com.hujiang.project.zhgd.hjProjectWorkers.domain.TCount;
 import com.hujiang.project.zhgd.hjProjectWorkers.mapper.HjProjectWorkersMapper;
-import com.hujiang.project.zhgd.utils.*;
-import org.slf4j.LoggerFactory;
+import com.hujiang.project.zhgd.utils.APIClient;
+import com.hujiang.project.zhgd.utils.AuthService;
+import com.hujiang.project.zhgd.utils.BASE64DecodedMultipartFile;
+import com.hujiang.project.zhgd.utils.Constants;
+import com.hujiang.project.zhgd.utils.PrintJobTo;
+import com.hujiang.project.zhgd.utils.Util;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.hujiang.project.zhgd.hjAttendanceRecord.mapper.HjAttendanceRecordMapper;
-import com.hujiang.project.zhgd.hjAttendanceRecord.domain.HjAttendanceRecord;
-import com.hujiang.common.support.Convert;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.jms.Queue;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 考勤记录 服务层实现
@@ -44,6 +48,9 @@ import javax.jms.Queue;
 @Service
 @Transactional
 public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService {
+
+    private static final Logger logger = Logger.getLogger(HjAttendanceRecordServiceImpl.class);
+
     @Autowired
     private HjAttendanceRecordMapper hjAttendanceRecordMapper;
 
@@ -54,7 +61,6 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
     private HjProjectMapper hjProjectMapper;
     @Resource
     APIClient apiClient;
-    private Logger logger = Logger.getLogger(HjAttendanceRecordServiceImpl.class.getName());
 
     @Autowired
     private Queue attendanceRecord;
@@ -67,6 +73,7 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
      * @param hjAttendanceRecord
      * @return
      */
+    @Override
     public HjAttendanceRecord selectNewHjAttendanceRecord(HjAttendanceRecord hjAttendanceRecord) {
         return hjAttendanceRecordMapper.selectNewHjAttendanceRecord(hjAttendanceRecord);
     }
@@ -81,13 +88,14 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
     public List<DongTai> selectWorkerList(Integer projectId) {
         return hjAttendanceRecordMapper.selectWorkerList(projectId);
     }
+
     /**
      * 电视看板管理人员考勤动态
      *
      * @param projectId
      * @return
      */
-   @Override
+    @Override
     public List<DongTai> selectManagerList(Integer projectId) {
         return hjAttendanceRecordMapper.selectManagerList(projectId);
     }
@@ -98,6 +106,7 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
      * @param hjAttendanceRecord
      * @return
      */
+    @Override
     public HjAttendanceRecord selectHjAttendanceRecordListIn(HjAttendanceRecord hjAttendanceRecord) {
         return hjAttendanceRecordMapper.selectHjAttendanceRecordListIn(hjAttendanceRecord);
     }
@@ -108,6 +117,7 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
      * @param hjAttendanceRecord
      * @return
      */
+    @Override
     public HjAttendanceRecord selectHjAttendanceRecordListOut(HjAttendanceRecord hjAttendanceRecord) {
         return hjAttendanceRecordMapper.selectHjAttendanceRecordListOut(hjAttendanceRecord);
     }
@@ -119,6 +129,7 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
      * @param empName
      * @param projectId
      */
+    @Override
     public void addTime(Integer empId, String empName, Integer projectId) {
         hjAttendanceRecordMapper.addTime(empId, empName, projectId);
     }
@@ -130,6 +141,7 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
      * @param time
      * @return
      */
+    @Override
     public List<HjAttendanceRecord> selectHjAttendanceRecordInAndOut(Integer id, String time) {
         return hjAttendanceRecordMapper.selectHjAttendanceRecordInAndOut(id, time);
     }
@@ -177,6 +189,7 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
     public int updateHjAttendanceRecord(HjAttendanceRecord hjAttendanceRecord) {
         return hjAttendanceRecordMapper.updateHjAttendanceRecord(hjAttendanceRecord);
     }
+
     @Override
     public int updateHjAttendanceRecordTwo(HjAttendanceRecord hjAttendanceRecord) {
         return hjAttendanceRecordMapper.updateHjAttendanceRecordTwo(hjAttendanceRecord);
@@ -290,9 +303,10 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
 
                 // 根据项目id 查询 人脸组id
                 HjProject hjProject = hjProjectMapper.selectHjProjectById(hjAttendanceRecord.getProjectId());
+                logger.info("根据项目id查询项目表返回数据=" + hjProject);
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-                com.alibaba.fastjson.JSONArray jsonArray = new com.alibaba.fastjson.JSONArray();
-                com.alibaba.fastjson.JSONObject resultObject = new com.alibaba.fastjson.JSONObject();
+                JSONArray jsonArray;
+                JSONObject resultObject = new JSONObject();
                 try {
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("image", nameUel);//k考勤照片
@@ -301,7 +315,7 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
                     String s = Util.httpPostWithJSON("https://aip.baidubce.com/rest/2.0/face/v3/search?access_token=" + AuthService.getAuth(), jsonObject);
                     resultObject = com.alibaba.fastjson.JSONObject.parseObject(s);
                     com.alibaba.fastjson.JSONObject object1 = com.alibaba.fastjson.JSONObject.parseObject(resultObject.getString("result"));
-                    jsonArray = com.alibaba.fastjson.JSONArray.parseArray(object1.getString("user_list"));//校验成功，获取返回结果
+                    jsonArray = JSONArray.parseArray(object1.getString("user_list"));//校验成功，获取返回结果
                 } catch (Exception e) {
                     throw new BusinessException("人脸识别异常：" + resultObject.toString());
                 }
@@ -314,6 +328,8 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
                         if (jsonArray.getJSONObject(i).getLong("score") > Constants.ATTENDANCESCORE) {                  //人脸识别数据大于设置数据，考勤成功
                             String userId = jsonArray.getJSONObject(i).getString("user_id");   //获取匹配人脸的员工
                             HjProjectWorkers hjProjectWorkers = hjProjectWorkersMapper.selectHjProjectWorkersById(Integer.parseInt(userId));
+                            logger.info("根据id查询项目工人表返回数据=" + hjProjectWorkers);
+
                             if (hjProjectWorkers != null) {
                                 if (hjProjectWorkers.getEnterAndRetreatCondition() == 0) {
 
@@ -377,7 +393,7 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
      */
     @Override
     public Map<String, Object> insertAdministrationNew(HjAttendanceRecord hjAttendanceRecord, MultipartFile file) {
-        String nameUel = "";
+//        String nameUel = "";
         try {
 //			String folder = AliyunOSSClientUtil.createFolder(AliyunOSSClientUtil.getOSSClient(), "hujiang", hjAttendanceRecord.getDirection().trim()+"/");  // 文件夹名称
 //			String filename= StringUtil.getRandomStringByLength(6)+new SimpleDateFormat("HHmmss")                                               //文件名称
@@ -388,20 +404,27 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
             String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
             String imgBase = BASE64DecodedMultipartFile.MultipartFileToBase64(PrintJobTo.addWorkMarkToMutipartFile(file, time));
             // 根据项目id 查询 人脸组id
+            logger.info("根据项目id查询项目表人参projectId=" + hjAttendanceRecord.getProjectId());
             HjProject hjProject = hjProjectMapper.selectHjProjectById(hjAttendanceRecord.getProjectId());
+            logger.info("根据项目id查询项目表=" + hjProject);
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            com.alibaba.fastjson.JSONArray jsonArray;
-            com.alibaba.fastjson.JSONObject resultObject = new com.alibaba.fastjson.JSONObject();
+            JSONArray jsonArray;
+            JSONObject resultObject = new JSONObject();
             try {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("image", imgBase);//k考勤照片
+                //k考勤照片
+                jsonObject.put("image", imgBase);
                 jsonObject.put("image_type", "BASE64");
                 jsonObject.put("liveness_control", "LOW");
-                jsonObject.put("group_id_list", hjProject.getFaceGroup());//人脸库
-                String s = Util.httpPostWithJSON("https://aip.baidubce.com/rest/2.0/face/v3/search?access_token=" + AuthService.getAuth(), jsonObject);
-                resultObject = com.alibaba.fastjson.JSONObject.parseObject(s);
-                com.alibaba.fastjson.JSONObject object1 = com.alibaba.fastjson.JSONObject.parseObject(resultObject.getString("result"));
-                jsonArray = com.alibaba.fastjson.JSONArray.parseArray(object1.getString("user_list"));//校验成功，获取返回结果
+                //人脸库
+                jsonObject.put("group_id_list", hjProject.getFaceGroup());
+                logger.info("请求百度接口入参jsonObject=" + jsonObject);
+                String returnBaiDu = Util.httpPostWithJSON("https://aip.baidubce.com/rest/2.0/face/v3/search?access_token=" + AuthService.getAuth(), jsonObject);
+                logger.info("请求百度接口https://aip.baidubce.com/rest/2.0/face/v3/search?access_token=返回数据=" + returnBaiDu);
+                resultObject = JSONObject.parseObject(returnBaiDu);
+                JSONObject object1 = JSONObject.parseObject(resultObject.getString("result"));
+                //校验成功，获取返回结果
+                jsonArray = JSONArray.parseArray(object1.getString("user_list"));
             } catch (Exception e) {
                 throw new BusinessException("人脸识别异常：" + resultObject.toString());
             }
@@ -411,9 +434,13 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
             if (resultObject.getString("error_msg").equals("SUCCESS")) {
 //					  org.json.JSONArray jsonArray = resultObject.getJSONObject("result").getJSONArray("user_list");
                 for (int i = 0; i < jsonArray.size(); i++) {
-                    if (jsonArray.getJSONObject(i).getLong("score") > Constants.ATTENDANCESCORE) {                  //人脸识别数据大于设置数据，考勤成功
-                        String userId = jsonArray.getJSONObject(i).getString("user_id");   //获取匹配人脸的员工
+                    //人脸识别数据大于设置数据，考勤成功
+                    if (jsonArray.getJSONObject(i).getLong("score") > Constants.ATTENDANCESCORE) {
+                        //获取匹配人脸的员工
+                        String userId = jsonArray.getJSONObject(i).getString("user_id");
+                        logger.info("根据userId查询项目工人表人参userId=" + userId);
                         HjProjectWorkers hjProjectWorkers = hjProjectWorkersMapper.selectHjProjectWorkersById(Integer.parseInt(userId));
+                        logger.info("根据userId查询项目工人表返回数据=" + hjProjectWorkers);
                         if (hjProjectWorkers != null) {
                             if (hjProjectWorkers.getEnterAndRetreatCondition() == 0) {
 //                                JSONObject map = new JSONObject();
@@ -426,37 +453,41 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
 //                                jmsMessagingTemplate.convertAndSend(attendanceRecord, JsonUtils.toJson(messageInfo));
                                 ThreadUtils.async(new Runnable() {
 
-                                                      @Override
-                                                      public void run() {
-                                                          try {
+                                    @Override
+                                    public void run() {
+                                        try {
 
 //                                                              HjProjectWorkers hjProjectWorkers=JSONObject.parseObject(s.getString("hjProjectWorkers"),HjProjectWorkers.class);
 //                                                              HjAttendanceRecord hjAttendanceRecord=JSONObject.parseObject(s.getString("hjAttendanceRecord"),HjAttendanceRecord.class);
 //                                                              String d=hjAttendanceRecord.getDirection();
 //                                                              String imgbase=s.getString("imgBase");
-                                                              MultipartFile file=  BASE64DecodedMultipartFile.base64ToMultipartOnt(imgBase);
-                                                              boolean re = apiClient.uploadPassedLogTest(hjProjectWorkers,hjAttendanceRecord.getDirection(),imgBase);
-                                                              String folder = AliyunOSSClientUtil.createFolder(AliyunOSSClientUtil.getOSSClient(), "hujiang", hjAttendanceRecord.getDirection()+"/");  // 文件夹名称
-                                                              String filename= hjProjectWorkers.getId()+new Date().getTime()+".jpg";
-                                                              String fileUrl = AliyunOSSClientUtil.uploadFileImg(file, folder,filename);
-                                                              String nameUel = fileUrl.substring(0,fileUrl.lastIndexOf("?"));
+                                            MultipartFile file = BASE64DecodedMultipartFile.base64ToMultipartOnt(imgBase);
+                                            boolean re = apiClient.uploadPassedLogTest(hjProjectWorkers, hjAttendanceRecord.getDirection(), imgBase);
+                                            logger.info("re=" + re);
+                                            String folder = AliyunOSSClientUtil.createFolder(AliyunOSSClientUtil.getOSSClient(), "hujiang", hjAttendanceRecord.getDirection() + "/");  // 文件夹名称
+                                            String filename = hjProjectWorkers.getId() + System.currentTimeMillis() + ".jpg";
+                                            String fileUrl = AliyunOSSClientUtil.uploadFileImg(file, folder, filename);
+                                            String nameUel = fileUrl.substring(0, fileUrl.lastIndexOf("?"));
 
-                                                              hjAttendanceRecord.setCreateDate(new Date());  // 保存到考勤记录
-                                                              hjAttendanceRecord.setWay(1);
-                                                              hjAttendanceRecord.setPassedTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-                                                              hjAttendanceRecord.setEmployeeId(hjProjectWorkers.getId());
-                                                              hjAttendanceRecord.setSitePhoto(nameUel);
-                                                              if(re) {
-                                                                  hjAttendanceRecord.setUploadTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-                                                              }
-                                                              int i1 = hjAttendanceRecordMapper.insertHjAttendanceRecord(hjAttendanceRecord);
-
-                                                              System.out.println(hjProjectWorkers.getEmpName()+":考勤异步执行完毕");
-                                                          }catch (Exception e) {
-                                                              logger.info("上传失败: "+e.getMessage());
-                                                          }
-                                                      }
-                                                  });
+                                            // 保存到考勤记录
+                                            hjAttendanceRecord.setCreateDate(new Date());
+                                            hjAttendanceRecord.setWay(1);
+                                            hjAttendanceRecord.setPassedTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+                                            hjAttendanceRecord.setEmployeeId(hjProjectWorkers.getId());
+                                            hjAttendanceRecord.setSitePhoto(nameUel);
+                                            if (re) {
+                                                hjAttendanceRecord.setUploadTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+                                            }
+                                            int i1 = hjAttendanceRecordMapper.insertHjAttendanceRecord(hjAttendanceRecord);
+                                            if(i1 > 0){
+                                                logger.info(hjProjectWorkers.getEmpName() + ":考勤异步执行完毕");
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                            logger.info("上传失败: " + e.getMessage());
+                                        }
+                                    }
+                                });
 
                                 logger.info("考勤成功！添加考勤记录：" + hjProjectWorkers.getEmpName());
                                 //上传和插入由消息队列执行
