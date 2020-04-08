@@ -179,4 +179,6 @@ int updateQuarantine(ProjectWorkerPC pw);
 	public HjProjectWorkers lzqrs(Integer projectId,Integer contract);
 
 	public HjProjectWorkers easyContract(Integer projectId);
+
+	HjProjectWorkers getById(Integer id);
 }

@@ -69,6 +69,8 @@ public interface ISbElevatorAddrecordService
 	 */
 	public List<SbElevatorAddrecord> selectElevatorCount(Map<String, Object> map);
 
+	int selectElevatorCountNew(Map<String, Object> paramMap);
+
 	public int selectElevatorCountTwo(Map<String, Object> map);
 	public int selectElevatorCountThree(Map<String, Object> map);
 	public int selectElevatorCountFour(Map<String, Object> map);
@@ -79,4 +81,6 @@ public interface ISbElevatorAddrecordService
 	/**1.0看板*/
 	public  List<SbElevatorAddrecord> crane(Integer pid);
 	public  List<SbElevatorAddrecord> cranes(Integer pid, String runtime);
+
+
 }

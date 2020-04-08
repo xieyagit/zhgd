@@ -85,4 +85,6 @@ public interface SbElevatorAddrecordMapper
 	/**1.0看板*/
 	public  List<SbElevatorAddrecord> crane(@Param("pid") Integer pid);
 	public  List<SbElevatorAddrecord> cranes(@Param("pid") Integer pid, String runtime);
+
+	int selectElevatorCountNew(Map<String, Object> paramMap);
 }

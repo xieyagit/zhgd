@@ -130,7 +130,7 @@ public class ZCAPIClient {
      */
     public static final String reportedCay2019(String url, JSONObject jsonObject) throws URISyntaxException, IOException {
         String returnDate = Util.httpPostWithJSON(Constants.CAY_CS + url + Constants.TOKEN_CS, jsonObject);
-        System.out.println("请求服务：" + Constants.CAY_CS + url + Constants.TOKEN_CS);
+        logger.info("请求服务：" + Constants.CAY_CS + url + Constants.TOKEN_CS);
         JSONObject jSONObject = JSONObject.parseObject(returnDate);
         String k = null;
         if (!"0".equals(jSONObject.getString("total"))) {
@@ -146,7 +146,7 @@ public class ZCAPIClient {
      */
     public static final JSONObject reportedCay(String url, JSONObject jsonObject) throws URISyntaxException, IOException {
         String returnJson = Util.httpPostWithJSON(Constants.CAY_CS + url + Constants.TOKEN_CS, jsonObject);
-        System.out.println("请求服务：" + Constants.CAY_CS + url + Constants.TOKEN_CS);
+        logger.info("请求服务：" + Constants.CAY_CS + url + Constants.TOKEN_CS);
         JSONObject jSONObject = JSONObject.parseObject(returnJson);
 //        JSONArray data = a.getJSONArray("res");
 //        JSONObject datas = data.getJSONObject(0);
@@ -169,11 +169,11 @@ public class ZCAPIClient {
      * @return com.alibaba.fastjson.JSONObject
      **/
     public static final JSONObject cayArea(String url, JSONObject jsonObject) throws URISyntaxException, IOException {
-        System.out.println("请求城安院区管项目接口地址：" + Constants.CAY_QGXM + url + Constants.TOKEN_CS_QG);
+        logger.info("请求城安院区管项目接口地址：" + Constants.CAY_QGXM + url + Constants.TOKEN_CS_QG);
         String qgReturnList = Util.httpPostWithJSON(Constants.CAY_QGXM + url + Constants.TOKEN_CS_QG, jsonObject);
 
         JSONObject jSONObject = JSONObject.parseObject(qgReturnList);
-        System.out.println(jSONObject);
+        logger.info(jSONObject);
         JSONObject object = new JSONObject();
         if("SUCCESS".equals(jSONObject.get("msg"))){
             List<Map<String, Object>> dataJSONObject = (List<Map<String, Object>>) jSONObject.get("data");
