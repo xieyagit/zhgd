@@ -58,6 +58,10 @@
         </where>
     </select>
 
+    <select id="selectHjDeeppitDataByTime" parameterType="HjDeeppitData" resultMap="HjDeeppitDataResult">
+        <include refid="selectHjDeeppitDataVo"/>
+          where factor_id = #{factorId} and creation=#{creation}
+    </select>
     <!--最大值-->
     <select id="selectParmeterMax" parameterType="com.hujiang.project.zhgd.hjDeeppit.domain.SbAvg" resultType="java.lang.String">
         <if test="subside != null ">select max(${subside}) from hj_deeppit_data</if>
