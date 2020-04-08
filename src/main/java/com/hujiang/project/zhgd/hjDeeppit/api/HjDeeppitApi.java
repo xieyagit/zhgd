@@ -152,12 +152,10 @@ public class HjDeeppitApi extends BaseController {
         if ((pageDomain.getPageNum()) <= Math.ceil(count / (double) pageDomain.getPageSize())) {
             jsonObject.put("msg", "查询成功");
             jsonObject.put("code", 0);
-            jsonObject.put("sum", dataTable.getTotal());
             jsonObject.put("data", hjDeeppitDataList);
         }else {
             jsonObject.put("msg", "查询成功");
             jsonObject.put("code", 0);
-            jsonObject.put("sum", 0);
             jsonObject.put("data", Collections.emptyList());
         }
         return jsonObject;

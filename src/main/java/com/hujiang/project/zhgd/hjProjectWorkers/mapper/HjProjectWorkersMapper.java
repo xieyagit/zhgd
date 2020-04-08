@@ -1,10 +1,17 @@
 package com.hujiang.project.zhgd.hjProjectWorkers.mapper;
 
-import com.hujiang.project.zhgd.hjProjectWorkers.domain.*;
+import com.hujiang.project.zhgd.hjProjectWorkers.domain.Cqgztj;
+import com.hujiang.project.zhgd.hjProjectWorkers.domain.EmpNameParam;
+import com.hujiang.project.zhgd.hjProjectWorkers.domain.HjProjectWorkers;
+import com.hujiang.project.zhgd.hjProjectWorkers.domain.InOROut;
+import com.hujiang.project.zhgd.hjProjectWorkers.domain.PdfWorkers;
+import com.hujiang.project.zhgd.hjProjectWorkers.domain.ProjectWorkerPC;
+import com.hujiang.project.zhgd.hjProjectWorkers.domain.ProjectWorkers;
+import com.hujiang.project.zhgd.hjProjectWorkers.domain.ProjectWorkersParam;
+import com.hujiang.project.zhgd.hjProjectWorkers.domain.SignParam;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 项目工人 数据层
@@ -217,4 +224,6 @@ public interface HjProjectWorkersMapper
 	public HjProjectWorkers tc(@Param("projectId") Integer projectId,@Param("contract") Integer contract);
 	public HjProjectWorkers lzqrs(@Param("projectId") Integer projectId,@Param("contract") Integer contract);
 	public HjProjectWorkers easyContract(@Param("projectId") Integer projectId);
+
+	HjProjectWorkers getById(Integer id);
 }

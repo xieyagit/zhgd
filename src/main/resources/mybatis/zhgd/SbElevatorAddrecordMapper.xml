@@ -363,4 +363,8 @@
         #{id}
     </foreach>
     </select>
+
+    <select id="selectElevatorCountNew" resultType="int">
+        select count(1) from sb_crane_addrecord where STR_TO_DATE(runtime,'%Y-%m-%d %H:%i:%s') > STR_TO_DATE(#{time},'%Y-%m-%d %H:%i:%s') and hxzid in (select hxzid from sb_crane_binding where pid=${pid})
+    </select>
 </mapper>

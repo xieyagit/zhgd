@@ -15,18 +15,27 @@ import com.hujiang.project.zhgd.hjConstructionProject.domain.HjConstructionProje
 import com.hujiang.project.zhgd.hjConstructionProject.service.IHjConstructionProjectService;
 import com.hujiang.project.zhgd.hjProject.domain.HjProject;
 import com.hujiang.project.zhgd.hjProject.service.IHjProjectService;
-import com.hujiang.project.zhgd.hjProjectWorkers.domain.*;
+import com.hujiang.project.zhgd.hjProjectWorkers.domain.EmpNameParam;
+import com.hujiang.project.zhgd.hjProjectWorkers.domain.HjProjectWorkers;
+import com.hujiang.project.zhgd.hjProjectWorkers.domain.ProjectWorkers;
+import com.hujiang.project.zhgd.hjProjectWorkers.domain.ProjectWorkersParam;
+import com.hujiang.project.zhgd.hjProjectWorkers.domain.SignParam;
 import com.hujiang.project.zhgd.hjProjectWorkers.service.IHjProjectWorkersService;
 import com.hujiang.project.zhgd.hjTeam.domain.HjTeam;
 import com.hujiang.project.zhgd.hjTeam.service.IHjTeamService;
+import com.hujiang.project.zhgd.utils.AliyunOSSClientUtil;
 import com.hujiang.project.zhgd.utils.BASE64DecodedMultipartFile;
 import com.hujiang.project.zhgd.utils.Constants;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import com.hujiang.project.zhgd.utils.AliyunOSSClientUtil;
 
 import java.io.IOException;
 import java.net.URL;
@@ -369,17 +378,31 @@ public class ProjectWorkersApi {
             @RequestParam(value = "configStr", required = true) String configStr
     ) throws Exception {
         System.out.println(configStr);
-        String folder = AliyunOSSClientUtil.createFolder(AliyunOSSClientUtil.getOSSClient(), "hujiang", configStr.trim() + "/");  // 文件夹名称
-        String filename = StringUtil.getRandomStringByLength(6) + new SimpleDateFormat("HHmmss")                                               //文件名称
+        //ios bug解决
+        if("face,face".equals(configStr)){
+            configStr = "face";
+        }
+        if("back,back".equals(configStr)){
+            configStr = "back";
+        }
+        if("card,card".equals(configStr)){
+            configStr = "card";
+        }
+        // 文件夹名称
+        String folder = AliyunOSSClientUtil.createFolder(AliyunOSSClientUtil.getOSSClient(), "hujiang", configStr.trim() + "/");
+        //文件名称
+        String filename = StringUtil.getRandomStringByLength(6) + new SimpleDateFormat("HHmmss")
                 .format(new Date()) + file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-        String fileUrl = AliyunOSSClientUtil.uploadFileImg(file, folder, filename);   // 文件上传
+        // 文件上传
+        String fileUrl = AliyunOSSClientUtil.uploadFileImg(file, folder, filename);
         if (!"".equals(fileUrl)) {
             String name = fileUrl.substring(0, fileUrl.lastIndexOf("?"));
             try {
                 // 文件是否为空
                 if (configStr.equals("card")) {
                     URL imageUrl = new URL(name);
-                    Map<String, String> map = AliOcrUtil.getAliOcrBankcard(imageUrl);    // 银行卡
+                    // 银行卡
+                    Map<String, String> map = AliOcrUtil.getAliOcrBankcard(imageUrl);
                     map.put("url", name);
                     return AjaxResult.success(map);
                 } else {
