@@ -31,7 +31,7 @@ public interface IHjDeeppitDataService
      */
 	public List<HjDeeppitData> selectHjDeeppitDataList(HjDeeppitData hjDeeppitData);
 
-	public List<HjDeeppitData> selectHjDeeppitDataByTime(HjDeeppitData hjDeeppitData);
+	public List<HjDeeppitData> selectHjDeeppitDataByTime();
 
 
 	/**
