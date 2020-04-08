@@ -1,3 +1,4 @@
+
 package com.hujiang.project.zhgd.hjDeeppit.task;
 
 
@@ -567,25 +568,31 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
             System.out.println(s);
 
             //将数据存入数据库
-            net.sf.json.JSONObject sj = net.sf.json.JSONObject.fromObject(s);
-                if(sj.get("message").equals("数据查询成功")) {
-                    net.sf.json.JSONArray fList = sj.getJSONArray("stations");
-                    net.sf.json.JSONObject station;
-                    net.sf.json.JSONArray fDataList;
-                    net.sf.json.JSONObject fData;
-                    HjDeeppitData hjDeeppitData;
-
-                    for (int i = 0; i < fList.size(); i++) {
-                        station = fList.getJSONObject(i);
-                        fDataList = station.getJSONArray("data");
-                        for (int j = 0; j < fDataList.size(); j++) {
-                            fData = fDataList.getJSONObject(j);
+            JSONObject sj = JSONObject.parseObject(s);
+            JSONArray fList = sj.getJSONArray("stations");
+            JSONObject station;
+            JSONArray fDataList;
+            JSONObject fData;
+            HjDeeppitData hjDeeppitData;
+            for (int i = 0; i < fList.size(); i++) {
+                station = fList.getJSONObject(i);
+                fDataList = station.getJSONArray("data");
+                if(station.getString("name").equals("水位")){
+                    for (int j = 0; j < fDataList.size(); j++) {
+                        fData = fDataList.getJSONObject(j);
+                        HjDeeppitData hjDeeppit = new HjDeeppitData();
+                        hjDeeppit.setFactorId(station.getIntValue("id"));
+                        hjDeeppit.setCreation(fData.getString("time"));
+                        List<HjDeeppitData> hjDeeppitDatas = hjDeeppitDataService.selectHjDeeppitDataByTime(hjDeeppit);
+                        if(hjDeeppitDatas.size()<=0) {
                             hjDeeppitData = new HjDeeppitData();
-                            hjDeeppitData.setFactorId(station.getInt("id"));
+                            hjDeeppitData.setFactorId(station.getIntValue("id"));
                             hjDeeppitData.setWaterLevel(fData.getString("waterLevel"));
                             hjDeeppitData.setCreation(fData.getString("time"));
                             hjDeeppitDataService.insertHjDeeppitData(hjDeeppitData);
                         }
+                    }
+                }
 //                switch(station.getString("name")){
 //                    case "水位" :
 //                        for (int j =0;j <fDataList.size();j++){

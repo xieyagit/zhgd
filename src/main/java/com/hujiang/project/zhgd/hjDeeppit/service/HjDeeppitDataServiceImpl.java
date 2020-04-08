@@ -49,6 +49,11 @@ public class HjDeeppitDataServiceImpl implements IHjDeeppitDataService
 	}
 
 	@Override
+	public List<HjDeeppitData> selectHjDeeppitDataByTime(HjDeeppitData hjDeeppitData) {
+		return hjDeeppitDataMapper.selectHjDeeppitDataByTime(hjDeeppitData);
+	}
+
+	@Override
 	public String selectParmeterMax(SbAvg parmeter) {
 		return hjDeeppitDataMapper.selectParmeterMax(parmeter);
 	}
