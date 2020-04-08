@@ -268,6 +268,7 @@ public class ShiroConfig
         filterChainDefinitionMap.put("/unloader/zhgd/**", "anon,captchaValidate");
         filterChainDefinitionMap.put("/LAPI/**", "anon,captchaValidate");
         filterChainDefinitionMap.put("/DevService/**", "anon,captchaValidate");
+        filterChainDefinitionMap.put("/zhgd/**", "anon,captchaValidate");
 
         // 系统权限列表
         // filterChainDefinitionMap.putAll(SpringUtils.getBean(IMenuService.class).selectPermsAll());

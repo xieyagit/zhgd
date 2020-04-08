@@ -8,7 +8,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-
+/**
+ * @Author xieya
+ * @Description 对接德业接口
+ * @Date 2020/4/8 13:21
+ * @return
+ **/
 @RestController
 @RequestMapping(value = "/zhgd")
 public class CraneApi {
