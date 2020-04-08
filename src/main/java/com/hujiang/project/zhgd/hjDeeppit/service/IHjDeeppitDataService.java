@@ -31,8 +31,8 @@ public interface IHjDeeppitDataService
      */
 	public List<HjDeeppitData> selectHjDeeppitDataList(HjDeeppitData hjDeeppitData);
 
+	public List<HjDeeppitData> selectHjDeeppitDataByTime();
 
-	public List<HjDeeppitData> selectHjDeeppitDataByTime(HjDeeppitData hjDeeppitData);
 
 	/**
 	 * 取最大值

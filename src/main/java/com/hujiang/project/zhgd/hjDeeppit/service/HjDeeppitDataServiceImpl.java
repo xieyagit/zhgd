@@ -49,8 +49,8 @@ public class HjDeeppitDataServiceImpl implements IHjDeeppitDataService
 	}
 
 	@Override
-	public List<HjDeeppitData> selectHjDeeppitDataByTime(HjDeeppitData hjDeeppitData) {
-		return hjDeeppitDataMapper.selectHjDeeppitDataByTime(hjDeeppitData);
+	public List<HjDeeppitData> selectHjDeeppitDataByTime() {
+		return hjDeeppitDataMapper.selectHjDeeppitDataByTime();
 	}
 
 	@Override
