@@ -1,15 +1,15 @@
 package com.hujiang.project.zhgd.sbElevatorAddrecord.service;
 
-import java.util.List;
-import java.util.Map;
-
+import com.hujiang.common.support.Convert;
 import com.hujiang.project.zhgd.sbElevatorAddrecord.domain.ElevatorAddRecord;
+import com.hujiang.project.zhgd.sbElevatorAddrecord.domain.SbElevatorAddrecord;
+import com.hujiang.project.zhgd.sbElevatorAddrecord.mapper.SbElevatorAddrecordMapper;
 import com.hujiang.project.zhgd.sbGroup.domain.ElevatorKB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.hujiang.project.zhgd.sbElevatorAddrecord.mapper.SbElevatorAddrecordMapper;
-import com.hujiang.project.zhgd.sbElevatorAddrecord.domain.SbElevatorAddrecord;
-import com.hujiang.common.support.Convert;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 2.5.3升降机实时数据 服务层实现
@@ -119,6 +119,12 @@ public class SbElevatorAddrecordServiceImpl implements ISbElevatorAddrecordServi
 	public List<SbElevatorAddrecord> selectElevatorCount(Map<String,Object> map){
 		return sbElevatorAddrecordMapper.selectElevatorCount(map);
 	}
+
+	@Override
+	public int selectElevatorCountNew(Map<String, Object> paramMap) {
+		return sbElevatorAddrecordMapper.selectElevatorCountNew(paramMap);
+	}
+
 	@Override
 	public int selectElevatorCountTwo(Map<String,Object> map){
 		return sbElevatorAddrecordMapper.selectElevatorCountTwo(map);

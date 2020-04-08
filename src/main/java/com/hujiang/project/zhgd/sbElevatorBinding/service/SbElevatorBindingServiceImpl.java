@@ -1,12 +1,12 @@
 package com.hujiang.project.zhgd.sbElevatorBinding.service;
 
-import java.util.List;
-
+import com.hujiang.common.support.Convert;
 import com.hujiang.project.zhgd.sbElevatorBinding.domain.SbElevatorBinding;
+import com.hujiang.project.zhgd.sbElevatorBinding.mapper.SbElevatorBindingMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.hujiang.project.zhgd.sbElevatorBinding.mapper.SbElevatorBindingMapper;
-import com.hujiang.common.support.Convert;
+
+import java.util.List;
 
 /**
  * 升降机绑定 服务层实现
@@ -93,5 +93,15 @@ public class SbElevatorBindingServiceImpl implements ISbElevatorBindingService
 	public List<SbElevatorBinding> list(SbElevatorBinding info){
 		return sbElevatorBindingMapper.list(info);
 	}
-	
+
+	@Override
+	public List<SbElevatorBinding> selectSbElevatorBindingByPid(Integer pid) {
+		return sbElevatorBindingMapper.selectSbElevatorBindingByPid(pid);
+	}
+
+	@Override
+	public SbElevatorBinding selectOneSbElevatorBinding(Integer pid, String hxzid) {
+		return sbElevatorBindingMapper.selectOneSbElevatorBinding(pid, hxzid);
+	}
+
 }

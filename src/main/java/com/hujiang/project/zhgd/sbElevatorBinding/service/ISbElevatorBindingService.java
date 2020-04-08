@@ -58,5 +58,8 @@ public interface ISbElevatorBindingService
 	 * @return 结果
 	 * */
 	public List<SbElevatorBinding> list(SbElevatorBinding info);
-	
+
+	List<SbElevatorBinding> selectSbElevatorBindingByPid(Integer pid);
+
+	SbElevatorBinding selectOneSbElevatorBinding(Integer pid, String hxzid);
 }

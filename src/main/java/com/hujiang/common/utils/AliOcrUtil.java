@@ -15,13 +15,13 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -59,13 +59,16 @@ public class AliOcrUtil {
             System.out.println(response.getEntity());
             String result= EntityUtils.toString(response.getEntity());
             System.out.println(result);
-            if(result.equals("Invalid Input - wrong category"))
+            if(result.equals("Invalid Input - wrong category")){
                 throw new BusinessException("身份证图片有误");
-            if(result.equals("Invalid Result - face results are all empty"))
+            }
+            if(result.equals("Invalid Result - face results are all empty")){
                 throw new BusinessException("无效的身份证图片");
+            }
             JSONObject resultObj = new JSONObject(result);
             JSONArray outputArray = resultObj.getJSONArray("outputs");
-            String output = outputArray.getJSONObject(0).getJSONObject("outputValue").getString("dataValue"); // 取出结果json字符串
+            // 取出结果json字符串
+            String output = outputArray.getJSONObject(0).getJSONObject("outputValue").getString("dataValue");
             JSONObject out = new JSONObject(output);
                 if (out.getBoolean("success")) {
                     if(!configStr.isEmpty()&&configStr.equals("face")){

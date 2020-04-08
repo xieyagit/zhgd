@@ -38,8 +38,8 @@ public class cay {
         JSONObject object = new JSONObject();
         HjProject hjProject = iHjProjectService.selectHjProjectById(projectId);
         JSONObject jsonObject1 = new JSONObject();
-        jsonObject1.put("curpage","1");
-        jsonObject1.put("name",hjProject.getProjectName());
+        jsonObject1.put("curpage", "1");
+        jsonObject1.put("name", hjProject.getProjectName());
 //        jsonObject1.put("name", "联投东方国");
 
         /** 区管项目*/

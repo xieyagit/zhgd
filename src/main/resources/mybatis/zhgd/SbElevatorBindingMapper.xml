@@ -133,5 +133,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
-    
+
+    <select id="selectSbElevatorBindingByPid" resultType="com.hujiang.project.zhgd.sbElevatorBinding.domain.SbElevatorBinding">
+        SELECT
+        t1.hxzid,
+        t1.userid
+        FROM sb_elevator_binding t1
+        WHERE pid=#{pid}
+    </select>
+
+    <select id="selectOneSbElevatorBinding" resultType="com.hujiang.project.zhgd.sbElevatorBinding.domain.SbElevatorBinding">
+        SELECT
+        t1.hxzid,
+        t1.dname,
+        t1.userid
+        FROM sb_elevator_binding t1
+        WHERE pid=#{pid} AND t1.hxzid = #{hxzid}
+    </select>
+
 </mapper>

@@ -750,4 +750,8 @@ select w.emp_name empName,w.id_code,w.face_url,
 (select team_name from hj_team where w.work_typename_id=id) teamName from hj_project_workers w where w.id=#{id}
     </select>
 
+    <select id="getById" resultType="com.hujiang.project.zhgd.hjProjectWorkers.domain.HjProjectWorkers">
+        select * from hj_project_workers where id= #{id}
+    </select>
+
 </mapper>

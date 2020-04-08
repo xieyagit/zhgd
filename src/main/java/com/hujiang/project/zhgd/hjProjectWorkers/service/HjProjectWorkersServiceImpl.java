@@ -1,53 +1,51 @@
 package com.hujiang.project.zhgd.hjProjectWorkers.service;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.logging.Logger;
-
-import com.alibaba.fastjson.JSONObject;
 import com.baidu.aip.face.AipFace;
 import com.hujiang.common.exception.BusinessException;
-import com.hujiang.common.utils.AliOcrUtil;
+import com.hujiang.common.support.Convert;
 import com.hujiang.common.utils.JsonUtils;
 import com.hujiang.framework.jms.JmsMessageInfo;
 import com.hujiang.framework.jms.JmsMessageType;
 import com.hujiang.framework.web.domain.AjaxResult;
 import com.hujiang.project.client.SystemClient;
-import com.hujiang.project.zhgd.hjAttendanceDevice.domain.HjAttendanceDevice;
 import com.hujiang.project.zhgd.hjAttendanceDevice.service.IHjAttendanceDeviceService;
 import com.hujiang.project.zhgd.hjConstructionCompany.domain.HjConstructionCompany;
 import com.hujiang.project.zhgd.hjConstructionCompany.mapper.HjConstructionCompanyMapper;
-import com.hujiang.project.zhgd.hjDeviceProjectworkers.domain.HjDeviceProjectworkers;
 import com.hujiang.project.zhgd.hjDeviceProjectworkers.service.IHjDeviceProjectworkersService;
 import com.hujiang.project.zhgd.hjProject.domain.HjProject;
 import com.hujiang.project.zhgd.hjProject.mapper.HjProjectMapper;
-import com.hujiang.project.zhgd.hjProjectWorkers.domain.*;
-import com.hujiang.project.zhgd.hjSynchronizationInformation.domain.HjSynchronizationInformation;
-import com.hujiang.project.zhgd.hjSynchronizationInformation.mapper.HjSynchronizationInformationMapper;
-import com.hujiang.project.zhgd.hjTeam.domain.HjTeam;
-import com.hujiang.project.zhgd.hjTeam.mapper.HjTeamMapper;
+import com.hujiang.project.zhgd.hjProjectWorkers.domain.Cqgztj;
+import com.hujiang.project.zhgd.hjProjectWorkers.domain.EmpName;
+import com.hujiang.project.zhgd.hjProjectWorkers.domain.EmpNameParam;
+import com.hujiang.project.zhgd.hjProjectWorkers.domain.HjProjectWorkers;
+import com.hujiang.project.zhgd.hjProjectWorkers.domain.InOROut;
+import com.hujiang.project.zhgd.hjProjectWorkers.domain.PdfWorkers;
+import com.hujiang.project.zhgd.hjProjectWorkers.domain.ProjectWorkerPC;
+import com.hujiang.project.zhgd.hjProjectWorkers.domain.ProjectWorkers;
+import com.hujiang.project.zhgd.hjProjectWorkers.domain.ProjectWorkersParam;
+import com.hujiang.project.zhgd.hjProjectWorkers.domain.SignParam;
+import com.hujiang.project.zhgd.hjProjectWorkers.mapper.HjProjectWorkersMapper;
 import com.hujiang.project.zhgd.hjWorkerRecord.domain.HjWorkerRecord;
 import com.hujiang.project.zhgd.hjWorkerRecord.mapper.HjWorkerRecordMapper;
 import com.hujiang.project.zhgd.hjWorkers.domain.HjWorkers;
 import com.hujiang.project.zhgd.hjWorkers.mapper.HjWorkersMapper;
-import com.hujiang.project.zhgd.sbDustEmission.domain.SbDustEmission;
 import com.hujiang.project.zhgd.utils.APIClient;
 import com.hujiang.project.zhgd.utils.Constants;
 import com.hujiang.project.zhgd.utils.MoredianClient;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsMessagingTemplate;
-import org.springframework.stereotype.Service;import org.springframework.transaction.annotation.Transactional;
-import com.hujiang.project.zhgd.hjProjectWorkers.mapper.HjProjectWorkersMapper;
-import com.hujiang.common.support.Convert;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.jms.Queue;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * 项目工人 服务层实现
@@ -658,5 +656,10 @@ public class HjProjectWorkersServiceImpl implements IHjProjectWorkersService {
     }
     public HjProjectWorkers easyContract(Integer projectId){
         return hjProjectWorkersMapper.easyContract(projectId);
+    }
+
+    @Override
+    public HjProjectWorkers getById(Integer id) {
+        return hjProjectWorkersMapper.getById(id);
     }
 }
