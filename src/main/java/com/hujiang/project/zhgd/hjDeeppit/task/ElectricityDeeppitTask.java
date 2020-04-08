@@ -577,11 +577,17 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
                 if(station.getString("name").equals("水位")){
                     for (int j = 0; j < fDataList.size(); j++) {
                         fData = fDataList.getJSONObject(j);
-                        hjDeeppitData = new HjDeeppitData();
-                        hjDeeppitData.setFactorId(station.getIntValue("id"));
-                        hjDeeppitData.setWaterLevel(fData.getString("waterLevel"));
-                        hjDeeppitData.setCreation(fData.getString("time"));
-                        hjDeeppitDataService.insertHjDeeppitData(hjDeeppitData);
+                        HjDeeppitData hjDeeppit = new HjDeeppitData();
+                        hjDeeppit.setFactorId(station.getIntValue("id"));
+                        hjDeeppit.setCreation(fData.getString("time"));
+                        List<HjDeeppitData> hjDeeppitDatas = hjDeeppitDataService.selectHjDeeppitDataByTime(hjDeeppit);
+                        if(hjDeeppitDatas.size()<=0) {
+                            hjDeeppitData = new HjDeeppitData();
+                            hjDeeppitData.setFactorId(station.getIntValue("id"));
+                            hjDeeppitData.setWaterLevel(fData.getString("waterLevel"));
+                            hjDeeppitData.setCreation(fData.getString("time"));
+                            hjDeeppitDataService.insertHjDeeppitData(hjDeeppitData);
+                        }
                     }
                 }
 
