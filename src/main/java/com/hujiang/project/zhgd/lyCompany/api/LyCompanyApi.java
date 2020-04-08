@@ -4,11 +4,16 @@ import com.hujiang.framework.web.controller.BaseController;
 import com.hujiang.framework.web.domain.AjaxResult;
 import com.hujiang.framework.web.page.TableDataInfo;
 import com.hujiang.project.zhgd.lyCompany.domain.LyCompany;
+import com.hujiang.project.zhgd.lyCompany.domain.LyCompanyCount;
 import com.hujiang.project.zhgd.lyCompany.service.ILyCompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 楼宇公司表
@@ -79,10 +84,15 @@ public class LyCompanyApi extends BaseController {
         }
         return AjaxResult.error("失败");
     }
-//    @PostMapping("/companyPerson")
-//    public AjaxResult companyPerson(Integer pid){
-//        return
-//    }
+    @PostMapping("/companyPerson")
+    public AjaxResult companyPerson(Integer pid){
+        startPage();
+        Map<String,String> map=new HashMap<String,String>();
+        map.put("pid",pid.toString());
+        map.put("time",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        List<LyCompanyCount> list=lyCompanyService.selectLyCompanyCount(map);
+        return AjaxResult.success(getDataTable(list));
+    }
 
 
 

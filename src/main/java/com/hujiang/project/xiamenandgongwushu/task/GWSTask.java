@@ -20,6 +20,7 @@ import com.hujiang.project.zhgd.hjSynchronizationInformation.service.IHjSynchron
 import com.hujiang.project.zhgd.hjTeam.domain.HjTeam;
 import com.hujiang.project.zhgd.hjTeam.service.IHjTeamService;
 import com.hujiang.project.zhgd.utils.*;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -382,11 +383,13 @@ public class GWSTask extends AutoTaskBase {
                 hc.setCreateDate(a.getString("RCDate"));
                 //判断参建单位类型
                 if ("监理单位".equals(a.getString("FenBaoType"))) {
-                    hc.setCompanyType(2);
-                    body.put("Type","007");
+//                    hc.setCompanyType(2);
+//                    body.put("Type","007");
+                    continue;
                 } else if ("管理单位".equals(a.getString("FenBaoType"))) {
-                    hc.setCompanyType(3);
-                    body.put("Type","008");
+//                    hc.setCompanyType(3);
+//                    body.put("Type","008");
+                    continue;
                 } else {
                     hd.setTitle(a.getString("FenBaoType"));
                     hd.setCategory("UNIT_TYPE");
@@ -492,7 +495,12 @@ public class GWSTask extends AutoTaskBase {
             hc=new HjConstructionCompany();
             ht=new HjTeam();
             a  = JSONObject.parseObject(o.toString());
-            ht.setRemark(a.getString("BZDataID"));
+            ht.setProjectId(pid);
+            if(StringUtils.isNotBlank(a.getString("BZDataID"))) {
+                ht.setRemark(a.getString("BZDataID"));
+            }else{
+                ht.setTeamName(a.getString("Name"));
+            }
             List<HjTeam> hjList=hjTeamService.selectHjTeamList(ht);
             //没有的班组添加上传
             if(hjList.size()<=0) {
@@ -608,7 +616,12 @@ public class GWSTask extends AutoTaskBase {
                 if(hcsList.size()>0){
                     HjConstructionCompany  hcs=hcsList.get(0);
                     //班组是否存在
-                    ht.setRemark(a.getString("BZDataID"));
+                    ht.setProjectId(pid);
+                    if(StringUtils.isNotBlank(a.getString("BZDataID"))) {
+                        ht.setRemark(a.getString("BZDataID"));
+                    }else{
+                        ht.setTeamName(a.getString("Name"));
+                    }
                     List<HjTeam> htsList=hjTeamService.selectHjTeamList(ht);
                     if(htsList.size()>0) {
                         HjTeam  hts = htsList.get(0);

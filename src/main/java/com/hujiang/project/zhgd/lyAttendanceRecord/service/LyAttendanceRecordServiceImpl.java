@@ -1,6 +1,7 @@
 package com.hujiang.project.zhgd.lyAttendanceRecord.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.hujiang.project.zhgd.lyAttendanceRecord.domain.LyAttendanceRecordPersonnel;
 import com.hujiang.project.zhgd.lyAttendanceRecord.domain.LyRecordExport;
@@ -96,5 +97,9 @@ public class LyAttendanceRecordServiceImpl implements ILyAttendanceRecordService
 	@Override
 	public List<LyRecordExport> selectRecordExport(LyRecordExport lyRecordExport){
 		return lyAttendanceRecordMapper.selectRecordExport(lyRecordExport);
+	}
+	@Override
+	public int getRecordCount(Map<String,String> map){
+		return lyAttendanceRecordMapper.getRecordCount(map);
 	}
 }

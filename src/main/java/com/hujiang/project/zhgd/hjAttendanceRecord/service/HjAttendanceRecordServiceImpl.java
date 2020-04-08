@@ -415,7 +415,7 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
                 //k考勤照片
                 jsonObject.put("image", imgBase);
                 jsonObject.put("image_type", "BASE64");
-                jsonObject.put("liveness_control", "LOW");
+                jsonObject.put("liveness_control", "NORMAL");
                 //人脸库
                 jsonObject.put("group_id_list", hjProject.getFaceGroup());
                 logger.info("请求百度接口入参jsonObject=" + jsonObject);

@@ -51,7 +51,7 @@ public class Constants {
     public static final String ZCAPI = "http://szwb.sz.gov.cn:2018/openapi";
 
     public static final Integer ATTENDANCESCORE = 80;//考勤识别分数
-    public static final Integer FACESCORE = 55;//人脸对比分数
+    public static final Integer FACESCORE = 35;//人脸对比分数
 
 
     //public static final String ZCAPI = "http://szwb.sz.gov.cn:2018/openapi";
