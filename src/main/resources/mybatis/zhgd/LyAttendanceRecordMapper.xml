@@ -44,7 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     <!--人员同行详情-->
     <select id="selectLyAttendanceRecordListTwo" parameterType="LyAttendanceRecord" resultMap="LyAttendanceRecordResult">
-       select id,employee_id,(select p.emp_name from ly_personnel p where p.id=employee_id) empName,DATE_FORMAT(passed_time, '%H:%m') passed_time,temperature
+       select id,employee_id,(select p.emp_name from ly_personnel p where p.id=employee_id) empName,DATE_FORMAT(passed_time, '%H:%i') passed_time,direction,temperature
        from ly_attendance_record
         <where>
 
@@ -136,12 +136,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     </resultMap>
     <select id="selectPersonnelRecordPageList" parameterType="LyAttendanceRecordPersonnel" resultMap="LyAttendanceRecordPersonnelResult">
-            select p.emp_number,r.id,p.emp_name empName,r.project_id, r.employee_id,p.companyName ,r.direction,r.passed_time,r.temperature,p.type from ly_attendance_record r left join ly_personnel p on r.employee_id=p.id
+            select p.emp_number,r.id,p.emp_name empName,r.site_photo,r.project_id, r.employee_id,p.companyName ,r.direction,r.passed_time,r.temperature,p.type from ly_attendance_record r left join ly_personnel p on r.employee_id=p.id
             where r.project_id =#{projectId}
         <if test="passedTime != null  and passedTime != '' "> and to_days(r.passed_time) = to_days(#{passedTime})</if>
         <if test="empName != null  and empName != '' "> and emp_name like  '%${empName}%'</if>
         <if test="companyName != null  and companyName != '' "> and companyName like  '%${companyName}%'</if>
         <if test="direction != null  and direction != '' "> and direction = #{direction}</if>
+        <if test="type != null  and type != '' "> and type = #{type}</if>
          order by r.id desc
     </select>
     <resultMap type="LyRecordExport" id="LyRecordExportResult">
@@ -159,5 +160,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 (select MIN(passed_time) from ly_attendance_record where TO_DAYS(passed_time)=TO_DAYS(#{passedTime}) and direction='in' and employee_id=r.employee_id) minTime,r.temperature
 
 from ly_attendance_record r left join ly_personnel p on r.employee_id=p.id where project_id=#{projectId} and TO_DAYS(passed_time)=TO_DAYS(#{passedTime}) and p.type=1 and p.ispresent=0 GROUP BY employee_id
+    </select>
+    <select id="getRecordCount" parameterType="Map" resultType="Integer">
+select count(t.id) from (
+select id from ly_attendance_record where project_id=#{pid} and TO_DAYS(passed_time) =TO_DAYS(#{time}) and employee_id in(select id from ly_personnel where `type`=#{type} and ispresent=0 and pid=#{pid}) GROUP BY employee_id ) t
     </select>
 </mapper>

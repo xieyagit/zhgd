@@ -22,10 +22,12 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/api/lyRecord",method = RequestMethod.POST)
+@RequestMapping(value = "/api/lyRecord")
 public class LyRecordApi extends BaseController {
     @Autowired
     private ILyAttendanceRecordService lyAttendanceRecordService;
@@ -48,7 +50,7 @@ public class LyRecordApi extends BaseController {
         List<LyAttendanceRecordPersonnel> larpList=lyAttendanceRecordService.selectPersonnelRecordPageList(lyAttendanceRecordPersonnel);
         return AjaxResult.success(getDataTable(larpList));
     }
-    @PostMapping("/export")
+    @GetMapping("/export")
     public void selectPersonnelRecordPageList( LyRecordExport lyRecordExport, HttpServletResponse response)throws  Exception{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -80,11 +82,11 @@ public class LyRecordApi extends BaseController {
             content[i][0] = obj.getEmpNumber();
             content[i][1] = obj.getEmpName();
             content[i][2] = time;
-            content[i][3] = sdf2.format(sdf3.parse(obj.getMinTime()));
-            content[i][4] =sdf2.format(sdf3.parse(obj.getMaxTime()));
+            content[i][3] = StringUtils.isBlank(obj.getMinTime())?"":sdf2.format(sdf3.parse(obj.getMinTime()));
+            content[i][4] =StringUtils.isBlank(obj.getMaxTime())?"":sdf2.format(sdf3.parse(obj.getMaxTime()));
             content[i][5] =obj.getTemperature();
             content[i][6]=obj.getSubordinate();
-            ;
+
         }
 
         //创建HSSFWorkbook
@@ -112,6 +114,25 @@ public class LyRecordApi extends BaseController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+    /**
+     * 首页职员和访客统计
+     */
+    @PostMapping("/getRecordCount")
+    public AjaxResult getRecordCount(Integer pid){
+        Map<String,String> map=new HashMap<String,String>();
+        map.put("pid",pid.toString());
+        map.put("time",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        map.put("type","1");
+        Map<String,Integer> result=new HashMap<String,Integer>();
+        int zzryRecordCount=lyAttendanceRecordService.getRecordCount(map);
+        map.put("type","2");
+        int fkryRecordCount=lyAttendanceRecordService.getRecordCount(map);
+        result.put("zzryRecordCount",zzryRecordCount);
+        result.put("fkryRecordCount",fkryRecordCount);
+        return AjaxResult.success(result);
+
 
     }
 }

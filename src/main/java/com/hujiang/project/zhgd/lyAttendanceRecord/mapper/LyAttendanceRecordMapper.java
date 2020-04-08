@@ -5,6 +5,7 @@ import com.hujiang.project.zhgd.lyAttendanceRecord.domain.LyAttendanceRecordPers
 import com.hujiang.project.zhgd.lyAttendanceRecord.domain.LyRecordExport;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 考勤记录 数据层
@@ -65,4 +66,6 @@ public interface LyAttendanceRecordMapper
 
 	public List<LyAttendanceRecordPersonnel> selectPersonnelRecordPageList(LyAttendanceRecordPersonnel lyAttendanceRecordPersonnel);
 	public List<LyRecordExport> selectRecordExport(LyRecordExport lyRecordExport);
+
+	public int getRecordCount(Map<String,String> map);
 }

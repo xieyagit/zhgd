@@ -1,6 +1,9 @@
 package com.hujiang.project.zhgd.lyCompany.service;
 
 import java.util.List;
+import java.util.Map;
+
+import com.hujiang.project.zhgd.lyCompany.domain.LyCompanyCount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;import org.springframework.transaction.annotation.Transactional;
 import com.hujiang.project.zhgd.lyCompany.mapper.LyCompanyMapper;
@@ -79,5 +82,8 @@ public class LyCompanyServiceImpl implements ILyCompanyService
 	{
 		return lyCompanyMapper.deleteLyCompanyByIds(Convert.toStrArray(ids));
 	}
-	
+	@Override
+	public List<LyCompanyCount> selectLyCompanyCount(Map<String,String> map){
+		return lyCompanyMapper.selectLyCompanyCount(map);
+	}
 }

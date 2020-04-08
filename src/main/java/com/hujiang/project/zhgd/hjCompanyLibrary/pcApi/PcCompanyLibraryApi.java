@@ -63,7 +63,7 @@ public class PcCompanyLibraryApi extends BaseController {
      */
     @RequestMapping("/insertHjCompanyLibrary")
     @ResponseBody
-    public int insertHjCompanyLibrary(@RequestBody  HjCompanyLibrary hjCompanyLibrary,  Integer parentaId)
+    public AjaxResult insertHjCompanyLibrary(@RequestBody  HjCompanyLibrary hjCompanyLibrary,  Integer parentaId)
     {
 //        System.out.println(parentaId);
         logger.info("保存公司信息库开始");
@@ -84,7 +84,13 @@ public class PcCompanyLibraryApi extends BaseController {
             hjh.setParentId(hjh3.getParentId() + "," + hjh3.getCompanyId());
         }
 //        System.out.println(hjh);
-        return hjCompanyHierarchyService.insertHjCompanyHierarchy(hjh);
+       int j= hjCompanyHierarchyService.insertHjCompanyHierarchy(hjh);
+        if(j>0){
+            return AjaxResult.success("操作成功");
+        }else{
+            return AjaxResult.error("操作失败");
+        }
+
     }
 
     /**

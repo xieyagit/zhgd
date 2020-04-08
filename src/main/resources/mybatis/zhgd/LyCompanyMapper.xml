@@ -77,5 +77,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
-    
+    <resultMap type="LyCompanyCount" id="LyCompanyCountResult">
+    <result property="companyName"    column="company_name"    />
+    <result property="zrs"    column="zrs"    />
+    <result property="kqrs"    column="kqrs"    />
+    </resultMap>
+    <select id="selectLyCompanyCount" parameterType="Map" resultMap="LyCompanyCountResult">
+       select t.company_name,(select count(pp.id) from ly_personnel pp where pp.company_id=t.cid and ispresent=0 and type=1) zrs,count(t.cid) kqrs from (
+select c.id cid,c.company_name,r.* from ly_attendance_record r left join ly_personnel p on p.id=r.employee_id left join ly_company c on c.id =p.company_id  where TO_DAYS(r.passed_time)=TO_DAYS(#{time}) and p.ispresent=0 and p.type=1 and r.project_id=#{pid} group by r.employee_id
+) t GROUP BY t.cid order by kqrs desc
+    </select>
 </mapper>
