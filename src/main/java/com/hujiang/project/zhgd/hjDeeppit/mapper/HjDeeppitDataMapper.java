@@ -33,7 +33,7 @@ public interface HjDeeppitDataMapper
      */
 	public List<HjDeeppitData> selectHjDeeppitDataList(HjDeeppitData hjDeeppitData);
 
-	public List<HjDeeppitData> selectHjDeeppitDataByTime(HjDeeppitData hjDeeppitData);
+	public List<HjDeeppitData> selectHjDeeppitDataByTime();
 
 	/**
 	 * 取最大值

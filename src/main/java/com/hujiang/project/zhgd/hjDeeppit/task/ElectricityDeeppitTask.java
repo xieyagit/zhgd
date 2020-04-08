@@ -12,6 +12,7 @@ import com.hujiang.project.zhgd.hjghformwork.domain.HighformworkAlarmData;
 import com.hujiang.project.zhgd.hjghformwork.domain.HighformworkData;
 import com.hujiang.project.zhgd.hjghformwork.service.IHighformworkAlarmDataService;
 import com.hujiang.project.zhgd.hjghformwork.service.IHighformworkDataService;
+import com.hujiang.project.zhgd.moduleToPush.domain.ModuleToPush;
 import com.hujiang.project.zhgd.sbProjectDustEmission.task.JPushSMS;
 import com.hujiang.project.zhgd.utils.DeeppitTools;
 import com.hujiang.project.zhgd.utils.EncryptionUtil;
@@ -31,6 +32,7 @@ import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 基坑、高支模定时任务
@@ -571,16 +573,16 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
             JSONArray fDataList;
             JSONObject fData;
             HjDeeppitData hjDeeppitData;
+            List<HjDeeppitData> hjDeeppitDataList = hjDeeppitDataService.selectHjDeeppitDataByTime();
             for (int i = 0; i < fList.size(); i++) {
                 station = fList.getJSONObject(i);
                 fDataList = station.getJSONArray("data");
                 if(station.getString("name").equals("水位")){
                     for (int j = 0; j < fDataList.size(); j++) {
                         fData = fDataList.getJSONObject(j);
-                        HjDeeppitData hjDeeppit = new HjDeeppitData();
-                        hjDeeppit.setFactorId(station.getIntValue("id"));
-                        hjDeeppit.setCreation(fData.getString("time"));
-                        List<HjDeeppitData> hjDeeppitDatas = hjDeeppitDataService.selectHjDeeppitDataByTime(hjDeeppit);
+                        Integer factorId = station.getIntValue("id");
+                        String creation = fData.getString("time");
+                        List<HjDeeppitData> hjDeeppitDatas = hjDeeppitDataList.stream().filter(a -> a.getFactorId().equals(factorId) && a.getCreation().equals(creation)).collect(Collectors.toList());
                         if(hjDeeppitDatas.size()<=0) {
                             hjDeeppitData = new HjDeeppitData();
                             hjDeeppitData.setFactorId(station.getIntValue("id"));
