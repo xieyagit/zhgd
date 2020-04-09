@@ -68,30 +68,6 @@
             <if test="updateDate != null ">and update_date = #{updateDate}</if>
             <if test="comId != null ">and comId = #{comId}</if>
         </where>
-        <where>  
-            <if test="id != null "> and id = #{id}</if>
-             <if test="constructionName != null  and constructionName != '' "> and construction_name = #{constructionName}</if>
-             <if test="shortName != null  and shortName != '' "> and short_name = #{shortName}</if>
-             <if test="capital != null "> and capital = #{capital}</if>
-             <if test="companyType != null "> and company_type = #{companyType}</if>
-             <if test="legalPerson != null  and legalPerson != '' "> and legal_person = #{legalPerson}</if>
-             <if test="suid != null  and suid != '' "> and suid = #{suid}</if>
-             <if test="organizationCode != null  and organizationCode != '' "> and organization_code = #{organizationCode}</if>
-             <if test="bankOpen != null  and bankOpen != '' "> and bank_open = #{bankOpen}</if>
-             <if test="bankNum != null  and bankNum != '' "> and bank_num = #{bankNum}</if>
-             <if test="bankAddress != null  and bankAddress != '' "> and bank_address = #{bankAddress}</if>
-             <if test="address != null  and address != '' "> and address = #{address}</if>
-             <if test="contacts != null  and contacts != '' "> and contacts = #{contacts}</if>
-             <if test="mobilePhone != null  and mobilePhone != '' "> and mobile_phone = #{mobilePhone}</if>
-             <if test="email != null  and email != '' "> and email = #{email}</if>
-             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
-             <if test="showState != null "> and show_state = #{showState}</if>
-             <if test="faceGroup != null  and faceGroup != '' "> and face_group = #{faceGroup}</if>
-             <if test="isUpload != null  and isUpload != '' "> and isUpload = #{isUpload}</if>
-             <if test="createDate != null "> and create_date = #{createDate}</if>
-             <if test="updateDate != null "> and update_date = #{updateDate}</if>
-             <if test="comId != null "> and comId = #{comId}</if>
-         </where>
 
     </select>
     <select id="getConstructionCompany" parameterType="HjConstructionCompany" resultMap="HjConstructionCompanyResult">

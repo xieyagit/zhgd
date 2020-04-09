@@ -1,7 +1,10 @@
 package com.hujiang.project.zhgd.lyCompany.mapper;
 
 import com.hujiang.project.zhgd.lyCompany.domain.LyCompany;
-import java.util.List;	
+import com.hujiang.project.zhgd.lyCompany.domain.LyCompanyCount;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 楼宇公司 数据层
@@ -58,5 +61,6 @@ public interface LyCompanyMapper
      * @return 结果
      */
 	public int deleteLyCompanyByIds(String[] ids);
-	
+
+	public List<LyCompanyCount> selectLyCompanyCount(Map<String,String> map);
 }

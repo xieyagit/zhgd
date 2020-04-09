@@ -251,6 +251,7 @@ public class HqController {
             har.setWay(1);
             har.setDeviceType("face");
             har.setDeviceSn(log.getString("sn"));
+            har.setTemperature(log.getString("temperature"));
             if(flag2){
                 har.setUploadTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
             }

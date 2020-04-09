@@ -125,7 +125,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     <select id="selectHjProjectListR" resultMap="HjProjectResult" >
         <include refid="selectHjProjectVo"/>
+<<<<<<< HEAD
         where id in (select project_id from hj_company_project where path like CONCAT('%,',#{companyId}))
+=======
+        where id in (select project_id from hj_company_project where path like CONCAT('%,',#{companyId})) and show_state=0
+>>>>>>> aac9628784f925c0932b618a71a13d32028ba09b
         <!--<if test="region != 0"> and project_region like #{region}"%"</if>-->
     </select>
 

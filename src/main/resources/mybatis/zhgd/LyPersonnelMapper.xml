@@ -234,7 +234,7 @@ select count(d.id) from (select r.id from ly_attendance_record r where r.employe
     <select id="getLyPersonnelRecordZZ" parameterType="LyAttendanceRecord"  resultMap="getLyPersonnelRecordResult">
 
 
-select p.emp_name,p.face_url,p.id,DATE_FORMAT(r.passed_time, '%H:%m') passed_time,r.temperature,r.direction
+select p.emp_name,p.face_url,p.id,DATE_FORMAT(r.passed_time, '%H:%i') passed_time,r.temperature,r.direction
 from ly_attendance_record r left join ly_personnel p on p.id=r.employee_id
 where r.project_id=#{projectId} and TO_DAYS(r.passed_time)=TO_DAYS(#{passedTime}) and p.type='1' and ispresent='0' GROUP BY r.direction ORDER BY r.id
 
@@ -242,7 +242,7 @@ where r.project_id=#{projectId} and TO_DAYS(r.passed_time)=TO_DAYS(#{passedTime}
     <select id="getLyPersonnelRecordFK" parameterType="LyAttendanceRecord"  resultMap="getLyPersonnelRecordResult">
 
 
-select p.emp_name,p.face_url,p.id,DATE_FORMAT(r.passed_time, '%H:%m') passed_time,r.temperature,r.direction
+select p.emp_name,p.face_url,p.id,DATE_FORMAT(r.passed_time, '%H:%i') passed_time,r.temperature,r.direction
 from ly_attendance_record r left join ly_personnel p on p.id=r.employee_id
 where r.project_id=#{projectId} and TO_DAYS(r.passed_time)=TO_DAYS(#{passedTime}) and p.type='2'
 and p.id in (select t.pwid from ly_registration_record t where t.pid=4 and  t.type='2' and TO_DAYS(t.time)=TO_DAYS(#{passedTime}) )

@@ -120,11 +120,6 @@ eureka:
 
         defaultZone: http://localhost:9006/eureka/  # 注册中心访问地址
 
-
-
-
-
-
 # MyBatis
 mybatis:
   # 搜索指定包别名

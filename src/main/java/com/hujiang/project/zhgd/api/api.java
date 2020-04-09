@@ -1532,7 +1532,7 @@ public class api {
     }
 
     @RequestMapping("/pcCompanyLibrary/insertHjCompanyLibrary")
-    public int insertHjCompanyLibrary(HjCompanyLibrary hjCompanyLibrary, Integer pid) {
+    public AjaxResult insertHjCompanyLibrary(HjCompanyLibrary hjCompanyLibrary, Integer pid) {
         return pcCompanyLibraryApi.insertHjCompanyLibrary(hjCompanyLibrary, pid);
     }
 
