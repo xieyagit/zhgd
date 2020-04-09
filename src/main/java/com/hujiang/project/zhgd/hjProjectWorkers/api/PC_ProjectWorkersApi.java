@@ -86,11 +86,14 @@ public class PC_ProjectWorkersApi extends BaseController {
     @PostMapping("/quarantineList")
     public AjaxResult quarantineList(@RequestBody HjProjectWorkers hjProjectWorkers) {
         String ads = hjProjectWorkers.getIdAddress();
-        String [] strAds = ads.split(",");
         List<String> adsList = new ArrayList<>();
-        for(String str : strAds){
-            adsList.add(str);
+        if(ads != null){
+            String [] strAds = ads.split(",");
+            for(String str : strAds){
+                adsList.add(str);
+            }
         }
+
         hjProjectWorkers.setAdsList(adsList);
         startPage();
         List<ProjectWorkerPC> list = hjProjectWorkersService.selectProjectWorkersListPC(hjProjectWorkers);

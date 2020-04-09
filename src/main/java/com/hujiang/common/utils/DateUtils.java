@@ -4,8 +4,10 @@ import java.lang.management.ManagementFactory;
 import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 
@@ -217,4 +219,51 @@ public class DateUtils extends org.apache.commons.lang.time.DateUtils {
         long day = diff / nd;
         return day ;
     }
+
+    /**
+     * 字符串转换日期
+     * @param str
+     * @return
+     */
+    public static Date stringToDate(String str){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        if(!str.equals("")&&str!=null){
+            try {
+                return format.parse(str);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @Author xieya
+     * @Description 判断在哪一个区间内
+     * @Date 2020/4/9 16:22
+     * @param str
+     * @return int
+     **/
+    public static int index(String str){
+//        Date date = stringToDate(str);
+//        SimpleDateFormat hh = new SimpleDateFormat("HH");
+//        String hour = hh.format(date);
+//        int hours = Integer.parseInt(hour);
+//        SimpleDateFormat mm = new SimpleDateFormat("mm");
+//        String minute = mm.format(date);
+//        int minutes = Integer.parseInt(minute);
+//
+//        int min=0;
+//        if(minutes>=30){
+//            min = 1;
+//        }
+//        return hours*2 + min;
+
+        Date date = stringToDate(str);
+        SimpleDateFormat hh = new SimpleDateFormat("HH");
+        String hour = hh.format(date);
+        int hours = Integer.parseInt(hour);
+        return hours;
+    }
+
 }

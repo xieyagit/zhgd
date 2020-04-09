@@ -99,5 +99,7 @@ public interface HjDeeppitDataMapper
      * @return 结果
      */
 	public int deleteHjDeeppitDataByIds(String[] ids);
-	
+
+
+	List<HjDeeppitData> selectToDay(Integer factorId, String param, String date);
 }
