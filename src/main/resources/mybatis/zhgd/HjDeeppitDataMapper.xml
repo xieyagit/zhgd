@@ -61,6 +61,8 @@
 
     <select id="selectHjDeeppitDataByTime" parameterType="HjDeeppitData" resultMap="HjDeeppitDataResult">
         <include refid="selectHjDeeppitDataVo"/>
+        where creation BETWEEN CONCAT(CURDATE(),' 00:00:00') AND CONCAT(CURDATE(),' 23:59:59')
+
     </select>
     <!--最大值-->
     <select id="selectParmeterMax" parameterType="com.hujiang.project.zhgd.hjDeeppit.domain.SbAvg" resultType="java.lang.String">
@@ -206,8 +208,6 @@
         FROM hj_deeppit_data t1
         WHERE to_days(t1.creation) = to_days(now())
     </select>
-
-
 
 
 </mapper>

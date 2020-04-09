@@ -272,6 +272,7 @@
     <select id="selectElevatorCount" parameterType="Map" resultMap="SbElevatorAddrecordResult">
         <include refid="selectSbElevatorAddrecordVo"/>
         where STR_TO_DATE(runtime,'%Y-%m-%d %H:%i:%s') > STR_TO_DATE(#{time},'%Y-%m-%d %H:%i:%s') and hxzid in (select hxzid from sb_elevator_binding where pid=${pid}) GROUP BY hxzid
+
     </select>
     <!--载重报警-->
     <select id="selectElevatorCountTwo" parameterType="Map" resultType="Integer">
@@ -279,6 +280,7 @@
         where to_days(runtime) = to_days(#{time})
         and WeightAlarm = 1
         <if test="pid != null  and pid != '' ">and hxzid in (select hxzid from sb_elevator_binding where pid=${pid})</if>
+
         <if test="hxzid != null  and hxzid != '' "> and hxzid =#{hxzid}</if>
     </select>
     <!--人数报警-->
@@ -287,6 +289,7 @@
         where to_days(runtime) = to_days(#{time})
         and PeopleCntAlarm = 1
         <if test="pid != null  and pid != '' ">and hxzid in (select hxzid from sb_elevator_binding where pid=${pid})</if>
+
         <if test="hxzid != null  and hxzid != '' "> and hxzid =#{hxzid}</if>
     </select>
     <!--速度报警-->
@@ -295,6 +298,7 @@
         where to_days(runtime) = to_days(#{time})
         and SpeedAlarm = 1
         <if test="pid != null  and pid != '' ">and hxzid in (select hxzid from sb_elevator_binding where pid=${pid})</if>
+
         <if test="hxzid != null  and hxzid != '' "> and hxzid =#{hxzid}</if>
     </select>
     <!--倾斜报警-->
@@ -303,6 +307,7 @@
         where to_days(runtime) = to_days(#{time})
         and (ObliguityXAlarm = 1 or ObliguityYAlarm=1)
         <if test="pid != null  and pid != '' ">and hxzid in (select hxzid from sb_elevator_binding where pid=${pid})</if>
+
         <if test="hxzid != null  and hxzid != '' "> and hxzid =#{hxzid}</if>
     </select>
     <!--上限位报警-->
@@ -311,6 +316,7 @@
         where to_days(runtime) = to_days(#{time})
         and is_up_warning=1
         <if test="pid != null  and pid != '' ">and hxzid in (select hxzid from sb_elevator_binding where pid=${pid})</if>
+
         <if test="hxzid != null  and hxzid != '' "> and hxzid =#{hxzid}</if>
     </select>
     <!--下限位报警-->
@@ -319,6 +325,7 @@
         where to_days(runtime) = to_days(#{time})
         and is_down_warning=1
         <if test="pid != null  and pid != '' ">and hxzid in (select hxzid from sb_elevator_binding where pid=${pid})</if>
+
         <if test="hxzid != null  and hxzid != '' "> and hxzid =#{hxzid}</if>
     </select>
 

@@ -102,4 +102,5 @@ public interface IHjDeeppitDataService
 
 
 	List<HjDeeppitData> selectToDay(Integer factorId, String param, String date);
+
 }

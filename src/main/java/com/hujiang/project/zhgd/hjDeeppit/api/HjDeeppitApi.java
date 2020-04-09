@@ -42,6 +42,16 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.hujiang.project.zhgd.hjDeeppit.domain.*;
+import com.hujiang.project.zhgd.hjDeeppit.service.*;
+import com.hujiang.project.zhgd.hjDeeppit.task.ElectricityDeeppitTask;
+import com.hujiang.project.zhgd.hjghformwork.domain.HighformworkAlarmData;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.*;
 
 
 /**
@@ -55,7 +65,6 @@ import java.util.Map;
 public class HjDeeppitApi extends BaseController {
 
     private static final Logger logger = LoggerFactory.getLogger(HjDeeppitApi.class);
-
 
     String url = "https://api.zhiwucloud.com/api/v1";
 
@@ -204,7 +213,6 @@ public class HjDeeppitApi extends BaseController {
                                         @RequestParam(value = "factorId") Integer factorId) {
         SbAvg avg = new SbAvg();
         Map<String, String> map = new HashMap<>();
-        ;
         String avgR;
         String maxR;
         String minR;
@@ -217,6 +225,7 @@ public class HjDeeppitApi extends BaseController {
         map.put("avg", avgR);
         map.put("min", minR);
         map.put("max", maxR);
+
 
 
 //        switch (displayId){
@@ -300,7 +309,6 @@ public class HjDeeppitApi extends BaseController {
         List<StatisticsAlertor> list = deeppitAlarmDataService.statisticsAlertor(structureId);
         return AjaxResult.success(list);
     }
-
 
     /**
      * 按时间段查询历史数据
@@ -613,10 +621,6 @@ public class HjDeeppitApi extends BaseController {
         return returnList;
     }
 
-    public static void main(String[] args) {
-        Double.valueOf("-6.187");
-    }
-
 
     /**
      * 历史数据图表
@@ -740,3 +744,4 @@ public class HjDeeppitApi extends BaseController {
         return ajaxResult;
     }
 }
+
