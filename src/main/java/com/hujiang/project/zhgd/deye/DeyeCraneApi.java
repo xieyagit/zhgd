@@ -1188,6 +1188,7 @@ public class DeyeCraneApi {
         sa.setHxzid(s.getString("hxzid"));
         List<SbElevatorAddparams> sList = sbElevatorAddparamsService.selectSbElevatorAddparamsList(sa);
 
+        //插入升降机实时数据
         JSONArray body = setAddRecord(s, sList.get(0).getLLoadCapacity());
         /** 对接城安院*/
         SbElevatorBinding sbElevatorBinding = new SbElevatorBinding();

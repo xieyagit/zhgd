@@ -1,13 +1,12 @@
 package com.hujiang.common.utils;
 
+import org.apache.commons.lang.time.DateFormatUtils;
+
 import java.lang.management.ManagementFactory;
 import java.text.ParseException;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-import org.apache.commons.lang.time.DateFormatUtils;
 
 /**
  * 时间工具类
@@ -177,6 +176,7 @@ public class DateUtils extends org.apache.commons.lang.time.DateUtils {
         }
         return date;
     }
+
     /**
      * 计算两个时间差
      */
@@ -195,8 +195,9 @@ public class DateUtils extends org.apache.commons.lang.time.DateUtils {
         long min = diff % nd % nh / nm;
         // 计算差多少秒//输出结果
         // long sec = diff % nd % nh % nm / ns;
-        return day ;
+        return day;
     }
+
     /**
      * 毫秒级时间戳转化成日期和时间
      *
@@ -206,6 +207,7 @@ public class DateUtils extends org.apache.commons.lang.time.DateUtils {
     public static String timstamp2DateTime(Long timestamp) {
         return new SimpleDateFormat(YYYY_MM_DD).format(timestamp);
     }
+
     /**
      * 计算两个时间差
      */
@@ -215,6 +217,53 @@ public class DateUtils extends org.apache.commons.lang.time.DateUtils {
         long diff = endDate - nowDate;
         // 计算差多少天
         long day = diff / nd;
-        return day ;
+        return day;
     }
+
+    /**
+     * 字符串转换日期
+     * @param str
+     * @return
+     */
+    public static Date stringToDate(String str) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        if (!str.equals("") && str != null) {
+            try {
+                return format.parse(str);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @Author xieya
+     * @Description 判断在哪一个区间内
+     * @Date 2020/4/9 16:22
+     * @param str
+     * @return int
+     **/
+    public static int index(String str) {
+//        Date date = stringToDate(str);
+//        SimpleDateFormat hh = new SimpleDateFormat("HH");
+//        String hour = hh.format(date);
+//        int hours = Integer.parseInt(hour);
+//        SimpleDateFormat mm = new SimpleDateFormat("mm");
+//        String minute = mm.format(date);
+//        int minutes = Integer.parseInt(minute);
+//
+//        int min=0;
+//        if(minutes>=30){
+//            min = 1;
+//        }
+//        return hours*2 + min;
+
+        Date date = stringToDate(str);
+        SimpleDateFormat hh = new SimpleDateFormat("HH");
+        String hour = hh.format(date);
+        int hours = Integer.parseInt(hour);
+        return hours;
+    }
+
 }

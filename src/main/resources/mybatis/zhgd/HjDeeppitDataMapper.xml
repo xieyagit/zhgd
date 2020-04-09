@@ -55,12 +55,14 @@
                     and to_days(creation)=to_days(#{creation})
                 </otherwise>
             </choose>
+            order by creation desc
         </where>
     </select>
 
     <select id="selectHjDeeppitDataByTime" parameterType="HjDeeppitData" resultMap="HjDeeppitDataResult">
         <include refid="selectHjDeeppitDataVo"/>
         where creation BETWEEN CONCAT(CURDATE(),' 00:00:00') AND CONCAT(CURDATE(),' 23:59:59')
+
     </select>
     <!--最大值-->
     <select id="selectParmeterMax" parameterType="com.hujiang.project.zhgd.hjDeeppit.domain.SbAvg" resultType="java.lang.String">
@@ -89,6 +91,7 @@
                 and creation <![CDATA[ <=]]> #{endTime}
             </if>
         </where>
+        ORDER BY creation Desc
     </select>
 
 
@@ -182,5 +185,29 @@
             #{id}
         </foreach>
     </delete>
+    <!--    查询当天所有数据-->
+    <select id="selectToDay" parameterType="String" resultMap="HjDeeppitDataResult">
+        SELECT
+        t1.creation,
+        t1.display_id,
+        t1.factor_id,
+        t1.id,
+        t1.level_accumulate_x,
+        t1.level_accumulate_y,
+        t1.level_x,
+        t1.level_y,
+        t1.reserved_o,
+        t1.reserved_t,
+        t1.strain_frequency,
+        t1.strain_temperature,
+        t1.structures_id,
+        t1.subside,
+        t1.tilt_x,
+        t1.tilt_y,
+        t1.water_level
+        FROM hj_deeppit_data t1
+        WHERE to_days(t1.creation) = to_days(now())
+    </select>
+
 
 </mapper>

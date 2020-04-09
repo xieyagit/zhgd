@@ -134,5 +134,10 @@ public class HjDeeppitDataServiceImpl implements IHjDeeppitDataService
 	{
 		return hjDeeppitDataMapper.deleteHjDeeppitDataByIds(Convert.toStrArray(ids));
 	}
-	
+
+	@Override
+	public List<HjDeeppitData> selectToDay(Integer factorId, String param, String date ) {
+		return hjDeeppitDataMapper.selectToDay(factorId, param, date);
+	}
+
 }
