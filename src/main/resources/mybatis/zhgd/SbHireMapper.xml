@@ -72,7 +72,7 @@
         select id, imei, peopleId, areaId from sb_hire
     </sql>
     <select id="selectAreaProjectList" parameterType="SbAreaProject" resultMap="SbAreaProjectResult">
-        SELECT imei,peopleId,w.emp_name AS userName,areaId,`name`,pid,bid,phone AS userPhone,a.adminId FROM `sb_hire` AS h
+        SELECT imei,peopleId,w.emp_name AS userName,areaId,`name`,pid as projectId,bid,phone AS userPhone,a.adminId FROM `sb_hire` AS h
         LEFT JOIN sb_area AS a ON(a.id=h.areaId)
         LEFT JOIN hj_project_workers AS w ON(w.id = h.peopleId)
     </select>
