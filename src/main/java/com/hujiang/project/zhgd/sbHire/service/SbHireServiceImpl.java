@@ -2,13 +2,10 @@ package com.hujiang.project.zhgd.sbHire.service;
 
 import java.util.List;
 
-import com.hujiang.project.zhgd.sbHire.domain.SbAreaProject;
-import com.hujiang.project.zhgd.sbHire.domain.Hire;
-import com.hujiang.project.zhgd.sbHire.domain.HirePeople;
+import com.hujiang.project.zhgd.sbHire.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.hujiang.project.zhgd.sbHire.mapper.SbHireMapper;
-import com.hujiang.project.zhgd.sbHire.domain.SbHire;
 import com.hujiang.common.support.Convert;
 
 /**
@@ -37,6 +34,16 @@ public class SbHireServiceImpl implements ISbHireService
 	@Override
 	public List<HirePeople> selectArea(Integer pId) {
 		return sbHireMapper.selectArea(pId);
+	}
+
+	@Override
+	public List<SbAreaLocaltion> selectAreaLocaltion() {
+		return sbHireMapper.selectAreaLocaltion();
+	}
+
+	@Override
+	public List<SbAreaCertificate> selectAreaCertificate() {
+		return sbHireMapper.selectAreaCertificate();
 	}
 
 	@Override

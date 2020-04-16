@@ -18,6 +18,12 @@ public class Hire {
     private Double areaYloc;
     private Double areaRadius;
     private Integer projectId;
+    private Integer way;
+    private String idCode;
+    private String startTime;
+    private String empNaticeplace;
+    private String workType;
+    private Integer areaId;
 
     public String getAreaName() {
         return areaName;
@@ -137,5 +143,53 @@ public class Hire {
 
     public void setProjectId(Integer projectId) {
         this.projectId = projectId;
+    }
+
+    public Integer getWay() {
+        return way;
+    }
+
+    public void setWay(Integer way) {
+        this.way = way;
+    }
+
+    public String getIdCode() {
+        return idCode;
+    }
+
+    public void setIdCode(String idCode) {
+        this.idCode = idCode;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEmpNaticeplace() {
+        return empNaticeplace;
+    }
+
+    public void setEmpNaticeplace(String empNaticeplace) {
+        this.empNaticeplace = empNaticeplace;
+    }
+
+    public String getWorkType() {
+        return workType;
+    }
+
+    public void setWorkType(String workType) {
+        this.workType = workType;
+    }
+
+    public Integer getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(Integer areaId) {
+        this.areaId = areaId;
     }
 }

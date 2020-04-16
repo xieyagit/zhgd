@@ -5,6 +5,7 @@ import com.hujiang.project.zhgd.sbArea.domain.Area;
 import com.hujiang.project.zhgd.sbArea.domain.OptionsLocation;
 import com.hujiang.project.zhgd.sbArea.domain.OptionsUser;
 import com.hujiang.project.zhgd.sbArea.domain.SbArea;
+import com.hujiang.project.zhgd.sbHire.domain.SbAreaLocaltion;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -48,6 +49,7 @@ public interface SbAreaMapper
 	 * @return
 	 */
 	public int addArea(OptionsLocation optionsLocation);
+	public int addAreaLocaltion(List<SbAreaLocaltion> sbAreaLocaltionList);
 	public int deleteArea(Integer areaId);
 
 	public List<Area> selectProject();

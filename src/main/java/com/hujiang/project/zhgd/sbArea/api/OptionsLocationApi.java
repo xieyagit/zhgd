@@ -19,9 +19,11 @@ import com.hujiang.project.zhgd.moduleToPush.service.IModuleToPushService;
 import com.hujiang.project.zhgd.sbArea.domain.OptionsLocation;
 import com.hujiang.project.zhgd.sbArea.domain.OptionsUser;
 import com.hujiang.project.zhgd.sbArea.service.ISbAreaService;
+import com.hujiang.project.zhgd.sbHire.domain.SbAreaLocaltion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -97,23 +99,37 @@ public class OptionsLocationApi extends BaseController {
         return jsonObject;
     }
     @PostMapping("/addArea")
-    public JSONObject addArea(@RequestParam("areaName")String areaName,
-                                     @RequestParam("areaAddress")String areaAddress,
-                                     @RequestParam("constructionId")Integer constructionId,
-                                     @RequestParam("areaXloc")Double areaXloc,
-                                     @RequestParam("areaYloc")Double areaYloc,
-                                     @RequestParam("radius")Double radius,
-                                     @RequestParam("projectId")Integer projectId){
+    public JSONObject addArea(@RequestBody SbAreaAdd sbAreaAdd){
+        int result = 0;
         JSONObject jsonObject = new JSONObject();
         OptionsLocation optionsLocation = new OptionsLocation();
-        optionsLocation.setAreaName(areaName);
-        optionsLocation.setAreaAddress(areaAddress);
-        optionsLocation.setConstructionId(constructionId);
-        optionsLocation.setAreaXloc(areaXloc);
-        optionsLocation.setAreaYloc(areaYloc);
-        optionsLocation.setRadius(radius);
-        optionsLocation.setProjectId(projectId);
-        int result = areaService.addArea(optionsLocation);
+        optionsLocation.setAreaName(sbAreaAdd.getAreaName());
+        optionsLocation.setAreaAddress(sbAreaAdd.getAreaAddress());
+        optionsLocation.setConstructionId(sbAreaAdd.getConstructionId());
+        optionsLocation.setProjectId(sbAreaAdd.getProjectId());
+        if(sbAreaAdd.getWay()==1) {
+            optionsLocation.setWay(1);
+            result = areaService.addArea(optionsLocation);
+            if(sbAreaAdd.getArray().size()> 0) {
+                List<SbAreaLocaltion> sbAreaLocaltionList = new ArrayList<>();
+                for (int i = 0;i<sbAreaAdd.getArray().size();i++) {
+                    SbAreaLocaltion sbAreaLocaltion = new SbAreaLocaltion();
+                    sbAreaLocaltion.setAreaId(optionsLocation.getAreaId());
+                    sbAreaLocaltion.setArray(i+1);
+                    sbAreaLocaltion.setXloc(sbAreaAdd.getArray().get(i).getXloc());
+                    sbAreaLocaltion.setYloc(sbAreaAdd.getArray().get(i).getYloc());
+                    sbAreaLocaltionList.add(sbAreaLocaltion);
+                }
+                areaService.addAreaLocaltion(sbAreaLocaltionList);
+            }
+
+        }else{
+            optionsLocation.setWay(0);
+            optionsLocation.setAreaXloc(sbAreaAdd.getAreaXloc());
+            optionsLocation.setAreaYloc(sbAreaAdd.getAreaYloc());
+            optionsLocation.setRadius(sbAreaAdd.getRadius());
+            result = areaService.addArea(optionsLocation);
+        }
         if(result>0){
             jsonObject.put("msg","成功");
             jsonObject.put("code",0);

@@ -98,6 +98,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="areaYloc != null  ">yloc,</if>
             <if test="radius != null  ">radius,</if>
             <if test="areaAddress != null  ">address,</if>
+            <if test="way != null  ">way,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="areaName != null  and areaName != ''  ">#{areaName},</if>
@@ -107,8 +108,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="areaYloc != null  ">#{areaYloc},</if>
             <if test="radius != null  ">#{radius},</if>
             <if test="areaAddress != null  ">#{areaAddress},</if>
+            <if test="way != null  ">#{way},</if>
         </trim>
     </insert>
+    <insert id ="addAreaLocaltion" parameterType="java.util.List" >
+        <selectKey resultType ="java.lang.Integer" keyProperty= "id" order= "AFTER">
+         SELECT LAST_INSERT_ID()
+        </selectKey >
+        insert into sb_area_localtion
+        (xloc, yloc, array, areaId)
+        values
+    <foreach collection ="list" item="sbAreaLocaltionList" index= "index" separator =",">
+    (#{sbAreaLocaltionList.xloc}, #{sbAreaLocaltionList.yloc},#{sbAreaLocaltionList.array},
+    #{sbAreaLocaltionList.areaId})
+    </foreach >
+    </insert >
     <update id="updateAreaUser" parameterType="OptionsUser">
         UPDATE `sb_hire`
         <trim prefix="SET" suffixOverrides=",">

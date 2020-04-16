@@ -173,6 +173,9 @@ public class locationTask extends AutoTaskBase {
                             .filter(c -> c.getImei().equals(imei))
                             .collect(Collectors.toList());
                     SbEquipmentWarning equipmentWarning = JSONObject.parseObject(data.toJSONString(), SbEquipmentWarning.class);
+                    if(areaProjects == null || areaProjects.size() <= 0){
+                        continue;
+                    }
                     equipmentWarning.setProjectId(areaProjects.get(0).getProjectId());
                     //保存定位数据
                     equipmentWarningList.add(equipmentWarning);
