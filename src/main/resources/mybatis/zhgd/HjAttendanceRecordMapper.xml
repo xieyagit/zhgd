@@ -21,7 +21,7 @@
     </resultMap>
 
     <sql id="selectHjAttendanceRecordVo">
-        select alarm,temperature,id, project_id, employee_id, passed_time, direction, way, site_photo, create_date,upload_time from hj_attendance_record
+        select alarm,temperature,id, project_id, employee_id, passed_time, direction, way, site_photo, create_date,upload_time,device_type,device_sn from hj_attendance_record
     </sql>
 
     <select id="items" parameterType="HjAttendanceRecord" resultMap="HjAttendanceRecordResult">
@@ -497,6 +497,7 @@ and TO_DAYS(curdate())=TO_DAYS(passed_time)  GROUP BY employee_id ORDER BY passe
         <where>
             <if test="projectId != null ">and project_id = #{projectId}</if>
         </where>
+        AND to_days(passed_time) <![CDATA[ <= ]]> to_days(now())
         order by passed_time desc limit 1
     </select>
 
