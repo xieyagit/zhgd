@@ -12,7 +12,7 @@ public class OptionsLocation {
     private Double areaYloc;
     private Double radius;
     private Integer projectId;
-
+    private Integer way;
     public Integer getAreaId() {
         return areaId;
     }
@@ -100,4 +100,13 @@ public class OptionsLocation {
     public void setProjectId(Integer projectId) {
         this.projectId = projectId;
     }
+
+    public Integer getWay() {
+        return way;
+    }
+
+    public void setWay(Integer way) {
+        this.way = way;
+    }
+
 }

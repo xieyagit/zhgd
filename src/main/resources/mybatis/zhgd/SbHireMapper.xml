@@ -26,6 +26,12 @@
         <result property="areaXloc" column="areaXloc"/>
         <result property="areaYloc" column="areaYloc"/>
         <result property="areaRadius" column="areaRadius"/>
+        <result property="way" column="way"/>
+        <result property="idCode" column="idCode"/>
+        <result property="startTime" column="startTime"/>
+        <result property="empNaticeplace" column="empNaticeplace"/>
+        <result property="workType" column="workType"/>
+        <result property="areaId" column="areaId"/>
     </resultMap>
     <resultMap id="HirePeopleResult" type="HirePeople">
         <result property="pId" column="pId"/>
@@ -42,6 +48,14 @@
         <result property="radius" column="radius"/>
         <result property="address" column="address"/>
         <result property="bat" column="bat"/>
+        <result property="way" column="way"/>
+        <result property="array" column="array"/>
+    </resultMap>
+    <resultMap id="SbAreaLocaltionResult" type="SbAreaLocaltion">
+        <result property="areaId" column="areaId"/>
+        <result property="xloc" column="xloc"/>
+        <result property="yloc" column="yloc"/>
+        <result property="array" column="array"/>
     </resultMap>
 
     <resultMap type="SbEquipmentRecord" id="SbEquipmentRecordResult">
@@ -67,6 +81,13 @@
         <result property="userPhone" column="userPhone"/>
         <result property="adminId" column="adminId"/>
     </resultMap>
+    <resultMap id="SbAreaCertificateResult" type="SbAreaCertificate">
+        <result property="tertiaryEducation" column="tertiaryEducation"/>
+        <result property="laborContract" column="laborContract"/>
+        <result property="digitalTraining" column="digitalTraining"/>
+        <result property="skilCertificate" column="skilCertificate"/>
+        <result property="userId" column="userId"/>
+    </resultMap>
 
     <sql id="selectSbHireVo">
         select id, imei, peopleId, areaId from sb_hire
@@ -81,9 +102,11 @@
       where p.id=#{projectId}
     </select>
     <select id="selectArea" parameterType="HirePeople" resultMap="HirePeopleResult">
-        SELECT id as areaId,`name` as areaName,xloc,yloc,radius,pid as pId from sb_area where 1=1
+        SELECT id as areaId,`name` as areaName,xloc,yloc,radius,pid as pId,way from sb_area where 1=1
         <if test="pId != null">and pid=#{pId}</if>
-
+    </select>
+    <select id="selectAreaLocaltion" parameterType="SbAreaLocaltion" resultMap="SbAreaLocaltionResult">
+        SELECT * from sb_area_localtion
     </select>
     <select id="selectPeople" parameterType="HirePeople" resultMap="HirePeopleResult">
         SELECT w.id as peopleId,emp_name as  peopleName,h.imei,areaId from sb_hire h
@@ -110,6 +133,7 @@
     <select id="selectTimeList" parameterType="HirePeople" resultMap="HirePeopleResult">
         SELECT imei,bat,watchDate,xloc,yloc,address
         from sb_equipment_record where 1=1
+        AND TO_DAYS(watchDate) = TO_DAYS(NOW())
         <if test="imei != null and imei != ''">and imei = #{imei}</if>
         ORDER BY watchDate desc
     </select>
@@ -183,22 +207,23 @@
         u.id AS id,
         u.emp_name AS userName,
         u.emp_phon AS userPhone,
-        (
-        SELECT
-        construction_name
-        FROM
-        hj_construction_company c
-        WHERE
-        a.bid = c.id
-        ) AS constructionName,
+        u.id_code AS idCode,
+        u.start_time AS startTime,
+        emp_naticeplace AS empNaticeplace,
+        (SELECT title FROM hj_dictionaries e WHERE  e.tag =  u.job_name) as workType,
+        (SELECT construction_name FROM hj_construction_company c WHERE  a.bid = c.id ) AS constructionName,
         r.imei AS imei,
-        a.`name` as areaName,a.xloc as areaXloc,a.yloc as areaYloc,a.radius as areaRadius
-        FROM
-        sb_hire h
+        a.`name` as areaName,
+        a.id as areaId,
+        a.xloc as areaXloc,
+        a.yloc as areaYloc,
+        a.radius as areaRadius,
+        a.way
+        FROM sb_hire h
         LEFT JOIN hj_project_workers u ON(h.peopleId=u.id)
         LEFT JOIN sb_area a ON (h.areaId=a.id)
         LEFT JOIN sb_equipment_record r ON(h.imei=r.imei)
-        where 1=1
+        WHERE 1=1
         <if test="filed != null and filed != ''">
             AND `emp_name`=#{filed} or r.imei=#{filed} or `emp_phon` = #{filed}
         </if>
@@ -207,6 +232,10 @@
         </if>
         GROUP BY
         h.peopleId
+    </select>
+
+    <select id="selectAreaCertificate" parameterType="SbAreaCertificate" resultMap="SbAreaCertificateResult">
+        select * from sb_area_certificate
     </select>
     <select id="selectHireHistory" parameterType="Hire" resultMap="HireResult">
         select h.imei,u.id as id,u.emp_name as userName,u.emp_phon as userPhone,

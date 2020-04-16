@@ -107,6 +107,7 @@ import com.hujiang.project.zhgd.sbAccountTalkback.domain.SbAccountTalkback;
 import com.hujiang.project.zhgd.sbApiFaceAttendance.api.FaceAttendanceAPI;
 import com.hujiang.project.zhgd.sbApiFaceAttendance.domain.SbApiFaceAttendance;
 import com.hujiang.project.zhgd.sbArea.api.OptionsLocationApi;
+import com.hujiang.project.zhgd.sbArea.api.SbAreaAdd;
 import com.hujiang.project.zhgd.sbArea.domain.SbArea;
 import com.hujiang.project.zhgd.sbCraneAddparams.api.OptionsCraneApi;
 import com.hujiang.project.zhgd.sbCraneAddrecord.api.AppCraneAddRecordApi;
@@ -131,6 +132,7 @@ import com.hujiang.project.zhgd.sbGroupTitle.api.GroupTitleApi;
 import com.hujiang.project.zhgd.sbGroupTitle.domain.SbGroupTitle;
 import com.hujiang.project.zhgd.sbHire.api.SbHireApi;
 import com.hujiang.project.zhgd.sbHire.api.SbHireAppApi;
+import com.hujiang.project.zhgd.sbHire.domain.SbAreaLocaltion;
 import com.hujiang.project.zhgd.sbManufacturer.api.ManufacturerPC;
 import com.hujiang.project.zhgd.sbManufacturer.domain.SbManufacturer;
 import com.hujiang.project.zhgd.sbProjectDustEmission.api.AppProjectDustEmissionApi;
@@ -600,14 +602,8 @@ public class api {
     }
 
     @PostMapping("/OptionsLocationApi/addArea")
-    public JSONObject addArea(@RequestParam("areaName") String areaName,
-                              @RequestParam("areaAddress") String areaAddress,
-                              @RequestParam("constructionId") Integer constructionId,
-                              @RequestParam("areaXloc") Double areaXloc,
-                              @RequestParam("areaYloc") Double areaYloc,
-                              @RequestParam("radius") Double radius,
-                              @RequestParam("projectId") Integer projectId) {
-        return optionsLocationApi.addArea(areaName, areaAddress, constructionId, areaXloc, areaYloc, radius, projectId);
+    public JSONObject addArea(@RequestBody SbAreaAdd sbAreaAdd) {
+        return optionsLocationApi.addArea(sbAreaAdd);
     }
 
     @PostMapping("/OptionsLocationApi/deleteArea")
