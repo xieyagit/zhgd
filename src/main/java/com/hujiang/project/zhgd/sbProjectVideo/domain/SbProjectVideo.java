@@ -24,6 +24,7 @@ public class SbProjectVideo {
      * 视频地址
      */
     private String url;
+    private String hdurl;
     /**
      * 视频账户
      */
@@ -84,6 +85,14 @@ public class SbProjectVideo {
     private String latitude;//纬度
     private String factory;//厂家
     private String channelNo;//通道号
+
+    public String getHdurl() {
+        return hdurl;
+    }
+
+    public void setHdurl(String hdurl) {
+        this.hdurl = hdurl;
+    }
 
     public String getChannelNo() {
         return channelNo;

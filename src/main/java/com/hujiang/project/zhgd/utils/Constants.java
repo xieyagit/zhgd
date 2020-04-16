@@ -90,5 +90,8 @@ public class Constants {
     public static final String JIANSHI_SHIMINGZHI="http://220.177.172.55:8004/3HDataSmart";
     //乐橙云接口
     public static final String OPEN_LC="https://openapi.lechange.cn:443/openapi/";
-
+    //海康云眸
+    public static final String YUNMOU="https://api2.hik-cloud.com";
+    //云眸密钥ID
+    public static final Integer YUNMOUTOKEN_ID=121;
 }

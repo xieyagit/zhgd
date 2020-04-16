@@ -34,6 +34,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertSbProjectVideoArea" parameterType="SbProjectVideoArea">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
         insert into sb_project_video_area
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null  ">id,</if>
@@ -114,7 +117,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     INNER JOIN hj_project b on (a.project_id=b.id)
     where 1=1
         and a.path like CONCAT((select path from hj_company_project where company_id=#{cid} LIMIT 1), '%')
-        and a.project_id is not null)
+        and a.project_id is not null) and cc.show_state=1
     </select>
     <resultMap type="VideoPicUrl" id="getVideoPicUrlResult">
 
@@ -168,4 +171,23 @@ select a.projectId , v.id vid,v.video_sn,v.picUrl,v.channelNo,v.factory from sb_
 			left	join hj_construction_project c on c.project_id=p.id left join hj_construction_company cc on c.construction_id=cc.id left join hj_dictionaries d on cc.company_type=d.id
 				where a.projectid =#{pid}
     </select>
+    <resultMap type="PvideoJT" id="getPvideoListResult">
+        <result property="pid"    column="pid"    />
+        <result property="projectName"    column="project_name"    />
+        <collection property="videoList" ofType="Video"  >
+            <result property="videoName"    column="video_name"    />
+            <result property="url"    column="url"    />
+            <result property="hdUrl"    column="hdurl"    />
+        </collection>
+    </resultMap>
+    <select id="getPvideoList" parameterType="Integer" resultMap="getPvideoListResult">
+
+  		select p.id pid,p.project_name,v.url,v.hdurl,v.video_name from sb_project_video v join sb_project_video_area a on a.id=v.area_id join hj_project p on p.id=a.projectid where p.id in (select b.id from hj_company_project a
+    INNER JOIN hj_project b on (a.project_id=b.id)
+    where 1=1
+        and a.path like CONCAT((select path from hj_company_project where company_id=#{cid} LIMIT 1), '%')
+        and a.project_id is not null)
+    </select>
+
+
 </mapper>

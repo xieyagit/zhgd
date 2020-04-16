@@ -1,9 +1,6 @@
 package com.hujiang.project.zhgd.sbProjectVideoArea.mapper;
 
-import com.hujiang.project.zhgd.sbProjectVideoArea.domain.ProjectVideoJT;
-import com.hujiang.project.zhgd.sbProjectVideoArea.domain.SbJTArea;
-import com.hujiang.project.zhgd.sbProjectVideoArea.domain.SbProjectVideoArea;
-import com.hujiang.project.zhgd.sbProjectVideoArea.domain.VideoPicUrl;
+import com.hujiang.project.zhgd.sbProjectVideoArea.domain.*;
 
 import java.util.List;
 
@@ -72,4 +69,5 @@ public interface SbProjectVideoAreaMapper
 	 * 项目获取摄像头列表
 	 */
 	public ProjectVideoJT getVideoList(Integer pid);
+	public List<PvideoJT> getPvideoList(Integer cid);
 }

@@ -1,6 +1,7 @@
 package com.hujiang.project.zhgd.api;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hujiang.common.utils.StringUtils;
 import com.hujiang.common.utils.poi.ExcelUtil;
 import com.hujiang.framework.aspectj.lang.annotation.Log;
 import com.hujiang.framework.aspectj.lang.enums.BusinessType;
@@ -3416,6 +3417,9 @@ public class api {
             @RequestParam(value = "file", required = true) MultipartFile file,
             @RequestParam(value = "url", required = true) String url
     ) throws Exception {
+        if (StringUtils.isNotBlank(url)) {
+            url=  url.indexOf(",") >= 0 ? url.substring(0, url.indexOf(",")) : url;
+        }
         return projectWorkersApi.queryWitnessComparison(file, url);
     }
 
