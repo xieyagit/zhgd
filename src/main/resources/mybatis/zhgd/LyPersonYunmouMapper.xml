@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.lyPersonYunmou.mapper.LyPersonYunmouMapper">
+    
+    <resultMap type="LyPersonYunmou" id="LyPersonYunmouResult">
+        <result property="id"    column="id"    />
+        <result property="idCard"    column="idCard"    />
+    </resultMap>
+	
+	<sql id="selectLyPersonYunmouVo">
+        select id, idCard from ly_person_yunmou
+    </sql>
+	
+    <select id="selectLyPersonYunmouList" parameterType="LyPersonYunmou" resultMap="LyPersonYunmouResult">
+        <include refid="selectLyPersonYunmouVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="idCard != null  and idCard != '' "> and idCard = #{idCard}</if>
+         </where>
+    </select>
+    
+    <select id="selectLyPersonYunmouById" parameterType="Integer" resultMap="LyPersonYunmouResult">
+        <include refid="selectLyPersonYunmouVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLyPersonYunmou" parameterType="LyPersonYunmou">
+        insert into ly_person_yunmou
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="idCard != null  and idCard != ''  ">idCard,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="idCard != null  and idCard != ''  ">#{idCard},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateLyPersonYunmou" parameterType="LyPersonYunmou">
+        update ly_person_yunmou
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="idCard != null  and idCard != ''  ">idCard = #{idCard},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteLyPersonYunmouById" parameterType="Integer">
+        delete from ly_person_yunmou where id = #{id}
+    </delete>
+	
+    <delete id="deleteLyPersonYunmouByIds" parameterType="String">
+        delete from ly_person_yunmou where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

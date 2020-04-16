@@ -23,6 +23,15 @@ public class LyDevicePersonnel
 	private String status;
 	/** 人员类型， */
 	private String type;
+private String taskId;
+
+	public String getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
+	}
 
 	public String getType() {
 		return type;
