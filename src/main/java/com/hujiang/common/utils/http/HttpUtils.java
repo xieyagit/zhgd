@@ -17,6 +17,8 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hujiang.project.common.Result;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
@@ -255,23 +257,28 @@ public class HttpUtils
     /**
      * 提交json
      *
-     * @param url
-     * @param json
+     * @param  url  请求地址
+     * @param  str  请求入参
+     * @param  msg  接口名称
      * @return
      * @throws IOException
      */
-    public static String httpPostWithjson(String url, String json) throws IOException {
-        String result = "";
+    public static Result httpPostWithjson(String url, String str, String msg) throws IOException {
+        log.info(msg+"请求地址=" + url);
+        log.info(msg+"请求入参=" + str);
         HttpPost httpPost = new HttpPost(url);
         CloseableHttpClient httpClient = HttpClients.createDefault();
         try {
             BasicResponseHandler handler = new BasicResponseHandler();
-            StringEntity entity = new StringEntity(json, "utf-8");//解决中文乱码问题
+            //解决中文乱码问题
+            StringEntity entity = new StringEntity(str, "utf-8");
             entity.setContentEncoding("UTF-8");
             entity.setContentType("application/json");
             httpPost.setEntity(entity);
-            result = httpClient.execute(httpPost, handler);
-            return result;
+            String result = httpClient.execute(httpPost, handler);
+            log.info(msg+"返回参数=" + result);
+            Result resultObj = JSONObject.parseObject(result, Result.class);
+            return resultObj;
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -282,6 +289,6 @@ public class HttpUtils
                 e.printStackTrace();
             }
         }
-        return result;
+        return new Result();
     }
 }
