@@ -1,9 +1,6 @@
 package com.hujiang.project.zhgd.sbHire.service;
 
-import com.hujiang.project.zhgd.sbHire.domain.SbAreaProject;
-import com.hujiang.project.zhgd.sbHire.domain.Hire;
-import com.hujiang.project.zhgd.sbHire.domain.HirePeople;
-import com.hujiang.project.zhgd.sbHire.domain.SbHire;
+import com.hujiang.project.zhgd.sbHire.domain.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -30,6 +27,8 @@ public interface ISbHireService
 	 * @return
 	 */
 	public List<HirePeople> selectArea(Integer pId);
+	public List<SbAreaLocaltion> selectAreaLocaltion();
+	public List<SbAreaCertificate> selectAreaCertificate();
 	/**
 	 * pc和移动
 	 * 查询人员

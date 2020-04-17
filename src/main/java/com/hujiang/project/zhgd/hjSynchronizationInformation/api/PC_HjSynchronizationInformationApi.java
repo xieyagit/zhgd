@@ -1,5 +1,8 @@
 package com.hujiang.project.zhgd.hjSynchronizationInformation.api;
 
+import com.alibaba.fastjson.JSON;
+import com.hujiang.common.utils.DateUtils;
+import com.hujiang.common.utils.http.HttpUtils;
 import com.hujiang.framework.aspectj.lang.annotation.Log;
 import com.hujiang.framework.aspectj.lang.enums.BusinessType;
 import com.hujiang.framework.web.controller.BaseController;
@@ -13,7 +16,11 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @program: Provider01
@@ -43,8 +50,8 @@ public class PC_HjSynchronizationInformationApi extends BaseController {
      */
     @Log(title = "项目两制同步", businessType = BusinessType.INSERT)
     @PostMapping("/add")
-    public AjaxResult addSave( @RequestBody HjSynchronizationInformation hjSynchronizationInformation)
-    {
+    public AjaxResult addSave( @RequestBody HjSynchronizationInformation hjSynchronizationInformation) {
+
         System.out.println(hjSynchronizationInformation);
         return toAjax(hjSynchronizationInformationService.insertHjSynchronizationInformation(hjSynchronizationInformation));
     }

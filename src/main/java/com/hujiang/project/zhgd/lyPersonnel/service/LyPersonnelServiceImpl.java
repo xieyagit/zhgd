@@ -3,6 +3,7 @@ package com.hujiang.project.zhgd.lyPersonnel.service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.support.Convert;
+import com.hujiang.project.chaonaoyunmou.util.YunMouUtil;
 import com.hujiang.project.client.SystemClient;
 import com.hujiang.project.zhgd.hjAttendanceDevice.domain.HjAttendanceDevice;
 import com.hujiang.project.zhgd.hjAttendanceDevice.service.IHjAttendanceDeviceService;
@@ -10,11 +11,14 @@ import com.hujiang.project.zhgd.lyAttendanceRecord.domain.LyAttendanceRecord;
 import com.hujiang.project.zhgd.lyDevicePersonnel.domain.LyDevicePersonnel;
 import com.hujiang.project.zhgd.lyDevicePersonnel.mapper.LyDevicePersonnelMapper;
 import com.hujiang.project.zhgd.lyDevicePersonnel.service.ILyDevicePersonnelService;
+import com.hujiang.project.zhgd.lyPersonYunmou.domain.LyPersonYunmou;
+import com.hujiang.project.zhgd.lyPersonYunmou.mapper.LyPersonYunmouMapper;
 import com.hujiang.project.zhgd.lyPersonnel.domain.LyCompanyPersonnel;
 import com.hujiang.project.zhgd.lyPersonnel.domain.LyPersonnel;
 import com.hujiang.project.zhgd.lyPersonnel.domain.LyPersonnelRecord;
 import com.hujiang.project.zhgd.lyPersonnel.mapper.LyPersonnelMapper;
 import com.hujiang.project.zhgd.utils.BASE64DecodedMultipartFile;
+import com.hujiang.project.zhgd.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +48,10 @@ public class LyPersonnelServiceImpl implements ILyPersonnelService
 	private SystemClient client;
 	@Autowired
 	private ILyDevicePersonnelService lyDevicePersonnelService;
+	@Autowired
+	private LyPersonYunmouMapper lyPersonYunmouMapper;
+	@Autowired
+	private YunMouUtil yunMouUtil;
 	/**
      * 查询楼宇人员信息
      * 
@@ -174,35 +182,37 @@ public class LyPersonnelServiceImpl implements ILyPersonnelService
 					lyDevicePersonnelService.insertLyDevicePersonnel(hdpw);
 				}
 
-			}
+			}else if("cn".equals(h.getDeviceFactory())) {
+				yunmouInsert(lyPersonnel,h.getRemark());
+			}else {
 				//看是否是待删除人脸
 				hdpw.setStatus("2");
 				hdpw.setDeviceNo(h.getDeviceNo());
-				list=lyDevicePersonnelMapper.selectLyDevicePersonnelList(hdpw);
+				list = lyDevicePersonnelMapper.selectLyDevicePersonnelList(hdpw);
 				//是的话就不用删除了，直接改状态
-				 if(list.size()>0){
+				if (list.size() > 0) {
 					hdpw.setStatus("1");
 					hdpw.setType(lyPersonnel.getType());
 					lyDevicePersonnelMapper.updateLyDevicePersonnelTwo(hdpw);
-				}else{
+				} else {
 					//否的话就待添加
 					hdpw.setStatus("0");
-					list=lyDevicePersonnelMapper.selectLyDevicePersonnelList(hdpw);
-					if(list.size()<=0){
+					list = lyDevicePersonnelMapper.selectLyDevicePersonnelList(hdpw);
+					if (list.size() <= 0) {
 						hdpw.setStatus("1");
-						list=lyDevicePersonnelMapper.selectLyDevicePersonnelList(hdpw);
-						if(list.size()<=0){
+						list = lyDevicePersonnelMapper.selectLyDevicePersonnelList(hdpw);
+						if (list.size() <= 0) {
 							hdpw.setStatus("0");
 							hdpw.setType(lyPersonnel.getType());
 							lyDevicePersonnelMapper.insertLyDevicePersonnel(hdpw);
-							//如果是宇视设备，就立刻添加
+
 
 						}
 
 					}
 
 				}
-
+			}
 
 		}
 	}
@@ -234,6 +244,8 @@ public class LyPersonnelServiceImpl implements ILyPersonnelService
 						hdpw.setStatus("2");
 						hdpw.setPersonnelId(lyPersonnel.getId());
 						lyDevicePersonnelMapper.updateLyDevicePersonnelTwo(hdpw);}
+				}else if("cn".equals(h.getDeviceFactory())){
+					yunmouDelete(h,lyPersonnel);
 				}else{
 					//否的话就待删除
 					hdpw.setStatus("2");
@@ -313,6 +325,78 @@ public class LyPersonnelServiceImpl implements ILyPersonnelService
 		} else{
 			return false;
 		}
+
+	}
+
+	public void yunmouInsert(LyPersonnel lyPersonnel,String deviceId)throws Exception{
+		LyPersonYunmou lpy=new LyPersonYunmou();
+		lpy.setIdCard(lyPersonnel.getIdCode());
+		List<LyPersonYunmou> lpyList=lyPersonYunmouMapper.selectLyPersonYunmouList(lpy);
+		String token=yunMouUtil.getToken();
+		if(lpyList.size()<=0){
+			//没添加就先添加用户
+			JSONObject json=new JSONObject();
+			json.put("employeeNo",lyPersonnel.getIdCode());
+			json.put("personName",lyPersonnel.getEmpName());
+			JSONObject json1=new JSONObject();
+			json1.put("faceName",lyPersonnel.getEmpName());
+			json1.put("faceData", BASE64DecodedMultipartFile.ImageToBase64ByOnline(lyPersonnel.getFaceUrl()).replaceAll("\r|\n", ""));
+			json.put("face",json1);
+			String result=yunMouUtil.httpPostWithJSONH(Constants.YUNMOU+"/api/v1/community/superBrains/persons",json,token);
+			JSONObject s=JSONObject.parseObject(result);
+			if("200".equals(s.getString("code"))) {
+			LyPersonYunmou lpy2=new LyPersonYunmou();
+			lpy2.setIdCard(lyPersonnel.getIdCode());
+			lyPersonYunmouMapper.insertLyPersonYunmou(lpy2);
+			//下发任务
+				xiafa(lyPersonnel,deviceId,token);
+
+			}
+	}else{
+			xiafa(lyPersonnel,deviceId,token);
+		}
+
+	}
+	public void xiafa(LyPersonnel lyPersonnel,String deviceId,String token)throws  Exception{
+		JSONObject json=new JSONObject();
+		json.put("deviceId",deviceId);
+		json.put("customFaceLibId","huayun");
+		JSONArray list=new JSONArray();
+		list.add(lyPersonnel.getIdCode());
+		json.put("employeeNoList",list);
+		String result=yunMouUtil.httpPostWithJSONH(Constants.YUNMOU+"/api/v1/community/superBrains/actions/asyncDeliveredFaces",json,token);
+		JSONObject s=JSONObject.parseObject(result);
+		if("200".equals(s.getString("code"))){
+			JSONObject data=s.getJSONObject("data");
+			LyDevicePersonnel ldp=new LyDevicePersonnel();
+			ldp.setDeviceNo(deviceId);
+			ldp.setPersonnelId(lyPersonnel.getId());
+			ldp.setStatus("1");
+			ldp.setType(lyPersonnel.getType());
+			ldp.setTaskId(data.getString("taskId"));
+			lyDevicePersonnelMapper.insertLyDevicePersonnel(ldp);
+		}
+
+
+	}
+
+	public void yunmouDelete(HjAttendanceDevice h,LyPersonnel lyPersonnel)throws Exception{
+		LyDevicePersonnel ldp=new LyDevicePersonnel();
+		ldp.setDeviceNo(h.getRemark());
+		ldp.setPersonnelId(lyPersonnel.getId());
+		List<LyDevicePersonnel> list=lyDevicePersonnelMapper.selectLyDevicePersonnelList(ldp);
+		String token=yunMouUtil.getToken();
+		if(list.size()>0){
+			LyDevicePersonnel ldp2=list.get(0);
+			String url="/api/v1/community/superBrains/actions/deleteImportTask?deviceId="+h.getRemark()+"&taskId="+ldp2.getTaskId();
+			String result=yunMouUtil.httpDeleteWithJSON(Constants.YUNMOU+url,token);
+			JSONObject s=JSONObject.parseObject(result);
+			if("200".equals(s.getString("code"))){
+				lyDevicePersonnelMapper.deleteLyDevicePersonnelById(ldp2.getId());
+			}
+
+		}
+
 
 	}
 }

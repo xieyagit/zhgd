@@ -133,7 +133,9 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
         });
     }
 
-    @Scheduled(cron = "0 0 * * * ?")
+//    @Scheduled(cron = "0 0 * * * ?")
+//    @Scheduled(cron = "0 0/3 * * * ?")
+    @Scheduled(cron = "*/5 * * * * ?")
     public void task3() {
         super.exec(new Runnable() {
             @Override

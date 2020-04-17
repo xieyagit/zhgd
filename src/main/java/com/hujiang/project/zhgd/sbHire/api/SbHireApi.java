@@ -7,9 +7,7 @@ import com.hujiang.project.zhgd.hjProjectWorkers.domain.HjProjectWorkers;
 import com.hujiang.project.zhgd.hjProjectWorkers.service.IHjProjectWorkersService;
 import com.hujiang.project.zhgd.sbArea.domain.SbArea;
 import com.hujiang.project.zhgd.sbArea.service.ISbAreaService;
-import com.hujiang.project.zhgd.sbHire.domain.Hire;
-import com.hujiang.project.zhgd.sbHire.domain.HirePeople;
-import com.hujiang.project.zhgd.sbHire.domain.SbHire;
+import com.hujiang.project.zhgd.sbHire.domain.*;
 import com.hujiang.project.zhgd.sbHire.service.ISbHireService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -60,75 +58,93 @@ public class SbHireApi extends BaseController{
 
             List<HirePeople> projectList = hireService.selectProject(projectId);
             List<HirePeople> areaList = hireService.selectArea(null);
+            List<SbAreaLocaltion> areaLocaltionList = hireService.selectAreaLocaltion();
             List<HirePeople> peopleList = hireService.selectPeople(null);
             List<HirePeople> timeList = hireService.selectTimeList(null);
             if(projectList == null && projectList.size()<1){
                 return result;
             }
-            for (HirePeople project:projectList) {
-                JSONObject projectMap = new JSONObject();       //项目map
-                projectMap.put("projectId",project.getpId());
-                projectMap.put("projectName", project.getProjectName());
-                List<HirePeople> myAreaList = areaList.stream().filter(
-                        a->a.getpId().equals(project.getpId())
-                ).collect(Collectors.toList());
-                if (myAreaList == null || myAreaList.size() < 1) {
-                    continue;
-                }
-                for (HirePeople area : myAreaList){
-                    JSONObject areaMap = new JSONObject();      //工区map
-                    areaMap.put("areaId",area.getAreaId());
-                    areaMap.put("areaName", area.getAreaName());
+
+            JSONObject projectMap = new JSONObject();       //项目map
+            projectMap.put("projectId",projectList.get(0).getpId());
+            projectMap.put("projectName", projectList.get(0).getProjectName());
+            //工业区列表
+            List<HirePeople> myAreaList = areaList.stream().filter(
+                    a->a.getpId().equals(projectId)).collect(Collectors.toList());
+
+            if (myAreaList == null || myAreaList.size() < 1) {
+                return result;
+            }
+            //工业区
+            for (HirePeople area : myAreaList){
+                JSONObject areaMap = new JSONObject();      //工区map
+                areaMap.put("areaId",area.getAreaId());
+                areaMap.put("areaName", area.getAreaName());
+                areaMap.put("way", area.getWay());
+                if(area.getWay()==1){
+                    List<SbAreaLocaltion> myAreaLocaltionList = areaLocaltionList.stream().filter(
+                            a->a.getAreaId().equals(area.getAreaId())).collect(Collectors.toList());
+                    areaMap.put("localtion", myAreaLocaltionList);
+                }else{
                     areaMap.put("areaXloc",area.getXloc());
                     areaMap.put("areaYloc",area.getYloc());
                     areaMap.put("areaRadius",area.getRadius());
-                    List<HirePeople> myPeopleList = peopleList.stream().filter(
-                            a->a.getAreaId().equals(area.getAreaId())
-                    ).collect(Collectors.toList());
-                    if (myPeopleList == null || myPeopleList.size() < 1) {
-                        continue;
-                    }
-                    JSONArray userArray = new JSONArray();//人员array
-                    for (HirePeople times : myPeopleList){
+                }
+                List<HirePeople> myPeopleList = peopleList.stream().filter(
+                        a->a.getAreaId().equals(area.getAreaId())
+                ).collect(Collectors.toList());
+                if (myPeopleList == null || myPeopleList.size() < 1) {
+                    continue;
+                }
+                //工业区下的人员
+                JSONArray onLineArray = new JSONArray();//在线人员array
+                JSONArray offLineArray = new JSONArray();//离线人员array
+                JSONObject lineMap = new JSONObject();//离线人员array
+                for (HirePeople times : myPeopleList){
+                    JSONObject onLineMap = new JSONObject();//人员map
+                    JSONObject offLineMap = new JSONObject();//人员map
+                    if(!timeList.stream().filter(
+                            a->a.getImei().equals(times.getImei())).findAny().isPresent()) {
+                        offLineMap.put("userId",times.getPeopleId());
+                        offLineMap.put("userName",times.getPeopleName());
+                        offLineMap.put("userStatus",false);//离线
+                        offLineArray.add(offLineMap);
+                        lineMap.put("offLine",offLineArray);
+                    }else {
+                        HirePeople myTime = timeList.stream().filter(
+                                a->a.getImei().equals(times.getImei())).findAny().get();
 
-                        JSONObject userMap = new JSONObject();//人员map
-                        if(!timeList.stream().filter(
-                                a->a.getImei().equals(times.getImei())).findAny().isPresent()) {
-                            userMap.put("userId",times.getPeopleId());
-                            userMap.put("userName",times.getPeopleName());
-                            userMap.put("userXloc",null);
-                            userMap.put("userYloc",null);
-                            userMap.put("userStatus",false);//离线
+                        //时间转毫秒
+                        long time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(myTime.getWatchDate()).getTime();
+                        //系统毫秒
+                        long l = System.currentTimeMillis();
+                        //监测时间加一个小时大于当前时间
+                        if((time+3600000)>l){
+                            onLineMap.put("userId",times.getPeopleId());
+                            onLineMap.put("userName",times.getPeopleName());
+                            onLineMap.put("userXloc",myTime.getXloc());
+                            onLineMap.put("userYloc",myTime.getYloc());
+                            onLineMap.put("userStatus",true);//在线
+                            onLineArray.add(onLineMap);
+                            lineMap.put("onLine",onLineArray);
+                        }else{
+                            offLineMap.put("userId",times.getPeopleId());
+                            offLineMap.put("userName",times.getPeopleName());
+                            offLineMap.put("userStatus",false);//离线
+                            offLineArray.add(offLineMap);
+                            lineMap.put("offLine",offLineArray);
                         }
-                        else {
-                            HirePeople myTime = timeList.stream().filter(
-                                    a->a.getImei().equals(times.getImei())).findAny().get();
-
-                            userMap.put("userId",times.getPeopleId());
-                            userMap.put("userName",times.getPeopleName());
-                            userMap.put("userXloc",myTime.getXloc());
-                            userMap.put("userYloc",myTime.getYloc());
-
-                            //时间转毫秒
-                            long time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(myTime.getWatchDate()).getTime();
-                            //系统毫秒
-                            long l = System.currentTimeMillis();
-                            //监测时间加一个小时大于当前时间
-                            if((time+3600000)>l){
-                                userMap.put("userStatus",true);//在线
-                            }else{
-                                userMap.put("userStatus",false);//离线
-                            }
-                        }
-                        userArray.add(userMap);
                     }
-                    areaMap.put("userList",userArray);
-                    areaArray.add(areaMap);
+
 
                 }
-                projectMap.put("areaList",areaArray);
-                projectArray.add(projectMap);
+                areaMap.put("line",lineMap);
+                areaArray.add(areaMap);
+
             }
+            projectMap.put("areaList",areaArray);
+            projectArray.add(projectMap);
+
             result.put("msg","查询成功");
             result.put("code",0);
             result.put("data",projectArray);
@@ -145,7 +161,9 @@ public class SbHireApi extends BaseController{
                                               @RequestParam(value = "projectId")int projectId) {
             JSONObject result = new JSONObject();
             SimpleDateFormat sp = new SimpleDateFormat("yyyy-MM-dd");
-            String format = sp.format(new Date());  //获取当天信息
+            String format = sp.format(new Date());  //获取当天信息\
+            List<SbAreaLocaltion> areaLocaltionList = hireService.selectAreaLocaltion();
+            List<SbAreaCertificate> areaCertificateList = hireService.selectAreaCertificate();
             if (filed == null) {
                 result.put("data", Collections.emptyList());
             } else {
@@ -160,16 +178,43 @@ public class SbHireApi extends BaseController{
                             hireMap.put("userName", hire.getUserName());
                             hireMap.put("userPhone", hire.getUserPhone());
                             hireMap.put("constructionName", hire.getConstructionName());
+                            hireMap.put("idCode", hire.getIdCode());
+                            hireMap.put("startTime", hire.getStartTime());
+                            hireMap.put("workType", hire.getWorkType());
                             hireMap.put("imei", hire.getImei());
+                            hireMap.put("areaName", hire.getAreaName());
+                            hireMap.put("empNaticeplace", hire.getEmpNaticeplace());
+                            hireMap.put("way", hire.getWay());
+                            if(hire.getWay() == 1){
+                                List<SbAreaLocaltion> myAreaLocaltionList = areaLocaltionList.stream().filter(
+                                        a->a.getAreaId().equals(hire.getAreaId())).collect(Collectors.toList());
+                                hireMap.put("localtion", myAreaLocaltionList);
+                            }else{
+                                hireMap.put("areaXloc", hire.getAreaXloc());
+                                hireMap.put("areaYloc", hire.getAreaYloc());
+                                hireMap.put("areaRadius", hire.getAreaRadius());
+                            }
+                            //一人只有一条，多条也只取一条
+                            List<SbAreaCertificate> myAreaCertificateList = areaCertificateList.stream().filter(
+                                    a->a.getUserId().equals(hire.getId())).collect(Collectors.toList());
+
+                            if(myAreaCertificateList.size()<=0){
+                                hireMap.put("tertiaryEducation",0);
+                                hireMap.put("laborContract",0);
+                                hireMap.put("digitalTraining",0);
+                                hireMap.put("skilCertificate","");
+                            }else{
+                                hireMap.put("tertiaryEducation",myAreaCertificateList.get(0).getTertiaryEducation());
+                                hireMap.put("laborContract",myAreaCertificateList.get(0).getLaborContract());
+                                hireMap.put("digitalTraining",myAreaCertificateList.get(0).getDigitalTraining());
+                                hireMap.put("skilCertificate",myAreaCertificateList.get(0).getSkilCertificate());
+                            }
                             hireMap.put("bat", hirePeople.getBat());
                             hireMap.put("watchDate", hirePeople.getWatchDate());
                             hireMap.put("xloc", hirePeople.getXloc());
                             hireMap.put("yloc", hirePeople.getYloc());
                             hireMap.put("address", hirePeople.getAddress());
-                            hireMap.put("areaName", hire.getAreaName());
-                            hireMap.put("areaXloc", hire.getAreaXloc());
-                            hireMap.put("areaYloc", hire.getAreaYloc());
-                            hireMap.put("areaRadius", hire.getAreaRadius());
+
                             hireArray.add(hireMap);
                         }
                     }
@@ -177,7 +222,7 @@ public class SbHireApi extends BaseController{
                     result.put("code", 0);
                     result.put("data",hireArray);
                 }else{
-                    result.put("msg","查询失败");
+                    result.put("msg","查询成功");
                     result.put("code",-1);
                     result.put("data", Collections.emptyList());
                 }
@@ -185,34 +230,47 @@ public class SbHireApi extends BaseController{
             return result;
         }
 
-        /**
-         * 历史轨迹 按照时间排序
-         * @return
-         */
-        @PostMapping("/getHireHistory")
-        public JSONObject getHireHistory(@RequestParam(value = "filed", required = false) String filed,
-                                         @RequestParam(value = "projectId", required = false) int projectId,
-                                         @RequestParam(value = "startTime", required = false) String startTime) {
-            JSONObject result = new JSONObject();
-            if (filed == null && startTime == null) {
-                result.put("data", Collections.emptyList());
-            } else {
-                List<Hire> hireList = hireService.selectHireHistory(filed,projectId);
-                JSONArray hireArray = new JSONArray();
-                if(hireList!=null && hireList.size()>0){
-                    for (Hire hireOne:hireList){        //人员
-                        JSONArray hireTwoArray = new JSONArray();
+    /**
+     * 历史轨迹 按照时间排序
+     * @return
+     */
+    @PostMapping("/getHireHistory")
+    public JSONObject getHireHistory(@RequestParam(value = "filed", required = false) String filed,
+                                     @RequestParam(value = "projectId", required = false) int projectId,
+                                     @RequestParam(value = "startTime", required = false) String startTime) {
+        JSONObject result = new JSONObject();
+        if (filed == null && startTime == null) {
+            result.put("data", Collections.emptyList());
+        } else {
+            List<Hire> hireList = hireService.selectHireHistory(filed,projectId);
+            JSONArray hireArray = new JSONArray();
+            if(hireList!=null && hireList.size()>0){
+                for (Hire hireOne:hireList){        //人员
+                    JSONArray hireTwoArray = new JSONArray();
 
-                            JSONObject hireMaps = new JSONObject();
-                            hireMaps.put("id",hireOne.getId());
-                            hireMaps.put("userName",hireOne.getUserName());
-                            hireMaps.put("userPhone",hireOne.getUserPhone());
-                            hireMaps.put("constructionName",hireOne.getConstructionName());
-                            hireMaps.put("imei",hireOne.getImei());
+                        JSONObject hireMaps = new JSONObject();
+                        hireMaps.put("id",hireOne.getId());
+                        hireMaps.put("userName",hireOne.getUserName());
+                        hireMaps.put("userPhone",hireOne.getUserPhone());
+                        hireMaps.put("constructionName",hireOne.getConstructionName());
+                        hireMaps.put("imei",hireOne.getImei());
 
-                            if(startTime != null){
-                            List<Hire> hires = hireService.selectHireHistoryTime(hireOne.getImei(),startTime);
-                                if(hires!=null && hires.size()>0){
+                        if(startTime != null){
+                        List<Hire> hires = hireService.selectHireHistoryTime(hireOne.getImei(),startTime);
+                            if(hires!=null && hires.size()>0){
+                            for (Hire hireTwo:hires){
+                                JSONObject hireMap = new JSONObject();
+                                hireMap.put("bat",hireTwo.getBat());
+                                hireMap.put("watchDate",hireTwo.getWatchDate());
+                                hireMap.put("xloc",hireTwo.getXloc());
+                                hireMap.put("yloc",hireTwo.getYloc());
+                                hireMap.put("address",hireTwo.getAddress());
+                                hireTwoArray.add(hireMap);
+                            }
+                            }
+                        }else{
+                            List<Hire> hires = hireService.selectHireHistoryTimeTwo(hireOne.getImei());
+                            if(hires!=null && hires.size()>0){
                                 for (Hire hireTwo:hires){
                                     JSONObject hireMap = new JSONObject();
                                     hireMap.put("bat",hireTwo.getBat());
@@ -222,35 +280,22 @@ public class SbHireApi extends BaseController{
                                     hireMap.put("address",hireTwo.getAddress());
                                     hireTwoArray.add(hireMap);
                                 }
-                                }
-                            }else{
-                                List<Hire> hires = hireService.selectHireHistoryTimeTwo(hireOne.getImei());
-                                if(hires!=null && hires.size()>0){
-                                    for (Hire hireTwo:hires){
-                                        JSONObject hireMap = new JSONObject();
-                                        hireMap.put("bat",hireTwo.getBat());
-                                        hireMap.put("watchDate",hireTwo.getWatchDate());
-                                        hireMap.put("xloc",hireTwo.getXloc());
-                                        hireMap.put("yloc",hireTwo.getYloc());
-                                        hireMap.put("address",hireTwo.getAddress());
-                                        hireTwoArray.add(hireMap);
-                                    }
-                                }
                             }
-                            hireMaps.put("list",hireTwoArray);
-                            hireArray.add(hireMaps);
-                    }
-                    result.put("msg", "查询成功");
-                    result.put("code", 0);
-                    result.put("data",hireArray);
-                }else {
-                    result.put("msg","查询失败");
-                    result.put("code",-1);
-                    result.put("data", Collections.emptyList());
+                        }
+                        hireMaps.put("list",hireTwoArray);
+                        hireArray.add(hireMaps);
                 }
+                result.put("msg", "查询成功");
+                result.put("code", 0);
+                result.put("data",hireArray);
+            }else {
+                result.put("msg","查询失败");
+                result.put("code",-1);
+                result.put("data", Collections.emptyList());
             }
-            return result;
         }
+        return result;
+    }
 
     /**
      * 修改电子围栏半径

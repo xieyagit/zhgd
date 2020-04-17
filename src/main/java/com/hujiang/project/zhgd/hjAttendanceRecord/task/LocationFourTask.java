@@ -52,7 +52,7 @@ public class LocationFourTask extends AutoTaskBase {
         String time2=sdf.format(new Date());
         SbEquipmentRecord se=new SbEquipmentRecord();
         se.setAddress("科伦特");
-        se.setImei("661804021000845100101");
+        se.setImei("661804021000845");
         se.setWatchDate(sdf.parse("2020-03-26"));
         List<SbEquipmentRecord> eList = sbEquipmentRecordService.selectSbEquipmentRecordList(se);
         SbEquipmentRecord s=null;

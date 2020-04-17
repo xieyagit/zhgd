@@ -1,9 +1,6 @@
 package com.hujiang.project.zhgd.sbHire.mapper;
 
-import com.hujiang.project.zhgd.sbHire.domain.SbAreaProject;
-import com.hujiang.project.zhgd.sbHire.domain.Hire;
-import com.hujiang.project.zhgd.sbHire.domain.HirePeople;
-import com.hujiang.project.zhgd.sbHire.domain.SbHire;
+import com.hujiang.project.zhgd.sbHire.domain.*;
 import org.apache.ibatis.annotations.Param;
 
 
@@ -62,6 +59,8 @@ public interface SbHireMapper
 	 * @return
 	 */
 	public List<HirePeople> selectArea(@Param(value = "pId")Integer pId);
+	public List<SbAreaLocaltion> selectAreaLocaltion();
+	public List<SbAreaCertificate> selectAreaCertificate();
 
 	/**
 	 * pcAndApp

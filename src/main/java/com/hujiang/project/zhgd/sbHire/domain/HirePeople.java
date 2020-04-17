@@ -17,6 +17,8 @@ public class HirePeople {
     private Double radius;  //半径
     private String address;
     private Integer bat;
+    private Integer way;
+    private Integer array;
 
     public Integer getpId() {
         return pId;
@@ -128,6 +130,22 @@ public class HirePeople {
 
     public void setBat(Integer bat) {
         this.bat = bat;
+    }
+
+    public Integer getWay() {
+        return way;
+    }
+
+    public void setWay(Integer way) {
+        this.way = way;
+    }
+
+    public Integer getArray() {
+        return array;
+    }
+
+    public void setArray(Integer array) {
+        this.array = array;
     }
 
     @Override

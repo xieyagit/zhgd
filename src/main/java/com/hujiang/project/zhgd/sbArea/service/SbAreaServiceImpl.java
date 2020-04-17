@@ -6,6 +6,7 @@ import com.hujiang.project.zhgd.hjProject.domain.HjProject;
 import com.hujiang.project.zhgd.sbArea.domain.Area;
 import com.hujiang.project.zhgd.sbArea.domain.OptionsLocation;
 import com.hujiang.project.zhgd.sbArea.domain.OptionsUser;
+import com.hujiang.project.zhgd.sbHire.domain.SbAreaLocaltion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;import org.springframework.transaction.annotation.Transactional;
 import com.hujiang.project.zhgd.sbArea.mapper.SbAreaMapper;
@@ -85,6 +86,11 @@ public class SbAreaServiceImpl implements ISbAreaService
 	@Override
 	public int addArea(OptionsLocation optionsLocation) {
 		return sbAreaMapper.addArea(optionsLocation);
+	}
+
+	@Override
+	public int addAreaLocaltion(List<SbAreaLocaltion> sbAreaLocaltionList) {
+		return sbAreaMapper.addAreaLocaltion(sbAreaLocaltionList);
 	}
 
 	@Override

@@ -40,7 +40,7 @@ import java.util.List;
 @RequestMapping(value = "/provider/b")
 @Component("electricityBoxTask")
 public class ElectricityBoxTask extends AutoTaskBase {
-    private final Logger logger = LoggerFactory.getLogger(ZCAPIClient.class);
+    private final Logger logger = LoggerFactory.getLogger(ElectricityBoxTask.class);
     @Autowired
     private ISbProjectElectricityBoxService iProjectElectricityBoxService;
     @Autowired

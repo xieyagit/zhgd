@@ -10,10 +10,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="personnelId"    column="personnel_id"    />
         <result property="status"    column="status"    />
         <result property="type"    column="type"    />
+        <result property="taskId"    column="taskId"    />
     </resultMap>
 	
 	<sql id="selectLyDevicePersonnelVo">
-        select id, device_no, personnel_id,type, status from ly_device_personnel
+        select id, device_no, personnel_id,type, status,taskId from ly_device_personnel
     </sql>
     <resultMap type="HjDeviceProjectworkersParam" id="HjDeviceProjectworkersParamResult">
         <result property="did" column="did"/>
@@ -36,6 +37,7 @@ where d.device_no=#{deviceNo} and d.status=#{status} limit 1
              <if test="deviceNo != null  and deviceNo != '' "> and device_no = #{deviceNo}</if>
              <if test="personnelId != null "> and personnel_id = #{personnelId}</if>
              <if test="status != null  and status != '' "> and status = #{status}</if>
+             <if test="taskId != null  and taskId != '' "> and taskId = #{taskId}</if>
              <if test="type != null  and type != '' "> and `type` = #{type}</if>
          </where>
     </select>
@@ -69,6 +71,7 @@ where d.device_no=#{deviceNo} and d.status=#{status} limit 1
 			<if test="personnelId != null  ">personnel_id,</if>
 			<if test="status != null  and status != ''  ">status,</if>
 			<if test="type != null  and type != ''  ">type,</if>
+			<if test="taskId != null  and taskId != ''  ">taskId,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null  ">#{id},</if>
@@ -76,6 +79,7 @@ where d.device_no=#{deviceNo} and d.status=#{status} limit 1
 			<if test="personnelId != null  ">#{personnelId},</if>
             <if test="status != null  and status != ''  ">#{status},</if>
 			<if test="type != null  and type != ''  ">#{type},</if>
+			<if test="taskId != null  and taskId != ''  ">#{taskId},</if>
          </trim>
     </insert>
 	 
