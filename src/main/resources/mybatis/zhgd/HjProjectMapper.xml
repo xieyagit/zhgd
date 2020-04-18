@@ -354,6 +354,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="faceGroup != null  and faceGroup != ''  ">face_group = #{faceGroup},</if>
             <if test="buildUnit != null  and buildUnit != ''  ">build_unit = #{buildUnit},</if>
             <if test="projectDept != null  and projectDept != ''  ">project_dept = #{projectDept},</if>
+            <if test="projectCode != null  and projectCode != ''  ">project_code = #{projectCode},</if>
 
         </trim>
         where id = #{id}

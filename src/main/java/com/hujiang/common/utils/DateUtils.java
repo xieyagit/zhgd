@@ -29,6 +29,26 @@ public class DateUtils extends org.apache.commons.lang.time.DateUtils {
             "yyyy/MM/dd", "yyyy/MM/dd HH:mm:ss", "yyyy/MM/dd HH:mm", "yyyy/MM",
             "yyyy.MM.dd", "yyyy.MM.dd HH:mm:ss", "yyyy.MM.dd HH:mm", "yyyy.MM"};
 
+
+    /**
+     * 获取当前日期
+     * @return
+     */
+    public static String getCurrentDate() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        return format.format(new Date());
+    }
+
+    /**
+     * 日期转换成字符串
+     * @param date
+     * @param formatprn 格式
+     * @return
+     */
+    public static String dateToString(Date date, String formatprn) {
+        SimpleDateFormat format = new SimpleDateFormat(formatprn);
+        return format.format(date);
+    }
     /**
      * 获取当前Date型日期
      *

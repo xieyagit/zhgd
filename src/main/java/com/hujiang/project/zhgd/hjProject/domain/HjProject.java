@@ -83,6 +83,16 @@ public class HjProject
 	private String cid;
 /** 所属部门 */
 	private String projectDept;
+	/**项目编码   福建用*/
+	private String projectCode;
+
+	public String getProjectCode() {
+		return projectCode;
+	}
+
+	public void setProjectCode(String projectCode) {
+		this.projectCode = projectCode;
+	}
 
 	public String getProjectDept() {
 		return projectDept;
