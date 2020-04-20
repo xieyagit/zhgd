@@ -17,7 +17,7 @@ public class FuJianUtils {
 
     /**上传项目信息*/
     public static String PROJECT_UPLOAD = "Project.Upload";
-    /**查询项目信息*/
+    /**项目信息异步查询接口*/
     public static String PROJECT_UQERY = "Project.Query";
     /**上传参建单位信息*/
     public static String PROJECT_SUBCONTRACTOR_UPLOAD = "ProjectSubContractor.Upload";
@@ -59,4 +59,5 @@ public class FuJianUtils {
         apiParam.put("timestamp", DateUtils.dateToString(new Date(), "yyyyMMddHHmmss"));
         return apiParam;
     }
+
 }
