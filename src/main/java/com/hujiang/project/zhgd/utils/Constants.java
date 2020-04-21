@@ -95,6 +95,6 @@ public class Constants {
     //云眸密钥ID
     public static final Integer YUNMOUTOKEN_ID=121;
 
-    //福建两制对接地址
+    /**福建两制对接地址*/
     public static String HUJIAN_TWO_SYSTEMS = "http://47.106.167.195:9096/open.api/v1";
 }

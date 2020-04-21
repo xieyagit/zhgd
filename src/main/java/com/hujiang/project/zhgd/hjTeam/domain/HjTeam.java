@@ -40,6 +40,8 @@ public class HjTeam
 	private String teamType;
 	//班组id(工务署专属id)
 	private String teamId;
+	//班组编号
+	private String teamSysno;
 
 	//班组名称
 	private String constructionName;
@@ -146,6 +148,14 @@ public class HjTeam
 	public String getUpdateDate()
 	{
 		return updateDate;
+	}
+
+	public String getTeamSysno() {
+		return teamSysno;
+	}
+
+	public void setTeamSysno(String teamSysno) {
+		this.teamSysno = teamSysno;
 	}
 
 	@Override

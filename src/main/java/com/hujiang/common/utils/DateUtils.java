@@ -286,4 +286,16 @@ public class DateUtils extends org.apache.commons.lang.time.DateUtils {
         return hours;
     }
 
+    /**
+     * @Author xieya
+     * @Description
+     * @Date 2020/4/20 14:38
+     * @param da1
+     * @param da2
+     * @return int
+     **/
+    public static int compareDate(Date da1, Date da2){
+       return da1.compareTo(da2);
+    }
+
 }

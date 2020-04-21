@@ -92,6 +92,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateDate != null  ">update_date = #{updateDate},</if>
             <if test="teamType != null  and teamType != '' "> and team_type = #{teamType},</if>
             <if test="teamId != null  and teamId != '' "> and team_id = #{teamId},</if>
+            <if test="teamSysno != null  and teamSysno != '' "> and team_sysno = #{teamSysno},</if>
         </trim>
         where id = #{id}
     </update>

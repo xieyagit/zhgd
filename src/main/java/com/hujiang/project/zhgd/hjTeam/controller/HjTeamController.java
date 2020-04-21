@@ -104,7 +104,12 @@ public class HjTeamController extends BaseController {
     @PostMapping("/add")
     @ResponseBody
     public AjaxResult addSave(HjTeam hjTeam) {
+        fujianTeam(hjTeam, "add");
 
+        return toAjax(hjTeamService.insertHjTeam(hjTeam));
+    }
+
+    private void fujianTeam(HjTeam hjTeam, String type) {
         try {
             //同步参建单位
             HjSynchronizationInformation hs = new HjSynchronizationInformation();
@@ -129,32 +134,55 @@ public class HjTeamController extends BaseController {
 
                     HjConstructionCompany constructionCompany = hjConstructionCompanyService.selectHjConstructionCompanyById(hjTeam.getConstructionId());
 
-                    String paramStr = uploadParam(apiKey, apiSecret, project, constructionCompany, hjTeam);
+                    String paramStr = uploadParam(apiKey, apiSecret, project, constructionCompany, hjTeam, type);
 
-                    String msg = "福建两制上传班组信息";
+                    String msg = "";
+                    if ("add".equals(type)) {
+                        msg = "福建两制上传班组信息";
+                    }
+                    if ("edit".equals(type)) {
+                        msg = "福建两制跟新班组信息";
+                    }
+
                     Result result = HttpUtils.httpPostWithjson(Constants.HUJIAN_TWO_SYSTEMS, paramStr, msg);
                     if ("0".equals(result.getCode()) && result.getData() != null) {
-                        String requestSerialCode = (String) JSON.parseObject(result.getData().toString()).get("requestSerialCode");
+                        String requestSerialCode = (String) JSON.parseObject((String) result.getData()).get("requestSerialCode");
 
-                        String resultStr1 = queryParam(apiKey, apiSecret, requestSerialCode);
-                        Result resultQuery = JSONObject.parseObject(resultStr1, Result.class);
-                        if ("0".equals(resultQuery.getCode())) {
-                            LoggerUitls.logInfo("福建两制上传班组信息成功", resultQuery.getCode(), resultQuery.getMessage(), resultQuery.getData());
+                        if ("add".equals(type)) {
+                            String resultStr1 = queryParam(apiKey, apiSecret, requestSerialCode);
+                            Result resultQuery = JSONObject.parseObject(resultStr1, Result.class);
+                            if ("0".equals(resultQuery.getCode())) {
+                                //异步请求得到班组编号跟新数据库
+                                JSONObject jsonObjects = JSON.parseObject((String) result.getData());
+                                JSONObject ja = jsonObjects.getJSONObject("result");
+                                String teamSysno = (String) ja.get("teamSysno");
+                                hjTeam.setTeamSysno(teamSysno);
+                                hjTeamService.updateHjTeam(hjTeam);
+                                LoggerUitls.logInfo("福建两制上传班组信息成功", resultQuery.getCode(), resultQuery.getMessage(), resultQuery.getData());
+                            } else {
+                                LoggerUitls.logInfo("福建两制上传项目信息失败", resultQuery.getCode(), resultQuery.getMessage(), resultQuery.getData());
+                            }
                         } else {
-                            LoggerUitls.logInfo("福建两制上传项目信息失败", resultQuery.getCode(), resultQuery.getMessage(), resultQuery.getData());
+                            LoggerUitls.logInfo("福建两制跟新班组信息成功", result.getCode(), result.getMessage(), result.getData());
                         }
+
                     }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return toAjax(hjTeamService.insertHjTeam(hjTeam));
     }
 
-    private String uploadParam(String apiKey, String apiSecret, HjProject project, HjConstructionCompany constructionCompany, HjTeam hjTeam) {
-        Map apiParam = FuJianUtils.setHeader(FuJianUtils.TEAM_UPLOAD);
+    private String uploadParam(String apiKey, String apiSecret, HjProject project, HjConstructionCompany constructionCompany, HjTeam hjTeam, String type) {
+        Map apiParam = null;
+        if ("add".equals(type)) {
+            apiParam = FuJianUtils.setHeader(FuJianUtils.TEAM_UPLOAD);
+        }
+        if ("edit".equals(type)) {
+            apiParam = FuJianUtils.setHeader(FuJianUtils.TEAM_UPDATE);
+        }
+
         apiParam.put("appid", apiKey);
 
         Map<String, Object> param = new HashMap<>();
@@ -208,53 +236,7 @@ public class HjTeamController extends BaseController {
     @PostMapping("/edit")
     @ResponseBody
     public AjaxResult editSave(HjTeam hjTeam) {
-        try {
-            //同步参建单位
-            HjSynchronizationInformation hs = new HjSynchronizationInformation();
-            hs.setProjectId(hjTeam.getProjectId());
-            hs.setState(1);
-            hs.setApiType("keytype1");
-
-            List<HjSynchronizationInformation> hList = hjSynchronizationInformationService.selectHjSynchronizationInformationList(hs);
-            String apiKey = null;
-            String apiSecret = null;
-            if (hList != null && hList.size() > 0) {
-                apiKey = hList.get(0).getApiKey();
-                apiSecret = hList.get(0).getApiSecret();
-            }
-
-            //有秘钥才去上传
-            for (HjSynchronizationInformation h : hList) {
-                //对接福建两制
-                if ("FUJIAN".equals(h.getPlatformName())) {
-
-                    Map<String, Object> projectMap = hjProjectService.getProject(hjTeam.getProjectId());
-                    HjProject project = JSONObject.parseObject(JSONObject.toJSONString(projectMap), HjProject.class);
-
-                    HjConstructionCompany constructionCompany = hjConstructionCompanyService.selectHjConstructionCompanyById(hjTeam.getConstructionId());
-
-                    String paramStr = uploadParam(apiKey, apiSecret, project, constructionCompany, hjTeam);
-
-                    String msg = "福建两制跟新班组信息";
-
-                    Result result = HttpUtils.httpPostWithjson(Constants.HUJIAN_TWO_SYSTEMS, paramStr, msg);
-
-                    if ("0".equals(result.getCode()) && result.getData() != null) {
-                        String requestSerialCode = (String) JSON.parseObject(result.getData().toString()).get("requestSerialCode");
-
-                        String resultStr1 = queryParam(apiKey, apiSecret, requestSerialCode);
-                        Result resultQuery = JSONObject.parseObject(resultStr1, Result.class);
-                        if ("0".equals(resultQuery.getCode())) {
-                            LoggerUitls.logInfo("福建两制跟新班组信息成功", resultQuery.getCode(), resultQuery.getMessage(), resultQuery.getData());
-                        } else {
-                            LoggerUitls.logInfo("福建两制跟新项目信息失败", resultQuery.getCode(), resultQuery.getMessage(), resultQuery.getData());
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        fujianTeam(hjTeam, "edit");
 
         hjTeam.setUpdateDate(CurrentTime.getCurrentTime());
         return toAjax(hjTeamService.updateHjTeam(hjTeam));
