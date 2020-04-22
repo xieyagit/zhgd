@@ -93,50 +93,50 @@ public class SbHireApi extends BaseController{
                 List<HirePeople> myPeopleList = peopleList.stream().filter(
                         a->a.getAreaId().equals(area.getAreaId())
                 ).collect(Collectors.toList());
-                if (myPeopleList == null || myPeopleList.size() < 1) {
-                    continue;
-                }
                 //工业区下的人员
                 JSONArray onLineArray = new JSONArray();//在线人员array
                 JSONArray offLineArray = new JSONArray();//离线人员array
                 JSONObject lineMap = new JSONObject();//离线人员array
-                for (HirePeople times : myPeopleList){
-                    JSONObject onLineMap = new JSONObject();//人员map
-                    JSONObject offLineMap = new JSONObject();//人员map
-                    if(!timeList.stream().filter(
-                            a->a.getImei().equals(times.getImei())).findAny().isPresent()) {
-                        offLineMap.put("userId",times.getPeopleId());
-                        offLineMap.put("userName",times.getPeopleName());
-                        offLineMap.put("userStatus",false);//离线
-                        offLineArray.add(offLineMap);
-                        lineMap.put("offLine",offLineArray);
-                    }else {
-                        HirePeople myTime = timeList.stream().filter(
-                                a->a.getImei().equals(times.getImei())).findAny().get();
-
-                        //时间转毫秒
-                        long time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(myTime.getWatchDate()).getTime();
-                        //系统毫秒
-                        long l = System.currentTimeMillis();
-                        //监测时间加一个小时大于当前时间
-                        if((time+3600000)>l){
-                            onLineMap.put("userId",times.getPeopleId());
-                            onLineMap.put("userName",times.getPeopleName());
-                            onLineMap.put("userXloc",myTime.getXloc());
-                            onLineMap.put("userYloc",myTime.getYloc());
-                            onLineMap.put("userStatus",true);//在线
-                            onLineArray.add(onLineMap);
-                            lineMap.put("onLine",onLineArray);
-                        }else{
-                            offLineMap.put("userId",times.getPeopleId());
-                            offLineMap.put("userName",times.getPeopleName());
-                            offLineMap.put("userStatus",false);//离线
+                if (myPeopleList.size() > 0) {
+                    for (HirePeople times : myPeopleList) {
+                        JSONObject onLineMap = new JSONObject();//人员map
+                        JSONObject offLineMap = new JSONObject();//人员map
+                        if (!timeList.stream().filter(
+                                a -> a.getImei().equals(times.getImei())).findAny().isPresent()) {
+                            offLineMap.put("userId", times.getPeopleId());
+                            offLineMap.put("userName", times.getPeopleName());
+                            offLineMap.put("userStatus", false);//离线
                             offLineArray.add(offLineMap);
-                            lineMap.put("offLine",offLineArray);
+                            lineMap.put("offLine", offLineArray);
+                        } else {
+                            HirePeople myTime = timeList.stream().filter(
+                                    a -> a.getImei().equals(times.getImei())).findAny().get();
+                            //时间转毫秒
+                            long time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(myTime.getWatchDate()).getTime();
+                            //系统毫秒
+                            long l = System.currentTimeMillis();
+                            //监测时间加一个小时大于当前时间
+                            if ((time + 3600000) > l) {
+                                onLineMap.put("userId", times.getPeopleId());
+                                onLineMap.put("userName", times.getPeopleName());
+                                onLineMap.put("userXloc", myTime.getXloc());
+                                onLineMap.put("userYloc", myTime.getYloc());
+                                onLineMap.put("userStatus", true);//在线
+                                onLineArray.add(onLineMap);
+                                lineMap.put("onLine", onLineArray);
+                            } else {
+                                offLineMap.put("userId", times.getPeopleId());
+                                offLineMap.put("userName", times.getPeopleName());
+                                offLineMap.put("userStatus", false);//离线
+                                offLineArray.add(offLineMap);
+                                lineMap.put("offLine", offLineArray);
+                            }
                         }
                     }
 
-
+                }else{
+                    lineMap.put("onLine", onLineArray);
+                    lineMap.put("offLine", offLineArray);
                 }
                 areaMap.put("line",lineMap);
                 areaArray.add(areaMap);
