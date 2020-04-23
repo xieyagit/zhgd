@@ -289,6 +289,46 @@ public class DateUtils extends org.apache.commons.lang.time.DateUtils {
     /**
      * @Author xieya
      * @Description
+     * @Date 2020/4/23 11:09
+     * @param
+     * @return java.util.Date
+     **/
+    public static String endDate() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.SECOND, 59);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.MILLISECOND, 59);
+
+        String str = dateToString(cal.getTime(), "yyyy-MM-dd HH:mm:ss");
+        return str;
+    }
+
+    /**
+     * @Author xieya
+     * @Description
+     * @Date 2020/4/23 11:10
+     * @param
+     * @return java.util.Date
+     **/
+    public static String startDate() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        String str = dateToString(cal.getTime(), "yyyy-MM-dd HH:mm:ss");
+        return str;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(startDate());
+        System.out.println(endDate());
+    }
+
+    /**
+     * @Author xieya
+     * @Description
      * @Date 2020/4/20 14:38
      * @param da1
      * @param da2

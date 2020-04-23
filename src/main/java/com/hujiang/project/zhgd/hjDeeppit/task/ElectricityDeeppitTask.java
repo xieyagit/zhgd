@@ -4,6 +4,7 @@ package com.hujiang.project.zhgd.hjDeeppit.task;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hujiang.common.utils.DateUtils;
 import com.hujiang.common.utils.Md5Utils;
 import com.hujiang.framework.AutoTaskBase;
 import com.hujiang.framework.web.domain.AjaxResult;
@@ -25,14 +26,12 @@ import com.hujiang.project.zhgd.hjDeeppit.service.ISbDeeppitGroupService;
 import com.hujiang.project.zhgd.hjDeeppit.service.ISbDeeppitStructuresService;
 import com.hujiang.project.zhgd.hjDeeppit.service.ISbDeeppitTokenService;
 import com.hujiang.project.zhgd.hjDeeppit.service.ISbProjectDeeppitStructuresService;
-import com.hujiang.project.zhgd.hjDeeppit.domain.*;
-import com.hujiang.project.zhgd.hjDeeppit.service.*;
 import com.hujiang.project.zhgd.hjghformwork.domain.HighformworkAlarmData;
 import com.hujiang.project.zhgd.hjghformwork.domain.HighformworkData;
 import com.hujiang.project.zhgd.hjghformwork.service.IHighformworkAlarmDataService;
 import com.hujiang.project.zhgd.hjghformwork.service.IHighformworkDataService;
-import com.hujiang.project.zhgd.moduleToPush.domain.ModuleToPush;
 import com.hujiang.project.zhgd.sbProjectDustEmission.task.JPushSMS;
+import com.hujiang.project.zhgd.utils.Constants;
 import com.hujiang.project.zhgd.utils.DeeppitTools;
 import com.hujiang.project.zhgd.utils.EncryptionUtil;
 import com.hujiang.project.zhgd.utils.Util;
@@ -42,6 +41,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.message.BasicNameValuePair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -50,18 +51,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -72,7 +70,8 @@ import java.util.stream.Collectors;
 @Component("ElectricityDeeppitTask")
 public class ElectricityDeeppitTask extends AutoTaskBase {
 
-    String url = "https://api.zhiwucloud.com/api/v1";
+    private static final Logger logger = LoggerFactory.getLogger(ElectricityDeeppitTask.class);
+
     //默认供应商id
     private Integer SUPPLIER = 0;
 
@@ -103,47 +102,42 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
     private IHighformworkDataService highformworkDataService;
 
 
-    @Scheduled(cron="0 0 12 ? * WED")
+    @Scheduled(cron = "0 0 12 ? * WED")
     public void task1() {
         super.exec(new Runnable() {
             @Override
             public void run() {
                 try {
                     tokens();
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     // logger
                 }
             }
         });
     }
 
-    @Scheduled(cron="0 */2 * * * ?")
+    @Scheduled(cron = "0 */2 * * * ?")
     public void task2() {
         super.exec(new Runnable() {
             @Override
             public void run() {
                 try {
                     getStationAlarmDataAll();
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     // logger
                 }
             }
         });
     }
 
-//    @Scheduled(cron = "0 0 * * * ?")
-//    @Scheduled(cron = "0 0/3 * * * ?")
-    @Scheduled(cron = "*/5 * * * * ?")
+    @Scheduled(cron = "0 */5 * * * ?")
     public void task3() {
         super.exec(new Runnable() {
             @Override
             public void run() {
                 try {
                     insertStationDate();
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     // logger
                 }
             }
@@ -155,11 +149,11 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
      * @return
      */
     @PostMapping("tokens")
-    public AjaxResult tokens(){
+    public AjaxResult tokens() {
         List<SbProjectDeeppitStructures> pdsl = sbProjectDeeppitStructuresService.selectSbProjectDeeppitStructuresList(null);
-        for (SbProjectDeeppitStructures p :pdsl){
-            if (p.getAppD() != null || p.getAppSecret() != null){
-                token(p.getAppD(),p.getAppSecret(),p.getProjectId());
+        for (SbProjectDeeppitStructures p : pdsl) {
+            if (p.getAppD() != null || p.getAppSecret() != null) {
+                token(p.getAppD(), p.getAppSecret(), p.getProjectId());
             }
         }
         return AjaxResult.success();
@@ -169,18 +163,18 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
      * 获取所有用户的报警信息
      */
     @PostMapping("/insert")
-    public void getStationAlarmDataAll(){
+    public void getStationAlarmDataAll() {
 
         List<SbProjectDeeppitStructures> list = sbProjectDeeppitStructuresService.selectSbProjectDeeppitStructuresList(null);
         System.out.println(list);
-        if (list == null){
+        if (list == null) {
             return;
         }
-        for (SbProjectDeeppitStructures s:list){
+        for (SbProjectDeeppitStructures s : list) {
             SbDeeppitStructures deeppitStructures = new SbDeeppitStructures();
             deeppitStructures.setReservedO(s.getProjectId().toString());
             List<SbDeeppitStructures> list1 = sbDeeppitStructuresService.selectSbDeeppitStructuresList(deeppitStructures);
-            for (SbDeeppitStructures ds :list1) {
+            for (SbDeeppitStructures ds : list1) {
                 getStationAlarmData(s.getProjectId(), s.getUserId(), ds.getId());
             }
         }
@@ -194,11 +188,11 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
     @PostMapping("token")
     public AjaxResult token(@RequestParam(value = "appId") String appId,
                             @RequestParam(value = "appSecret") String appSecret,
-                            @RequestParam(value = "projectId") Integer projectId){
-        String authorization = Util.EncodeBase64(appId+":"+appSecret);
+                            @RequestParam(value = "projectId") Integer projectId) {
+        String authorization = Util.EncodeBase64(appId + ":" + appSecret);
 
         // 创建POST请求对象
-        HttpPost httpPost = new HttpPost(url+"/oauth2/token");
+        HttpPost httpPost = new HttpPost(Constants.LIFTING_PIT + "/oauth2/token");
 
 
         /*
@@ -218,8 +212,7 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
         /*
          * 添加请求头信息
          */
-        httpPost.addHeader("Authorization", "Basic "+authorization);
-        //httpPost.addHeader("Content-Type", "application/json");
+        httpPost.addHeader("Authorization", "Basic " + authorization);
         httpPost.setEntity(entityParam);
         String s = DeeppitTools.postParams(httpPost);
         System.out.println(s);
@@ -235,12 +228,12 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
         dk.setAppId(projectId.toString());
         List<SbDeeppitToken> ldk = sbDeeppitTokenService.selectSbDeeppitTokenList(dk);
 
-        if(ldk.size()>0){
-            for (SbDeeppitToken t:ldk){
+        if (ldk.size() > 0) {
+            for (SbDeeppitToken t : ldk) {
                 t.setToken(jsonObject.getString("token"));
                 sbDeeppitTokenService.updateSbDeeppitToken(t);
             }
-        }else {
+        } else {
             sbDeeppitTokenService.insertSbDeeppitToken(st);
         }
         return AjaxResult.success();
@@ -250,48 +243,45 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
      * 获取结构物列表--2
      * @return
      */
-    @RequestMapping(value = "getStructures" ,method = RequestMethod.GET)
-    public AjaxResult getStructures(@RequestParam(value = "projectId") Integer projectId){
+    @RequestMapping(value = "getStructures", method = RequestMethod.GET)
+    public AjaxResult getStructures(@RequestParam(value = "projectId") Integer projectId) {
         AjaxResult ajaxResult = new AjaxResult();
 
         //获取token
         SbDeeppitToken st = new SbDeeppitToken();
         st.setAppId(projectId.toString());
         List<SbDeeppitToken> listT = sbDeeppitTokenService.selectSbDeeppitTokenList(st);
-        if(listT ==null){
+        if (listT == null) {
             return AjaxResult.error("没有这个项目的结构件");
         }
-        if (listT.size() <= 0){
-            ajaxResult.put("code",0);
-            ajaxResult.put("msg","token为空，请获取token");
+        if (listT.size() <= 0) {
+            ajaxResult.put("code", 0);
+            ajaxResult.put("msg", "token为空，请获取token");
             return ajaxResult;
         }
         try {
             // 创建POST请求对象
-            URIBuilder uriBuilder = new URIBuilder(url+"/structures/");
+            URIBuilder uriBuilder = new URIBuilder(Constants.LIFTING_PIT + "/structures/");
             /*
              * 添加请求参数
              */
             List<NameValuePair> list = new LinkedList<>();
             String token = String.valueOf(listT.get(0).getToken());
-            BasicNameValuePair param = new BasicNameValuePair("token",token);
+            BasicNameValuePair param = new BasicNameValuePair("token", token);
             list.add(param);
             uriBuilder.setParameters(list);
 
             HttpGet httpGet = new HttpGet(uriBuilder.build());
             // 使用URL实体转换工具
             UrlEncodedFormEntity entityParam = null;
-            /*
-             * 添加请求头信息
-             */
-            httpGet.addHeader("Content-Type", "application/json");
+
             String s = DeeppitTools.getParams(httpGet);
             System.out.println(s);
 
             //将数据存入数据库
             SbDeeppitStructures ds;
             net.sf.json.JSONArray jsonArray = net.sf.json.JSONArray.fromObject(s);
-            for (int i = 0;i < jsonArray.size();i++){
+            for (int i = 0; i < jsonArray.size(); i++) {
                 net.sf.json.JSONObject jsonObj = jsonArray.getJSONObject(i);
                 ds = new SbDeeppitStructures();
                 ds.setId(jsonObj.getInt("id"));
@@ -305,7 +295,7 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
                 ds.setTypeName(type.getString("name"));
                 ds.setReservedO(projectId.toString());
                 ds.setSupplier(SUPPLIER);
-                String key = EncryptionUtil.encryptByAES(type.getInt("id")+SUPPLIER.toString(), Md5Utils.hash(SUPPLIER.toString()));
+                String key = EncryptionUtil.encryptByAES(type.getInt("id") + SUPPLIER.toString(), Md5Utils.hash(SUPPLIER.toString()));
                 ds.setMasterKey(key);
 
 
@@ -317,22 +307,22 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
                     sbProjectDeeppitStructuresService.insertSbProjectDeeppitStructures(deeppitStructures);
                 }*/
 
-                if(sbDeeppitStructuresService.selectSbDeeppitStructuresByMasterKey(key) == null){
+                if (sbDeeppitStructuresService.selectSbDeeppitStructuresByMasterKey(key) == null) {
                     sbDeeppitStructuresService.insertSbDeeppitStructures(ds);
-                }else {
+                } else {
                     sbDeeppitStructuresService.updateSbDeeppitStructures(ds);
                 }
 
             }
 
-            ajaxResult.put("code",1);
-            ajaxResult.put("msg",s);
+            ajaxResult.put("code", 1);
+            ajaxResult.put("msg", s);
             return ajaxResult;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ajaxResult.put("code",0);
-        ajaxResult.put("data","查询失败");
+        ajaxResult.put("code", 0);
+        ajaxResult.put("data", "查询失败");
         return ajaxResult;
     }
 
@@ -341,20 +331,20 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
      * @param structuresId 结构件id
      * @return
      */
-    @RequestMapping(value = "getDisplay" ,method = RequestMethod.GET)
+    @RequestMapping(value = "getDisplay", method = RequestMethod.GET)
     public AjaxResult getDisplay(@RequestParam(value = "projectId") Integer projectId,
-                                 @RequestParam(value = "structuresId") Integer structuresId){
+                                 @RequestParam(value = "structuresId") Integer structuresId) {
         AjaxResult ajaxResult = new AjaxResult();
-        String urlS =url+"/structures/"+structuresId+"/factors";
+        String urlS = Constants.LIFTING_PIT + "/structures/" + structuresId + "/factors";
 
         //获取token
         SbDeeppitToken st = new SbDeeppitToken();
         st.setAppId(projectId.toString());
 
-        List<SbDeeppitToken> listT= sbDeeppitTokenService.selectSbDeeppitTokenList(st);
-        if (listT.size() <= 0){
-            ajaxResult.put("code",0);
-            ajaxResult.put("msg","token为空，请获取token");
+        List<SbDeeppitToken> listT = sbDeeppitTokenService.selectSbDeeppitTokenList(st);
+        if (listT.size() <= 0) {
+            ajaxResult.put("code", 0);
+            ajaxResult.put("msg", "token为空，请获取token");
             return ajaxResult;
         }
         try {
@@ -366,8 +356,8 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
             List<NameValuePair> list = new LinkedList<>();
             String token = String.valueOf(listT.get(0).getToken());
 
-            BasicNameValuePair param1 = new BasicNameValuePair("token",token);
-            BasicNameValuePair param2 = new BasicNameValuePair("display","");
+            BasicNameValuePair param1 = new BasicNameValuePair("token", token);
+            BasicNameValuePair param2 = new BasicNameValuePair("display", "");
             list.add(param1);
             list.add(param2);
             uriBuilder.setParameters(list);
@@ -375,10 +365,6 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
             HttpGet httpGet = new HttpGet(uriBuilder.build());
             // 使用URL实体转换工具
             UrlEncodedFormEntity entityParam = null;
-            /*
-             * 添加请求头信息
-             */
-            httpGet.addHeader("Content-Type", "application/json");
             String s = DeeppitTools.getParams(httpGet);
             System.out.println(s);
 
@@ -386,14 +372,14 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
             SbDeeppitDisplay sdd = new SbDeeppitDisplay();
             net.sf.json.JSONArray jsonArray = net.sf.json.JSONArray.fromObject(s);
 
-            for (int i = 0;i < jsonArray.size();i++){
+            for (int i = 0; i < jsonArray.size(); i++) {
                 net.sf.json.JSONObject jsonObj = jsonArray.getJSONObject(i);
                 sdd.setId(jsonObj.getInt("id"));
                 sdd.setName(jsonObj.getString("name"));
                 sdd.setReserved(structuresId.toString());
                 sdd.setSupplier(SUPPLIER);
 
-                String key = EncryptionUtil.encryptByAES(jsonObj.getInt("id")+SUPPLIER.toString(), Md5Utils.hash(SUPPLIER.toString()));
+                String key = EncryptionUtil.encryptByAES(jsonObj.getInt("id") + SUPPLIER.toString(), Md5Utils.hash(SUPPLIER.toString()));
 
                 sdd.setDisplayKey(key);
                 //保存items信息
@@ -401,23 +387,23 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
                 //sdd.setItemsIndex(items.getInt("id"));
                 SbDeeppitDisplay sd = sbDeeppitDisplayService.selectSbDeeppitDisplayById(jsonObj.getInt("id"));
 
-                if(sd == null){
+                if (sd == null) {
                     sbDeeppitDisplayService.insertSbDeeppitDisplay(sdd);
-                }else {
+                } else {
                     sbDeeppitDisplayService.updateSbDeeppitDisplay(sdd);
                 }
             }
 
 
-            ajaxResult.put("code",1);
-            ajaxResult.put("msg",s);
+            ajaxResult.put("code", 1);
+            ajaxResult.put("msg", s);
             return ajaxResult;
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        ajaxResult.put("code",0);
-        ajaxResult.put("data","查询失败");
+        ajaxResult.put("code", 0);
+        ajaxResult.put("data", "查询失败");
         return ajaxResult;
     }
 
@@ -426,33 +412,33 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
      * 获取结构物下已配置的监测点--4
      * @return
      */
-    @RequestMapping(value = "getStation" ,method = RequestMethod.GET)
+    @RequestMapping(value = "getStation", method = RequestMethod.GET)
     public AjaxResult getStation(@RequestParam(value = "projectId") Integer projectId,
                                  @RequestParam(value = "structuresId") Integer structuresId,
-                                 @RequestParam(value = "displayId") Integer displayId){
+                                 @RequestParam(value = "displayId") Integer displayId) {
         AjaxResult ajaxResult = new AjaxResult();
 
 
         //获取token
         SbDeeppitToken st = new SbDeeppitToken();
         st.setAppId(projectId.toString());
-        List<SbDeeppitToken> listT= sbDeeppitTokenService.selectSbDeeppitTokenList(st);
-        if (listT.size() <= 0){
-            ajaxResult.put("code",0);
-            ajaxResult.put("msg","token为空，请获取token");
+        List<SbDeeppitToken> listT = sbDeeppitTokenService.selectSbDeeppitTokenList(st);
+        if (listT.size() <= 0) {
+            ajaxResult.put("code", 0);
+            ajaxResult.put("msg", "token为空，请获取token");
             return ajaxResult;
         }
         try {
             // 创建POST请求对象
-            URIBuilder uriBuilder = new URIBuilder(url+"/structures/"+structuresId+"/stations");
+            URIBuilder uriBuilder = new URIBuilder(Constants.LIFTING_PIT + "/structures/" + structuresId + "/stations");
             /*
              * 添加请求参数
              */
             List<NameValuePair> list = new LinkedList<>();
             String token = String.valueOf(listT.get(0).getToken());
 
-            BasicNameValuePair param1 = new BasicNameValuePair("factorId",displayId.toString());
-            BasicNameValuePair param2 = new BasicNameValuePair("token",token);
+            BasicNameValuePair param1 = new BasicNameValuePair("factorId", displayId.toString());
+            BasicNameValuePair param2 = new BasicNameValuePair("token", token);
             list.add(param1);
             list.add(param2);
             uriBuilder.setParameters(list);
@@ -460,17 +446,13 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
             HttpGet httpGet = new HttpGet(uriBuilder.build());
             // 使用URL实体转换工具
             UrlEncodedFormEntity entityParam = null;
-            /*
-             * 添加请求头信息
-             */
-            httpGet.addHeader("Content-Type", "application/json");
             String s = DeeppitTools.getParams(httpGet);
             System.out.println(s);
 
             //将数据存入数据库
             net.sf.json.JSONArray sj = net.sf.json.JSONArray.fromObject(s);
 
-            for (int l = 0;l  < sj.size(); l++) {
+            for (int l = 0; l < sj.size(); l++) {
                 net.sf.json.JSONObject displays = sj.getJSONObject(l);
                 net.sf.json.JSONArray display = displays.getJSONArray("groups");
                 SbDeeppitGroup dg;
@@ -485,7 +467,7 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
                     dg.setReserved(displays.getString("factorId"));
                     dg.setSupplier(SUPPLIER);
 
-                    String key = EncryptionUtil.encryptByAES(group.getInt("id")+SUPPLIER.toString(), Md5Utils.hash(SUPPLIER.toString()));
+                    String key = EncryptionUtil.encryptByAES(group.getInt("id") + SUPPLIER.toString(), Md5Utils.hash(SUPPLIER.toString()));
 
                     dg.setGroupKey(key);
                     SbDeeppitGroup sd = sbDeeppitGroupService.selectSbDeeppitGroupById(group.getInt("id"));
@@ -507,7 +489,7 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
                         df.setReserved(group.getString("id"));
                         df.setSupplier(SUPPLIER);
 
-                        String keyFactor = EncryptionUtil.encryptByAES(station.getInt("id")+SUPPLIER.toString(), Md5Utils.hash(SUPPLIER.toString()));
+                        String keyFactor = EncryptionUtil.encryptByAES(station.getInt("id") + SUPPLIER.toString(), Md5Utils.hash(SUPPLIER.toString()));
 
                         df.setFactorKey(key);
                         SbDeeppitFactor sdf = sbDeeppitFactorService.selectSbDeeppitFactorById(station.getInt("id"));
@@ -522,8 +504,8 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
                 }
             }
 
-            ajaxResult.put("code",1);
-            ajaxResult.put("msg",s);
+            ajaxResult.put("code", 1);
+            ajaxResult.put("msg", s);
             return ajaxResult;
         } catch (Exception e) {
             e.printStackTrace();
@@ -533,26 +515,13 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
         return ajaxResult;
     }
 
-    @RequestMapping(value = "getStationData" ,method = RequestMethod.GET)
-    public void insertStationDate(){
+    @RequestMapping(value = "getStationData", method = RequestMethod.GET)
+    public void insertStationDate() {
         List<SbStationsListData> pdsl = sbProjectDeeppitStructuresService.selectSbStationsList();
-        Calendar calendar = new GregorianCalendar();
-        calendar.add(Calendar.DAY_OF_MONTH,0);
-        calendar.set(Calendar.HOUR_OF_DAY,0);
-        calendar.set(Calendar.MINUTE,0);
-        calendar.set(Calendar.SECOND,0);
-        calendar.set(Calendar.MILLISECOND,0);
-        Date dayStart = calendar.getTime();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String startStr = simpleDateFormat.format(dayStart);
-        calendar.set(Calendar.HOUR_OF_DAY,23);
-        calendar.set(Calendar.MINUTE,59);
-        calendar.set(Calendar.SECOND,59);
-        calendar.set(Calendar.MILLISECOND,999);
-        Date dayEnd = calendar.getTime();
-        String endStr = simpleDateFormat.format(dayEnd);
-        for (SbStationsListData p :pdsl){
-            if(p.getFactorId() !=null) {
+        String startStr = DateUtils.startDate();
+        String endStr = DateUtils.endDate();
+        for (SbStationsListData p : pdsl) {
+            if (p.getFactorId() != null) {
                 getStationData(p.getProjectId(), p.getFactorId().toString(), startStr, endStr);
             }
         }
@@ -562,11 +531,11 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
      * 获取基坑测点检测数据
      * @return
      */
-    @RequestMapping(value = "getStationDatas" ,method = RequestMethod.GET)
+    @RequestMapping(value = "getStationDatas", method = RequestMethod.GET)
     public void getStationData(@RequestParam(value = "projectId") Integer projectId,
                                @RequestParam(value = "stations") String stations,
                                @RequestParam(value = "startTime") String startTime,
-                               @RequestParam(value = "endTime") String endTime){
+                               @RequestParam(value = "endTime") String endTime) {
 
         AjaxResult ajaxResult = new AjaxResult();
 
@@ -574,48 +543,31 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
         SbDeeppitToken st = new SbDeeppitToken();
         st.setAppId(projectId.toString());
 
-        List<SbDeeppitToken> listT= sbDeeppitTokenService.selectSbDeeppitTokenList(st);
-        if(listT.size() ==0){
+        List<SbDeeppitToken> listT = sbDeeppitTokenService.selectSbDeeppitTokenList(st);
+        if (listT.size() == 0) {
             return;
         }
-        if (listT.size() <= 0){
-            ajaxResult.put("code",0);
-            ajaxResult.put("msg","token为空，请获取token");
+        if (listT.size() <= 0) {
+            ajaxResult.put("code", 0);
+            ajaxResult.put("msg", "token为空，请获取token");
             return;
         }
         try {
             // 创建POST请求对象
-            URIBuilder uriBuilder = new URIBuilder(url+"/stations/theme/data");
+            URIBuilder uriBuilder = new URIBuilder(Constants.LIFTING_PIT + "/stations/theme/data");
 
-            /*
-             * 添加请求参数
-             */
-            List<NameValuePair> list = new LinkedList<>();
             String token = String.valueOf(listT.get(0).getToken());
-            BasicNameValuePair param1 = new BasicNameValuePair("stations",stations);
-            BasicNameValuePair param2 = new BasicNameValuePair("startTime",startTime);
-            BasicNameValuePair param3 = new BasicNameValuePair("endTime",endTime);
-//            BasicNameValuePair param4 = new BasicNameValuePair("limit",limit);
-            BasicNameValuePair param5 = new BasicNameValuePair("token",token);
-            list.add(param1);
-            list.add(param2);
-            list.add(param3);
-//            list.add(param4);
-            list.add(param5);
+
+            List<NameValuePair> list = setParam(stations, startTime, endTime, token);
             uriBuilder.setParameters(list);
 
             HttpGet httpGet = new HttpGet(uriBuilder.build());
-            // 使用URL实体转换工具
-            UrlEncodedFormEntity entityParam = null;
-            /*
-             * 添加请求头信息
-             */
-            httpGet.addHeader("Content-Type", "application/json");
-            String s = DeeppitTools.getParams(httpGet);
-            System.out.println(s);
+            String result = DeeppitTools.getParams(httpGet);
 
             //将数据存入数据库
-            JSONObject sj = JSONObject.parseObject(s);
+            JSONObject sj = JSONObject.parseObject(result);
+            //监测项
+            JSONObject items = sj.getJSONObject("items");
             JSONArray fList = sj.getJSONArray("stations");
             JSONObject station;
             JSONArray fDataList;
@@ -626,18 +578,21 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
             for (int i = 0; i < fList.size(); i++) {
                 station = fList.getJSONObject(i);
                 fDataList = station.getJSONArray("data");
-                if(station.getString("name").equals("水位")){
+                Integer factorId = station.getIntValue("id");
+                if (items.get("waterLevel") != null || items.get("force") != null) {
                     for (int j = 0; j < fDataList.size(); j++) {
                         fData = fDataList.getJSONObject(j);
-                        Integer factorId = station.getIntValue("id");
                         String creation = fData.getString("time");
                         List<HjDeeppitData> hjDeeppitDatas = hjDeeppitDataList.stream().filter(a -> a.getFactorId().equals(factorId) && a.getCreation().equals(creation)).collect(Collectors.toList());
-                        if(hjDeeppitDatas.size()<=0) {
-                            hjDeeppitData = new HjDeeppitData();
-                            hjDeeppitData.setFactorId(station.getIntValue("id"));
-                            hjDeeppitData.setWaterLevel(fData.getString("waterLevel"));
-                            hjDeeppitData.setCreation(fData.getString("time"));
+                        hjDeeppitData = new HjDeeppitData();
+                        hjDeeppitData.setFactorId(station.getIntValue("id"));
+                        hjDeeppitData.setFactorForce(fData.getString("force"));
+                        hjDeeppitData.setWaterLevel(fData.getString("waterLevel"));
+                        hjDeeppitData.setCreation(fData.getString("time"));
+                        if (hjDeeppitDatas.size() <= 0) {
                             hjDeeppitDataService.insertHjDeeppitData(hjDeeppitData);
+                        }else{
+                            hjDeeppitDataService.updateHjDeeppitData(hjDeeppitData);
                         }
                     }
                 }
@@ -647,42 +602,55 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
         }
     }
 
+    private List<NameValuePair> setParam(String stations, String startTime, String endTime, String token) {
+        List<NameValuePair> list = new LinkedList<>();
+        BasicNameValuePair param1 = new BasicNameValuePair("stations", stations);
+        BasicNameValuePair param2 = new BasicNameValuePair("startTime", startTime);
+        BasicNameValuePair param3 = new BasicNameValuePair("endTime", endTime);
+        BasicNameValuePair param5 = new BasicNameValuePair("token", token);
+        list.add(param1);
+        list.add(param2);
+        list.add(param3);
+        list.add(param5);
+        return list;
+    }
+
     /**
      * 获取高支模测点检测数据
      * @return
      */
-    @RequestMapping(value = "getHgformworkData" ,method = RequestMethod.GET)
-    public AjaxResult getHgformworkData(@RequestParam(value = "projectId") Integer projectId,@RequestParam(value = "structuresId") Integer structuresId,@RequestParam(value = "stations") String stations, @RequestParam(value = "startTime") String startTime, @RequestParam(value = "endTime") String endTime, @RequestParam(value = "limit") Integer limit){
+    @RequestMapping(value = "getHgformworkData", method = RequestMethod.GET)
+    public AjaxResult getHgformworkData(@RequestParam(value = "projectId") Integer projectId, @RequestParam(value = "structuresId") Integer structuresId, @RequestParam(value = "stations") String stations, @RequestParam(value = "startTime") String startTime, @RequestParam(value = "endTime") String endTime, @RequestParam(value = "limit") Integer limit) {
         AjaxResult ajaxResult = new AjaxResult();
 
         //获取token
         SbDeeppitToken st = new SbDeeppitToken();
         st.setAppId(projectId.toString());
 
-        List<SbDeeppitToken> listT= sbDeeppitTokenService.selectSbDeeppitTokenList(st);
-        if(listT.size() ==0){
+        List<SbDeeppitToken> listT = sbDeeppitTokenService.selectSbDeeppitTokenList(st);
+        if (listT.size() == 0) {
             return AjaxResult.error("没有这个项目的结构件");
         }
-        if (listT.size() <= 0){
-            ajaxResult.put("code",0);
-            ajaxResult.put("msg","token为空，请获取token");
+        if (listT.size() <= 0) {
+            ajaxResult.put("code", 0);
+            ajaxResult.put("msg", "token为空，请获取token");
             return ajaxResult;
         }
         try {
             // 创建POST请求对象
 
-            URIBuilder uriBuilder = new URIBuilder(url+"/stations/theme/data");
+            URIBuilder uriBuilder = new URIBuilder(Constants.LIFTING_PIT + "/stations/theme/data");
             /*
              * 添加请求参数
              */
             List<NameValuePair> list = new LinkedList<>();
             String token = String.valueOf(listT.get(0).getToken());
 
-            BasicNameValuePair param1 = new BasicNameValuePair("stations",stations);
-            BasicNameValuePair param2 = new BasicNameValuePair("startTime",startTime);
-            BasicNameValuePair param3 = new BasicNameValuePair("endTime",endTime);
-            BasicNameValuePair param4 = new BasicNameValuePair("limit",limit.toString());
-            BasicNameValuePair param5 = new BasicNameValuePair("token",token);
+            BasicNameValuePair param1 = new BasicNameValuePair("stations", stations);
+            BasicNameValuePair param2 = new BasicNameValuePair("startTime", startTime);
+            BasicNameValuePair param3 = new BasicNameValuePair("endTime", endTime);
+            BasicNameValuePair param4 = new BasicNameValuePair("limit", limit.toString());
+            BasicNameValuePair param5 = new BasicNameValuePair("token", token);
 
             list.add(param1);
             list.add(param2);
@@ -694,10 +662,6 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
             HttpGet httpGet = new HttpGet(uriBuilder.build());
             // 使用URL实体转换工具
             UrlEncodedFormEntity entityParam = null;
-            /*
-             * 添加请求头信息
-             */
-            httpGet.addHeader("Content-Type", "application/json");
             String s = DeeppitTools.getParams(httpGet);
             System.out.println(s);
 
@@ -711,14 +675,14 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
             net.sf.json.JSONObject fData;
             HighformworkData highformworkData;
 
-            for (int i = 0;i  < fList.size(); i++) {
+            for (int i = 0; i < fList.size(); i++) {
                 station = fList.getJSONObject(i);
                 fDataList = station.getJSONArray("data");
-                switch(type.getString("name")){
-                    case "轴力" :
-                        for (int j =0;j <fDataList.size();j++){
-                            fData =fDataList.getJSONObject(j);
-                            highformworkData =new HighformworkData();
+                switch (type.getString("name")) {
+                    case "轴力":
+                        for (int j = 0; j < fDataList.size(); j++) {
+                            fData = fDataList.getJSONObject(j);
+                            highformworkData = new HighformworkData();
                             highformworkData.setFactorId(station.getInt("id"));
                             highformworkData.setForce(fData.getString("force"));
                             highformworkData.setCreation(fData.getString("time"));
@@ -726,20 +690,20 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
                         }
                         break;
 
-                    case "位移" :
-                        for (int j =0;j <fDataList.size();j++){
-                            fData =fDataList.getJSONObject(j);
-                            highformworkData =new HighformworkData();
+                    case "位移":
+                        for (int j = 0; j < fDataList.size(); j++) {
+                            fData = fDataList.getJSONObject(j);
+                            highformworkData = new HighformworkData();
                             highformworkData.setFactorId(station.getInt("id"));
                             highformworkData.setDisplacement(fData.getString("displacement"));
                             highformworkData.setCreation(fData.getString("time"));
                             highformworkDataService.insertHighformworkData(highformworkData);
                         }
                         break;
-                    case "模板沉降" :
-                        for (int j =0;j <fDataList.size();j++){
-                            fData =fDataList.getJSONObject(j);
-                            highformworkData =new HighformworkData();
+                    case "模板沉降":
+                        for (int j = 0; j < fDataList.size(); j++) {
+                            fData = fDataList.getJSONObject(j);
+                            highformworkData = new HighformworkData();
                             highformworkData.setFactorId(station.getInt("id"));
                             highformworkData.setSubside(fData.getString("displacement"));
                             highformworkData.setCreation(fData.getString("time"));
@@ -747,10 +711,10 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
                         }
                         break;
 
-                    case "高支模倾斜" :
-                        for (int j =0;j <fDataList.size();j++){
-                            fData =fDataList.getJSONObject(j);
-                            highformworkData =new HighformworkData();
+                    case "高支模倾斜":
+                        for (int j = 0; j < fDataList.size(); j++) {
+                            fData = fDataList.getJSONObject(j);
+                            highformworkData = new HighformworkData();
                             highformworkData.setFactorId(station.getInt("id"));
                             highformworkData.setTiltX(fData.getString("x"));
                             highformworkData.setTiltY(fData.getString("y"));
@@ -765,15 +729,15 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
                 }
             }
 
-            ajaxResult.put("code",1);
-            ajaxResult.put("msg",s);
+            ajaxResult.put("code", 1);
+            ajaxResult.put("msg", s);
             return ajaxResult;
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        ajaxResult.put("code",0);
-        ajaxResult.put("data","获取失败！");
+        ajaxResult.put("code", 0);
+        ajaxResult.put("data", "获取失败！");
         return ajaxResult;
     }
 
@@ -785,34 +749,34 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
     //@RequestMapping(value = "getStationAlarmData" ,method = RequestMethod.POST)
     public AjaxResult getStationAlarmData(@RequestParam(value = "projectId") Integer projectId,
                                           @RequestParam(value = "userId") Integer userId,
-                                          @RequestParam(value = "structuresId") int structuresId){
+                                          @RequestParam(value = "structuresId") int structuresId) {
 
         //获取token
         SbDeeppitToken st = new SbDeeppitToken();
         st.setAppId(projectId.toString());
 
-        List<SbDeeppitToken> listT= sbDeeppitTokenService.selectSbDeeppitTokenList(st);
-        if (listT.size() <= 0){
+        List<SbDeeppitToken> listT = sbDeeppitTokenService.selectSbDeeppitTokenList(st);
+        if (listT.size() <= 0) {
             return AjaxResult.error("token为空，请获取token");
         }
         try {
             // 创建POST请求对象
-            URIBuilder uriBuilder = new URIBuilder(url+"/users/"+userId+"/alarms");
+            URIBuilder uriBuilder = new URIBuilder(Constants.LIFTING_PIT + "/users/" + userId + "/alarms");
             /*
              * 添加请求参数
              */
             List<NameValuePair> list = new LinkedList<>();
             String token = String.valueOf(listT.get(0).getToken());
 
-            BasicNameValuePair param1 = new BasicNameValuePair("token",token);
-            BasicNameValuePair param2 = new BasicNameValuePair("limit","5");
-            BasicNameValuePair param3 = new BasicNameValuePair("offset","0");
-            BasicNameValuePair param4 = new BasicNameValuePair("orderBy","level");
-            BasicNameValuePair param5 = new BasicNameValuePair("orderDirection","desc");
+            BasicNameValuePair param1 = new BasicNameValuePair("token", token);
+            BasicNameValuePair param2 = new BasicNameValuePair("limit", "5");
+            BasicNameValuePair param3 = new BasicNameValuePair("offset", "0");
+            BasicNameValuePair param4 = new BasicNameValuePair("orderBy", "level");
+            BasicNameValuePair param5 = new BasicNameValuePair("orderDirection", "desc");
             List li = new ArrayList();
             li.add(structuresId);
-            BasicNameValuePair param6 = new BasicNameValuePair("structures",li.toString());
-            BasicNameValuePair param7 = new BasicNameValuePair("status","new");
+            BasicNameValuePair param6 = new BasicNameValuePair("structures", li.toString());
+            BasicNameValuePair param7 = new BasicNameValuePair("status", "new");
 
             list.add(param1);
             list.add(param2);
@@ -834,7 +798,7 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
             String s = DeeppitTools.postParams(httpPost);
             System.out.println(s);
 
-            if (s == null){
+            if (s == null) {
                 return AjaxResult.error("请求失败");
             }
 
@@ -846,10 +810,10 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
             SbDeeppitFactor deeppitFactor;
             HighformworkAlarmData highformworkAlarmData;
 
-            for (int i = 0;i <sAlarms.size();i++){
+            for (int i = 0; i < sAlarms.size(); i++) {
                 JSONObject alarm = sAlarms.getJSONObject(i);
                 JSONArray al = (JSONArray) alarm.get("alarms");
-                for (int j = 0;j < al.size();j++) {
+                for (int j = 0; j < al.size(); j++) {
                     alarmData = new DeeppitAlarmData();
                     JSONObject all = al.getJSONObject(j);
                     JSONObject allSource = all.getJSONObject("source");
@@ -873,11 +837,11 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
                     DeeppitAlarmData dAD = deeppitAlarmDataService.selectDeeppitAlarmDataById(all.getString("id"));
                     if (dAD == null) {
                         deeppitAlarmDataService.insertDeeppitAlarmData(alarmData);
-                        System.out.println("获取报警数据"+new Date());
+                        System.out.println("获取报警数据" + new Date());
                         deeppitFactor = new SbDeeppitFactor();
                         deeppitFactor.setName(allSource.getString("name"));
                         List<SbDeeppitFactor> list1 = sbDeeppitFactorService.selectSbDeeppitFactorList(deeppitFactor);
-                        jPushDeeppit.setTitle(alarm.getString("structureName")+"报警");
+                        jPushDeeppit.setTitle(alarm.getString("structureName") + "报警");
 
                         jPushDeeppit.setWorks(alarm.getString("structureName"));
                         jPushDeeppit.setTime(all.getString("endTime"));
@@ -887,8 +851,8 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
 
                         jPushDeeppit.setSn(String.valueOf(alarm.getIntValue("structureId")));
 
-                        if (list1 != null){
-                            jPushSMS.JPushAndJSMS(jPushDeeppit,projectId);
+                        if (list1 != null) {
+                            jPushSMS.JPushAndJSMS(jPushDeeppit, projectId);
                         }
                     }/*else if (highformworkAlarmDataService.selectHighformworkAlarmDataList()){
 

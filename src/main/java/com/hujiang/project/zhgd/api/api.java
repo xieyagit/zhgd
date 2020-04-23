@@ -114,6 +114,7 @@ import com.hujiang.project.zhgd.sbCraneAddparams.api.OptionsCraneApi;
 import com.hujiang.project.zhgd.sbCraneAddrecord.api.AppCraneAddRecordApi;
 import com.hujiang.project.zhgd.sbCraneAddrecord.domain.SbCraneAddrecord;
 import com.hujiang.project.zhgd.sbCraneBinding.domain.SbCraneBinding;
+import com.hujiang.project.zhgd.sbCurrentTemperature.api.AppCurrentTemperatureApi;
 import com.hujiang.project.zhgd.sbCurrentTemperature.api.CurrentTemperatureApi;
 import com.hujiang.project.zhgd.sbCurrentTemperature.api.ElectricityBoxExternalApi;
 import com.hujiang.project.zhgd.sbCurrentTemperature.domain.SbCurrentTemperature;
@@ -322,7 +323,7 @@ public class api {
     @Autowired
     private AppDustEmissionApi appDustEmissionApi;
     @Autowired
-    private com.hujiang.project.zhgd.sbCurrentTemperature.api.appCurrentTemperatureApi appCurrentTemperatureApi;
+    private AppCurrentTemperatureApi appCurrentTemperatureApi;
     @Autowired
     private FolderApi folderApi;
     @Autowired

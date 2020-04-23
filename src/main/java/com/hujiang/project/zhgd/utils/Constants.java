@@ -97,4 +97,7 @@ public class Constants {
 
     /**福建两制对接地址*/
     public static String HUJIAN_TWO_SYSTEMS = "http://47.106.167.195:9096/open.api/v1";
+
+    /**对接升机坑  水位  沉降  测点*/
+    public static String LIFTING_PIT = "https://api.zhiwucloud.com/api/v1";
 }
