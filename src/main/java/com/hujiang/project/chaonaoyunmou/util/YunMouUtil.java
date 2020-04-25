@@ -137,7 +137,7 @@ public class YunMouUtil {
         URL url = new URL(urlString);
         URI uri = new URI(url.getProtocol(), url.getHost() + ":"
                 + url.getPort(), url.getPath(), url.getQuery(), null);
-        org.apache.http.client.methods.HttpPost httpPost = new HttpPost(uri);
+        HttpPost httpPost = new HttpPost(uri);
         httpPost.addHeader("Authorization","bearer "+token);
         client = HttpClients.createDefault();
         String respContent = null;
@@ -164,7 +164,7 @@ public class YunMouUtil {
         URI uri = new URI(url.getProtocol(), url.getHost() + ":"
                 + url.getPort(), url.getPath(), url.getQuery(), null);
 //        HttpPost httpPost = new HttpPost(uri);
-        HttpGet httpGet=new HttpGet();
+        HttpGet httpGet=new HttpGet(uri);
 //        httpPost.addHeader("content-type","application/x-www-form-urlencoded;charset=utf-8");
         httpGet.addHeader("Authorization","bearer "+token);
         client = HttpClients.createDefault();
@@ -192,7 +192,7 @@ public class YunMouUtil {
         URI uri = new URI(url.getProtocol(), url.getHost() + ":"
                 + url.getPort(), url.getPath(), url.getQuery(), null);
 //        HttpPost httpPost = new HttpPost(uri);
-        HttpDelete httpDelete=new HttpDelete();
+        HttpDelete httpDelete=new HttpDelete(uri);
 //        httpPost.addHeader("content-type","application/x-www-form-urlencoded;charset=utf-8");
         httpDelete.addHeader("Authorization","bearer "+token);
         client = HttpClients.createDefault();
