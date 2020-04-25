@@ -22,10 +22,11 @@
         <result property="reservedO"    column="reserved_o"    />
         <result property="reservedT"    column="reserved_t"    />
         <result property="creation"    column="creation"    />
+        <result property="factorForce"    column="factor_force"    />
     </resultMap>
 
     <sql id="selectHjDeeppitDataVo">
-        select id, structures_id, display_id, factor_id, level_x, level_y, level_accumulate_x, level_accumulate_y, water_level, strain_frequency, strain_temperature, subside, tilt_x, tilt_y, reserved_o, reserved_t, creation from hj_deeppit_data
+        select id, structures_id, display_id, factor_id, level_x, level_y, level_accumulate_x, level_accumulate_y, water_level, strain_frequency, strain_temperature, subside, tilt_x, tilt_y, reserved_o, reserved_t, creation, factor_force from hj_deeppit_data
     </sql>
 
     <select id="selectHjDeeppitDataList" parameterType="HjDeeppitData" resultMap="HjDeeppitDataResult">
@@ -130,6 +131,7 @@
             <if test="reservedO != null  and reservedO != ''  ">reserved_o,</if>
             <if test="reservedT != null  and reservedT != ''  ">reserved_t,</if>
             <if test="creation != null  ">creation,</if>
+            <if test="factorForce != null  ">factor_force,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null  ">#{id},</if>
@@ -149,6 +151,7 @@
             <if test="reservedO != null  and reservedO != ''  ">#{reservedO},</if>
             <if test="reservedT != null  and reservedT != ''  ">#{reservedT},</if>
             <if test="creation != null  ">#{creation},</if>
+            <if test="factorForce != null  ">#{factorForce},</if>
         </trim>
     </insert>
 
@@ -171,6 +174,7 @@
             <if test="reservedO != null  and reservedO != ''  ">reserved_o = #{reservedO},</if>
             <if test="reservedT != null  and reservedT != ''  ">reserved_t = #{reservedT},</if>
             <if test="creation != null  ">creation = #{creation},</if>
+            <if test="factorForce != null  ">creation = #{factorForce},</if>
         </trim>
         where id = #{id}
     </update>
