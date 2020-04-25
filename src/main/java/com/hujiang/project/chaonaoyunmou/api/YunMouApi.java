@@ -64,7 +64,7 @@ public class YunMouApi {
         String token=yunMouUtil.getToken();
         //注册设备
         List<NameValuePair> params1 = new ArrayList<NameValuePair>();
-        params1.add(new BasicNameValuePair("groupId", "e6ceeb5731d44a9086c2a58105862315"));
+        params1.add(new BasicNameValuePair("groupId", "7913c870234b42e7bace27ea3c61e2b9"));
         params1.add(new BasicNameValuePair("deviceSerial", sn));
         params1.add(new BasicNameValuePair("validateCode", validateCode));
         String result=yunMouUtil.httpPostWithJSONX(Constants.YUNMOU+"/v1/devices/add",params1,yunMouUtil.getToken());
@@ -76,11 +76,19 @@ public class YunMouApi {
             hd.setDeviceNo(sn);
             hd.setDeviceName(data.getString("deviceName"));
             hd.setDeviceFactory("cn");
+            hd.setDirection("in");
             hd.setStatus("1");
             hd.setRemark(data.getString("deviceId"));
             hd.setProjectId(pid);
             hd.setSystemType("ly");
             hjAttendanceDeviceService.insertHjAttendanceDevice(hd);
+            //修改设备名称
+            HjProject h=hjProjectService.selectHjProjectById(pid);
+            String url3="/v1/devices/"+deviceId+"/update";
+            List<NameValuePair> params10 = new ArrayList<NameValuePair>();
+            params10.add(new BasicNameValuePair("deviceId", deviceId));
+            params10.add(new BasicNameValuePair("deviceName", h.getProjectName()));
+            yunMouUtil.httpPostWithJSONX(Constants.YUNMOU+url3,params10,token);
             //关闭设备视频加密
             List<NameValuePair> params6 = new ArrayList<NameValuePair>();
             params6.add(new BasicNameValuePair("deviceId", deviceId));
@@ -99,7 +107,7 @@ public class YunMouApi {
            params2.put("faceLibs",params3);
            String result2=yunMouUtil.httpPostWithJSONH(Constants.YUNMOU+"/api/v1/community/superBrains/faceLibs",params2,yunMouUtil.getToken());
            //
-            HjProject h=hjProjectService.selectHjProjectById(pid);
+
             SbProjectVideoArea spa=new SbProjectVideoArea();
             spa.setProjectid(pid);
             spa.setAreaName(h.getShortName());
@@ -109,7 +117,8 @@ public class YunMouApi {
             params5.add(new BasicNameValuePair("deviceId", deviceId));
             yunMouUtil.httpPostWithJSONX(Constants.YUNMOU+"/v1/devices/"+deviceId+"/synchChannels",params5,token);
             //查询设备通道
-            String url="v1/channels/list?deviceId="+deviceId+"&pageNo=1&pageSize=999";
+            String url="/v1/channels/list?deviceId="+deviceId+"&pageNo=1&pageSize=999";
+            System.out.println(Constants.YUNMOU+url);
             String result3=yunMouUtil.httpGetWithJSON(Constants.YUNMOU+url,token);
             JSONObject s3=JSONObject.parseObject(result3);
             if("200".equals(s3.getString("code")));
@@ -131,8 +140,8 @@ public class YunMouApi {
                     JSONObject data2=s4.getJSONObject("data");
                     SbProjectVideo sv=new SbProjectVideo();
                     sv.setAreaId(spa.getId());
-                    sv.setUrl(data2.getString("rtmp"));
-                    sv.setHdurl(data2.getString("rtmpHd"));
+                    sv.setUrl(data2.getString("hls"));
+                    sv.setHdurl(data2.getString("hlsHd"));
                     sv.setIsControl("0");
                     sv.setVideoName(h.getProjectName()+data2.getInteger("channelNo"));
                     sv.setChannelNo(data2.getString("channelNo"));
