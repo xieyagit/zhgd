@@ -1,5 +1,6 @@
 package com.hujiang.project.zhgd.lyPersonnel.api;
 
+import com.hujiang.common.utils.StringUtils;
 import com.hujiang.framework.web.controller.BaseController;
 import com.hujiang.framework.web.domain.AjaxResult;
 import com.hujiang.project.zhgd.hjProject.domain.HjProject;
@@ -16,9 +17,19 @@ import com.hujiang.project.zhgd.lyRegistrationRecord.mapper.LyRegistrationRecord
 import com.hujiang.project.zhgd.lyRegistrationRecord.service.ILyRegistrationRecordService;
 import com.hujiang.project.zhgd.lyStatistics.domain.LyStatistics;
 import com.hujiang.project.zhgd.lyStatistics.service.ILyStatisticsService;
+import com.hujiang.project.zhgd.utils.AliyunOSSClientUtil;
+import org.apache.commons.fileupload.disk.DiskFileItem;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -188,6 +199,7 @@ public class PersonnelApi extends BaseController {
         lyPersonnel.setIspresent("1");
         lyPersonnelService.updateLyPersonnel(lyPersonnel);
         //删除人脸
+        lyPersonnel=lyPersonnelService.selectLyPersonnelById(lyPersonnel.getId());
         lyPersonnelService.personnelInOUt(lyPersonnel,"2");
         return AjaxResult.success("离职成功");
     }
@@ -249,5 +261,190 @@ public class PersonnelApi extends BaseController {
         List<LyStatistics> lsList=lyStatisticsService.selectLyTimeCount(ls);
         resultMap.put("lsList",lsList);
         return AjaxResult.success(resultMap);
+    }
+    private void deleteFile(File... files) {
+        for (File file : files) {
+            if (file.exists()) {
+           boolean a=     file.delete();
+                System.out.println(a);
+            }
+        }
+    }
+    /**
+     * 导入人员(不包括照片)
+     */
+    @PostMapping("/importPerson")
+    public AjaxResult importPerson( MultipartFile multfile,Integer pid)throws Exception{
+        //把MultipartFile转化为File
+
+        // 获取文件名
+        String fileName = multfile.getOriginalFilename();
+        // 获取文件后缀
+        String prefix=fileName.substring(fileName.lastIndexOf("."));
+        // 用uuid作为文件名，防止生成的临时文件重复
+        final File fo = File.createTempFile(String.valueOf(System.currentTimeMillis()), prefix);
+        // MultipartFile to File
+        multfile.transferTo(fo);
+
+        //你的业务逻辑
+
+
+
+        FileInputStream fis =null;
+        Workbook wookbook = null;
+        Sheet sheet =null;
+        try
+        {
+            //获取一个绝对地址的流
+            fis = new FileInputStream(fo);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        try
+        {
+            //2003版本的excel，用.xls结尾
+            wookbook = new HSSFWorkbook(fis);//得到工作簿
+
+        }
+        catch (Exception ex)
+        {
+            //ex.printStackTrace();
+            try
+            {
+                //2007版本的excel，用.xlsx结尾
+                fis = new FileInputStream(fo);
+                wookbook = new XSSFWorkbook(fis);//得到工作簿
+            } catch (IOException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+
+        Map<String, PictureData>  maplist=null;
+
+        sheet = wookbook.getSheetAt(0);
+
+        //得到一个工作表
+
+
+
+        //获得表头
+        Row rowHead = sheet.getRow(0);
+
+
+        //获得数据的总行数
+        int totalRowNum = sheet.getLastRowNum();
+        System.out.println("总行数："+totalRowNum);
+        //要获得属性
+        String studentid;
+        String studentname="";
+        String grade="";
+        String idCard="";
+        LyPersonnel lyPersonnel;
+        LyCompany lyCompany;
+        //获得所有数据
+        for(int i = 1 ; i <= totalRowNum ; i++)
+        {
+            //获得第i行对象
+            Row row = sheet.getRow(i);
+            if(row==null){
+                continue;
+            }
+//            HSSFRow xssfRow = sheet.getRow(i);
+
+            //获得获得第i行第0列的 String类型对象
+            Cell cell = row.getCell((short)0);
+            if(cell==null){
+                continue;
+            }
+            studentid = cell.getStringCellValue();
+
+            //获得一个数字类型的数据
+            //studentname = (int) cell.getNumericCellValue();
+            cell = row.getCell((short)1);
+            studentname =cell.getStringCellValue();
+
+            cell = row.getCell((short)2);
+            grade =cell.getStringCellValue();
+
+            cell = row.getCell((short)3);
+            idCard =cell.getStringCellValue();
+            lyPersonnel=new LyPersonnel();
+            lyPersonnel.setIdCode(idCard);
+            lyPersonnel.setEmpNumber(grade);
+            lyPersonnel.setEmpName(studentid);
+            lyPersonnel.setPid(pid);
+            lyPersonnel.setCompanyName(studentname);
+            lyCompany=new LyCompany();
+            lyCompany.setPid(pid);
+            lyCompany.setCompanyName(studentname);
+            List<LyCompany> lcList=lyCompanyService.selectLyCompanyList(lyCompany);
+            if(lcList.size()>0){
+                lyPersonnel.setCompanyId(lcList.get(0).getId());
+                lyPersonnel.setFloor(lcList.get(0).getFloor());
+            }
+            lyPersonnel.setIspresent("0");
+            lyPersonnel.setType("1");
+            LyPersonnel a=new LyPersonnel();
+            a.setPid(lyPersonnel.getPid());
+            a.setIdCode(lyPersonnel.getIdCode());
+            List<LyPersonnel> lList=lyPersonnelService.selectLyPersonnelList(a);
+            if(lList.size()>0){
+                if("0".equals(lList.get(0).getIsBlacklist())) {
+                    lyPersonnel.setId(lList.get(0).getId());
+                     lyPersonnelService.updateLyPersonnel(lyPersonnel);
+                }
+            }else{
+                 lyPersonnelService.insertLyPersonnel(lyPersonnel);
+            }
+
+            //登记记录
+            LyRegistrationRecord lrr=new LyRegistrationRecord();
+            lrr.setPwid(lyPersonnel.getId());
+            lrr.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            lrr.setCompanyName(lyPersonnel.getCompanyName());
+            lrr.setFloor(lyPersonnel.getFloor());
+            lrr.setSubordinate(lyPersonnel.getSubordinate());
+            lrr.setBz(lyPersonnel.getBz());
+            lrr.setPid(lyPersonnel.getPid());
+            lrr.setType(lyPersonnel.getType());
+            lyRegistrationRecordService.insertLyRegistrationRecord(lrr);
+            System.out.println("姓名："+studentid+"\t年级班级："+studentname+"\t学号："+grade+"\t身份证号："+idCard);
+        }
+
+        //程序结束时，删除临时文件
+        deleteFile(fo);
+        return AjaxResult.success("导入成功");
+    }
+    /**
+     * 上传人员照片
+     */
+    @PostMapping("/uploadFace")
+    public AjaxResult uploadFace( MultipartFile file,Integer id)throws Exception{
+        String FileImgurl = AliyunOSSClientUtil.uploadFileImg(file, "hujiang", id+"" + System.currentTimeMillis() + ".jpg");
+        String name = FileImgurl.substring(0, FileImgurl.lastIndexOf("?"));
+        LyPersonnel lyPersonnel=new LyPersonnel();
+        lyPersonnel.setId(id);
+        lyPersonnel.setFaceUrl(name);
+        lyPersonnelService.updateLyPersonnel(lyPersonnel);
+        return  AjaxResult.success("上传成功");
+    }
+    @PostMapping("/in")
+    public AjaxResult in(String ids)throws Exception{
+        String[] id=ids.split(",");
+        LyPersonnel lyPersonnel;
+        for(int i=0;i<id.length;i++){
+            lyPersonnel=lyPersonnelService.selectLyPersonnelById(Integer.valueOf(id[i])) ;
+            if(StringUtils.isBlank(lyPersonnel.getFaceUrl())){
+                return AjaxResult.error(lyPersonnel.getEmpName()+"未上传照片，无法下发");
+            }
+            lyPersonnelService.personnelInOUt(lyPersonnel,"0");
+        }
+return AjaxResult.success("下发成功");
     }
 }

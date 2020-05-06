@@ -1,23 +1,38 @@
 package com.hujiang.project.zhgd.hjAttendanceRecord.service;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.exception.BusinessException;
 import com.hujiang.common.support.Convert;
 import com.hujiang.common.utils.AliyunOSSClientUtil;
+import com.hujiang.common.utils.DateUtils;
 import com.hujiang.common.utils.FaceMatchUtil;
 import com.hujiang.common.utils.StringUtil;
 import com.hujiang.common.utils.ThreadUtils;
+import com.hujiang.common.utils.http.HttpUtils;
 import com.hujiang.framework.web.domain.AjaxResult;
+import com.hujiang.project.common.AesUtils;
+import com.hujiang.project.common.CommonUtils;
+import com.hujiang.project.common.FuJianUtils;
+import com.hujiang.project.common.LoggerUitls;
+import com.hujiang.project.common.Result;
+import com.hujiang.project.zhgd.hjAttendanceRecord.domain.AttendanceRecordDto;
 import com.hujiang.project.zhgd.hjAttendanceRecord.domain.DongTai;
 import com.hujiang.project.zhgd.hjAttendanceRecord.domain.HjAttendanceRecord;
 import com.hujiang.project.zhgd.hjAttendanceRecord.domain.Param;
 import com.hujiang.project.zhgd.hjAttendanceRecord.mapper.HjAttendanceRecordMapper;
+import com.hujiang.project.zhgd.hjConstructionCompany.service.IHjConstructionCompanyService;
 import com.hujiang.project.zhgd.hjProject.domain.HjProject;
 import com.hujiang.project.zhgd.hjProject.mapper.HjProjectMapper;
+import com.hujiang.project.zhgd.hjProject.service.IHjProjectService;
 import com.hujiang.project.zhgd.hjProjectWorkers.domain.HjProjectWorkers;
 import com.hujiang.project.zhgd.hjProjectWorkers.domain.TCount;
 import com.hujiang.project.zhgd.hjProjectWorkers.mapper.HjProjectWorkersMapper;
+import com.hujiang.project.zhgd.hjSynchronizationInformation.domain.HjSynchronizationInformation;
+import com.hujiang.project.zhgd.hjSynchronizationInformation.service.IHjSynchronizationInformationService;
+import com.hujiang.project.zhgd.hjTeam.domain.HjTeam;
+import com.hujiang.project.zhgd.hjTeam.service.IHjTeamService;
 import com.hujiang.project.zhgd.utils.APIClient;
 import com.hujiang.project.zhgd.utils.AuthService;
 import com.hujiang.project.zhgd.utils.BASE64DecodedMultipartFile;
@@ -34,6 +49,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.jms.Queue;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -66,6 +82,18 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
     private Queue attendanceRecord;
     @Autowired
     private JmsMessagingTemplate jmsMessagingTemplate;
+
+    @Autowired
+    private IHjSynchronizationInformationService hjSynchronizationInformationService;
+
+    @Autowired
+    private IHjProjectService projectService;
+
+    @Autowired
+    private IHjTeamService hjTeamService;
+
+    @Autowired
+    private IHjConstructionCompanyService hjConstructionCompanyService;
 
     /**
      * 获取最新一条考勤记录
@@ -483,6 +511,9 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
                                             if(i1 > 0){
                                                 logger.info(hjProjectWorkers.getEmpName() + ":考勤异步执行完毕");
                                             }
+
+                                            //福建两制上传工人考勤信息
+                                            workerAttendance(hjAttendanceRecord, hjProjectWorkers);
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                             logger.info("上传失败: " + e.getMessage());
@@ -513,6 +544,85 @@ public class HjAttendanceRecordServiceImpl implements IHjAttendanceRecordService
             return AjaxResult.error(-1, "考勤失败！");
         }
         return null;
+    }
+
+    private void workerAttendance(HjAttendanceRecord hjAttendanceRecord, HjProjectWorkers projectWorkers){
+
+        Integer projectId = hjAttendanceRecord.getProjectId();
+        HjSynchronizationInformation hs = new HjSynchronizationInformation();
+        hs.setProjectId(projectId);
+        hs.setState(1);
+        hs.setApiType("keytype1");
+        List<HjSynchronizationInformation> hList = hjSynchronizationInformationService.selectHjSynchronizationInformationList(hs);
+
+        Map<String, Object> projectMap = projectService.getProject(projectId);
+        HjProject project = JSONObject.parseObject(JSONObject.toJSONString(projectMap), HjProject.class);
+
+        HjTeam hjTeam = new HjTeam();
+        hjTeam.setProjectId(projectId);
+        HjTeam hjTeam1 = hjTeamService.getHjTeam(hjTeam);
+
+        String apiKey = null;
+        String apiSecret = null;
+        if (hList != null && hList.size() > 0) {
+            apiKey = hList.get(0).getApiKey();
+            apiSecret = hList.get(0).getApiSecret();
+        }
+
+        String paramStr = setParams(apiKey, apiSecret, hjAttendanceRecord, project, hjTeam1, projectWorkers);
+        String msg = "上传工人考勤信息";
+        try {
+            Result result = HttpUtils.httpPostWithjson(Constants.HUJIAN_TWO_SYSTEMS, paramStr, msg);
+            if ("0".equals(result.getCode()) && result.getData() != null) {
+                LoggerUitls.logInfo("福建两制上传工人考勤信息成功", result.getCode(), result.getMessage(), result.getData());
+            } else {
+                LoggerUitls.logInfo("福建两制上传工人考勤信息失败", result.getCode(), result.getMessage(), result.getData());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private String setParams(String apiKey, String apiSecret, HjAttendanceRecord hjAttendanceRecord, HjProject project, HjTeam hjTeam1, HjProjectWorkers projectWorkers) {
+        Map apiParam = FuJianUtils.setHeader(FuJianUtils.WORKERATTENDANCE_UPLOAD);
+
+        apiParam.put("appid", apiKey);
+
+        Map param = setParam(apiSecret, hjAttendanceRecord, project, hjTeam1, projectWorkers);
+
+        String data = JSON.toJSONString(param);
+        apiParam.put("data", data);
+
+        String sign = CommonUtils.getSign(apiParam, apiSecret);
+        apiParam.put("sign", sign);
+        return JSON.toJSONString(apiParam);
+    }
+
+    private Map<String, Object> setParam(String apiSecret, HjAttendanceRecord hjAttendanceRecord, HjProject project, HjTeam hjTeam1, HjProjectWorkers projectWorkers){
+        Map<String, Object> map = new HashMap<>();
+        map.put("projectCode", project.getProjectCode());
+        map.put("teamSysNo", hjTeam1.getTeamSysno());
+        List<AttendanceRecordDto> list = new ArrayList();
+        AttendanceRecordDto attendanceRecord = new AttendanceRecordDto();
+        if("in".equals(hjAttendanceRecord.getDirection())){
+            attendanceRecord.setDirection("01");
+        }
+        if("out".equals(hjAttendanceRecord.getDirection())){
+            attendanceRecord.setDirection("02");
+        }
+
+        attendanceRecord.setIdCardNumber(AesUtils.encrypt(projectWorkers.getIdCode(), apiSecret));
+        attendanceRecord.setIdCardType("01");
+        //判断一个人是进场还是退场   退场时间为空    或者退场时间大于当前时间    进场状态
+        if(projectWorkers.getEndTime() == null || DateUtils.compareDate(DateUtils.stringToDate(projectWorkers.getEndTime()), new Date()) == 1){
+            attendanceRecord.setDate(projectWorkers.getStartTime());
+        }else{
+            attendanceRecord.setDate(projectWorkers.getEndTime());
+        }
+
+        list.add(attendanceRecord);
+        map.put("dataList", list);
+        return map;
     }
 
 

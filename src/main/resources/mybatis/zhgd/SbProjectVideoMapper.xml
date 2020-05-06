@@ -90,6 +90,8 @@
             <if test="hjCode != null  and hjCode != ''  ">hj_code,</if>
             <if test="flowCard != null  and flowCard != ''  ">flow_card,</if>
             <if test="shipmentDate != null  and shipmentDate != ''  ">shipment_date,</if>
+            <if test="channelNo != null  and channelNo != ''  ">channelNo,</if>
+            <if test="factory != null  and factory != ''  ">factory,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null  ">#{id},</if>
@@ -111,6 +113,8 @@
             <if test="hjCode != null  and hjCode != ''  ">#{hjCode},</if>
             <if test="flowCard != null  and flowCard != ''  ">#{flowCard},</if>
             <if test="shipmentDate != null  and shipmentDate != ''  ">#{shipmentDate},</if>
+            <if test="channelNo != null  and channelNo != ''  ">#{channelNo},</if>
+            <if test="factory != null  and factory != ''  ">#{factory},</if>
         </trim>
     </insert>
 

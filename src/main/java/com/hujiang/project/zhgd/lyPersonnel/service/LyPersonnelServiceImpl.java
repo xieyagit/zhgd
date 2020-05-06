@@ -360,10 +360,11 @@ public class LyPersonnelServiceImpl implements ILyPersonnelService
 	public void xiafa(LyPersonnel lyPersonnel,String deviceId,String token)throws  Exception{
 		JSONObject json=new JSONObject();
 		json.put("deviceId",deviceId);
-		json.put("customFaceLibId","huayun");
+		json.put("customFaceLibId","huayuan");
 		JSONArray list=new JSONArray();
 		list.add(lyPersonnel.getIdCode());
 		json.put("employeeNoList",list);
+		System.out.println("下发参数："+json.toJSONString());
 		String result=yunMouUtil.httpPostWithJSONH(Constants.YUNMOU+"/api/v1/community/superBrains/actions/asyncDeliveredFaces",json,token);
 		JSONObject s=JSONObject.parseObject(result);
 		if("200".equals(s.getString("code"))){
@@ -394,7 +395,8 @@ public class LyPersonnelServiceImpl implements ILyPersonnelService
 			if("200".equals(s.getString("code"))){
 				lyDevicePersonnelMapper.deleteLyDevicePersonnelById(ldp2.getId());
 			}
-
+			String url2="/api/v1/community/superBrains/actions/deleteFaceLibPicture?deviceId="+h.getRemark()+"&customFaceLibId=huayuan&employeeNo="+lyPersonnel.getIdCode();
+			yunMouUtil.httpDeleteWithJSON(Constants.YUNMOU+url2,token);
 		}
 
 
