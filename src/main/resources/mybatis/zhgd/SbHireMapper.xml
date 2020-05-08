@@ -211,7 +211,7 @@
         u.start_time AS startTime,
         emp_naticeplace AS empNaticeplace,
         (SELECT title FROM hj_dictionaries e WHERE  e.tag =  u.job_name) as workType,
-        (SELECT construction_name FROM hj_construction_company c WHERE  a.bid = c.id ) AS constructionName,
+        (SELECT construction_name FROM hj_construction_company c WHERE  u.construction_id = c.id) AS constructionName,
         r.imei AS imei,
         a.`name` as areaName,
         a.id as areaId,
