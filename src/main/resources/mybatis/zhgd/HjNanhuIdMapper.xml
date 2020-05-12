@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujiang.project.zhgd.hjNanhuId.mapper.HjNanhuIdMapper">
+    
+    <resultMap type="HjNanhuId" id="HjNanhuIdResult">
+        <result property="id"    column="id"    />
+        <result property="nanhuId"    column="nanhu_id"    />
+        <result property="projectId"    column="project_id"    />
+    </resultMap>
+	
+	<sql id="selectHjNanhuIdVo">
+        select id, nanhu_id, project_id from hj_nanhu_id
+    </sql>
+	
+    <select id="selectHjNanhuIdList" parameterType="HjNanhuId" resultMap="HjNanhuIdResult">
+        <include refid="selectHjNanhuIdVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="nanhuId != null  and nanhuId != '' "> and nanhu_id = #{nanhuId}</if>
+             <if test="projectId != null "> and project_id = #{projectId}</if>
+         </where>
+    </select>
+    
+    <select id="selectHjNanhuIdById" parameterType="Integer" resultMap="HjNanhuIdResult">
+        <include refid="selectHjNanhuIdVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHjNanhuId" parameterType="HjNanhuId">
+        insert into hj_nanhu_id
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="nanhuId != null  and nanhuId != ''  ">nanhu_id,</if>
+			<if test="projectId != null  ">project_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="nanhuId != null  and nanhuId != ''  ">#{nanhuId},</if>
+			<if test="projectId != null  ">#{projectId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHjNanhuId" parameterType="HjNanhuId">
+        update hj_nanhu_id
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="nanhuId != null  and nanhuId != ''  ">nanhu_id = #{nanhuId},</if>
+            <if test="projectId != null  ">project_id = #{projectId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHjNanhuIdById" parameterType="Integer">
+        delete from hj_nanhu_id where id = #{id}
+    </delete>
+	
+    <delete id="deleteHjNanhuIdByIds" parameterType="String">
+        delete from hj_nanhu_id where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
