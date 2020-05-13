@@ -42,14 +42,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.hujiang.project.zhgd.hjDeeppit.domain.*;
-import com.hujiang.project.zhgd.hjDeeppit.service.*;
-import com.hujiang.project.zhgd.hjDeeppit.task.ElectricityDeeppitTask;
-import com.hujiang.project.zhgd.hjghformwork.domain.HighformworkAlarmData;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -210,15 +202,20 @@ public class HjDeeppitApi extends BaseController {
      */
     @PostMapping(value = "getParmeterAvg")
     public AjaxResult getFactorDataInfo(@RequestParam(value = "displayId") Integer displayId,
-                                        @RequestParam(value = "factorId") Integer factorId) {
+                                        @RequestParam(value = "factorId") Integer factorId,
+                                        @RequestParam(value = "types") Integer types) {
         SbAvg avg = new SbAvg();
         Map<String, String> map = new HashMap<>();
         String avgR;
         String maxR;
         String minR;
         avg.setSubside(displayId.toString());
-        avg.setSubside("water_level");
         avg.setFactorId(factorId);
+        if(types == 1){
+            avg.setSubside("water_level");
+        }else if(types == 2){
+            avg.setSubside("factor_force");
+        }
         avgR = hjDeeppitDataService.selectParmeterAvg(avg);
         minR = hjDeeppitDataService.selectParmeterMax(avg);
         maxR = hjDeeppitDataService.selectParmeterMin(avg);
@@ -227,40 +224,6 @@ public class HjDeeppitApi extends BaseController {
         map.put("max", maxR);
 
 
-
-//        switch (displayId){
-//            case 126:
-//                avg.setSubside(displayId.toString());
-//                avg.setSubside("subside");
-//                avg.setFactorId(factorId);
-//                avgR = hjDeeppitDataService.selectParmeterAvg(avg);
-//                avgS = avgR.substring(0,avgR.indexOf(".")+3);
-//                maxR = hjDeeppitDataService.selectParmeterMax(avg);
-//                maxS = maxR.substring(0,maxR.indexOf(".")+3);
-//                minR = hjDeeppitDataService.selectParmeterMin(avg);
-//                minS = minR.substring(0,minR.indexOf(".")+3);
-//                map.put("avg",avgR);
-//                map.put("min",minR);
-//                map.put("max",maxR);
-//                break;
-//            case 33:
-//                avg.setSubside(displayId.toString());
-//                avg.setSubside("water_level");
-//                avg.setFactorId(factorId);
-//                avgR = hjDeeppitDataService.selectParmeterAvg(avg);
-//                //avgS = avgR.substring(0,avgR.indexOf(".")+3);
-//                maxR = hjDeeppitDataService.selectParmeterMax(avg);
-//                //maxS = maxR.substring(0,maxR.indexOf(".")+3);
-//                minR = hjDeeppitDataService.selectParmeterMin(avg);
-//                //minS = minR.substring(0,minR.indexOf(".")+3);
-//                map.put("avg",avgR);
-//                map.put("min",minR);
-//                map.put("max",maxR);
-//                break;
-//
-//            default:
-//                map.put("msg","没有这个检测类型");
-//        }
         return AjaxResult.success(map);
     }
 
@@ -347,278 +310,27 @@ public class HjDeeppitApi extends BaseController {
      */
     @PostMapping(value = "selectSpecial")
     public List selectSpecial(@RequestParam(value = "factorId") Integer factorId,
-                              @RequestParam(value = "param") String param,
-                              @RequestParam(value = "date") String date) {
+                              @RequestParam(value = "date") String date,
+                              @RequestParam(value = "types") String types) {
         //查询书当天所有数据
-        List<HjDeeppitData> list = hjDeeppitDataService.selectToDay(factorId, param, date);
-        logger.info("list=", list);
-        return retuenObj(list);
-    }
+        List<HjDeeppitData> deeppitDataList = hjDeeppitDataService.selectToDay(factorId, date, types);
 
-    private List<Object> retuenObj(List<HjDeeppitData> list){
-        double sum1 = 0;double sum2 = 0;double sum3 = 0;double sum4 = 0;double sum5 = 0;double sum6 = 0;double sum7 = 0;double sum8 = 0;double sum9 = 0;double sum10 = 0;double sum11 = 0;double sum12 = 0;
-        double sum13 = 0;double sum14 = 0;double sum15 = 0;double sum16 = 0;double sum17 = 0;double sum18 = 0;double sum19 = 0;double sum20 = 0;double sum21 = 0;double sum22 = 0;double sum23 = 0;double sum24 = 0;
-//        double sum25 = 0;double sum26 = 0;double sum27 = 0;double sum28 = 0;double sum29 = 0;double sum30 = 0;double sum31 = 0;double sum32 = 0;double sum33 = 0;double sum34 = 0;double sum35 = 0;double sum36 = 0;
-//        double sum37 = 0;double sum38 = 0;double sum39 = 0;double sum40 = 0;double sum41 = 0;double sum42 = 0;double sum43 = 0;double sum44 = 0;double sum45 = 0;double sum46 = 0;double sum47 = 0;double sum48 = 0;
-        int index1 = 0;int index2 = 0;int index3 = 0;int index4 = 0;int index5 = 0;int index6 = 0;int index7 = 0;int index8 = 0;int index9 = 0;int index10 = 0;int index11 = 0;int index12 = 0;
-        int index13 = 0;int index14 = 0;int index15 = 0;int index16 = 0;int index17 = 0;int index18 = 0;int index19 = 0;int index20 = 0;int index21 = 0;int index22 = 0;int index23 = 0;int index24 = 0;
-//        int index25 = 0;int index26 = 0;int index27 = 0;int index28 = 0;int index29 = 0;int index30 = 0;int index31 = 0;int index32 = 0;int index33 = 0;int index34 = 0;int index35 = 0;int index36 = 0;
-//        int index37 = 0;int index38 = 0;int index39 = 0;int index40 = 0;int index41 = 0;int index42 = 0;int index43 = 0;int index44 = 0;int index45 = 0;int index46 = 0;int index47 = 0;int index48 = 0;
-        for(HjDeeppitData hjDeeppitData :list){
-            if(hjDeeppitData.getWaterLevel() != null){
-                //判断在哪一个区间
-                int index = DateUtils.index(hjDeeppitData.getCreation());
-                switch(index){
-                    case 0 :
-                        index1++;
-                        sum1 = sum1 + Double.valueOf(hjDeeppitData.getWaterLevel());
-                        break;
-                    case 1 :
-                        index2++;
-                        sum2 = sum2 + Double.valueOf(hjDeeppitData.getWaterLevel());
-                        break;
-                    case 2 :
-                        index3++;
-                        sum3 = sum3 + Double.valueOf(hjDeeppitData.getWaterLevel());
-                        break;
-                    case 3 :
-                        index4++;
-                        sum4 = sum4 + Double.valueOf(hjDeeppitData.getWaterLevel());
-                        break;
-                    case 4 :
-                        index5++;
-                        sum5 = sum5 + Double.valueOf(hjDeeppitData.getWaterLevel());
-                        break;
-                    case 5 :
-                        index6++;
-                        sum6 = sum6 + Double.valueOf(hjDeeppitData.getWaterLevel());
-                        break;
-                    case 6 :
-                        index7++;
-                        sum7 = sum7 + Double.valueOf(hjDeeppitData.getWaterLevel());
-                        break;
-                    case 7 :
-                        index8++;
-                        sum8 = sum8 + Double.valueOf(hjDeeppitData.getWaterLevel());
-                        break;
-                    case 8 :
-                        index9++;
-                        sum9 = sum9 + Double.valueOf(hjDeeppitData.getWaterLevel());
-                        break;
-                    case 9 :
-                        index10++;
-                        sum10 = sum10 + Double.valueOf(hjDeeppitData.getWaterLevel());
-                        break;
-                    case 10 :
-                        index11++;
-                        sum11 = sum11 + Double.valueOf(hjDeeppitData.getWaterLevel());
-                        break;
-                    case 11 :
-                        index12++;
-                        sum12 = sum12 + Double.valueOf(hjDeeppitData.getWaterLevel());
-                        break;
-                    case 12 :
-                        index13++;
-                        sum13 = sum13 + Double.valueOf(hjDeeppitData.getWaterLevel());
-                        break;
-                    case 13 :
-                        index14++;
-                        sum14 = sum14 + Double.valueOf(hjDeeppitData.getWaterLevel());
-                        break;
-                    case 14 :
-                        index15++;
-                        sum15 = sum15 + Double.valueOf(hjDeeppitData.getWaterLevel());
-                        break;
-                    case 15 :
-                        index16++;
-                        sum16 = sum16 + Double.valueOf(hjDeeppitData.getWaterLevel());
-                        break;
-                    case 16 :
-                        index17++;
-                        sum17 = sum17 + Double.valueOf(hjDeeppitData.getWaterLevel());
-                        break;
-                    case 17 :
-                        index18++;
-                        sum18 = sum18 + Double.valueOf(hjDeeppitData.getWaterLevel());
-                        break;
-                    case 18 :
-                        index19++;
-                        sum19 = sum19 + Double.valueOf(hjDeeppitData.getWaterLevel());
-                        break;
-                    case 19 :
-                        index20++;
-                        sum20 = sum20 + Double.valueOf(hjDeeppitData.getWaterLevel());
-                        break;
-                    case 20 :
-                        index21++;
-                        sum21 = sum21 + Double.valueOf(hjDeeppitData.getWaterLevel());
-                        break;
-                    case 21 :
-                        index22++;
-                        sum22 = sum22 + Double.valueOf(hjDeeppitData.getWaterLevel());
-                        break;
-                    case 22 :
-                        index23++;
-                        sum23 = sum23 + Double.valueOf(hjDeeppitData.getWaterLevel());
-                        break;
-                    case 23 :
-                        index24++;
-                        sum24 = sum24 + Double.valueOf(hjDeeppitData.getWaterLevel());
-                        break;
-//                    case 24 :
-//                        index25++;
-//                        sum25 = sum25 + Double.valueOf(hjDeeppitData.getWaterLevel());
-//                        break;
-//                    case 25 :
-//                        index26++;
-//                        sum26 = sum26 + Double.valueOf(hjDeeppitData.getWaterLevel());
-//                        break;
-//                    case 26 :
-//                        index27++;
-//                        sum27 = sum27 + Double.valueOf(hjDeeppitData.getWaterLevel());
-//                        break;
-//                    case 27 :
-//                        index28++;
-//                        sum28 = sum28 + Double.valueOf(hjDeeppitData.getWaterLevel());
-//                        break;
-//                    case 28 :
-//                        index29++;
-//                        sum29 = sum29 + Double.valueOf(hjDeeppitData.getWaterLevel());
-//                        break;
-//                    case 29 :
-//                        index30++;
-//                        sum30 = sum30 + Double.valueOf(hjDeeppitData.getWaterLevel());
-//                        break;
-//                    case 30 :
-//                        index31++;
-//                        sum31 = sum31 + Double.valueOf(hjDeeppitData.getWaterLevel());
-//                        break;
-//                    case 31 :
-//                        index32++;
-//                        sum32 = sum32 + Double.valueOf(hjDeeppitData.getWaterLevel());
-//                        break;
-//                    case 32 :
-//                        index33++;
-//                        sum33 = sum33 + Double.valueOf(hjDeeppitData.getWaterLevel());
-//                        break;
-//                    case 33 :
-//                        index34++;
-//                        sum34 = sum34 + Double.valueOf(hjDeeppitData.getWaterLevel());
-//                        break;
-//                    case 34 :
-//                        index35++;
-//                        sum35 = sum35 + Double.valueOf(hjDeeppitData.getWaterLevel());
-//                        break;
-//                    case 35 :
-//                        index36++;
-//                        sum36 = sum36 + Double.valueOf(hjDeeppitData.getWaterLevel());
-//                        break;
-//                    case 36 :
-//                        index37++;
-//                        sum37 = sum37 + Double.valueOf(hjDeeppitData.getWaterLevel());
-//                        break;
-//                    case 37 :
-//                        index38++;
-//                        sum38 = sum38 + Double.valueOf(hjDeeppitData.getWaterLevel());
-//                        break;
-//                    case 38 :
-//                        index39++;
-//                        sum39 = sum39 + Double.valueOf(hjDeeppitData.getWaterLevel());
-//                        break;
-//                    case 39 :
-//                        index40++;
-//                        sum40 = sum40 + Double.valueOf(hjDeeppitData.getWaterLevel());
-//                        break;
-//                    case 40 :
-//                        index41++;
-//                        sum41 = sum41 + Double.valueOf(hjDeeppitData.getWaterLevel());
-//                        break;
-//                    case 41 :
-//                        index42++;
-//                        sum42 = sum42 + Double.valueOf(hjDeeppitData.getWaterLevel());
-//                        break;
-//                    case 42 :
-//                        index43++;
-//                        sum43 = sum43 + Double.valueOf(hjDeeppitData.getWaterLevel());
-//                        break;
-//                    case 43 :
-//                        index44++;
-//                        sum44 = sum44 + Double.valueOf(hjDeeppitData.getWaterLevel());
-//                        break;
-//                    case 44 :
-//                        index45++;
-//                        sum45 = sum45 + Double.valueOf(hjDeeppitData.getWaterLevel());
-//                        break;
-//                    case 45 :
-//                        index46++;
-//                        sum46 = sum46 + Double.valueOf(hjDeeppitData.getWaterLevel());
-//                        break;
-//                    case 46 :
-//                        index47++;
-//                        sum47 = sum47 + Double.valueOf(hjDeeppitData.getWaterLevel());
-//                        break;
-//                    case 47 :
-//                        index48++;
-//                        sum48 = sum48 + Double.valueOf(hjDeeppitData.getWaterLevel());
-//                        break;
-                    default :
-
-                }
-
+        if("1".equals(types)){
+            List list = new ArrayList();
+            for(HjDeeppitData hjDeeppitData : deeppitDataList){
+                list.add(hjDeeppitData.getWaterLevel());
             }
+            return list;
         }
-        List<Object> returnList = new ArrayList<>();
-        returnList.add(index1 != 0 ? sum1/index1 : null);
-        returnList.add(index2 != 0 ? sum2/index2 : null);
-        returnList.add(index3 != 0 ? sum3/index3 : null);
-        returnList.add(index4 != 0 ? sum4/index4 : null);
-        returnList.add(index5 != 0 ? sum5/index5 : null);
-        returnList.add(index6 != 0 ? sum6/index6 : null);
-        returnList.add(index7 != 0 ? sum7/index7 : null);
-        returnList.add(index8 != 0 ? sum8/index8 : null);
-        returnList.add(index9 != 0 ? sum9/index9 : null);
-        returnList.add(index10 != 0 ? sum10/index10 : null);
-        returnList.add(index11 != 0 ? sum11/index11 : null);
-        returnList.add(index12 != 0 ? sum12/index12 : null);
-        returnList.add(index13 != 0 ? sum13/index13 : null);
-        returnList.add(index14 != 0 ? sum14/index14 : null);
-        returnList.add(index15 != 0 ? sum15/index15 : null);
-        returnList.add(index16 != 0 ? sum16/index16 : null);
-        returnList.add(index17 != 0 ? sum17/index17 : null);
-        returnList.add(index18 != 0 ? sum18/index18 : null);
-        returnList.add(index19 != 0 ? sum19/index19 : null);
-        returnList.add(index20 != 0 ? sum20/index20 : null);
-        returnList.add(index21 != 0 ? sum21/index21 : null);
-        returnList.add(index22 != 0 ? sum22/index22 : null);
-        returnList.add(index23 != 0 ? sum23/index23 : null);
-        returnList.add(index24 != 0 ? sum24/index24 : null);
-//        returnList.add(index25 != 0 ? sum25/index25 : null);
-//        returnList.add(index26 != 0 ? sum26/index26 : null);
-//        returnList.add(index27 != 0 ? sum27/index27 : null);
-//        returnList.add(index28 != 0 ? sum28/index28 : null);
-//        returnList.add(index29 != 0 ? sum29/index29 : null);
-//        returnList.add(index30 != 0 ? sum30/index30 : null);
-//        returnList.add(index31 != 0 ? sum31/index31 : null);
-//        returnList.add(index32 != 0 ? sum32/index32 : null);
-//        returnList.add(index33 != 0 ? sum33/index33 : null);
-//        returnList.add(index34 != 0 ? sum34/index34 : null);
-//        returnList.add(index35 != 0 ? sum35/index35 : null);
-//        returnList.add(index36 != 0 ? sum36/index36 : null);
-//        returnList.add(index37 != 0 ? sum37/index37 : null);
-//        returnList.add(index38 != 0 ? sum38/index38 : null);
-//        returnList.add(index39 != 0 ? sum39/index39 : null);
-//        returnList.add(index40 != 0 ? sum40/index40 : null);
-//        returnList.add(index41 != 0 ? sum41/index41 : null);
-//        returnList.add(index42 != 0 ? sum42/index42 : null);
-//        returnList.add(index43 != 0 ? sum43/index43 : null);
-//        returnList.add(index44 != 0 ? sum44/index44 : null);
-//        returnList.add(index45 != 0 ? sum45/index45 : null);
-//        returnList.add(index46 != 0 ? sum46/index46 : null);
-//        returnList.add(index47 != 0 ? sum47/index47 : null);
-//        returnList.add(index48 != 0 ? sum48/index48 : null);
 
-
-        return returnList;
+        if("2".equals(types)){
+            List list = new ArrayList();
+            for(HjDeeppitData hjDeeppitData : deeppitDataList){
+                list.add(hjDeeppitData.getFactorForce());
+            }
+            return list;
+        }
+        return null;
     }
 
 
@@ -667,59 +379,6 @@ public class HjDeeppitApi extends BaseController {
             }
             array.add(array1);
         }
-//        switch (displayId){
-//            //沉降
-//            case 126 :
-//                for (HjDeeppitData data : hjDeeppitDataList){
-//                    array1 = new JSONArray();
-//                    array1.add(data.getCreation());
-//                    array1.add(data.getSubside());
-//                    array.add(array1);
-//                }
-//                break;
-//            //地下水位
-//            case 33 :
-//                for (HjDeeppitData data : hjDeeppitDataList){
-//                    array1 = new JSONArray();
-//                    array1.add(data.getCreation());
-//                    array1.add(data.getWaterLevel());
-//                    array.add(array1);
-//                }
-//                break;
-//            //深层水平位移
-//            case 21 :
-//                for (HjDeeppitData data : hjDeeppitDataList){
-//                    array1 = new JSONArray();
-//                    array1.add(data.getCreation());
-//                    array1.add(data.getLevelX());
-//                    array1.add(data.getLevelY());
-//                    array.add(array1);
-//                }
-//                break;
-//            //应变原始数据
-//            case 22 :
-//                for (HjDeeppitData data : hjDeeppitDataList){
-//                    array1 = new JSONArray();
-//                    array1.add(data.getCreation());
-//                    array1.add(data.getStrainFrequency());
-//                    array1.add(data.getStrainTemperature());
-//                    array.add(array1);
-//                }
-//                break;
-//            //建筑物倾斜
-//            case 127 :
-//                for (HjDeeppitData data : hjDeeppitDataList){
-//                    array1 = new JSONArray();
-//                    array1.add(data.getCreation());
-//                    array1.add(data.getTiltX());
-//                    array1.add(data.getTiltY());
-//                    array.add(array1);
-//                }
-//                break;
-//            default:
-//                array.add("参数错误");
-//        }
-
         return array;
     }
 

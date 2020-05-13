@@ -34,7 +34,7 @@ import com.hujiang.project.zhgd.sbProjectDustEmission.task.JPushSMS;
 import com.hujiang.project.zhgd.utils.Constants;
 import com.hujiang.project.zhgd.utils.DeeppitTools;
 import com.hujiang.project.zhgd.utils.EncryptionUtil;
-import com.hujiang.project.zhgd.utils.Util;
+import com.hujiang.project.zhgd.utils.RestTemplateHttpUitls;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -53,13 +53,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -102,47 +99,47 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
     private IHighformworkDataService highformworkDataService;
 
 
-    @Scheduled(cron = "0 0 12 ? * WED")
-    public void task1() {
-        super.exec(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    tokens();
-                } catch (Exception e) {
-                    // logger
-                }
-            }
-        });
-    }
+//    @Scheduled(cron = "0 0 12 ? * WED")
+//    public void task1() {
+//        super.exec(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    tokens();
+//                } catch (Exception e) {
+//                    // logger
+//                }
+//            }
+//        });
+//    }
 
-    @Scheduled(cron = "0 */2 * * * ?")
-    public void task2() {
-        super.exec(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    getStationAlarmDataAll();
-                } catch (Exception e) {
-                    // logger
-                }
-            }
-        });
-    }
+//    @Scheduled(cron = "0 */2 * * * ?")
+//    public void task2() {
+//        super.exec(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    getStationAlarmDataAll();
+//                } catch (Exception e) {
+//                    // logger
+//                }
+//            }
+//        });
+//    }
 
-    @Scheduled(cron = "0 */5 * * * ?")
-    public void task3() {
-        super.exec(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    insertStationDate();
-                } catch (Exception e) {
-                    // logger
-                }
-            }
-        });
-    }
+//    @Scheduled(cron = "0 */5 * * * ?")
+//    public void task3() {
+//        super.exec(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    insertStationDate();
+//                } catch (Exception e) {
+//                    // logger
+//                }
+//            }
+//        });
+//    }
 
     /**
      * 更新所有token
@@ -153,7 +150,7 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
         List<SbProjectDeeppitStructures> pdsl = sbProjectDeeppitStructuresService.selectSbProjectDeeppitStructuresList(null);
         for (SbProjectDeeppitStructures p : pdsl) {
             if (p.getAppD() != null || p.getAppSecret() != null) {
-                token(p.getAppD(), p.getAppSecret(), p.getProjectId());
+//                token(p.getAppD(), p.getAppSecret(), p.getProjectId());
             }
         }
         return AjaxResult.success();
@@ -185,47 +182,75 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
      * @param
      * @return
      */
+//    @PostMapping("token")
+//    public AjaxResult token(@RequestParam(value = "appId") String appId,
+//                            @RequestParam(value = "appSecret") String appSecret,
+//                            @RequestParam(value = "projectId") Integer projectId) {
+//        String authorization = Util.EncodeBase64(appId + ":" + appSecret);
+//
+//        // 创建POST请求对象
+//        HttpPost httpPost = new HttpPost(Constants.LIFTING_PIT + "/oauth2/token");
+//
+//
+//        /*
+//         * 添加请求参数
+//         */
+//        // 创建请求参数
+//        List<NameValuePair> list = new LinkedList<>();
+//        BasicNameValuePair param = new BasicNameValuePair("grant_type", "client_credentials");
+//        list.add(param);
+//        // 使用URL实体转换工具
+//        UrlEncodedFormEntity entityParam = null;
+//        try {
+//            entityParam = new UrlEncodedFormEntity(list, "UTF-8");
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
+//        /*
+//         * 添加请求头信息
+//         */
+//        httpPost.addHeader("Authorization", "Basic " + authorization);
+//        httpPost.setEntity(entityParam);
+//        String s = DeeppitTools.postParams(httpPost);
+//        System.out.println(s);
+//
+//        //将token存入数据库
+//        JSONObject jsonObject = JSONObject.parseObject(result);
+//        SbDeeppitToken st = new SbDeeppitToken();
+//        st.setToken(jsonObject.getString("token"));
+//        st.setExpiration(jsonObject.getString("expires_in"));
+//        st.setAppId(projectId.toString());
+//
+//        SbDeeppitToken dk = new SbDeeppitToken();
+//        dk.setAppId(projectId.toString());
+//        List<SbDeeppitToken> ldk = sbDeeppitTokenService.selectSbDeeppitTokenList(dk);
+//
+//        if (ldk.size() > 0) {
+//            for (SbDeeppitToken t : ldk) {
+//                t.setToken(jsonObject.getString("token"));
+//                sbDeeppitTokenService.updateSbDeeppitToken(t);
+//            }
+//        } else {
+//            sbDeeppitTokenService.insertSbDeeppitToken(st);
+//        }
+//        return AjaxResult.success();
+//    }
+
     @PostMapping("token")
-    public AjaxResult token(@RequestParam(value = "appId") String appId,
-                            @RequestParam(value = "appSecret") String appSecret,
-                            @RequestParam(value = "projectId") Integer projectId) {
-        String authorization = Util.EncodeBase64(appId + ":" + appSecret);
+    public AjaxResult token() {
 
-        // 创建POST请求对象
-        HttpPost httpPost = new HttpPost(Constants.LIFTING_PIT + "/oauth2/token");
-
-
-        /*
-         * 添加请求参数
-         */
-        // 创建请求参数
-        List<NameValuePair> list = new LinkedList<>();
-        BasicNameValuePair param = new BasicNameValuePair("grant_type", "client_credentials");
-        list.add(param);
-        // 使用URL实体转换工具
-        UrlEncodedFormEntity entityParam = null;
-        try {
-            entityParam = new UrlEncodedFormEntity(list, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        /*
-         * 添加请求头信息
-         */
-        httpPost.addHeader("Authorization", "Basic " + authorization);
-        httpPost.setEntity(entityParam);
-        String s = DeeppitTools.postParams(httpPost);
-        System.out.println(s);
-
+        String result = RestTemplateHttpUitls.postForJiKeng(Constants.LIFTING_PIT + "/oauth2/token", "基坑对接获取Token");
         //将token存入数据库
-        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(s);
+        JSONObject jsonObject = JSONObject.parseObject(result);
+        jsonObject.getString("token");
+
+
+
         SbDeeppitToken st = new SbDeeppitToken();
         st.setToken(jsonObject.getString("token"));
         st.setExpiration(jsonObject.getString("expires_in"));
-        st.setAppId(projectId.toString());
 
         SbDeeppitToken dk = new SbDeeppitToken();
-        dk.setAppId(projectId.toString());
         List<SbDeeppitToken> ldk = sbDeeppitTokenService.selectSbDeeppitTokenList(dk);
 
         if (ldk.size() > 0) {
@@ -574,7 +599,7 @@ public class ElectricityDeeppitTask extends AutoTaskBase {
             JSONObject fData;
             HjDeeppitData hjDeeppitData;
 
-            List<HjDeeppitData> hjDeeppitDataList = hjDeeppitDataService.selectHjDeeppitDataByTime();
+            List<HjDeeppitData> hjDeeppitDataList = hjDeeppitDataService.selectHjDeeppitDataByTime("1");
             for (int i = 0; i < fList.size(); i++) {
                 station = fList.getJSONObject(i);
                 fDataList = station.getJSONArray("data");

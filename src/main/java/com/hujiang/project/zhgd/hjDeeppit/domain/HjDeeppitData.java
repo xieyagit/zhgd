@@ -50,6 +50,16 @@ public class HjDeeppitData {
     private String endTime;
 	/**轴力*/
 	private String factorForce;
+    /**类型 1 水位  2轴力*/
+	private String types;
+
+    public String getTypes() {
+        return types;
+    }
+
+    public void setTypes(String types) {
+        this.types = types;
+    }
 
     public void setId(Integer id) {
         this.id = id;
