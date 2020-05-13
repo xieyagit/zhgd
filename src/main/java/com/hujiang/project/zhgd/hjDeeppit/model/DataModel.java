@@ -10,7 +10,6 @@ import java.io.Serializable;
  *@Author xieya
  *@Date 2020/5/10  16:02
  */
-@Data
 public class DataModel implements Serializable {
     /**水位*/
     private String waterLevel;
@@ -18,4 +17,28 @@ public class DataModel implements Serializable {
     private String force;
     /**时间*/
     private String time;
+
+    public String getWaterLevel() {
+        return waterLevel;
+    }
+
+    public void setWaterLevel(String waterLevel) {
+        this.waterLevel = waterLevel;
+    }
+
+    public String getForce() {
+        return force;
+    }
+
+    public void setForce(String force) {
+        this.force = force;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
 }
