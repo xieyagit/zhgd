@@ -100,7 +100,7 @@ public class YunMouApi {
            JSONArray params3=new JSONArray();
            JSONObject params4=new JSONObject();
            params4.put("index",1);
-           params4.put("faceLibName","华远电气");
+           params4.put("faceLibName","师生库");
            params4.put("customFaceLibId","huayuan");
            params4.put("thresholdValue",80);
            params3.add(params4);

@@ -38,6 +38,15 @@ public class LyAttendanceRecordPersonnel
 	private String companyName;//公司名字
 	private String type;//在职人员或访客
 	private String empNumber;
+	private String typeName;
+
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
+	}
 
 	public String getEmpNumber() {
 		return empNumber;

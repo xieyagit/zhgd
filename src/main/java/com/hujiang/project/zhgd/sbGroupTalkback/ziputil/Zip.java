@@ -6,6 +6,7 @@ import com.aliyun.oss.model.Bucket;
 import com.aliyun.oss.model.OSSObject;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectResult;
+import com.hujiang.project.zhgd.utils.DESUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,9 +26,9 @@ public class Zip {
     //阿里云API的内或外网域名
     private static final String endpoint = "http://oss-cn-shenzhen.aliyuncs.com";
     //阿里云API的密钥Access Key ID
-    private static final String accessKeyId = "LTAIPTT5twHBc241";
+    private static final String accessKeyId = "xIqLQSxkCgFfcSfws7cVO+nFqfcfK7Mx";
     //阿里云API的密钥Access Key Secret
-    private static final String accessKeySecret = "HR1G0nST28lpO6Ke89Ys0oYZQA91n2";
+    private static final String accessKeySecret = "4nzYQGBQQjCikUCenmAzl3MbVC33DO+biXdU1NXKVu0=";
     //阿里云API的bucket名称
     private static final String bucketName = "hujiang";
     //阿里云API的bucket路径
@@ -51,7 +52,7 @@ public class Zip {
      * @return ossClient
      */
     public static  OSSClient getOSSClient(){
-        return new OSSClient(endpoint,accessKeyId, accessKeySecret);
+        return new OSSClient(endpoint, DESUtil.desEncrypt(accessKeyId,"88888888","88888888"), DESUtil.desEncrypt(accessKeySecret,"88888888","88888888"));
     }
 
     /**
@@ -244,7 +245,7 @@ public class Zip {
 
             InputStream fis = (InputStream) file.getInputStream();
 
-            OSSClient client = new OSSClient(endpoint,accessKeyId,accessKeySecret);
+            OSSClient client = new OSSClient(endpoint,DESUtil.desEncrypt(accessKeyId,"88888888","88888888"), DESUtil.desEncrypt(accessKeySecret,"88888888","88888888"));
 
             client.putObject(bucketName,folder+filename,fis);
 

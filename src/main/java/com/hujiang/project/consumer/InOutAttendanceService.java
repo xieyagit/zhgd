@@ -251,6 +251,7 @@ public class InOutAttendanceService {
             params.add(new BasicNameValuePair("certificateNumber",hw.getIdCode()));
             params.add(new BasicNameValuePair("base64FaceImageFile","data:image/jpg;base64,"+ BASE64DecodedMultipartFile.ImageToBase64ByOnline(hw.getFaceUrl()).replaceAll("\r|\n", "")));
             params.add(new BasicNameValuePair("extension.userType","2"));
+            params.add(new BasicNameValuePair("extension.userVerifyMode","Face"));
             String s=   ysUtil.httpPostWithJSON(Constants.OPEN_YS+"person/add",params);
             JSONObject result=JSONObject.parseObject(s);
             //添加成功则保存进萤石用户表，否则添加异常记录

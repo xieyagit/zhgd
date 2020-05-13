@@ -66,7 +66,7 @@ public class LyRecordApi extends BaseController {
         }
         List<LyRecordExport> list=lyAttendanceRecordService.selectRecordExport(lyRecordExport);
         //excel标题
-        String[] title = {"工号", "姓名", "日期", "签到时间", "签退时间","体温","部门"};
+        String[] title = {"教育ID", "姓名", "日期", "签到时间", "签退时间","体温","年级班级/部门","人员类型"};
 
         //excel文件名
         String fileName = "记录" + System.currentTimeMillis() + ".xls";
@@ -84,9 +84,9 @@ public class LyRecordApi extends BaseController {
             content[i][2] = time;
             content[i][3] = StringUtils.isBlank(obj.getMinTime())?"":sdf2.format(sdf3.parse(obj.getMinTime()));
             content[i][4] =StringUtils.isBlank(obj.getMaxTime())?"":sdf2.format(sdf3.parse(obj.getMaxTime()));
-            content[i][5] =obj.getTemperature();
-            content[i][6]=obj.getSubordinate();
-
+            content[i][5] =StringUtils.isBlank(obj.getTemperature())?"":obj.getTemperature();
+            content[i][6]=obj.getCompanyName();
+            content[i][7]=obj.getTypeName();
         }
 
         //创建HSSFWorkbook

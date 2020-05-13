@@ -171,7 +171,8 @@ public class consumerTask extends AutoTaskBase {
                     String idCode=candidate.getString("employeeNo");
                     LyPersonnel lp=new LyPersonnel();
                     lp.setPid(pid);
-                    lp.setIdCode(idCode);
+//                    lp.setIdCode(idCode);
+                    lp.setEmpNumber(idCode);
                     List<LyPersonnel> lpList=lyPersonnelService.selectLyPersonnelList(lp);
                     if(lpList.size()>0){
                         LyAttendanceRecord lr=new LyAttendanceRecord();

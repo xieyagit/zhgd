@@ -657,6 +657,7 @@ public class ExcelUtil<T>
         sheet.setColumnWidth(4, (int)35.7*150);
         sheet.setColumnWidth(5, (int)35.7*150);
         sheet.setColumnWidth(6, (int)35.7*150);
+        sheet.setColumnWidth(7, (int)35.7*150);
         // 第四步，创建单元格，并设置值表头 设置表头居中
         HSSFCellStyle style = wb.createCellStyle();
 

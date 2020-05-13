@@ -2,6 +2,7 @@ package com.hujiang.project.ys.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hujiang.common.utils.StringUtils;
 import com.hujiang.project.zhgd.hjSynchronizationInformation.domain.HjSynchronizationInformation;
 import com.hujiang.project.zhgd.hjSynchronizationInformation.service.IHjSynchronizationInformationService;
 import com.hujiang.project.zhgd.utils.Constants;
@@ -73,6 +74,17 @@ public  class YsUtil {
         List<HjSynchronizationInformation> hsList=hjSynchronizationInformationService.selectHjSynchronizationInformationList(hs2);
         if(hsList.size()>0) {
             HjSynchronizationInformation   hs = hsList.get(0);
+            if(StringUtils.isBlank(hs.getProjectNumber())){
+                List<NameValuePair> params = new ArrayList<NameValuePair>();
+                params.add(new BasicNameValuePair("appKey", hs.getApiKey()));
+                params.add(new BasicNameValuePair("appSecret", hs.getApiSecret()));
+                String result = httpPostWithJSON("https://open.ys7.com/api/lapp/token/get", params);
+                JSONObject data = JSONObject.parseObject(result).getJSONObject("data");
+                hs.setProjectNumber(data.getString("expireTime"));
+                hs.setClientSerial(data.getString("accessToken"));
+                hjSynchronizationInformationService.updateHjSynchronizationInformation(hs);
+                return data.getString("accessToken");
+            }
             Long time = new Date().getTime();
             Long expireTime = Long.valueOf(hs.getProjectNumber());
             //是否过期
