@@ -354,36 +354,14 @@ public class HjDeeppitApi extends BaseController {
         for (HjDeeppitData data : hjDeeppitDataList) {
             array1 = new JSONArray();
             array1.add(data.getCreation());
-//            if (data.getSubside() != null && data.getSubside() != "") {
-//                array1.add(data.getSubside());
-//            }
             if (data.getWaterLevel() != null && data.getWaterLevel() != "") {
                 array1.add(data.getWaterLevel());
             }
             if (data.getFactorForce() != null && data.getFactorForce() != "") {
                 array1.add(data.getFactorForce());
             }
-//            if (data.getLevelX() != null && data.getLevelX() != "") {
-//                array1.add(data.getLevelX());
-//            }
-//            if (data.getLevelY() != null && data.getLevelY() != "") {
-//                array1.add(data.getLevelY());
-//            }
-//            if (data.getStrainFrequency() != null && data.getStrainFrequency() != "") {
-//                array1.add(data.getStrainFrequency());
-//            }
-//            if (data.getStrainTemperature() != null && data.getStrainTemperature() != "") {
-//                array1.add(data.getStrainTemperature());
-//            }
-//            if (data.getTiltX() != null && data.getTiltX() != "") {
-//                array1.add(data.getTiltX());
-//            }
-//            if (data.getTiltY() != null && data.getTiltY() != "") {
-//                array1.add(data.getTiltY());
-//            }
             array.add(array1);
         }
-//        JSONArray array= JSON.parseArray(JSON.toJSONString(hjDeeppitDataList));
         return array;
     }
 
