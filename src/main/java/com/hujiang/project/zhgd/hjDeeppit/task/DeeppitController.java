@@ -20,6 +20,8 @@ import com.hujiang.project.zhgd.hjDeeppit.service.ISbProjectDeeppitStructuresSer
 import com.hujiang.project.zhgd.utils.Constants;
 import com.hujiang.project.zhgd.utils.RestTemplateHttpUitls;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -39,11 +41,12 @@ import java.util.stream.Collectors;
  *@Author xieya
  *@Date 2020/5/10  12:27
  */
-@Slf4j
 @RestController
 @RequestMapping(value = "/provider/DeeppitJiKeng")
 @Component
 public class DeeppitController {
+
+    private static final Logger logger = LoggerFactory.getLogger(DeeppitController.class);
 
     @Autowired
     private IHjDeeppitDataService hjDeeppitDataService;
@@ -83,7 +86,7 @@ public class DeeppitController {
             token = jsonObject.getString("token");
 //            request.getSession().setAttribute("token", token);
         }
-        log.info("token=" + token);
+        logger.info("token=" + token);
         paramMap.put("token", token);
         String result = RestTemplateHttpUitls.getForJiKeng(Constants.LIFTING_PIT + "/structures?token=" + token, paramMap, "获取所有结构物");
         List<StructuresModel> structuresModelList = JSONObject.parseArray(result, StructuresModel.class);
@@ -91,7 +94,7 @@ public class DeeppitController {
         for (StructuresModel structuresModel : structuresModelList) {
             paramMap.put("display", true);
             String resultFactors = RestTemplateHttpUitls.getForJiKeng(Constants.LIFTING_PIT + "/structures/" + structuresModel.getId() + "/factors?token=" + token, paramMap, "获取结构物下监测因素 ");
-            log.info("resultFactors=" + resultFactors);
+            logger.info("resultFactors=" + resultFactors);
 
             List<FactorsModel> list = new ArrayList<>();
             List<FactorsModel> factorsModelList = JSONObject.parseArray(resultFactors, FactorsModel.class);
@@ -111,7 +114,7 @@ public class DeeppitController {
                 factorParamMap.put("factorId", factorsModel.getId());
                 factorParamMap.put("token", token);
                 String resultStations = RestTemplateHttpUitls.getForJiKeng(Constants.LIFTING_PIT + "/structures/" + structuresModel.getId() + "/stations?factorId=" + factorsModel.getId() + "&token=" + token, factorParamMap, "获取结构物下测点 ");
-                log.info("resultStations=" + resultStations);
+                logger.info("resultStations=" + resultStations);
                 List<FactorModel> factorModelList = JSONObject.parseArray(resultStations, FactorModel.class);
 
                 //插入数据库
@@ -144,14 +147,14 @@ public class DeeppitController {
             //水位入参
             Map waterLeveMap = setParam(token, waterLevelSb.toString(), startTime, endTime);
             String resultStationList = RestTemplateHttpUitls.getForJiKeng(Constants.LIFTING_PIT + "/stations/theme/data?stations=" + waterLevelSb.toString() + "&startTime=" + startTime + "&endTime=" + endTime + "&limit=" + 10000 + "&token=" + token, waterLeveMap, "获取水位数据");
-            log.info("resultStationList=" + resultStationList);
+            logger.info("resultStationList=" + resultStationList);
             //水位数据处理
             dataProcessing(resultStationList, "1");
 
             //轴力入参
             Map forceMap = setParam(token, forceSb.toString(), startTime, endTime);
             String resultStationList1 = RestTemplateHttpUitls.getForJiKeng(Constants.LIFTING_PIT + "/stations/theme/data?stations=" + forceSb.toString() + "&startTime=" + startTime + "&endTime=" + endTime + "&limit=" + 10000 + "&token=" + token, forceMap, "获取轴力数据");
-            log.info("resultStation=" + resultStationList1);
+            logger.info("resultStation=" + resultStationList1);
             //轴力数据处理
             dataProcessing(resultStationList1, "2");
 
