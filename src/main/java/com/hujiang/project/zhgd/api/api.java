@@ -1,5 +1,6 @@
 package com.hujiang.project.zhgd.api;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.utils.StringUtils;
 import com.hujiang.common.utils.poi.ExcelUtil;
@@ -165,7 +166,6 @@ import com.hujiang.project.zhgd.utils.Util;
 import com.hujiang.project.zhgd.zhNode.api.NodeApi;
 import com.hujiang.project.zhgd.zhNode.domain.*;
 import io.swagger.annotations.ApiOperation;
-import net.sf.json.JSONArray;
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -3027,7 +3027,7 @@ public class api {
     }
 
     @PostMapping(value = "/hjDeeppit/getFactorData")
-    public net.sf.json.JSONObject getFactorData(@RequestParam(value = "factorId") Integer factorId,
+    public JSONObject getFactorData(@RequestParam(value = "factorId") Integer factorId,
                                                 @RequestParam(value = "date") String date,
                                                 @RequestParam(value = "endTime") String endTime,
                                                 @RequestParam(value = "pageSize") Integer pageSize,

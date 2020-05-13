@@ -330,13 +330,13 @@ public class LyPersonnelServiceImpl implements ILyPersonnelService
 
 	public void yunmouInsert(LyPersonnel lyPersonnel,String deviceId)throws Exception{
 		LyPersonYunmou lpy=new LyPersonYunmou();
-		lpy.setIdCard(lyPersonnel.getIdCode());
+		lpy.setIdCard(lyPersonnel.getEmpNumber());
 		List<LyPersonYunmou> lpyList=lyPersonYunmouMapper.selectLyPersonYunmouList(lpy);
 		String token=yunMouUtil.getToken();
 		if(lpyList.size()<=0){
 			//没添加就先添加用户
 			JSONObject json=new JSONObject();
-			json.put("employeeNo",lyPersonnel.getIdCode());
+			json.put("employeeNo",lyPersonnel.getEmpNumber());
 			json.put("personName",lyPersonnel.getEmpName());
 			JSONObject json1=new JSONObject();
 			json1.put("faceName",lyPersonnel.getEmpName());
@@ -346,7 +346,7 @@ public class LyPersonnelServiceImpl implements ILyPersonnelService
 			JSONObject s=JSONObject.parseObject(result);
 			if("200".equals(s.getString("code"))) {
 			LyPersonYunmou lpy2=new LyPersonYunmou();
-			lpy2.setIdCard(lyPersonnel.getIdCode());
+			lpy2.setIdCard(lyPersonnel.getEmpNumber());
 			lyPersonYunmouMapper.insertLyPersonYunmou(lpy2);
 			//下发任务
 				xiafa(lyPersonnel,deviceId,token);
@@ -362,7 +362,7 @@ public class LyPersonnelServiceImpl implements ILyPersonnelService
 		json.put("deviceId",deviceId);
 		json.put("customFaceLibId","huayuan");
 		JSONArray list=new JSONArray();
-		list.add(lyPersonnel.getIdCode());
+		list.add(lyPersonnel.getEmpNumber());
 		json.put("employeeNoList",list);
 		System.out.println("下发参数："+json.toJSONString());
 		String result=yunMouUtil.httpPostWithJSONH(Constants.YUNMOU+"/api/v1/community/superBrains/actions/asyncDeliveredFaces",json,token);
@@ -395,7 +395,7 @@ public class LyPersonnelServiceImpl implements ILyPersonnelService
 			if("200".equals(s.getString("code"))){
 				lyDevicePersonnelMapper.deleteLyDevicePersonnelById(ldp2.getId());
 			}
-			String url2="/api/v1/community/superBrains/actions/deleteFaceLibPicture?deviceId="+h.getRemark()+"&customFaceLibId=huayuan&employeeNo="+lyPersonnel.getIdCode();
+			String url2="/api/v1/community/superBrains/actions/deleteFaceLibPicture?deviceId="+h.getRemark()+"&customFaceLibId=huayuan&employeeNo="+lyPersonnel.getEmpNumber();
 			yunMouUtil.httpDeleteWithJSON(Constants.YUNMOU+url2,token);
 		}
 

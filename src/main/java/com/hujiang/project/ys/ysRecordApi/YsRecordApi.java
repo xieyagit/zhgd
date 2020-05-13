@@ -51,9 +51,10 @@ public class YsRecordApi {
 
 
             //json=json.replace("\"","");
+            System.out.println("海康人脸机："+json);
             String publicString= RSAUtil.decryt(json,publicKey,0);
 //        publicString=publicString.replace("\\","");
-            System.out.println(publicString);
+//            System.out.println(publicString);
             Map a=JsonUtils.parse(publicString, HashMap.class);
             Map b = (Map)a.get("eps");
             List alert = (List)b.get("alert");
@@ -74,10 +75,17 @@ public class YsRecordApi {
             List<HjAttendanceDevice> hadList = hjAttendanceDeviceService.selectHjAttendanceDeviceList(had);
             //有此设备才进行操作
             if (hadList.size() > 0) {
-
-                HjAttendanceDevice had2 = hadList.get(0);
-                List<HjSynchronizationInformation> list = this.queryHjSynchronizationInformation(had2.getProjectId());  // 项目密钥
                 String passedTime = body.getString("createTime");
+                HjAttendanceDevice had2 = hadList.get(0);
+                String twoway = had2.getTwoway();
+                String direction = null;
+                if ("0".equals(twoway)) {
+                    direction = had2.getDirection();
+                } else {
+                    direction = getDirection(passedTime);
+                }
+                List<HjSynchronizationInformation> list = this.queryHjSynchronizationInformation(had2.getProjectId());  // 项目密钥
+
                 //考勤时间是30分钟之内的才上传
                 Boolean flag = comparisonDate(passedTime);
                 HjProjectWorkers hw = this.getHjProjectWorkers(body.getInteger("employeeNoString"), had2.getProjectId());
@@ -98,7 +106,7 @@ public class YsRecordApi {
                                 jsonData.put("person_id", hw.getIdCode());
                                 jsonData.put("person_name", hw.getEmpName());
                                 jsonData.put("passed_time", passedTime);
-                                jsonData.put("direction", had2.getDirection());
+                                jsonData.put("direction", direction);
                                 jsonData.put("way", "1");
                                 HjSynchronizationInformation h = list.get(i);
                                 if (h.getPlatformName().equals("HOUS")) {//住建
@@ -157,7 +165,7 @@ public class YsRecordApi {
                 har.setProjectId(had2.getProjectId());
                 har.setEmployeeId(hw.getId());
                 har.setPassedTime(passedTime);
-                har.setDirection(had2.getDirection());
+                har.setDirection(direction);
                 har.setWay(1);
                 har.setSitePhoto(faceUrl);
                 if (flag2) {
@@ -223,5 +231,17 @@ public class YsRecordApi {
             return false;
         }
 
+    }
+    private String getDirection(String time) throws Exception {
+
+        Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time);
+        String str = new SimpleDateFormat("HH").format(date);
+        System.out.println("++++++++++++++++++++" + str);
+        int a = Integer.valueOf(str);
+        if (a < 14) {
+            return "in";
+        } else {
+            return "out";
+        }
     }
 }

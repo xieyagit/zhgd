@@ -1,5 +1,6 @@
 package com.hujiang.project.zhgd.hjghformwork.api;
 
+import com.alibaba.fastjson.JSONArray;
 import com.hujiang.framework.web.controller.BaseController;
 import com.hujiang.framework.web.domain.AjaxResult;
 import com.hujiang.framework.web.page.PageDomain;
@@ -8,8 +9,6 @@ import com.hujiang.project.zhgd.hjDeeppit.domain.*;
 import com.hujiang.project.zhgd.hjDeeppit.service.*;
 import com.hujiang.project.zhgd.hjghformwork.domain.*;
 import com.hujiang.project.zhgd.hjghformwork.service.*;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

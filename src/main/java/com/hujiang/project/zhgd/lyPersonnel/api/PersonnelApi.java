@@ -341,10 +341,13 @@ public class PersonnelApi extends BaseController {
         int totalRowNum = sheet.getLastRowNum();
         System.out.println("总行数："+totalRowNum);
         //要获得属性
-        String studentid;
-        String studentname="";
-        String grade="";
-        String idCard="";
+        String empName="";//姓名
+        String iphone="";//电话
+        String sex="";//性别
+        String idCard="";//身份证
+        String bumen="";//年级班级/部门
+        String empNumber="";//教育ID
+        String typeName="";//人员类型
         LyPersonnel lyPersonnel;
         LyCompany lyCompany;
         //获得所有数据
@@ -358,31 +361,44 @@ public class PersonnelApi extends BaseController {
 //            HSSFRow xssfRow = sheet.getRow(i);
 
             //获得获得第i行第0列的 String类型对象
-            Cell cell = row.getCell((short)0);
+            Cell cell = row.getCell((short)2);
             if(cell==null){
                 continue;
             }
-            studentid = cell.getStringCellValue();
+            empName = cell.getStringCellValue();
 
             //获得一个数字类型的数据
             //studentname = (int) cell.getNumericCellValue();
-            cell = row.getCell((short)1);
-            studentname =cell.getStringCellValue();
-
-            cell = row.getCell((short)2);
-            grade =cell.getStringCellValue();
-
             cell = row.getCell((short)3);
-            idCard =cell.getStringCellValue();
+            if(cell!=null) {
+                iphone = cell.getStringCellValue();
+            }
+            cell = row.getCell((short)4);
+            if(cell!=null) {
+                sex = cell.getStringCellValue();
+            }
+            cell = row.getCell((short)6);
+            if(cell!=null) {
+                idCard = cell.getStringCellValue();
+            }
+            cell = row.getCell((short)10);
+            bumen =cell.getStringCellValue();
+            cell = row.getCell((short)11);
+            empNumber =cell.getStringCellValue();
+            cell = row.getCell((short)12);
+            typeName =cell.getStringCellValue();
             lyPersonnel=new LyPersonnel();
             lyPersonnel.setIdCode(idCard);
-            lyPersonnel.setEmpNumber(grade);
-            lyPersonnel.setEmpName(studentid);
+            lyPersonnel.setEmpNumber(empNumber);
+            lyPersonnel.setEmpName(empName);
             lyPersonnel.setPid(pid);
-            lyPersonnel.setCompanyName(studentname);
+            lyPersonnel.setCompanyName(bumen);
+            lyPersonnel.setEmpPhon(iphone);
+            lyPersonnel.setEmpSex(sex);
+            lyPersonnel.setTypeName(typeName);
             lyCompany=new LyCompany();
             lyCompany.setPid(pid);
-            lyCompany.setCompanyName(studentname);
+            lyCompany.setCompanyName(bumen);
             List<LyCompany> lcList=lyCompanyService.selectLyCompanyList(lyCompany);
             if(lcList.size()>0){
                 lyPersonnel.setCompanyId(lcList.get(0).getId());
@@ -392,7 +408,8 @@ public class PersonnelApi extends BaseController {
             lyPersonnel.setType("1");
             LyPersonnel a=new LyPersonnel();
             a.setPid(lyPersonnel.getPid());
-            a.setIdCode(lyPersonnel.getIdCode());
+//            a.setIdCode(lyPersonnel.getIdCode());//改为学号或工号
+            a.setEmpNumber(lyPersonnel.getEmpNumber());
             List<LyPersonnel> lList=lyPersonnelService.selectLyPersonnelList(a);
             if(lList.size()>0){
                 if("0".equals(lList.get(0).getIsBlacklist())) {
@@ -414,7 +431,7 @@ public class PersonnelApi extends BaseController {
             lrr.setPid(lyPersonnel.getPid());
             lrr.setType(lyPersonnel.getType());
             lyRegistrationRecordService.insertLyRegistrationRecord(lrr);
-            System.out.println("姓名："+studentid+"\t年级班级："+studentname+"\t学号："+grade+"\t身份证号："+idCard);
+//            System.out.println("姓名："+studentid+"\t年级班级："+studentname+"\t学号："+grade+"\t身份证号："+idCard);
         }
 
         //程序结束时，删除临时文件

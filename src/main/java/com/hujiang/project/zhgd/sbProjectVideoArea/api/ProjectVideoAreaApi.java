@@ -137,14 +137,15 @@ public class ProjectVideoAreaApi extends BaseController {
     @PostMapping("/getVideoListJT")
     public List<SbJTArea> getVideoListJT(Integer cid) throws  Exception{
         List<SbJTArea> saList=areaService.getVideoListJT(cid);
-        String token=ysUtil.getAccessToken2(saList.get(0).getProjectList().get(0).getPid());
+        String token="";
         List<NameValuePair> params;
         List<Video> vList=new ArrayList<Video>();
         for(int i=0;i<saList.size();i++){
             List<ProjectVideoJT> projectList=saList.get(i).getProjectList();
             for(int j=0;j<projectList.size();j++){
+                Integer pid=projectList.get(j).getPid();
+                token=ysUtil.getAccessToken2(pid);
                 projectList.get(j).setToken(token);
-
             }
 
         }

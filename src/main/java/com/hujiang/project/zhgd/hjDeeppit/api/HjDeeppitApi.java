@@ -1,5 +1,8 @@
 package com.hujiang.project.zhgd.hjDeeppit.api;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.utils.DateUtils;
 import com.hujiang.common.utils.StringUtils;
 import com.hujiang.framework.web.controller.BaseController;
@@ -25,8 +28,6 @@ import com.hujiang.project.zhgd.hjDeeppit.service.ISbDeeppitStructuresService;
 import com.hujiang.project.zhgd.hjDeeppit.service.ISbDeeppitTokenService;
 import com.hujiang.project.zhgd.hjDeeppit.service.ISbProjectDeeppitStructuresService;
 import com.hujiang.project.zhgd.hjDeeppit.task.ElectricityDeeppitTask;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -353,32 +354,36 @@ public class HjDeeppitApi extends BaseController {
         for (HjDeeppitData data : hjDeeppitDataList) {
             array1 = new JSONArray();
             array1.add(data.getCreation());
-            if (data.getSubside() != null && data.getSubside() != "") {
-                array1.add(data.getSubside());
-            }
+//            if (data.getSubside() != null && data.getSubside() != "") {
+//                array1.add(data.getSubside());
+//            }
             if (data.getWaterLevel() != null && data.getWaterLevel() != "") {
                 array1.add(data.getWaterLevel());
             }
-            if (data.getLevelX() != null && data.getLevelX() != "") {
-                array1.add(data.getLevelX());
+            if (data.getFactorForce() != null && data.getFactorForce() != "") {
+                array1.add(data.getFactorForce());
             }
-            if (data.getLevelY() != null && data.getLevelY() != "") {
-                array1.add(data.getLevelY());
-            }
-            if (data.getStrainFrequency() != null && data.getStrainFrequency() != "") {
-                array1.add(data.getStrainFrequency());
-            }
-            if (data.getStrainTemperature() != null && data.getStrainTemperature() != "") {
-                array1.add(data.getStrainTemperature());
-            }
-            if (data.getTiltX() != null && data.getTiltX() != "") {
-                array1.add(data.getTiltX());
-            }
-            if (data.getTiltY() != null && data.getTiltY() != "") {
-                array1.add(data.getTiltY());
-            }
+//            if (data.getLevelX() != null && data.getLevelX() != "") {
+//                array1.add(data.getLevelX());
+//            }
+//            if (data.getLevelY() != null && data.getLevelY() != "") {
+//                array1.add(data.getLevelY());
+//            }
+//            if (data.getStrainFrequency() != null && data.getStrainFrequency() != "") {
+//                array1.add(data.getStrainFrequency());
+//            }
+//            if (data.getStrainTemperature() != null && data.getStrainTemperature() != "") {
+//                array1.add(data.getStrainTemperature());
+//            }
+//            if (data.getTiltX() != null && data.getTiltX() != "") {
+//                array1.add(data.getTiltX());
+//            }
+//            if (data.getTiltY() != null && data.getTiltY() != "") {
+//                array1.add(data.getTiltY());
+//            }
             array.add(array1);
         }
+//        JSONArray array= JSON.parseArray(JSON.toJSONString(hjDeeppitDataList));
         return array;
     }
 
