@@ -64,7 +64,7 @@ public class DeeppitController {
      * @param
      * @return void
      **/
-    @Scheduled(cron = "0 0 * * * ？")
+    @Scheduled(cron = "0 0 * * * ?")
     public void structuresTask() {
         structures();
     }
