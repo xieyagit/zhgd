@@ -35,6 +35,8 @@ public interface HjDeeppitDataMapper
 
 	public List<HjDeeppitData> selectHjDeeppitDataByTime();
 
+	public List<HjDeeppitData> selectHjDeeppitDataByTimeByType(String types);
+
 	/**
 	 * 取最大值
 	 *
@@ -101,6 +103,6 @@ public interface HjDeeppitDataMapper
 	public int deleteHjDeeppitDataByIds(String[] ids);
 
 
-	List<HjDeeppitData> selectToDay(Integer factorId, String param, String date);
+	List<HjDeeppitData> selectToDay(Integer factorId, String date, String types);
 
 }

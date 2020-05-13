@@ -3039,9 +3039,9 @@ public class api {
     }
 
     @PostMapping(value = "/hjDeeppit/getParmeterAvg")
-    public AjaxResult getFactorDataInfo(@RequestParam(value = "displayId") Integer displayId, @RequestParam(value = "factorId") Integer factorId) {
+    public AjaxResult getFactorDataInfo(@RequestParam(value = "displayId") Integer displayId, @RequestParam(value = "factorId") Integer factorId, @RequestParam(value = "types") Integer types) {
 
-        return hjDeeppitApi.getFactorDataInfo(displayId, factorId);
+        return hjDeeppitApi.getFactorDataInfo(displayId, factorId, types);
     }
 
     @PostMapping(value = "/hjDeeppit/selectUserAlarms")
@@ -3072,8 +3072,8 @@ public class api {
     }
 
     @PostMapping(value = "/hjDeeppit/selectSpecial")
-    public List selectSpecialdeppit(@RequestParam(value = "factorId") Integer factorId, @RequestParam(value = "param") String param, @RequestParam(value = "date") String date) {
-        return hjDeeppitApi.selectSpecial(factorId, param, date);
+    public List selectSpecialdeppit(@RequestParam(value = "factorId") Integer factorId, @RequestParam(value = "date") String date, @RequestParam(value = "types") String types) {
+        return hjDeeppitApi.selectSpecial(factorId, date, types);
     }
 
     @PostMapping(value = "/hjDeeppit/selectSpecialS")

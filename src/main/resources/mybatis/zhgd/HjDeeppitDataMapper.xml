@@ -26,7 +26,7 @@
     </resultMap>
 
     <sql id="selectHjDeeppitDataVo">
-        select id, structures_id, display_id, factor_id, level_x, level_y, level_accumulate_x, level_accumulate_y, water_level, strain_frequency, strain_temperature, subside, tilt_x, tilt_y, reserved_o, reserved_t, creation, factor_force from hj_deeppit_data
+        select id, structures_id, display_id, factor_id, level_x, level_y, level_accumulate_x, level_accumulate_y, water_level, strain_frequency, strain_temperature, subside, tilt_x, tilt_y, reserved_o, reserved_t, creation, factor_force, types from hj_deeppit_data
     </sql>
 
     <select id="selectHjDeeppitDataList" parameterType="HjDeeppitData" resultMap="HjDeeppitDataResult">
@@ -65,6 +65,13 @@
         where creation BETWEEN CONCAT(CURDATE(),' 00:00:00') AND CONCAT(CURDATE(),' 23:59:59')
 
     </select>
+
+    <select id="selectHjDeeppitDataByTimeByType" parameterType="HjDeeppitData" resultMap="HjDeeppitDataResult">
+        <include refid="selectHjDeeppitDataVo"/>
+        where creation BETWEEN CONCAT(CURDATE(),' 00:00:00') AND CONCAT(CURDATE(),' 23:59:59') and types = #{types}
+
+    </select>
+
     <!--最大值-->
     <select id="selectParmeterMax" parameterType="com.hujiang.project.zhgd.hjDeeppit.domain.SbAvg" resultType="java.lang.String">
         <if test="subside != null ">select max(${subside}) from hj_deeppit_data</if>
@@ -132,6 +139,7 @@
             <if test="reservedT != null  and reservedT != ''  ">reserved_t,</if>
             <if test="creation != null  ">creation,</if>
             <if test="factorForce != null  ">factor_force,</if>
+            <if test="types != null  ">types,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null  ">#{id},</if>
@@ -152,6 +160,7 @@
             <if test="reservedT != null  and reservedT != ''  ">#{reservedT},</if>
             <if test="creation != null  ">#{creation},</if>
             <if test="factorForce != null  ">#{factorForce},</if>
+            <if test="types != null  ">#{types},</if>
         </trim>
     </insert>
 
@@ -190,7 +199,7 @@
         </foreach>
     </delete>
     <!--    查询当天所有数据-->
-    <select id="selectToDay" parameterType="String" resultMap="HjDeeppitDataResult">
+    <select id="selectToDay" parameterType="HjDeeppitData" resultMap="HjDeeppitDataResult">
         SELECT
         t1.creation,
         t1.display_id,
@@ -208,9 +217,11 @@
         t1.subside,
         t1.tilt_x,
         t1.tilt_y,
-        t1.water_level
+        t1.water_level,
+        t1.factor_force,
+        t1.types
         FROM hj_deeppit_data t1
-        WHERE to_days(t1.creation) = to_days(now())
+        WHERE to_days(t1.creation) = to_days(now()) and factor_id = #{factorId} and t1.types = #{types}
     </select>
 
 

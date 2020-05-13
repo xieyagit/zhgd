@@ -259,35 +259,6 @@ public class DateUtils extends org.apache.commons.lang.time.DateUtils {
 
     /**
      * @Author xieya
-     * @Description 判断在哪一个区间内
-     * @Date 2020/4/9 16:22
-     * @param str
-     * @return int
-     **/
-    public static int index(String str) {
-//        Date date = stringToDate(str);
-//        SimpleDateFormat hh = new SimpleDateFormat("HH");
-//        String hour = hh.format(date);
-//        int hours = Integer.parseInt(hour);
-//        SimpleDateFormat mm = new SimpleDateFormat("mm");
-//        String minute = mm.format(date);
-//        int minutes = Integer.parseInt(minute);
-//
-//        int min=0;
-//        if(minutes>=30){
-//            min = 1;
-//        }
-//        return hours*2 + min;
-
-        Date date = stringToDate(str);
-        SimpleDateFormat hh = new SimpleDateFormat("HH");
-        String hour = hh.format(date);
-        int hours = Integer.parseInt(hour);
-        return hours;
-    }
-
-    /**
-     * @Author xieya
      * @Description
      * @Date 2020/4/23 11:09
      * @param
