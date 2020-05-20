@@ -2,6 +2,7 @@ package com.hujiang.project.zhgd.hjDeeppit.task;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hujiang.common.utils.DateUtils;
+import com.hujiang.framework.AutoTaskBase;
 import com.hujiang.framework.web.domain.AjaxResult;
 import com.hujiang.project.zhgd.hjDeeppit.domain.HjDeeppitData;
 import com.hujiang.project.zhgd.hjDeeppit.domain.SbDeeppitFactor;
@@ -44,7 +45,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "/provider/DeeppitJiKeng")
 @Component
-public class DeeppitController {
+public class DeeppitController extends AutoTaskBase {
 
     private static final Logger logger = LoggerFactory.getLogger(DeeppitController.class);
 
@@ -66,9 +67,18 @@ public class DeeppitController {
      **/
     @Scheduled(cron = "0 0 * * * ?")
     public void structuresTask() {
-        structures();
+        super.exec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    structures();
+                }
+                catch (Exception e) {
+                    // logger
+                }
+            }
+        });
     }
-
     /**
      * @Author xieya
      * @Description 获取结构物 下的所有数据插入数据库

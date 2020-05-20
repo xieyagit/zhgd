@@ -237,7 +237,7 @@ public class AliyunOSSClientUtil {
 
             InputStream fis = (InputStream) file.getInputStream();
 
-            OSSClient client = new OSSClient(endpoint,accessKeyId,accessKeySecret);
+            OSSClient client = new OSSClient(endpoint,DESUtil.desEncrypt(accessKeyId,"88888888","88888888"), DESUtil.desEncrypt(accessKeySecret,"88888888","88888888"));
 
             client.putObject(bucketName,folder+filename,fis);
 
