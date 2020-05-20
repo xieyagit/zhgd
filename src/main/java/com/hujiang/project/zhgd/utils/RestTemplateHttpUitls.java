@@ -5,6 +5,7 @@ import com.hujiang.project.common.LoggerUitls;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -57,19 +58,19 @@ public class RestTemplateHttpUitls {
      * @param msg 接口名称
      * @return java.lang.String
      **/
-    private static String postForMap(String url, Map<String, Object> map, String msg) {
+    public static String postForMap(String url, Map<String, Object> map, String msg) {
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(map, headers);
         LoggerUitls.logInfo(msg + "请求开始");
         Long startTime = System.currentTimeMillis();
-        String result = restTemplate.postForObject(url, map, String.class);
-        LoggerUitls.logInfo(msg + "接口返回数据", result);
+        ResponseEntity<String> result = restTemplate.postForEntity(url, request, String.class);
+        LoggerUitls.logInfo(msg + "接口返回数据", result.getBody());
         Long endTime = System.currentTimeMillis();
         LoggerUitls.logInfo(msg + "接口请求耗时" + (endTime - startTime) + "毫秒");
         LoggerUitls.logInfo(msg + "请求结束");
-        return result;
+        return result.getBody();
     }
 
     /**
@@ -81,19 +82,22 @@ public class RestTemplateHttpUitls {
      * @param msg 接口名称
      * @return java.lang.String
      **/
-    private static String postForJson(String url, JSONObject json, String msg) {
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        LoggerUitls.logInfo(msg + "请求开始");
-        Long startTime = System.currentTimeMillis();
-        String result = restTemplate.postForObject(url, json, String.class);
-        LoggerUitls.logInfo(msg + "接口返回数据", result);
-        Long endTime = System.currentTimeMillis();
-        LoggerUitls.logInfo(msg + "接口请求耗时" + (endTime - startTime) + "毫秒");
-        LoggerUitls.logInfo(msg + "请求结束");
-        return result;
-    }
+//    public static String postForJson(String url, JSONObject json, String msg) {
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+//        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+//        map.add("grant_type","client_credentials");
+//        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<MultiValueMap<String, String>>(json.toString(), headers);
+//        LoggerUitls.logInfo(msg + "请求开始", url, json);
+//        Long startTime = System.currentTimeMillis();
+//        String result = restTemplate.postForObject(url, httpEntity, String.class);
+//        LoggerUitls.logInfo(msg + "接口返回数据", result);
+//        Long endTime = System.currentTimeMillis();
+//        LoggerUitls.logInfo(msg + "接口请求耗时" + (endTime - startTime) + "毫秒");
+//        LoggerUitls.logInfo(msg + "请求结束");
+//        return result;
+//    }
 
     /**
      * @Author xieya
