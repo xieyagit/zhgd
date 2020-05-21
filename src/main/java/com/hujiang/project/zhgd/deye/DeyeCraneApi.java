@@ -1166,7 +1166,6 @@ public class DeyeCraneApi {
             sbElevatorAddparams.setLHeight(s.getDouble("RatedHeight"));//最大高度
             sbElevatorAddparamsService.insertSbElevatorAddparams(sbElevatorAddparams);
         }
-
         //返回json字符串
         JSONObject result = new JSONObject();
         result.put("cmd", "BaseDataElevator");
@@ -1670,4 +1669,5 @@ public class DeyeCraneApi {
             return array;
         }
     }
+
 }

@@ -49,6 +49,16 @@ public class SbElevatorAddparams
 	private Double lLimitCapacity;
 	/** 设备编号 */
 	private String hxzid;
+	/**1 已上传CAY   2未上传*/
+	private String uploadCay;
+
+	public String getUploadCay() {
+		return uploadCay;
+	}
+
+	public void setUploadCay(String uploadCay) {
+		this.uploadCay = uploadCay;
+	}
 
 	public void setId(Integer id)
 	{

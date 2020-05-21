@@ -40,37 +40,33 @@ public class cay {
         JSONObject jsonObject1 = new JSONObject();
         jsonObject1.put("curpage", "1");
         jsonObject1.put("name", hjProject.getProjectName());
-//        jsonObject1.put("name", "联投东方国");
 
-        /** 区管项目*/
-        JSONObject jsonObject2 = ZCAPIClient.cayArea("authorize/getProAndSub", jsonObject1);
-        if (jsonObject2.getString("jdbh") != null && jsonObject2.getString("jdbh") != "") {
-            object.put("jdbh", jsonObject2.getString("jdbh"));
-            object.put("xmid", jsonObject2.getString("xmid"));
-            object.put("subId", jsonObject2.getString("gcid"));
-            //区管
-            object.put("gctype", 2);
+        /** 市管项目*/
+        String xmid = ZCAPIClient.reportedCay2019("authorize/getProjInfos", jsonObject1);
+        if (xmid != null) {
+            JSONObject j = new JSONObject();
+            j.put("pguid", xmid);
+            JSONObject object1 = ZCAPIClient.reportedCay("authorize/getGcbyProj", j);
+            JSONArray data = object1.getJSONArray("res");
+            //一个项目id对应多个工程id   暂时取第一个
+            JSONObject datas = data.getJSONObject(0);
+            object.put("jdbh", datas.getString("jdbh"));
+            object.put("xmid", datas.getString("xmid"));
+            object.put("subId", datas.getString("gcid"));
+            //市管
+            object.put("gctype", 1);
         } else {
-            /** 市管项目*/
-            String xmid = ZCAPIClient.reportedCay2019("authorize/getProjInfos", jsonObject1);
-            if (xmid != null) {
-                JSONObject j = new JSONObject();
-                j.put("pguid", xmid);
-                JSONObject object1 = ZCAPIClient.reportedCay("authorize/getGcbyProj", j);
-                JSONArray data = object1.getJSONArray("res");
-                //一个项目id对应多个工程id   暂时取第一个
-                JSONObject datas = data.getJSONObject(0);
-                object.put("jdbh", datas.getString("jdbh"));
-                object.put("xmid", datas.getString("xmid"));
-                object.put("subId", datas.getString("gcid"));
-                //市管
-                object.put("gctype", 1);
-            } else {
-                object.put("jdbh", "");
-                object.put("xmid", "");
-                object.put("subId", "");
+            /** 区管项目*/
+            JSONObject jsonObject2 = ZCAPIClient.cayArea("authorize/getProAndSub", jsonObject1);
+            if (jsonObject2.getString("jdbh") != null && jsonObject2.getString("jdbh") != "") {
+                object.put("jdbh", jsonObject2.getString("jdbh"));
+                object.put("xmid", jsonObject2.getString("xmid"));
+                object.put("subId", jsonObject2.getString("gcid"));
+                //区管
+                object.put("gctype", 2);
             }
         }
+
         return object;
     }
 
